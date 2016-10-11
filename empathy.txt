@@ -7,13 +7,26 @@ GIT link: https://wiki.gnome.org/Apps/Empathy/Git
 IRC:  irc://irc.gimp.org/empathy
 Mailing list: https://lists.freedesktop.org/mailman/listinfo/telepathy
 
-GBAB/GBAT
+latest commit was 2 weeks ago, the first seems to be 2007-04-25 (https://git.gnome.org/browse/empathy/commit/?id=40c0d1ba5434b5c5d4f8b7ff6fedd1add5c03ce6)
+
+There is a unreviewed patches page (https://bugzilla.gnome.org/page.cgi?id=patchreport.html&product=empathy&patch-status=none) but I am not sure who is accepting them. I would think it is the 2 maintainers listed XavierClaessens and GuillaumeDesmottes
+
+The project does not seem to have a lead developer
+
+There seems to be a lot of turnover in the project. A lot of the same people are contributing but at a much lower rate. For example, in the last few months even the maintainers haven’t made a contribution.
+
+Total contribution is declining from 601 in 2013 to 76 in 2016 as shown by the commit counts at https://git.gnome.org/browse/empathy/stats/?period=y&ofs=10
+
+There seems to be no official documentation for the source code, online or in the source aside from comments and such.
+
+GBAB/GBAT —
 
 CCOF http://hfoss16f-ritjoe.rhcloud.com/static/books/tomspotcallaway-howtotellifyourfossprojectisdoomedtofail.pdf
 size
 	+0
 Source Control
-	+5 no webviewer
+	//+5 no webviewer
+	+0 web viewer is actually part of git.gnome.org, so taking the fail points back
 Building From Source
 	+0
 Bundling
@@ -31,6 +44,7 @@ Releases
 History
 	+0
 Documentation
-	+0 (but the changeling seems to be more of a file just stuffed into the release bundles)
+	+20 Documentation could not be found
+	(gave 0 for changelogs but the changeling seems to be more of a file just stuffed into the release bundles)
 
 FAIL METER: You’re probably doing okay, but you could be better
