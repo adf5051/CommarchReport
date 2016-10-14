@@ -1,0 +1,1927 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+905
+906
+907
+908
+909
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920
+921
+922
+923
+924
+925
+926
+927
+928
+929
+930
+931
+932
+933
+934
+935
+936
+937
+938
+939
+940
+941
+942
+943
+944
+945
+946
+947
+948
+949
+950
+951
+952
+953
+954
+955
+956
+957
+958
+959
+960
+961
+962
+963</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*</span>
+<a name="gbab-2"></a><span class="cm"> * Copyright (C) 2012 The Android Open Source Project</span>
+<a name="gbab-3"></a><span class="cm"> *</span>
+<a name="gbab-4"></a><span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<a name="gbab-5"></a><span class="cm"> * you may not use this file except in compliance with the License.</span>
+<a name="gbab-6"></a><span class="cm"> * You may obtain a copy of the License at</span>
+<a name="gbab-7"></a><span class="cm"> *</span>
+<a name="gbab-8"></a><span class="cm"> *      http://www.apache.org/licenses/LICENSE-2.0</span>
+<a name="gbab-9"></a><span class="cm"> *</span>
+<a name="gbab-10"></a><span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
+<a name="gbab-11"></a><span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<a name="gbab-12"></a><span class="cm"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<a name="gbab-13"></a><span class="cm"> * See the License for the specific language governing permissions and</span>
+<a name="gbab-14"></a><span class="cm"> * limitations under the License.</span>
+<a name="gbab-15"></a><span class="cm"> */</span>
+<a name="gbab-16"></a>
+<a name="gbab-17"></a><span class="kn">package</span> <span class="nn">com.google.android.vending.expansion.downloader.impl</span><span class="o">;</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="kn">import</span> <span class="nn">com.google.android.vending.expansion.downloader.Constants</span><span class="o">;</span>
+<a name="gbab-20"></a><span class="kn">import</span> <span class="nn">com.google.android.vending.expansion.downloader.Helpers</span><span class="o">;</span>
+<a name="gbab-21"></a><span class="kn">import</span> <span class="nn">com.google.android.vending.expansion.downloader.IDownloaderClient</span><span class="o">;</span>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="kn">import</span> <span class="nn">org.apache.http.Header</span><span class="o">;</span>
+<a name="gbab-24"></a><span class="kn">import</span> <span class="nn">org.apache.http.HttpHost</span><span class="o">;</span>
+<a name="gbab-25"></a><span class="kn">import</span> <span class="nn">org.apache.http.HttpResponse</span><span class="o">;</span>
+<a name="gbab-26"></a><span class="kn">import</span> <span class="nn">org.apache.http.client.methods.HttpGet</span><span class="o">;</span>
+<a name="gbab-27"></a><span class="kn">import</span> <span class="nn">org.apache.http.conn.params.ConnRouteParams</span><span class="o">;</span>
+<a name="gbab-28"></a>
+<a name="gbab-29"></a><span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
+<a name="gbab-30"></a><span class="kn">import</span> <span class="nn">android.net.Proxy</span><span class="o">;</span>
+<a name="gbab-31"></a><span class="kn">import</span> <span class="nn">android.os.PowerManager</span><span class="o">;</span>
+<a name="gbab-32"></a><span class="kn">import</span> <span class="nn">android.os.Process</span><span class="o">;</span>
+<a name="gbab-33"></a><span class="kn">import</span> <span class="nn">android.util.Log</span><span class="o">;</span>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a><span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<a name="gbab-36"></a><span class="kn">import</span> <span class="nn">java.io.FileNotFoundException</span><span class="o">;</span>
+<a name="gbab-37"></a><span class="kn">import</span> <span class="nn">java.io.FileOutputStream</span><span class="o">;</span>
+<a name="gbab-38"></a><span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<a name="gbab-39"></a><span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="o">;</span>
+<a name="gbab-40"></a><span class="kn">import</span> <span class="nn">java.io.SyncFailedException</span><span class="o">;</span>
+<a name="gbab-41"></a><span class="kn">import</span> <span class="nn">java.net.URI</span><span class="o">;</span>
+<a name="gbab-42"></a><span class="kn">import</span> <span class="nn">java.net.URISyntaxException</span><span class="o">;</span>
+<a name="gbab-43"></a><span class="kn">import</span> <span class="nn">java.util.Locale</span><span class="o">;</span>
+<a name="gbab-44"></a>
+<a name="gbab-45"></a><span class="cm">/**</span>
+<a name="gbab-46"></a><span class="cm"> * Runs an actual download</span>
+<a name="gbab-47"></a><span class="cm"> */</span>
+<a name="gbab-48"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DownloadThread</span> <span class="o">{</span>
+<a name="gbab-49"></a>
+<a name="gbab-50"></a>    <span class="kd">private</span> <span class="n">Context</span> <span class="n">mContext</span><span class="o">;</span>
+<a name="gbab-51"></a>    <span class="kd">private</span> <span class="n">DownloadInfo</span> <span class="n">mInfo</span><span class="o">;</span>
+<a name="gbab-52"></a>    <span class="kd">private</span> <span class="n">DownloaderService</span> <span class="n">mService</span><span class="o">;</span>
+<a name="gbab-53"></a>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">DownloadsDB</span> <span class="n">mDB</span><span class="o">;</span>
+<a name="gbab-54"></a>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">DownloadNotification</span> <span class="n">mNotification</span><span class="o">;</span>
+<a name="gbab-55"></a>    <span class="kd">private</span> <span class="n">String</span> <span class="n">mUserAgent</span><span class="o">;</span>
+<a name="gbab-56"></a>
+<a name="gbab-57"></a>    <span class="kd">public</span> <span class="nf">DownloadThread</span><span class="o">(</span><span class="n">DownloadInfo</span> <span class="n">info</span><span class="o">,</span> <span class="n">DownloaderService</span> <span class="n">service</span><span class="o">,</span>
+<a name="gbab-58"></a>            <span class="n">DownloadNotification</span> <span class="n">notification</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-59"></a>        <span class="n">mContext</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+<a name="gbab-60"></a>        <span class="n">mInfo</span> <span class="o">=</span> <span class="n">info</span><span class="o">;</span>
+<a name="gbab-61"></a>        <span class="n">mService</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+<a name="gbab-62"></a>        <span class="n">mNotification</span> <span class="o">=</span> <span class="n">notification</span><span class="o">;</span>
+<a name="gbab-63"></a>        <span class="n">mDB</span> <span class="o">=</span> <span class="n">DownloadsDB</span><span class="o">.</span><span class="na">getDB</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
+<a name="gbab-64"></a>        <span class="n">mUserAgent</span> <span class="o">=</span> <span class="s">&quot;APKXDL (Linux; U; Android &quot;</span> <span class="o">+</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Build</span><span class="o">.</span><span class="na">VERSION</span><span class="o">.</span><span class="na">RELEASE</span> <span class="o">+</span> <span class="s">&quot;;&quot;</span>
+<a name="gbab-65"></a>                <span class="o">+</span> <span class="n">Locale</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;; &quot;</span> <span class="o">+</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Build</span><span class="o">.</span><span class="na">DEVICE</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span>
+<a name="gbab-66"></a>                <span class="o">+</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Build</span><span class="o">.</span><span class="na">ID</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span> <span class="o">+</span>
+<a name="gbab-67"></a>                <span class="n">service</span><span class="o">.</span><span class="na">getPackageName</span><span class="o">();</span>
+<a name="gbab-68"></a>    <span class="o">}</span>
+<a name="gbab-69"></a>
+<a name="gbab-70"></a>    <span class="cm">/**</span>
+<a name="gbab-71"></a><span class="cm">     * Returns the default user agent</span>
+<a name="gbab-72"></a><span class="cm">     */</span>
+<a name="gbab-73"></a>    <span class="kd">private</span> <span class="n">String</span> <span class="nf">userAgent</span><span class="o">()</span> <span class="o">{</span>
+<a name="gbab-74"></a>        <span class="k">return</span> <span class="n">mUserAgent</span><span class="o">;</span>
+<a name="gbab-75"></a>    <span class="o">}</span>
+<a name="gbab-76"></a>
+<a name="gbab-77"></a>    <span class="cm">/**</span>
+<a name="gbab-78"></a><span class="cm">     * State for the entire run() method.</span>
+<a name="gbab-79"></a><span class="cm">     */</span>
+<a name="gbab-80"></a>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">State</span> <span class="o">{</span>
+<a name="gbab-81"></a>        <span class="kd">public</span> <span class="n">String</span> <span class="n">mFilename</span><span class="o">;</span>
+<a name="gbab-82"></a>        <span class="kd">public</span> <span class="n">FileOutputStream</span> <span class="n">mStream</span><span class="o">;</span>
+<a name="gbab-83"></a>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="n">mCountRetry</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+<a name="gbab-84"></a>        <span class="kd">public</span> <span class="kt">int</span> <span class="n">mRetryAfter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<a name="gbab-85"></a>        <span class="kd">public</span> <span class="kt">int</span> <span class="n">mRedirectCount</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<a name="gbab-86"></a>        <span class="kd">public</span> <span class="n">String</span> <span class="n">mNewUri</span><span class="o">;</span>
+<a name="gbab-87"></a>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="n">mGotData</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+<a name="gbab-88"></a>        <span class="kd">public</span> <span class="n">String</span> <span class="n">mRequestUri</span><span class="o">;</span>
+<a name="gbab-89"></a>
+<a name="gbab-90"></a>        <span class="kd">public</span> <span class="nf">State</span><span class="o">(</span><span class="n">DownloadInfo</span> <span class="n">info</span><span class="o">,</span> <span class="n">DownloaderService</span> <span class="n">service</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-91"></a>            <span class="n">mRedirectCount</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="na">mRedirectCount</span><span class="o">;</span>
+<a name="gbab-92"></a>            <span class="n">mRequestUri</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="na">mUri</span><span class="o">;</span>
+<a name="gbab-93"></a>            <span class="n">mFilename</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="na">generateTempSaveFileName</span><span class="o">(</span><span class="n">info</span><span class="o">.</span><span class="na">mFileName</span><span class="o">);</span>
+<a name="gbab-94"></a>        <span class="o">}</span>
+<a name="gbab-95"></a>    <span class="o">}</span>
+<a name="gbab-96"></a>
+<a name="gbab-97"></a>    <span class="cm">/**</span>
+<a name="gbab-98"></a><span class="cm">     * State within executeDownload()</span>
+<a name="gbab-99"></a><span class="cm">     */</span>
+<a name="gbab-100"></a>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InnerState</span> <span class="o">{</span>
+<a name="gbab-101"></a>        <span class="kd">public</span> <span class="kt">int</span> <span class="n">mBytesSoFar</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<a name="gbab-102"></a>        <span class="kd">public</span> <span class="kt">int</span> <span class="n">mBytesThisSession</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<a name="gbab-103"></a>        <span class="kd">public</span> <span class="n">String</span> <span class="n">mHeaderETag</span><span class="o">;</span>
+<a name="gbab-104"></a>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="n">mContinuingDownload</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+<a name="gbab-105"></a>        <span class="kd">public</span> <span class="n">String</span> <span class="n">mHeaderContentLength</span><span class="o">;</span>
+<a name="gbab-106"></a>        <span class="kd">public</span> <span class="n">String</span> <span class="n">mHeaderContentDisposition</span><span class="o">;</span>
+<a name="gbab-107"></a>        <span class="kd">public</span> <span class="n">String</span> <span class="n">mHeaderContentLocation</span><span class="o">;</span>
+<a name="gbab-108"></a>        <span class="kd">public</span> <span class="kt">int</span> <span class="n">mBytesNotified</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<a name="gbab-109"></a>        <span class="kd">public</span> <span class="kt">long</span> <span class="n">mTimeLastNotification</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<a name="gbab-110"></a>    <span class="o">}</span>
+<a name="gbab-111"></a>
+<a name="gbab-112"></a>    <span class="cm">/**</span>
+<a name="gbab-113"></a><span class="cm">     * Raised from methods called by run() to indicate that the current request</span>
+<a name="gbab-114"></a><span class="cm">     * should be stopped immediately. Note the message passed to this exception</span>
+<a name="gbab-115"></a><span class="cm">     * will be logged and therefore must be guaranteed not to contain any PII,</span>
+<a name="gbab-116"></a><span class="cm">     * meaning it generally can&#39;t include any information about the request URI,</span>
+<a name="gbab-117"></a><span class="cm">     * headers, or destination filename.</span>
+<a name="gbab-118"></a><span class="cm">     */</span>
+<a name="gbab-119"></a>    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">StopRequest</span> <span class="kd">extends</span> <span class="n">Throwable</span> <span class="o">{</span>
+<a name="gbab-120"></a>        <span class="cm">/**</span>
+<a name="gbab-121"></a><span class="cm">		 * </span>
+<a name="gbab-122"></a><span class="cm">		 */</span>
+<a name="gbab-123"></a>        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">6338592678988347973L</span><span class="o">;</span>
+<a name="gbab-124"></a>        <span class="kd">public</span> <span class="kt">int</span> <span class="n">mFinalStatus</span><span class="o">;</span>
+<a name="gbab-125"></a>
+<a name="gbab-126"></a>        <span class="kd">public</span> <span class="nf">StopRequest</span><span class="o">(</span><span class="kt">int</span> <span class="n">finalStatus</span><span class="o">,</span> <span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-127"></a>            <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+<a name="gbab-128"></a>            <span class="n">mFinalStatus</span> <span class="o">=</span> <span class="n">finalStatus</span><span class="o">;</span>
+<a name="gbab-129"></a>        <span class="o">}</span>
+<a name="gbab-130"></a>
+<a name="gbab-131"></a>        <span class="kd">public</span> <span class="nf">StopRequest</span><span class="o">(</span><span class="kt">int</span> <span class="n">finalStatus</span><span class="o">,</span> <span class="n">String</span> <span class="n">message</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-132"></a>            <span class="kd">super</span><span class="o">(</span><span class="n">message</span><span class="o">,</span> <span class="n">throwable</span><span class="o">);</span>
+<a name="gbab-133"></a>            <span class="n">mFinalStatus</span> <span class="o">=</span> <span class="n">finalStatus</span><span class="o">;</span>
+<a name="gbab-134"></a>        <span class="o">}</span>
+<a name="gbab-135"></a>    <span class="o">}</span>
+<a name="gbab-136"></a>
+<a name="gbab-137"></a>    <span class="cm">/**</span>
+<a name="gbab-138"></a><span class="cm">     * Raised from methods called by executeDownload() to indicate that the</span>
+<a name="gbab-139"></a><span class="cm">     * download should be retried immediately.</span>
+<a name="gbab-140"></a><span class="cm">     */</span>
+<a name="gbab-141"></a>    <span class="kd">private</span> <span class="kd">class</span> <span class="nc">RetryDownload</span> <span class="kd">extends</span> <span class="n">Throwable</span> <span class="o">{</span>
+<a name="gbab-142"></a>
+<a name="gbab-143"></a>        <span class="cm">/**</span>
+<a name="gbab-144"></a><span class="cm">		 * </span>
+<a name="gbab-145"></a><span class="cm">		 */</span>
+<a name="gbab-146"></a>        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">6196036036517540229L</span><span class="o">;</span>
+<a name="gbab-147"></a>    <span class="o">}</span>
+<a name="gbab-148"></a>
+<a name="gbab-149"></a>    <span class="cm">/**</span>
+<a name="gbab-150"></a><span class="cm">     * Returns the preferred proxy to be used by clients. This is a wrapper</span>
+<a name="gbab-151"></a><span class="cm">     * around {@link android.net.Proxy#getHost()}. Currently no proxy will be</span>
+<a name="gbab-152"></a><span class="cm">     * returned for localhost or if the active network is Wi-Fi.</span>
+<a name="gbab-153"></a><span class="cm">     * </span>
+<a name="gbab-154"></a><span class="cm">     * @param context the context which will be passed to</span>
+<a name="gbab-155"></a><span class="cm">     *            {@link android.net.Proxy#getHost()}</span>
+<a name="gbab-156"></a><span class="cm">     * @param url the target URL for the request</span>
+<a name="gbab-157"></a><span class="cm">     * @note Calling this method requires permission</span>
+<a name="gbab-158"></a><span class="cm">     *       android.permission.ACCESS_NETWORK_STATE</span>
+<a name="gbab-159"></a><span class="cm">     * @return The preferred proxy to be used by clients, or null if there is no</span>
+<a name="gbab-160"></a><span class="cm">     *         proxy.</span>
+<a name="gbab-161"></a><span class="cm">     */</span>
+<a name="gbab-162"></a>    <span class="kd">public</span> <span class="n">HttpHost</span> <span class="nf">getPreferredHttpHost</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span>
+<a name="gbab-163"></a>            <span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-164"></a>        <span class="k">if</span> <span class="o">(!</span><span class="n">isLocalHost</span><span class="o">(</span><span class="n">url</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">mService</span><span class="o">.</span><span class="na">isWiFi</span><span class="o">())</span> <span class="o">{</span>
+<a name="gbab-165"></a>            <span class="kd">final</span> <span class="n">String</span> <span class="n">proxyHost</span> <span class="o">=</span> <span class="n">Proxy</span><span class="o">.</span><span class="na">getHost</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+<a name="gbab-166"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">proxyHost</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-167"></a>                <span class="k">return</span> <span class="k">new</span> <span class="n">HttpHost</span><span class="o">(</span><span class="n">proxyHost</span><span class="o">,</span> <span class="n">Proxy</span><span class="o">.</span><span class="na">getPort</span><span class="o">(</span><span class="n">context</span><span class="o">),</span> <span class="s">&quot;http&quot;</span><span class="o">);</span>
+<a name="gbab-168"></a>            <span class="o">}</span>
+<a name="gbab-169"></a>        <span class="o">}</span>
+<a name="gbab-170"></a>
+<a name="gbab-171"></a>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-172"></a>    <span class="o">}</span>
+<a name="gbab-173"></a>
+<a name="gbab-174"></a>    <span class="kd">static</span> <span class="kd">final</span> <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isLocalHost</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-175"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">url</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-176"></a>            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<a name="gbab-177"></a>        <span class="o">}</span>
+<a name="gbab-178"></a>
+<a name="gbab-179"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-180"></a>            <span class="kd">final</span> <span class="n">URI</span> <span class="n">uri</span> <span class="o">=</span> <span class="n">URI</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">url</span><span class="o">);</span>
+<a name="gbab-181"></a>            <span class="kd">final</span> <span class="n">String</span> <span class="n">host</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="na">getHost</span><span class="o">();</span>
+<a name="gbab-182"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">host</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-183"></a>                <span class="c1">// TODO: InetAddress.isLoopbackAddress should be used to check</span>
+<a name="gbab-184"></a>                <span class="c1">// for localhost. However no public factory methods exist which</span>
+<a name="gbab-185"></a>                <span class="c1">// can be used without triggering DNS lookup if host is not</span>
+<a name="gbab-186"></a>                <span class="c1">// localhost.</span>
+<a name="gbab-187"></a>                <span class="k">if</span> <span class="o">(</span><span class="n">host</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="s">&quot;localhost&quot;</span><span class="o">)</span> <span class="o">||</span>
+<a name="gbab-188"></a>                        <span class="n">host</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">)</span> <span class="o">||</span>
+<a name="gbab-189"></a>                        <span class="n">host</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;[::1]&quot;</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-190"></a>                    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+<a name="gbab-191"></a>                <span class="o">}</span>
+<a name="gbab-192"></a>            <span class="o">}</span>
+<a name="gbab-193"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IllegalArgumentException</span> <span class="n">iex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-194"></a>            <span class="c1">// Ignore (URI.create)</span>
+<a name="gbab-195"></a>        <span class="o">}</span>
+<a name="gbab-196"></a>
+<a name="gbab-197"></a>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<a name="gbab-198"></a>    <span class="o">}</span>
+<a name="gbab-199"></a>
+<a name="gbab-200"></a>    <span class="cm">/**</span>
+<a name="gbab-201"></a><span class="cm">     * Executes the download in a separate thread</span>
+<a name="gbab-202"></a><span class="cm">     */</span>
+<a name="gbab-203"></a>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+<a name="gbab-204"></a>        <span class="n">Process</span><span class="o">.</span><span class="na">setThreadPriority</span><span class="o">(</span><span class="n">Process</span><span class="o">.</span><span class="na">THREAD_PRIORITY_BACKGROUND</span><span class="o">);</span>
+<a name="gbab-205"></a>
+<a name="gbab-206"></a>        <span class="n">State</span> <span class="n">state</span> <span class="o">=</span> <span class="k">new</span> <span class="n">State</span><span class="o">(</span><span class="n">mInfo</span><span class="o">,</span> <span class="n">mService</span><span class="o">);</span>
+<a name="gbab-207"></a>        <span class="n">AndroidHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-208"></a>        <span class="n">PowerManager</span><span class="o">.</span><span class="na">WakeLock</span> <span class="n">wakeLock</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-209"></a>        <span class="kt">int</span> <span class="n">finalStatus</span> <span class="o">=</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_UNKNOWN_ERROR</span><span class="o">;</span>
+<a name="gbab-210"></a>
+<a name="gbab-211"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-212"></a>            <span class="n">PowerManager</span> <span class="n">pm</span> <span class="o">=</span> <span class="o">(</span><span class="n">PowerManager</span><span class="o">)</span> <span class="n">mContext</span><span class="o">.</span><span class="na">getSystemService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">POWER_SERVICE</span><span class="o">);</span>
+<a name="gbab-213"></a>            <span class="n">wakeLock</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="na">newWakeLock</span><span class="o">(</span><span class="n">PowerManager</span><span class="o">.</span><span class="na">PARTIAL_WAKE_LOCK</span><span class="o">,</span> <span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">);</span>
+<a name="gbab-214"></a>            <span class="n">wakeLock</span><span class="o">.</span><span class="na">acquire</span><span class="o">();</span>
+<a name="gbab-215"></a>
+<a name="gbab-216"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-217"></a>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;initiating download for &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mFileName</span><span class="o">);</span>
+<a name="gbab-218"></a>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;  at &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mUri</span><span class="o">);</span>
+<a name="gbab-219"></a>            <span class="o">}</span>
+<a name="gbab-220"></a>
+<a name="gbab-221"></a>            <span class="n">client</span> <span class="o">=</span> <span class="n">AndroidHttpClient</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">userAgent</span><span class="o">(),</span> <span class="n">mContext</span><span class="o">);</span>
+<a name="gbab-222"></a>
+<a name="gbab-223"></a>            <span class="kt">boolean</span> <span class="n">finished</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+<a name="gbab-224"></a>            <span class="k">while</span> <span class="o">(!</span><span class="n">finished</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-225"></a>                <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-226"></a>                    <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;initiating download for &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mFileName</span><span class="o">);</span>
+<a name="gbab-227"></a>                    <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;  at &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mUri</span><span class="o">);</span>
+<a name="gbab-228"></a>                <span class="o">}</span>
+<a name="gbab-229"></a>                <span class="c1">// Set or unset proxy, which may have changed since last GET</span>
+<a name="gbab-230"></a>                <span class="c1">// request.</span>
+<a name="gbab-231"></a>                <span class="c1">// setDefaultProxy() supports null as proxy parameter.</span>
+<a name="gbab-232"></a>                <span class="n">ConnRouteParams</span><span class="o">.</span><span class="na">setDefaultProxy</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">getParams</span><span class="o">(),</span>
+<a name="gbab-233"></a>                        <span class="n">getPreferredHttpHost</span><span class="o">(</span><span class="n">mContext</span><span class="o">,</span> <span class="n">state</span><span class="o">.</span><span class="na">mRequestUri</span><span class="o">));</span>
+<a name="gbab-234"></a>                <span class="n">HttpGet</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpGet</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mRequestUri</span><span class="o">);</span>
+<a name="gbab-235"></a>                <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-236"></a>                    <span class="n">executeDownload</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">client</span><span class="o">,</span> <span class="n">request</span><span class="o">);</span>
+<a name="gbab-237"></a>                    <span class="n">finished</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<a name="gbab-238"></a>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RetryDownload</span> <span class="n">exc</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-239"></a>                    <span class="c1">// fall through</span>
+<a name="gbab-240"></a>                <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+<a name="gbab-241"></a>                    <span class="n">request</span><span class="o">.</span><span class="na">abort</span><span class="o">();</span>
+<a name="gbab-242"></a>                    <span class="n">request</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-243"></a>                <span class="o">}</span>
+<a name="gbab-244"></a>            <span class="o">}</span>
+<a name="gbab-245"></a>
+<a name="gbab-246"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-247"></a>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;download completed for &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mFileName</span><span class="o">);</span>
+<a name="gbab-248"></a>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;  at &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mUri</span><span class="o">);</span>
+<a name="gbab-249"></a>            <span class="o">}</span>
+<a name="gbab-250"></a>            <span class="n">finalizeDestinationFile</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+<a name="gbab-251"></a>            <span class="n">finalStatus</span> <span class="o">=</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_SUCCESS</span><span class="o">;</span>
+<a name="gbab-252"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">StopRequest</span> <span class="n">error</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-253"></a>            <span class="c1">// remove the cause before printing, in case it contains PII</span>
+<a name="gbab-254"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span>
+<a name="gbab-255"></a>                    <span class="s">&quot;Aborting request for download &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mFileName</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">error</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+<a name="gbab-256"></a>            <span class="n">error</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+<a name="gbab-257"></a>            <span class="n">finalStatus</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="na">mFinalStatus</span><span class="o">;</span>
+<a name="gbab-258"></a>            <span class="c1">// fall through to finally block</span>
+<a name="gbab-259"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// sometimes the socket code throws unchecked</span>
+<a name="gbab-260"></a>                                 <span class="c1">// exceptions</span>
+<a name="gbab-261"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;Exception for &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mFileName</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-262"></a>            <span class="n">finalStatus</span> <span class="o">=</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_UNKNOWN_ERROR</span><span class="o">;</span>
+<a name="gbab-263"></a>            <span class="c1">// falls through to the code that reports an error</span>
+<a name="gbab-264"></a>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+<a name="gbab-265"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">wakeLock</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-266"></a>                <span class="n">wakeLock</span><span class="o">.</span><span class="na">release</span><span class="o">();</span>
+<a name="gbab-267"></a>                <span class="n">wakeLock</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-268"></a>            <span class="o">}</span>
+<a name="gbab-269"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">client</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-270"></a>                <span class="n">client</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<a name="gbab-271"></a>                <span class="n">client</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-272"></a>            <span class="o">}</span>
+<a name="gbab-273"></a>            <span class="n">cleanupDestination</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">finalStatus</span><span class="o">);</span>
+<a name="gbab-274"></a>            <span class="n">notifyDownloadCompleted</span><span class="o">(</span><span class="n">finalStatus</span><span class="o">,</span> <span class="n">state</span><span class="o">.</span><span class="na">mCountRetry</span><span class="o">,</span> <span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span><span class="o">,</span>
+<a name="gbab-275"></a>                    <span class="n">state</span><span class="o">.</span><span class="na">mRedirectCount</span><span class="o">,</span> <span class="n">state</span><span class="o">.</span><span class="na">mGotData</span><span class="o">,</span> <span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">);</span>
+<a name="gbab-276"></a>        <span class="o">}</span>
+<a name="gbab-277"></a>    <span class="o">}</span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a>    <span class="cm">/**</span>
+<a name="gbab-280"></a><span class="cm">     * Fully execute a single download request - setup and send the request,</span>
+<a name="gbab-281"></a><span class="cm">     * handle the response, and transfer the data to the destination file.</span>
+<a name="gbab-282"></a><span class="cm">     */</span>
+<a name="gbab-283"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">executeDownload</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">AndroidHttpClient</span> <span class="n">client</span><span class="o">,</span> <span class="n">HttpGet</span> <span class="n">request</span><span class="o">)</span>
+<a name="gbab-284"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span><span class="o">,</span> <span class="n">RetryDownload</span> <span class="o">{</span>
+<a name="gbab-285"></a>        <span class="n">InnerState</span> <span class="n">innerState</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InnerState</span><span class="o">();</span>
+<a name="gbab-286"></a>        <span class="kt">byte</span> <span class="n">data</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">Constants</span><span class="o">.</span><span class="na">BUFFER_SIZE</span><span class="o">];</span>
+<a name="gbab-287"></a>
+<a name="gbab-288"></a>        <span class="n">checkPausedOrCanceled</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+<a name="gbab-289"></a>
+<a name="gbab-290"></a>        <span class="n">setupDestinationFile</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">);</span>
+<a name="gbab-291"></a>        <span class="n">addRequestHeaders</span><span class="o">(</span><span class="n">innerState</span><span class="o">,</span> <span class="n">request</span><span class="o">);</span>
+<a name="gbab-292"></a>
+<a name="gbab-293"></a>        <span class="c1">// check just before sending the request to avoid using an invalid</span>
+<a name="gbab-294"></a>        <span class="c1">// connection at all</span>
+<a name="gbab-295"></a>        <span class="n">checkConnectivity</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+<a name="gbab-296"></a>
+<a name="gbab-297"></a>        <span class="n">mNotification</span><span class="o">.</span><span class="na">onDownloadStateChanged</span><span class="o">(</span><span class="n">IDownloaderClient</span><span class="o">.</span><span class="na">STATE_CONNECTING</span><span class="o">);</span>
+<a name="gbab-298"></a>        <span class="n">HttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">sendRequest</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">client</span><span class="o">,</span> <span class="n">request</span><span class="o">);</span>
+<a name="gbab-299"></a>        <span class="n">handleExceptionalStatus</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+<a name="gbab-300"></a>
+<a name="gbab-301"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-302"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;received response for &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mUri</span><span class="o">);</span>
+<a name="gbab-303"></a>        <span class="o">}</span>
+<a name="gbab-304"></a>
+<a name="gbab-305"></a>        <span class="n">processResponseHeaders</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+<a name="gbab-306"></a>        <span class="n">InputStream</span> <span class="n">entityStream</span> <span class="o">=</span> <span class="n">openResponseEntity</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+<a name="gbab-307"></a>        <span class="n">mNotification</span><span class="o">.</span><span class="na">onDownloadStateChanged</span><span class="o">(</span><span class="n">IDownloaderClient</span><span class="o">.</span><span class="na">STATE_DOWNLOADING</span><span class="o">);</span>
+<a name="gbab-308"></a>        <span class="n">transferData</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">data</span><span class="o">,</span> <span class="n">entityStream</span><span class="o">);</span>
+<a name="gbab-309"></a>    <span class="o">}</span>
+<a name="gbab-310"></a>
+<a name="gbab-311"></a>    <span class="cm">/**</span>
+<a name="gbab-312"></a><span class="cm">     * Check if current connectivity is valid for this request.</span>
+<a name="gbab-313"></a><span class="cm">     */</span>
+<a name="gbab-314"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkConnectivity</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-315"></a>        <span class="k">switch</span> <span class="o">(</span><span class="n">mService</span><span class="o">.</span><span class="na">getNetworkAvailabilityState</span><span class="o">(</span><span class="n">mDB</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-316"></a>            <span class="k">case</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">NETWORK_OK</span><span class="o">:</span>
+<a name="gbab-317"></a>                <span class="k">return</span><span class="o">;</span>
+<a name="gbab-318"></a>            <span class="k">case</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">NETWORK_NO_CONNECTION</span><span class="o">:</span>
+<a name="gbab-319"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_WAITING_FOR_NETWORK</span><span class="o">,</span>
+<a name="gbab-320"></a>                        <span class="s">&quot;waiting for network to return&quot;</span><span class="o">);</span>
+<a name="gbab-321"></a>            <span class="k">case</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">NETWORK_TYPE_DISALLOWED_BY_REQUESTOR</span><span class="o">:</span>
+<a name="gbab-322"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span>
+<a name="gbab-323"></a>                        <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_QUEUED_FOR_WIFI_OR_CELLULAR_PERMISSION</span><span class="o">,</span>
+<a name="gbab-324"></a>                        <span class="s">&quot;waiting for wifi or for download over cellular to be authorized&quot;</span><span class="o">);</span>
+<a name="gbab-325"></a>            <span class="k">case</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">NETWORK_CANNOT_USE_ROAMING</span><span class="o">:</span>
+<a name="gbab-326"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_WAITING_FOR_NETWORK</span><span class="o">,</span>
+<a name="gbab-327"></a>                        <span class="s">&quot;roaming is not allowed&quot;</span><span class="o">);</span>
+<a name="gbab-328"></a>            <span class="k">case</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">NETWORK_UNUSABLE_DUE_TO_SIZE</span><span class="o">:</span>
+<a name="gbab-329"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_QUEUED_FOR_WIFI</span><span class="o">,</span> <span class="s">&quot;waiting for wifi&quot;</span><span class="o">);</span>
+<a name="gbab-330"></a>        <span class="o">}</span>
+<a name="gbab-331"></a>    <span class="o">}</span>
+<a name="gbab-332"></a>
+<a name="gbab-333"></a>    <span class="cm">/**</span>
+<a name="gbab-334"></a><span class="cm">     * Transfer as much data as possible from the HTTP response to the</span>
+<a name="gbab-335"></a><span class="cm">     * destination file.</span>
+<a name="gbab-336"></a><span class="cm">     * </span>
+<a name="gbab-337"></a><span class="cm">     * @param data buffer to use to read data</span>
+<a name="gbab-338"></a><span class="cm">     * @param entityStream stream for reading the HTTP response entity</span>
+<a name="gbab-339"></a><span class="cm">     */</span>
+<a name="gbab-340"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">transferData</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="o">,</span>
+<a name="gbab-341"></a>            <span class="n">InputStream</span> <span class="n">entityStream</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-342"></a>        <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
+<a name="gbab-343"></a>            <span class="kt">int</span> <span class="n">bytesRead</span> <span class="o">=</span> <span class="n">readFromResponse</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">data</span><span class="o">,</span> <span class="n">entityStream</span><span class="o">);</span>
+<a name="gbab-344"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">bytesRead</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// success, end of stream already reached</span>
+<a name="gbab-345"></a>                <span class="n">handleEndOfStream</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">);</span>
+<a name="gbab-346"></a>                <span class="k">return</span><span class="o">;</span>
+<a name="gbab-347"></a>            <span class="o">}</span>
+<a name="gbab-348"></a>
+<a name="gbab-349"></a>            <span class="n">state</span><span class="o">.</span><span class="na">mGotData</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<a name="gbab-350"></a>            <span class="n">writeDataToDestination</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">data</span><span class="o">,</span> <span class="n">bytesRead</span><span class="o">);</span>
+<a name="gbab-351"></a>            <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span> <span class="o">+=</span> <span class="n">bytesRead</span><span class="o">;</span>
+<a name="gbab-352"></a>            <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesThisSession</span> <span class="o">+=</span> <span class="n">bytesRead</span><span class="o">;</span>
+<a name="gbab-353"></a>            <span class="n">reportProgress</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">);</span>
+<a name="gbab-354"></a>
+<a name="gbab-355"></a>            <span class="n">checkPausedOrCanceled</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+<a name="gbab-356"></a>        <span class="o">}</span>
+<a name="gbab-357"></a>    <span class="o">}</span>
+<a name="gbab-358"></a>
+<a name="gbab-359"></a>    <span class="cm">/**</span>
+<a name="gbab-360"></a><span class="cm">     * Called after a successful completion to take any necessary action on the</span>
+<a name="gbab-361"></a><span class="cm">     * downloaded file.</span>
+<a name="gbab-362"></a><span class="cm">     */</span>
+<a name="gbab-363"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">finalizeDestinationFile</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-364"></a>        <span class="n">syncDestination</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+<a name="gbab-365"></a>        <span class="n">String</span> <span class="n">tempFilename</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">;</span>
+<a name="gbab-366"></a>        <span class="n">String</span> <span class="n">finalFilename</span> <span class="o">=</span> <span class="n">Helpers</span><span class="o">.</span><span class="na">generateSaveFileName</span><span class="o">(</span><span class="n">mService</span><span class="o">,</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mFileName</span><span class="o">);</span>
+<a name="gbab-367"></a>        <span class="k">if</span> <span class="o">(!</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">finalFilename</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-368"></a>            <span class="n">File</span> <span class="n">startFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">tempFilename</span><span class="o">);</span>
+<a name="gbab-369"></a>            <span class="n">File</span> <span class="n">destFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">finalFilename</span><span class="o">);</span>
+<a name="gbab-370"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">mInfo</span><span class="o">.</span><span class="na">mTotalBytes</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mCurrentBytes</span> <span class="o">==</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mTotalBytes</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-371"></a>                <span class="k">if</span> <span class="o">(!</span><span class="n">startFile</span><span class="o">.</span><span class="na">renameTo</span><span class="o">(</span><span class="n">destFile</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-372"></a>                    <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_FILE_ERROR</span><span class="o">,</span>
+<a name="gbab-373"></a>                            <span class="s">&quot;unable to finalize destination file&quot;</span><span class="o">);</span>
+<a name="gbab-374"></a>                <span class="o">}</span>
+<a name="gbab-375"></a>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-376"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_FILE_DELIVERED_INCORRECTLY</span><span class="o">,</span>
+<a name="gbab-377"></a>                        <span class="s">&quot;file delivered with incorrect size. probably due to network not browser configured&quot;</span><span class="o">);</span>
+<a name="gbab-378"></a>            <span class="o">}</span>
+<a name="gbab-379"></a>        <span class="o">}</span>
+<a name="gbab-380"></a>    <span class="o">}</span>
+<a name="gbab-381"></a>
+<a name="gbab-382"></a>    <span class="cm">/**</span>
+<a name="gbab-383"></a><span class="cm">     * Called just before the thread finishes, regardless of status, to take any</span>
+<a name="gbab-384"></a><span class="cm">     * necessary action on the downloaded file.</span>
+<a name="gbab-385"></a><span class="cm">     */</span>
+<a name="gbab-386"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">cleanupDestination</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="kt">int</span> <span class="n">finalStatus</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-387"></a>        <span class="n">closeDestination</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+<a name="gbab-388"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">isStatusError</span><span class="o">(</span><span class="n">finalStatus</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-389"></a>            <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">).</span><span class="na">delete</span><span class="o">();</span>
+<a name="gbab-390"></a>            <span class="n">state</span><span class="o">.</span><span class="na">mFilename</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-391"></a>        <span class="o">}</span>
+<a name="gbab-392"></a>    <span class="o">}</span>
+<a name="gbab-393"></a>
+<a name="gbab-394"></a>    <span class="cm">/**</span>
+<a name="gbab-395"></a><span class="cm">     * Sync the destination file to storage.</span>
+<a name="gbab-396"></a><span class="cm">     */</span>
+<a name="gbab-397"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">syncDestination</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-398"></a>        <span class="n">FileOutputStream</span> <span class="n">downloadedFileStream</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-399"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-400"></a>            <span class="n">downloadedFileStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+<a name="gbab-401"></a>            <span class="n">downloadedFileStream</span><span class="o">.</span><span class="na">getFD</span><span class="o">().</span><span class="na">sync</span><span class="o">();</span>
+<a name="gbab-402"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-403"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;file &quot;</span> <span class="o">+</span> <span class="n">state</span><span class="o">.</span><span class="na">mFilename</span> <span class="o">+</span> <span class="s">&quot; not found: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-404"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">SyncFailedException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-405"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;file &quot;</span> <span class="o">+</span> <span class="n">state</span><span class="o">.</span><span class="na">mFilename</span> <span class="o">+</span> <span class="s">&quot; sync failed: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-406"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-407"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;IOException trying to sync &quot;</span> <span class="o">+</span> <span class="n">state</span><span class="o">.</span><span class="na">mFilename</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-408"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RuntimeException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-409"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;exception while syncing file: &quot;</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-410"></a>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+<a name="gbab-411"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">downloadedFileStream</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-412"></a>                <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-413"></a>                    <span class="n">downloadedFileStream</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<a name="gbab-414"></a>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-415"></a>                    <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;IOException while closing synced file: &quot;</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-416"></a>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RuntimeException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-417"></a>                    <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;exception while closing file: &quot;</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-418"></a>                <span class="o">}</span>
+<a name="gbab-419"></a>            <span class="o">}</span>
+<a name="gbab-420"></a>        <span class="o">}</span>
+<a name="gbab-421"></a>    <span class="o">}</span>
+<a name="gbab-422"></a>
+<a name="gbab-423"></a>    <span class="cm">/**</span>
+<a name="gbab-424"></a><span class="cm">     * Close the destination output stream.</span>
+<a name="gbab-425"></a><span class="cm">     */</span>
+<a name="gbab-426"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">closeDestination</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-427"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-428"></a>            <span class="c1">// close the file</span>
+<a name="gbab-429"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mStream</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-430"></a>                <span class="n">state</span><span class="o">.</span><span class="na">mStream</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<a name="gbab-431"></a>                <span class="n">state</span><span class="o">.</span><span class="na">mStream</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-432"></a>            <span class="o">}</span>
+<a name="gbab-433"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-434"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-435"></a>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;exception when closing the file after download : &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-436"></a>            <span class="o">}</span>
+<a name="gbab-437"></a>            <span class="c1">// nothing can really be done if the file can&#39;t be closed</span>
+<a name="gbab-438"></a>        <span class="o">}</span>
+<a name="gbab-439"></a>    <span class="o">}</span>
+<a name="gbab-440"></a>
+<a name="gbab-441"></a>    <span class="cm">/**</span>
+<a name="gbab-442"></a><span class="cm">     * Check if the download has been paused or canceled, stopping the request</span>
+<a name="gbab-443"></a><span class="cm">     * appropriately if it has been.</span>
+<a name="gbab-444"></a><span class="cm">     */</span>
+<a name="gbab-445"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkPausedOrCanceled</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-446"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">mService</span><span class="o">.</span><span class="na">getControl</span><span class="o">()</span> <span class="o">==</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">CONTROL_PAUSED</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-447"></a>            <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="n">mService</span><span class="o">.</span><span class="na">getStatus</span><span class="o">();</span>
+<a name="gbab-448"></a>            <span class="k">switch</span> <span class="o">(</span><span class="n">status</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-449"></a>                <span class="k">case</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_PAUSED_BY_APP</span><span class="o">:</span>
+<a name="gbab-450"></a>                    <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">mService</span><span class="o">.</span><span class="na">getStatus</span><span class="o">(),</span>
+<a name="gbab-451"></a>                            <span class="s">&quot;download paused&quot;</span><span class="o">);</span>
+<a name="gbab-452"></a>            <span class="o">}</span>
+<a name="gbab-453"></a>        <span class="o">}</span>
+<a name="gbab-454"></a>    <span class="o">}</span>
+<a name="gbab-455"></a>
+<a name="gbab-456"></a>    <span class="cm">/**</span>
+<a name="gbab-457"></a><span class="cm">     * Report download progress through the database if necessary.</span>
+<a name="gbab-458"></a><span class="cm">     */</span>
+<a name="gbab-459"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">reportProgress</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-460"></a>        <span class="kt">long</span> <span class="n">now</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+<a name="gbab-461"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span> <span class="o">-</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesNotified</span>
+<a name="gbab-462"></a>                <span class="o">&gt;</span> <span class="n">Constants</span><span class="o">.</span><span class="na">MIN_PROGRESS_STEP</span>
+<a name="gbab-463"></a>                <span class="o">&amp;&amp;</span> <span class="n">now</span> <span class="o">-</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mTimeLastNotification</span>
+<a name="gbab-464"></a>                <span class="o">&gt;</span> <span class="n">Constants</span><span class="o">.</span><span class="na">MIN_PROGRESS_TIME</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-465"></a>            <span class="c1">// we store progress updates to the database here</span>
+<a name="gbab-466"></a>            <span class="n">mInfo</span><span class="o">.</span><span class="na">mCurrentBytes</span> <span class="o">=</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span><span class="o">;</span>
+<a name="gbab-467"></a>            <span class="n">mDB</span><span class="o">.</span><span class="na">updateDownloadCurrentBytes</span><span class="o">(</span><span class="n">mInfo</span><span class="o">);</span>
+<a name="gbab-468"></a>
+<a name="gbab-469"></a>            <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesNotified</span> <span class="o">=</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span><span class="o">;</span>
+<a name="gbab-470"></a>            <span class="n">innerState</span><span class="o">.</span><span class="na">mTimeLastNotification</span> <span class="o">=</span> <span class="n">now</span><span class="o">;</span>
+<a name="gbab-471"></a>
+<a name="gbab-472"></a>            <span class="kt">long</span> <span class="n">totalBytesSoFar</span> <span class="o">=</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesThisSession</span> <span class="o">+</span> <span class="n">mService</span><span class="o">.</span><span class="na">mBytesSoFar</span><span class="o">;</span>
+<a name="gbab-473"></a>
+<a name="gbab-474"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGVV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-475"></a>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;downloaded &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mCurrentBytes</span> <span class="o">+</span> <span class="s">&quot; out of &quot;</span>
+<a name="gbab-476"></a>                        <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mTotalBytes</span><span class="o">);</span>
+<a name="gbab-477"></a>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;     total &quot;</span> <span class="o">+</span> <span class="n">totalBytesSoFar</span> <span class="o">+</span> <span class="s">&quot; out of &quot;</span>
+<a name="gbab-478"></a>                        <span class="o">+</span> <span class="n">mService</span><span class="o">.</span><span class="na">mTotalLength</span><span class="o">);</span>
+<a name="gbab-479"></a>            <span class="o">}</span>
+<a name="gbab-480"></a>
+<a name="gbab-481"></a>            <span class="n">mService</span><span class="o">.</span><span class="na">notifyUpdateBytes</span><span class="o">(</span><span class="n">totalBytesSoFar</span><span class="o">);</span>
+<a name="gbab-482"></a>        <span class="o">}</span>
+<a name="gbab-483"></a>    <span class="o">}</span>
+<a name="gbab-484"></a>
+<a name="gbab-485"></a>    <span class="cm">/**</span>
+<a name="gbab-486"></a><span class="cm">     * Write a data buffer to the destination file.</span>
+<a name="gbab-487"></a><span class="cm">     * </span>
+<a name="gbab-488"></a><span class="cm">     * @param data buffer containing the data to write</span>
+<a name="gbab-489"></a><span class="cm">     * @param bytesRead how many bytes to write from the buffer</span>
+<a name="gbab-490"></a><span class="cm">     */</span>
+<a name="gbab-491"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">writeDataToDestination</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="o">,</span> <span class="kt">int</span> <span class="n">bytesRead</span><span class="o">)</span>
+<a name="gbab-492"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-493"></a>        <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
+<a name="gbab-494"></a>            <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-495"></a>                <span class="k">if</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mStream</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-496"></a>                    <span class="n">state</span><span class="o">.</span><span class="na">mStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+<a name="gbab-497"></a>                <span class="o">}</span>
+<a name="gbab-498"></a>                <span class="n">state</span><span class="o">.</span><span class="na">mStream</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">bytesRead</span><span class="o">);</span>
+<a name="gbab-499"></a>                <span class="c1">// we close after every write --- this may be too inefficient</span>
+<a name="gbab-500"></a>                <span class="n">closeDestination</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+<a name="gbab-501"></a>                <span class="k">return</span><span class="o">;</span>
+<a name="gbab-502"></a>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-503"></a>                <span class="k">if</span> <span class="o">(!</span><span class="n">Helpers</span><span class="o">.</span><span class="na">isExternalMediaMounted</span><span class="o">())</span> <span class="o">{</span>
+<a name="gbab-504"></a>                    <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_DEVICE_NOT_FOUND_ERROR</span><span class="o">,</span>
+<a name="gbab-505"></a>                            <span class="s">&quot;external media not mounted while writing destination file&quot;</span><span class="o">);</span>
+<a name="gbab-506"></a>                <span class="o">}</span>
+<a name="gbab-507"></a>
+<a name="gbab-508"></a>                <span class="kt">long</span> <span class="n">availableBytes</span> <span class="o">=</span>
+<a name="gbab-509"></a>                        <span class="n">Helpers</span><span class="o">.</span><span class="na">getAvailableBytes</span><span class="o">(</span><span class="n">Helpers</span><span class="o">.</span><span class="na">getFilesystemRoot</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">));</span>
+<a name="gbab-510"></a>                <span class="k">if</span> <span class="o">(</span><span class="n">availableBytes</span> <span class="o">&lt;</span> <span class="n">bytesRead</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-511"></a>                    <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_INSUFFICIENT_SPACE_ERROR</span><span class="o">,</span>
+<a name="gbab-512"></a>                            <span class="s">&quot;insufficient space while writing destination file&quot;</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-513"></a>                <span class="o">}</span>
+<a name="gbab-514"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_FILE_ERROR</span><span class="o">,</span>
+<a name="gbab-515"></a>                        <span class="s">&quot;while writing destination file: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-516"></a>            <span class="o">}</span>
+<a name="gbab-517"></a>        <span class="o">}</span>
+<a name="gbab-518"></a>    <span class="o">}</span>
+<a name="gbab-519"></a>
+<a name="gbab-520"></a>    <span class="cm">/**</span>
+<a name="gbab-521"></a><span class="cm">     * Called when we&#39;ve reached the end of the HTTP response stream, to update</span>
+<a name="gbab-522"></a><span class="cm">     * the database and check for consistency.</span>
+<a name="gbab-523"></a><span class="cm">     */</span>
+<a name="gbab-524"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleEndOfStream</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-525"></a>        <span class="n">mInfo</span><span class="o">.</span><span class="na">mCurrentBytes</span> <span class="o">=</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span><span class="o">;</span>
+<a name="gbab-526"></a>        <span class="c1">// this should always be set from the market</span>
+<a name="gbab-527"></a>        <span class="c1">// if ( innerState.mHeaderContentLength == null ) {</span>
+<a name="gbab-528"></a>        <span class="c1">// mInfo.mTotalBytes = innerState.mBytesSoFar;</span>
+<a name="gbab-529"></a>        <span class="c1">// }</span>
+<a name="gbab-530"></a>        <span class="n">mDB</span><span class="o">.</span><span class="na">updateDownload</span><span class="o">(</span><span class="n">mInfo</span><span class="o">);</span>
+<a name="gbab-531"></a>
+<a name="gbab-532"></a>        <span class="kt">boolean</span> <span class="n">lengthMismatched</span> <span class="o">=</span> <span class="o">(</span><span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentLength</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+<a name="gbab-533"></a>                <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span> <span class="o">!=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentLength</span><span class="o">));</span>
+<a name="gbab-534"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">lengthMismatched</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-535"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">cannotResume</span><span class="o">(</span><span class="n">innerState</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-536"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_CANNOT_RESUME</span><span class="o">,</span>
+<a name="gbab-537"></a>                        <span class="s">&quot;mismatched content length&quot;</span><span class="o">);</span>
+<a name="gbab-538"></a>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-539"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">getFinalStatusForHttpError</span><span class="o">(</span><span class="n">state</span><span class="o">),</span>
+<a name="gbab-540"></a>                        <span class="s">&quot;closed socket before end of file&quot;</span><span class="o">);</span>
+<a name="gbab-541"></a>            <span class="o">}</span>
+<a name="gbab-542"></a>        <span class="o">}</span>
+<a name="gbab-543"></a>    <span class="o">}</span>
+<a name="gbab-544"></a>
+<a name="gbab-545"></a>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">cannotResume</span><span class="o">(</span><span class="n">InnerState</span> <span class="n">innerState</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-546"></a>        <span class="k">return</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderETag</span> <span class="o">==</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-547"></a>    <span class="o">}</span>
+<a name="gbab-548"></a>
+<a name="gbab-549"></a>    <span class="cm">/**</span>
+<a name="gbab-550"></a><span class="cm">     * Read some data from the HTTP response stream, handling I/O errors.</span>
+<a name="gbab-551"></a><span class="cm">     * </span>
+<a name="gbab-552"></a><span class="cm">     * @param data buffer to use to read data</span>
+<a name="gbab-553"></a><span class="cm">     * @param entityStream stream for reading the HTTP response entity</span>
+<a name="gbab-554"></a><span class="cm">     * @return the number of bytes actually read or -1 if the end of the stream</span>
+<a name="gbab-555"></a><span class="cm">     *         has been reached</span>
+<a name="gbab-556"></a><span class="cm">     */</span>
+<a name="gbab-557"></a>    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">readFromResponse</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="o">,</span>
+<a name="gbab-558"></a>            <span class="n">InputStream</span> <span class="n">entityStream</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-559"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-560"></a>            <span class="k">return</span> <span class="n">entityStream</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+<a name="gbab-561"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-562"></a>            <span class="n">logNetworkState</span><span class="o">();</span>
+<a name="gbab-563"></a>            <span class="n">mInfo</span><span class="o">.</span><span class="na">mCurrentBytes</span> <span class="o">=</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span><span class="o">;</span>
+<a name="gbab-564"></a>            <span class="n">mDB</span><span class="o">.</span><span class="na">updateDownload</span><span class="o">(</span><span class="n">mInfo</span><span class="o">);</span>
+<a name="gbab-565"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">cannotResume</span><span class="o">(</span><span class="n">innerState</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-566"></a>                <span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;while reading response: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+<a name="gbab-567"></a>                        <span class="o">+</span> <span class="s">&quot;, can&#39;t resume interrupted download with no ETag&quot;</span><span class="o">;</span>
+<a name="gbab-568"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_CANNOT_RESUME</span><span class="o">,</span>
+<a name="gbab-569"></a>                        <span class="n">message</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-570"></a>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-571"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">getFinalStatusForHttpError</span><span class="o">(</span><span class="n">state</span><span class="o">),</span>
+<a name="gbab-572"></a>                        <span class="s">&quot;while reading response: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-573"></a>            <span class="o">}</span>
+<a name="gbab-574"></a>        <span class="o">}</span>
+<a name="gbab-575"></a>    <span class="o">}</span>
+<a name="gbab-576"></a>
+<a name="gbab-577"></a>    <span class="cm">/**</span>
+<a name="gbab-578"></a><span class="cm">     * Open a stream for the HTTP response entity, handling I/O errors.</span>
+<a name="gbab-579"></a><span class="cm">     * </span>
+<a name="gbab-580"></a><span class="cm">     * @return an InputStream to read the response entity</span>
+<a name="gbab-581"></a><span class="cm">     */</span>
+<a name="gbab-582"></a>    <span class="kd">private</span> <span class="n">InputStream</span> <span class="nf">openResponseEntity</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">HttpResponse</span> <span class="n">response</span><span class="o">)</span>
+<a name="gbab-583"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-584"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-585"></a>            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="na">getEntity</span><span class="o">().</span><span class="na">getContent</span><span class="o">();</span>
+<a name="gbab-586"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-587"></a>            <span class="n">logNetworkState</span><span class="o">();</span>
+<a name="gbab-588"></a>            <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">getFinalStatusForHttpError</span><span class="o">(</span><span class="n">state</span><span class="o">),</span>
+<a name="gbab-589"></a>                    <span class="s">&quot;while getting entity: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-590"></a>        <span class="o">}</span>
+<a name="gbab-591"></a>    <span class="o">}</span>
+<a name="gbab-592"></a>
+<a name="gbab-593"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">logNetworkState</span><span class="o">()</span> <span class="o">{</span>
+<a name="gbab-594"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGX</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-595"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span>
+<a name="gbab-596"></a>                    <span class="s">&quot;Net &quot;</span>
+<a name="gbab-597"></a>                            <span class="o">+</span> <span class="o">(</span><span class="n">mService</span><span class="o">.</span><span class="na">getNetworkAvailabilityState</span><span class="o">(</span><span class="n">mDB</span><span class="o">)</span> <span class="o">==</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">NETWORK_OK</span> <span class="o">?</span> <span class="s">&quot;Up&quot;</span>
+<a name="gbab-598"></a>                                    <span class="o">:</span> <span class="s">&quot;Down&quot;</span><span class="o">));</span>
+<a name="gbab-599"></a>        <span class="o">}</span>
+<a name="gbab-600"></a>    <span class="o">}</span>
+<a name="gbab-601"></a>
+<a name="gbab-602"></a>    <span class="cm">/**</span>
+<a name="gbab-603"></a><span class="cm">     * Read HTTP response headers and take appropriate action, including setting</span>
+<a name="gbab-604"></a><span class="cm">     * up the destination file and updating the database.</span>
+<a name="gbab-605"></a><span class="cm">     */</span>
+<a name="gbab-606"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">processResponseHeaders</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">HttpResponse</span> <span class="n">response</span><span class="o">)</span>
+<a name="gbab-607"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-608"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">innerState</span><span class="o">.</span><span class="na">mContinuingDownload</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-609"></a>            <span class="c1">// ignore response headers on resume requests</span>
+<a name="gbab-610"></a>            <span class="k">return</span><span class="o">;</span>
+<a name="gbab-611"></a>        <span class="o">}</span>
+<a name="gbab-612"></a>
+<a name="gbab-613"></a>        <span class="n">readResponseHeaders</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+<a name="gbab-614"></a>
+<a name="gbab-615"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-616"></a>            <span class="n">state</span><span class="o">.</span><span class="na">mFilename</span> <span class="o">=</span> <span class="n">mService</span><span class="o">.</span><span class="na">generateSaveFile</span><span class="o">(</span><span class="n">mInfo</span><span class="o">.</span><span class="na">mFileName</span><span class="o">,</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mTotalBytes</span><span class="o">);</span>
+<a name="gbab-617"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">GenerateSaveFileError</span> <span class="n">exc</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-618"></a>            <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">exc</span><span class="o">.</span><span class="na">mStatus</span><span class="o">,</span> <span class="n">exc</span><span class="o">.</span><span class="na">mMessage</span><span class="o">);</span>
+<a name="gbab-619"></a>        <span class="o">}</span>
+<a name="gbab-620"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-621"></a>            <span class="n">state</span><span class="o">.</span><span class="na">mStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">);</span>
+<a name="gbab-622"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">exc</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-623"></a>            <span class="c1">// make sure the directory exists</span>
+<a name="gbab-624"></a>            <span class="n">File</span> <span class="n">pathFile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">Helpers</span><span class="o">.</span><span class="na">getSaveFilePath</span><span class="o">(</span><span class="n">mService</span><span class="o">));</span>
+<a name="gbab-625"></a>            <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-626"></a>                <span class="k">if</span> <span class="o">(</span><span class="n">pathFile</span><span class="o">.</span><span class="na">mkdirs</span><span class="o">())</span> <span class="o">{</span>
+<a name="gbab-627"></a>                    <span class="n">state</span><span class="o">.</span><span class="na">mStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">);</span>
+<a name="gbab-628"></a>                <span class="o">}</span>
+<a name="gbab-629"></a>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-630"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_FILE_ERROR</span><span class="o">,</span>
+<a name="gbab-631"></a>                        <span class="s">&quot;while opening destination file: &quot;</span> <span class="o">+</span> <span class="n">exc</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span> <span class="n">exc</span><span class="o">);</span>
+<a name="gbab-632"></a>            <span class="o">}</span>
+<a name="gbab-633"></a>        <span class="o">}</span>
+<a name="gbab-634"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-635"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;writing &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mUri</span> <span class="o">+</span> <span class="s">&quot; to &quot;</span> <span class="o">+</span> <span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">);</span>
+<a name="gbab-636"></a>        <span class="o">}</span>
+<a name="gbab-637"></a>
+<a name="gbab-638"></a>        <span class="n">updateDatabaseFromHeaders</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">);</span>
+<a name="gbab-639"></a>        <span class="c1">// check connectivity again now that we know the total size</span>
+<a name="gbab-640"></a>        <span class="n">checkConnectivity</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+<a name="gbab-641"></a>    <span class="o">}</span>
+<a name="gbab-642"></a>
+<a name="gbab-643"></a>    <span class="cm">/**</span>
+<a name="gbab-644"></a><span class="cm">     * Update necessary database fields based on values of HTTP response headers</span>
+<a name="gbab-645"></a><span class="cm">     * that have been read.</span>
+<a name="gbab-646"></a><span class="cm">     */</span>
+<a name="gbab-647"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">updateDatabaseFromHeaders</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-648"></a>        <span class="n">mInfo</span><span class="o">.</span><span class="na">mETag</span> <span class="o">=</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderETag</span><span class="o">;</span>
+<a name="gbab-649"></a>        <span class="n">mDB</span><span class="o">.</span><span class="na">updateDownload</span><span class="o">(</span><span class="n">mInfo</span><span class="o">);</span>
+<a name="gbab-650"></a>    <span class="o">}</span>
+<a name="gbab-651"></a>
+<a name="gbab-652"></a>    <span class="cm">/**</span>
+<a name="gbab-653"></a><span class="cm">     * Read headers from the HTTP response and store them into local state.</span>
+<a name="gbab-654"></a><span class="cm">     */</span>
+<a name="gbab-655"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">readResponseHeaders</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">HttpResponse</span> <span class="n">response</span><span class="o">)</span>
+<a name="gbab-656"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-657"></a>        <span class="n">Header</span> <span class="n">header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getFirstHeader</span><span class="o">(</span><span class="s">&quot;Content-Disposition&quot;</span><span class="o">);</span>
+<a name="gbab-658"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">header</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-659"></a>            <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentDisposition</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+<a name="gbab-660"></a>        <span class="o">}</span>
+<a name="gbab-661"></a>        <span class="n">header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getFirstHeader</span><span class="o">(</span><span class="s">&quot;Content-Location&quot;</span><span class="o">);</span>
+<a name="gbab-662"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">header</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-663"></a>            <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentLocation</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+<a name="gbab-664"></a>        <span class="o">}</span>
+<a name="gbab-665"></a>        <span class="n">header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getFirstHeader</span><span class="o">(</span><span class="s">&quot;ETag&quot;</span><span class="o">);</span>
+<a name="gbab-666"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">header</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-667"></a>            <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderETag</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+<a name="gbab-668"></a>        <span class="o">}</span>
+<a name="gbab-669"></a>        <span class="n">String</span> <span class="n">headerTransferEncoding</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-670"></a>        <span class="n">header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getFirstHeader</span><span class="o">(</span><span class="s">&quot;Transfer-Encoding&quot;</span><span class="o">);</span>
+<a name="gbab-671"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">header</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-672"></a>            <span class="n">headerTransferEncoding</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+<a name="gbab-673"></a>        <span class="o">}</span>
+<a name="gbab-674"></a>        <span class="n">String</span> <span class="n">headerContentType</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-675"></a>        <span class="n">header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getFirstHeader</span><span class="o">(</span><span class="s">&quot;Content-Type&quot;</span><span class="o">);</span>
+<a name="gbab-676"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">header</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-677"></a>            <span class="n">headerContentType</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+<a name="gbab-678"></a>            <span class="k">if</span> <span class="o">(!</span><span class="n">headerContentType</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;application/vnd.android.obb&quot;</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-679"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_FILE_DELIVERED_INCORRECTLY</span><span class="o">,</span>
+<a name="gbab-680"></a>                        <span class="s">&quot;file delivered with incorrect Mime type&quot;</span><span class="o">);</span>
+<a name="gbab-681"></a>            <span class="o">}</span>
+<a name="gbab-682"></a>        <span class="o">}</span>
+<a name="gbab-683"></a>
+<a name="gbab-684"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">headerTransferEncoding</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-685"></a>            <span class="n">header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getFirstHeader</span><span class="o">(</span><span class="s">&quot;Content-Length&quot;</span><span class="o">);</span>
+<a name="gbab-686"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">header</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-687"></a>                <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentLength</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+<a name="gbab-688"></a>                <span class="c1">// this is always set from Market</span>
+<a name="gbab-689"></a>                <span class="kt">long</span> <span class="n">contentLength</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentLength</span><span class="o">);</span>
+<a name="gbab-690"></a>                <span class="k">if</span> <span class="o">(</span><span class="n">contentLength</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">contentLength</span> <span class="o">!=</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mTotalBytes</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-691"></a>                    <span class="c1">// we&#39;re most likely on a bad wifi connection -- we should</span>
+<a name="gbab-692"></a>                    <span class="c1">// probably</span>
+<a name="gbab-693"></a>                    <span class="c1">// also look at the mime type --- but the size mismatch is</span>
+<a name="gbab-694"></a>                    <span class="c1">// enough</span>
+<a name="gbab-695"></a>                    <span class="c1">// to tell us that something is wrong here</span>
+<a name="gbab-696"></a>                    <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;Incorrect file size delivered.&quot;</span><span class="o">);</span>
+<a name="gbab-697"></a>                <span class="o">}</span>
+<a name="gbab-698"></a>            <span class="o">}</span>
+<a name="gbab-699"></a>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-700"></a>            <span class="c1">// Ignore content-length with transfer-encoding - 2616 4.4 3</span>
+<a name="gbab-701"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGVV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-702"></a>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span>
+<a name="gbab-703"></a>                        <span class="s">&quot;ignoring content-length because of xfer-encoding&quot;</span><span class="o">);</span>
+<a name="gbab-704"></a>            <span class="o">}</span>
+<a name="gbab-705"></a>        <span class="o">}</span>
+<a name="gbab-706"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGVV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-707"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;Content-Disposition: &quot;</span> <span class="o">+</span>
+<a name="gbab-708"></a>                    <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentDisposition</span><span class="o">);</span>
+<a name="gbab-709"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;Content-Length: &quot;</span> <span class="o">+</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentLength</span><span class="o">);</span>
+<a name="gbab-710"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;Content-Location: &quot;</span> <span class="o">+</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentLocation</span><span class="o">);</span>
+<a name="gbab-711"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;ETag: &quot;</span> <span class="o">+</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderETag</span><span class="o">);</span>
+<a name="gbab-712"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;Transfer-Encoding: &quot;</span> <span class="o">+</span> <span class="n">headerTransferEncoding</span><span class="o">);</span>
+<a name="gbab-713"></a>        <span class="o">}</span>
+<a name="gbab-714"></a>
+<a name="gbab-715"></a>        <span class="kt">boolean</span> <span class="n">noSizeInfo</span> <span class="o">=</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentLength</span> <span class="o">==</span> <span class="kc">null</span>
+<a name="gbab-716"></a>                <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">headerTransferEncoding</span> <span class="o">==</span> <span class="kc">null</span>
+<a name="gbab-717"></a>                <span class="o">||</span> <span class="o">!</span><span class="n">headerTransferEncoding</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="s">&quot;chunked&quot;</span><span class="o">));</span>
+<a name="gbab-718"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">noSizeInfo</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-719"></a>            <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_HTTP_DATA_ERROR</span><span class="o">,</span>
+<a name="gbab-720"></a>                    <span class="s">&quot;can&#39;t know size of download, giving up&quot;</span><span class="o">);</span>
+<a name="gbab-721"></a>        <span class="o">}</span>
+<a name="gbab-722"></a>    <span class="o">}</span>
+<a name="gbab-723"></a>
+<a name="gbab-724"></a>    <span class="cm">/**</span>
+<a name="gbab-725"></a><span class="cm">     * Check the HTTP response status and handle anything unusual (e.g. not</span>
+<a name="gbab-726"></a><span class="cm">     * 200/206).</span>
+<a name="gbab-727"></a><span class="cm">     */</span>
+<a name="gbab-728"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleExceptionalStatus</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">HttpResponse</span> <span class="n">response</span><span class="o">)</span>
+<a name="gbab-729"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span><span class="o">,</span> <span class="n">RetryDownload</span> <span class="o">{</span>
+<a name="gbab-730"></a>        <span class="kt">int</span> <span class="n">statusCode</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">().</span><span class="na">getStatusCode</span><span class="o">();</span>
+<a name="gbab-731"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">statusCode</span> <span class="o">==</span> <span class="mi">503</span> <span class="o">&amp;&amp;</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mNumFailed</span> <span class="o">&lt;</span> <span class="n">Constants</span><span class="o">.</span><span class="na">MAX_RETRIES</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-732"></a>            <span class="n">handleServiceUnavailable</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+<a name="gbab-733"></a>        <span class="o">}</span>
+<a name="gbab-734"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">statusCode</span> <span class="o">==</span> <span class="mi">301</span> <span class="o">||</span> <span class="n">statusCode</span> <span class="o">==</span> <span class="mi">302</span> <span class="o">||</span> <span class="n">statusCode</span> <span class="o">==</span> <span class="mi">303</span> <span class="o">||</span> <span class="n">statusCode</span> <span class="o">==</span> <span class="mi">307</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-735"></a>            <span class="n">handleRedirect</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">response</span><span class="o">,</span> <span class="n">statusCode</span><span class="o">);</span>
+<a name="gbab-736"></a>        <span class="o">}</span>
+<a name="gbab-737"></a>
+<a name="gbab-738"></a>        <span class="kt">int</span> <span class="n">expectedStatus</span> <span class="o">=</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mContinuingDownload</span> <span class="o">?</span> <span class="mi">206</span>
+<a name="gbab-739"></a>                <span class="o">:</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_SUCCESS</span><span class="o">;</span>
+<a name="gbab-740"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">statusCode</span> <span class="o">!=</span> <span class="n">expectedStatus</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-741"></a>            <span class="n">handleOtherStatus</span><span class="o">(</span><span class="n">state</span><span class="o">,</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">statusCode</span><span class="o">);</span>
+<a name="gbab-742"></a>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-743"></a>            <span class="c1">// no longer redirected</span>
+<a name="gbab-744"></a>            <span class="n">state</span><span class="o">.</span><span class="na">mRedirectCount</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<a name="gbab-745"></a>        <span class="o">}</span>
+<a name="gbab-746"></a>    <span class="o">}</span>
+<a name="gbab-747"></a>
+<a name="gbab-748"></a>    <span class="cm">/**</span>
+<a name="gbab-749"></a><span class="cm">     * Handle a status that we don&#39;t know how to deal with properly.</span>
+<a name="gbab-750"></a><span class="cm">     */</span>
+<a name="gbab-751"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleOtherStatus</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">,</span> <span class="kt">int</span> <span class="n">statusCode</span><span class="o">)</span>
+<a name="gbab-752"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-753"></a>        <span class="kt">int</span> <span class="n">finalStatus</span><span class="o">;</span>
+<a name="gbab-754"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">isStatusError</span><span class="o">(</span><span class="n">statusCode</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-755"></a>            <span class="n">finalStatus</span> <span class="o">=</span> <span class="n">statusCode</span><span class="o">;</span>
+<a name="gbab-756"></a>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">statusCode</span> <span class="o">&gt;=</span> <span class="mi">300</span> <span class="o">&amp;&amp;</span> <span class="n">statusCode</span> <span class="o">&lt;</span> <span class="mi">400</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-757"></a>            <span class="n">finalStatus</span> <span class="o">=</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_UNHANDLED_REDIRECT</span><span class="o">;</span>
+<a name="gbab-758"></a>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">innerState</span><span class="o">.</span><span class="na">mContinuingDownload</span> <span class="o">&amp;&amp;</span> <span class="n">statusCode</span> <span class="o">==</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_SUCCESS</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-759"></a>            <span class="n">finalStatus</span> <span class="o">=</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_CANNOT_RESUME</span><span class="o">;</span>
+<a name="gbab-760"></a>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-761"></a>            <span class="n">finalStatus</span> <span class="o">=</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_UNHANDLED_HTTP_CODE</span><span class="o">;</span>
+<a name="gbab-762"></a>        <span class="o">}</span>
+<a name="gbab-763"></a>        <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">finalStatus</span><span class="o">,</span> <span class="s">&quot;http error &quot;</span> <span class="o">+</span> <span class="n">statusCode</span><span class="o">);</span>
+<a name="gbab-764"></a>    <span class="o">}</span>
+<a name="gbab-765"></a>
+<a name="gbab-766"></a>    <span class="cm">/**</span>
+<a name="gbab-767"></a><span class="cm">     * Handle a 3xx redirect status.</span>
+<a name="gbab-768"></a><span class="cm">     */</span>
+<a name="gbab-769"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleRedirect</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">HttpResponse</span> <span class="n">response</span><span class="o">,</span> <span class="kt">int</span> <span class="n">statusCode</span><span class="o">)</span>
+<a name="gbab-770"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span><span class="o">,</span> <span class="n">RetryDownload</span> <span class="o">{</span>
+<a name="gbab-771"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGVV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-772"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;got HTTP redirect &quot;</span> <span class="o">+</span> <span class="n">statusCode</span><span class="o">);</span>
+<a name="gbab-773"></a>        <span class="o">}</span>
+<a name="gbab-774"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mRedirectCount</span> <span class="o">&gt;=</span> <span class="n">Constants</span><span class="o">.</span><span class="na">MAX_REDIRECTS</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-775"></a>            <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_TOO_MANY_REDIRECTS</span><span class="o">,</span> <span class="s">&quot;too many redirects&quot;</span><span class="o">);</span>
+<a name="gbab-776"></a>        <span class="o">}</span>
+<a name="gbab-777"></a>        <span class="n">Header</span> <span class="n">header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getFirstHeader</span><span class="o">(</span><span class="s">&quot;Location&quot;</span><span class="o">);</span>
+<a name="gbab-778"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">header</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-779"></a>            <span class="k">return</span><span class="o">;</span>
+<a name="gbab-780"></a>        <span class="o">}</span>
+<a name="gbab-781"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGVV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-782"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;Location :&quot;</span> <span class="o">+</span> <span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+<a name="gbab-783"></a>        <span class="o">}</span>
+<a name="gbab-784"></a>
+<a name="gbab-785"></a>        <span class="n">String</span> <span class="n">newUri</span><span class="o">;</span>
+<a name="gbab-786"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-787"></a>            <span class="n">newUri</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URI</span><span class="o">(</span><span class="n">mInfo</span><span class="o">.</span><span class="na">mUri</span><span class="o">).</span><span class="na">resolve</span><span class="o">(</span><span class="k">new</span> <span class="n">URI</span><span class="o">(</span><span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">())).</span><span class="na">toString</span><span class="o">();</span>
+<a name="gbab-788"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">URISyntaxException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-789"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-790"></a>                <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;Couldn&#39;t resolve redirect URI &quot;</span> <span class="o">+</span> <span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">()</span>
+<a name="gbab-791"></a>                        <span class="o">+</span> <span class="s">&quot; for &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mUri</span><span class="o">);</span>
+<a name="gbab-792"></a>            <span class="o">}</span>
+<a name="gbab-793"></a>            <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_HTTP_DATA_ERROR</span><span class="o">,</span>
+<a name="gbab-794"></a>                    <span class="s">&quot;Couldn&#39;t resolve redirect URI&quot;</span><span class="o">);</span>
+<a name="gbab-795"></a>        <span class="o">}</span>
+<a name="gbab-796"></a>        <span class="o">++</span><span class="n">state</span><span class="o">.</span><span class="na">mRedirectCount</span><span class="o">;</span>
+<a name="gbab-797"></a>        <span class="n">state</span><span class="o">.</span><span class="na">mRequestUri</span> <span class="o">=</span> <span class="n">newUri</span><span class="o">;</span>
+<a name="gbab-798"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">statusCode</span> <span class="o">==</span> <span class="mi">301</span> <span class="o">||</span> <span class="n">statusCode</span> <span class="o">==</span> <span class="mi">303</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-799"></a>            <span class="c1">// use the new URI for all future requests (should a retry/resume be</span>
+<a name="gbab-800"></a>            <span class="c1">// necessary)</span>
+<a name="gbab-801"></a>            <span class="n">state</span><span class="o">.</span><span class="na">mNewUri</span> <span class="o">=</span> <span class="n">newUri</span><span class="o">;</span>
+<a name="gbab-802"></a>        <span class="o">}</span>
+<a name="gbab-803"></a>        <span class="k">throw</span> <span class="k">new</span> <span class="n">RetryDownload</span><span class="o">();</span>
+<a name="gbab-804"></a>    <span class="o">}</span>
+<a name="gbab-805"></a>
+<a name="gbab-806"></a>    <span class="cm">/**</span>
+<a name="gbab-807"></a><span class="cm">     * Add headers for this download to the HTTP request to allow for resume.</span>
+<a name="gbab-808"></a><span class="cm">     */</span>
+<a name="gbab-809"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">addRequestHeaders</span><span class="o">(</span><span class="n">InnerState</span> <span class="n">innerState</span><span class="o">,</span> <span class="n">HttpGet</span> <span class="n">request</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-810"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">innerState</span><span class="o">.</span><span class="na">mContinuingDownload</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-811"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderETag</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-812"></a>                <span class="n">request</span><span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">&quot;If-Match&quot;</span><span class="o">,</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderETag</span><span class="o">);</span>
+<a name="gbab-813"></a>            <span class="o">}</span>
+<a name="gbab-814"></a>            <span class="n">request</span><span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">&quot;Range&quot;</span><span class="o">,</span> <span class="s">&quot;bytes=&quot;</span> <span class="o">+</span> <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span><span class="o">);</span>
+<a name="gbab-815"></a>        <span class="o">}</span>
+<a name="gbab-816"></a>    <span class="o">}</span>
+<a name="gbab-817"></a>
+<a name="gbab-818"></a>    <span class="cm">/**</span>
+<a name="gbab-819"></a><span class="cm">     * Handle a 503 Service Unavailable status by processing the Retry-After</span>
+<a name="gbab-820"></a><span class="cm">     * header.</span>
+<a name="gbab-821"></a><span class="cm">     */</span>
+<a name="gbab-822"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleServiceUnavailable</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">HttpResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-823"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGVV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-824"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;got HTTP response code 503&quot;</span><span class="o">);</span>
+<a name="gbab-825"></a>        <span class="o">}</span>
+<a name="gbab-826"></a>        <span class="n">state</span><span class="o">.</span><span class="na">mCountRetry</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<a name="gbab-827"></a>        <span class="n">Header</span> <span class="n">header</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getFirstHeader</span><span class="o">(</span><span class="s">&quot;Retry-After&quot;</span><span class="o">);</span>
+<a name="gbab-828"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">header</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-829"></a>            <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-830"></a>                <span class="k">if</span> <span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">LOGVV</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-831"></a>                    <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;Retry-After :&quot;</span> <span class="o">+</span> <span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+<a name="gbab-832"></a>                <span class="o">}</span>
+<a name="gbab-833"></a>                <span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">header</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+<a name="gbab-834"></a>                <span class="k">if</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-835"></a>                    <span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<a name="gbab-836"></a>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-837"></a>                    <span class="k">if</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">&lt;</span> <span class="n">Constants</span><span class="o">.</span><span class="na">MIN_RETRY_AFTER</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-838"></a>                        <span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">=</span> <span class="n">Constants</span><span class="o">.</span><span class="na">MIN_RETRY_AFTER</span><span class="o">;</span>
+<a name="gbab-839"></a>                    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">&gt;</span> <span class="n">Constants</span><span class="o">.</span><span class="na">MAX_RETRY_AFTER</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-840"></a>                        <span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">=</span> <span class="n">Constants</span><span class="o">.</span><span class="na">MAX_RETRY_AFTER</span><span class="o">;</span>
+<a name="gbab-841"></a>                    <span class="o">}</span>
+<a name="gbab-842"></a>                    <span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">+=</span> <span class="n">Helpers</span><span class="o">.</span><span class="na">sRandom</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">MIN_RETRY_AFTER</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+<a name="gbab-843"></a>                    <span class="n">state</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">*=</span> <span class="mi">1000</span><span class="o">;</span>
+<a name="gbab-844"></a>                <span class="o">}</span>
+<a name="gbab-845"></a>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">NumberFormatException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-846"></a>                <span class="c1">// ignored - retryAfter stays 0 in this case.</span>
+<a name="gbab-847"></a>            <span class="o">}</span>
+<a name="gbab-848"></a>        <span class="o">}</span>
+<a name="gbab-849"></a>        <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_WAITING_TO_RETRY</span><span class="o">,</span>
+<a name="gbab-850"></a>                <span class="s">&quot;got 503 Service Unavailable, will retry later&quot;</span><span class="o">);</span>
+<a name="gbab-851"></a>    <span class="o">}</span>
+<a name="gbab-852"></a>
+<a name="gbab-853"></a>    <span class="cm">/**</span>
+<a name="gbab-854"></a><span class="cm">     * Send the request to the server, handling any I/O exceptions.</span>
+<a name="gbab-855"></a><span class="cm">     */</span>
+<a name="gbab-856"></a>    <span class="kd">private</span> <span class="n">HttpResponse</span> <span class="nf">sendRequest</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">AndroidHttpClient</span> <span class="n">client</span><span class="o">,</span> <span class="n">HttpGet</span> <span class="n">request</span><span class="o">)</span>
+<a name="gbab-857"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-858"></a>        <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-859"></a>            <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+<a name="gbab-860"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IllegalArgumentException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-861"></a>            <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_HTTP_DATA_ERROR</span><span class="o">,</span>
+<a name="gbab-862"></a>                    <span class="s">&quot;while trying to execute request: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-863"></a>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-864"></a>            <span class="n">logNetworkState</span><span class="o">();</span>
+<a name="gbab-865"></a>            <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">getFinalStatusForHttpError</span><span class="o">(</span><span class="n">state</span><span class="o">),</span>
+<a name="gbab-866"></a>                    <span class="s">&quot;while trying to execute request: &quot;</span> <span class="o">+</span> <span class="n">ex</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span> <span class="n">ex</span><span class="o">);</span>
+<a name="gbab-867"></a>        <span class="o">}</span>
+<a name="gbab-868"></a>    <span class="o">}</span>
+<a name="gbab-869"></a>
+<a name="gbab-870"></a>    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getFinalStatusForHttpError</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-871"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">mService</span><span class="o">.</span><span class="na">getNetworkAvailabilityState</span><span class="o">(</span><span class="n">mDB</span><span class="o">)</span> <span class="o">!=</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">NETWORK_OK</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-872"></a>            <span class="k">return</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_WAITING_FOR_NETWORK</span><span class="o">;</span>
+<a name="gbab-873"></a>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">mInfo</span><span class="o">.</span><span class="na">mNumFailed</span> <span class="o">&lt;</span> <span class="n">Constants</span><span class="o">.</span><span class="na">MAX_RETRIES</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-874"></a>            <span class="n">state</span><span class="o">.</span><span class="na">mCountRetry</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<a name="gbab-875"></a>            <span class="k">return</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_WAITING_TO_RETRY</span><span class="o">;</span>
+<a name="gbab-876"></a>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-877"></a>            <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">TAG</span><span class="o">,</span> <span class="s">&quot;reached max retries for &quot;</span> <span class="o">+</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mNumFailed</span><span class="o">);</span>
+<a name="gbab-878"></a>            <span class="k">return</span> <span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_HTTP_DATA_ERROR</span><span class="o">;</span>
+<a name="gbab-879"></a>        <span class="o">}</span>
+<a name="gbab-880"></a>    <span class="o">}</span>
+<a name="gbab-881"></a>
+<a name="gbab-882"></a>    <span class="cm">/**</span>
+<a name="gbab-883"></a><span class="cm">     * Prepare the destination file to receive data. If the file already exists,</span>
+<a name="gbab-884"></a><span class="cm">     * we&#39;ll set up appropriately for resumption.</span>
+<a name="gbab-885"></a><span class="cm">     */</span>
+<a name="gbab-886"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">setupDestinationFile</span><span class="o">(</span><span class="n">State</span> <span class="n">state</span><span class="o">,</span> <span class="n">InnerState</span> <span class="n">innerState</span><span class="o">)</span>
+<a name="gbab-887"></a>            <span class="kd">throws</span> <span class="n">StopRequest</span> <span class="o">{</span>
+<a name="gbab-888"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// only true if we&#39;ve already run a</span>
+<a name="gbab-889"></a>                                       <span class="c1">// thread for this download</span>
+<a name="gbab-890"></a>            <span class="k">if</span> <span class="o">(!</span><span class="n">Helpers</span><span class="o">.</span><span class="na">isFilenameValid</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-891"></a>                <span class="c1">// this should never happen</span>
+<a name="gbab-892"></a>                <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_FILE_ERROR</span><span class="o">,</span>
+<a name="gbab-893"></a>                        <span class="s">&quot;found invalid internal destination filename&quot;</span><span class="o">);</span>
+<a name="gbab-894"></a>            <span class="o">}</span>
+<a name="gbab-895"></a>            <span class="c1">// We&#39;re resuming a download that got interrupted</span>
+<a name="gbab-896"></a>            <span class="n">File</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">);</span>
+<a name="gbab-897"></a>            <span class="k">if</span> <span class="o">(</span><span class="n">f</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
+<a name="gbab-898"></a>                <span class="kt">long</span> <span class="n">fileLength</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+<a name="gbab-899"></a>                <span class="k">if</span> <span class="o">(</span><span class="n">fileLength</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-900"></a>                    <span class="c1">// The download hadn&#39;t actually started, we can restart from</span>
+<a name="gbab-901"></a>                    <span class="c1">// scratch</span>
+<a name="gbab-902"></a>                    <span class="n">f</span><span class="o">.</span><span class="na">delete</span><span class="o">();</span>
+<a name="gbab-903"></a>                    <span class="n">state</span><span class="o">.</span><span class="na">mFilename</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<a name="gbab-904"></a>                <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">mInfo</span><span class="o">.</span><span class="na">mETag</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-905"></a>                    <span class="c1">// This should&#39;ve been caught upon failure</span>
+<a name="gbab-906"></a>                    <span class="n">f</span><span class="o">.</span><span class="na">delete</span><span class="o">();</span>
+<a name="gbab-907"></a>                    <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_CANNOT_RESUME</span><span class="o">,</span>
+<a name="gbab-908"></a>                            <span class="s">&quot;Trying to resume a download that can&#39;t be resumed&quot;</span><span class="o">);</span>
+<a name="gbab-909"></a>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-910"></a>                    <span class="c1">// All right, we&#39;ll be able to resume this download</span>
+<a name="gbab-911"></a>                    <span class="k">try</span> <span class="o">{</span>
+<a name="gbab-912"></a>                        <span class="n">state</span><span class="o">.</span><span class="na">mStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mFilename</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+<a name="gbab-913"></a>                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">exc</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-914"></a>                        <span class="k">throw</span> <span class="k">new</span> <span class="n">StopRequest</span><span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">STATUS_FILE_ERROR</span><span class="o">,</span>
+<a name="gbab-915"></a>                                <span class="s">&quot;while opening destination for resuming: &quot;</span> <span class="o">+</span> <span class="n">exc</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span> <span class="n">exc</span><span class="o">);</span>
+<a name="gbab-916"></a>                    <span class="o">}</span>
+<a name="gbab-917"></a>                    <span class="n">innerState</span><span class="o">.</span><span class="na">mBytesSoFar</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">fileLength</span><span class="o">;</span>
+<a name="gbab-918"></a>                    <span class="k">if</span> <span class="o">(</span><span class="n">mInfo</span><span class="o">.</span><span class="na">mTotalBytes</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-919"></a>                        <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderContentLength</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">mInfo</span><span class="o">.</span><span class="na">mTotalBytes</span><span class="o">);</span>
+<a name="gbab-920"></a>                    <span class="o">}</span>
+<a name="gbab-921"></a>                    <span class="n">innerState</span><span class="o">.</span><span class="na">mHeaderETag</span> <span class="o">=</span> <span class="n">mInfo</span><span class="o">.</span><span class="na">mETag</span><span class="o">;</span>
+<a name="gbab-922"></a>                    <span class="n">innerState</span><span class="o">.</span><span class="na">mContinuingDownload</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<a name="gbab-923"></a>                <span class="o">}</span>
+<a name="gbab-924"></a>            <span class="o">}</span>
+<a name="gbab-925"></a>        <span class="o">}</span>
+<a name="gbab-926"></a>
+<a name="gbab-927"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">mStream</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-928"></a>            <span class="n">closeDestination</span><span class="o">(</span><span class="n">state</span><span class="o">);</span>
+<a name="gbab-929"></a>        <span class="o">}</span>
+<a name="gbab-930"></a>    <span class="o">}</span>
+<a name="gbab-931"></a>
+<a name="gbab-932"></a>    <span class="cm">/**</span>
+<a name="gbab-933"></a><span class="cm">     * Stores information about the completed download, and notifies the</span>
+<a name="gbab-934"></a><span class="cm">     * initiating application.</span>
+<a name="gbab-935"></a><span class="cm">     */</span>
+<a name="gbab-936"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">notifyDownloadCompleted</span><span class="o">(</span>
+<a name="gbab-937"></a>            <span class="kt">int</span> <span class="n">status</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">countRetry</span><span class="o">,</span> <span class="kt">int</span> <span class="n">retryAfter</span><span class="o">,</span> <span class="kt">int</span> <span class="n">redirectCount</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">gotData</span><span class="o">,</span>
+<a name="gbab-938"></a>            <span class="n">String</span> <span class="n">filename</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-939"></a>        <span class="n">updateDownloadDatabase</span><span class="o">(</span>
+<a name="gbab-940"></a>                <span class="n">status</span><span class="o">,</span> <span class="n">countRetry</span><span class="o">,</span> <span class="n">retryAfter</span><span class="o">,</span> <span class="n">redirectCount</span><span class="o">,</span> <span class="n">gotData</span><span class="o">,</span> <span class="n">filename</span><span class="o">);</span>
+<a name="gbab-941"></a>        <span class="k">if</span> <span class="o">(</span><span class="n">DownloaderService</span><span class="o">.</span><span class="na">isStatusCompleted</span><span class="o">(</span><span class="n">status</span><span class="o">))</span> <span class="o">{</span>
+<a name="gbab-942"></a>            <span class="c1">// TBD: send status update?</span>
+<a name="gbab-943"></a>        <span class="o">}</span>
+<a name="gbab-944"></a>    <span class="o">}</span>
+<a name="gbab-945"></a>
+<a name="gbab-946"></a>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">updateDownloadDatabase</span><span class="o">(</span>
+<a name="gbab-947"></a>            <span class="kt">int</span> <span class="n">status</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">countRetry</span><span class="o">,</span> <span class="kt">int</span> <span class="n">retryAfter</span><span class="o">,</span> <span class="kt">int</span> <span class="n">redirectCount</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">gotData</span><span class="o">,</span>
+<a name="gbab-948"></a>            <span class="n">String</span> <span class="n">filename</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-949"></a>        <span class="n">mInfo</span><span class="o">.</span><span class="na">mStatus</span> <span class="o">=</span> <span class="n">status</span><span class="o">;</span>
+<a name="gbab-950"></a>        <span class="n">mInfo</span><span class="o">.</span><span class="na">mRetryAfter</span> <span class="o">=</span> <span class="n">retryAfter</span><span class="o">;</span>
+<a name="gbab-951"></a>        <span class="n">mInfo</span><span class="o">.</span><span class="na">mRedirectCount</span> <span class="o">=</span> <span class="n">redirectCount</span><span class="o">;</span>
+<a name="gbab-952"></a>        <span class="n">mInfo</span><span class="o">.</span><span class="na">mLastMod</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+<a name="gbab-953"></a>        <span class="k">if</span> <span class="o">(!</span><span class="n">countRetry</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-954"></a>            <span class="n">mInfo</span><span class="o">.</span><span class="na">mNumFailed</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<a name="gbab-955"></a>        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">gotData</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-956"></a>            <span class="n">mInfo</span><span class="o">.</span><span class="na">mNumFailed</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+<a name="gbab-957"></a>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<a name="gbab-958"></a>            <span class="n">mInfo</span><span class="o">.</span><span class="na">mNumFailed</span><span class="o">++;</span>
+<a name="gbab-959"></a>        <span class="o">}</span>
+<a name="gbab-960"></a>        <span class="n">mDB</span><span class="o">.</span><span class="na">updateDownload</span><span class="o">(</span><span class="n">mInfo</span><span class="o">);</span>
+<a name="gbab-961"></a>    <span class="o">}</span>
+<a name="gbab-962"></a>
+<a name="gbab-963"></a><span class="o">}</span>
+</pre></div>
+</td></tr></table>

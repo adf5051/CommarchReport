@@ -1,0 +1,1191 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/** </span>
+<a name="gbab-2"></a><span class="cm"> @file  enet.h</span>
+<a name="gbab-3"></a><span class="cm"> @brief ENet public header file</span>
+<a name="gbab-4"></a><span class="cm">*/</span>
+<a name="gbab-5"></a><span class="cp">#ifndef __ENET_ENET_H__</span>
+<a name="gbab-6"></a><span class="cp">#define __ENET_ENET_H__</span>
+<a name="gbab-7"></a>
+<a name="gbab-8"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-9"></a><span class="k">extern</span> <span class="s">&quot;C&quot;</span>
+<a name="gbab-10"></a><span class="p">{</span>
+<a name="gbab-11"></a><span class="cp">#endif</span>
+<a name="gbab-12"></a>
+<a name="gbab-13"></a><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="cp">#ifdef _WIN32</span>
+<a name="gbab-16"></a><span class="cp">#include</span> <span class="cpf">&quot;enet/win32.h&quot;</span><span class="cp"></span>
+<a name="gbab-17"></a><span class="cp">#else</span>
+<a name="gbab-18"></a><span class="cp">#include</span> <span class="cpf">&quot;enet/unix.h&quot;</span><span class="cp"></span>
+<a name="gbab-19"></a><span class="cp">#endif</span>
+<a name="gbab-20"></a>
+<a name="gbab-21"></a><span class="cp">#include</span> <span class="cpf">&quot;enet/types.h&quot;</span><span class="cp"></span>
+<a name="gbab-22"></a><span class="cp">#include</span> <span class="cpf">&quot;enet/protocol.h&quot;</span><span class="cp"></span>
+<a name="gbab-23"></a><span class="cp">#include</span> <span class="cpf">&quot;enet/list.h&quot;</span><span class="cp"></span>
+<a name="gbab-24"></a><span class="cp">#include</span> <span class="cpf">&quot;enet/callbacks.h&quot;</span><span class="cp"></span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="cp">#define ENET_VERSION_MAJOR 1</span>
+<a name="gbab-27"></a><span class="cp">#define ENET_VERSION_MINOR 3</span>
+<a name="gbab-28"></a><span class="cp">#define ENET_VERSION_PATCH 13</span>
+<a name="gbab-29"></a><span class="cp">#define ENET_VERSION_CREATE(major, minor, patch) (((major)&lt;&lt;16) | ((minor)&lt;&lt;8) | (patch))</span>
+<a name="gbab-30"></a><span class="cp">#define ENET_VERSION_GET_MAJOR(version) (((version)&gt;&gt;16)&amp;0xFF)</span>
+<a name="gbab-31"></a><span class="cp">#define ENET_VERSION_GET_MINOR(version) (((version)&gt;&gt;8)&amp;0xFF)</span>
+<a name="gbab-32"></a><span class="cp">#define ENET_VERSION_GET_PATCH(version) ((version)&amp;0xFF)</span>
+<a name="gbab-33"></a><span class="cp">#define ENET_VERSION ENET_VERSION_CREATE(ENET_VERSION_MAJOR, ENET_VERSION_MINOR, ENET_VERSION_PATCH)</span>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a><span class="k">typedef</span> <span class="n">enet_uint32</span> <span class="n">ENetVersion</span><span class="p">;</span>
+<a name="gbab-36"></a>
+<a name="gbab-37"></a><span class="k">struct</span> <span class="n">_ENetHost</span><span class="p">;</span>
+<a name="gbab-38"></a><span class="k">struct</span> <span class="n">_ENetEvent</span><span class="p">;</span>
+<a name="gbab-39"></a><span class="k">struct</span> <span class="n">_ENetPacket</span><span class="p">;</span>
+<a name="gbab-40"></a>
+<a name="gbab-41"></a><span class="k">typedef</span> <span class="k">enum</span> <span class="n">_ENetSocketType</span>
+<a name="gbab-42"></a><span class="p">{</span>
+<a name="gbab-43"></a>   <span class="n">ENET_SOCKET_TYPE_STREAM</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-44"></a>   <span class="n">ENET_SOCKET_TYPE_DATAGRAM</span> <span class="o">=</span> <span class="mi">2</span>
+<a name="gbab-45"></a><span class="p">}</span> <span class="n">ENetSocketType</span><span class="p">;</span>
+<a name="gbab-46"></a>
+<a name="gbab-47"></a><span class="k">typedef</span> <span class="k">enum</span> <span class="n">_ENetSocketWait</span>
+<a name="gbab-48"></a><span class="p">{</span>
+<a name="gbab-49"></a>   <span class="n">ENET_SOCKET_WAIT_NONE</span>      <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<a name="gbab-50"></a>   <span class="n">ENET_SOCKET_WAIT_SEND</span>      <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">),</span>
+<a name="gbab-51"></a>   <span class="n">ENET_SOCKET_WAIT_RECEIVE</span>   <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">),</span>
+<a name="gbab-52"></a>   <span class="n">ENET_SOCKET_WAIT_INTERRUPT</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<a name="gbab-53"></a><span class="p">}</span> <span class="n">ENetSocketWait</span><span class="p">;</span>
+<a name="gbab-54"></a>
+<a name="gbab-55"></a><span class="k">typedef</span> <span class="k">enum</span> <span class="n">_ENetSocketOption</span>
+<a name="gbab-56"></a><span class="p">{</span>
+<a name="gbab-57"></a>   <span class="n">ENET_SOCKOPT_NONBLOCK</span>  <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-58"></a>   <span class="n">ENET_SOCKOPT_BROADCAST</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a name="gbab-59"></a>   <span class="n">ENET_SOCKOPT_RCVBUF</span>    <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<a name="gbab-60"></a>   <span class="n">ENET_SOCKOPT_SNDBUF</span>    <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<a name="gbab-61"></a>   <span class="n">ENET_SOCKOPT_REUSEADDR</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<a name="gbab-62"></a>   <span class="n">ENET_SOCKOPT_RCVTIMEO</span>  <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+<a name="gbab-63"></a>   <span class="n">ENET_SOCKOPT_SNDTIMEO</span>  <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+<a name="gbab-64"></a>   <span class="n">ENET_SOCKOPT_ERROR</span>     <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+<a name="gbab-65"></a>   <span class="n">ENET_SOCKOPT_NODELAY</span>   <span class="o">=</span> <span class="mi">9</span>
+<a name="gbab-66"></a><span class="p">}</span> <span class="n">ENetSocketOption</span><span class="p">;</span>
+<a name="gbab-67"></a>
+<a name="gbab-68"></a><span class="k">typedef</span> <span class="k">enum</span> <span class="n">_ENetSocketShutdown</span>
+<a name="gbab-69"></a><span class="p">{</span>
+<a name="gbab-70"></a>    <span class="n">ENET_SOCKET_SHUTDOWN_READ</span>       <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<a name="gbab-71"></a>    <span class="n">ENET_SOCKET_SHUTDOWN_WRITE</span>      <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-72"></a>    <span class="n">ENET_SOCKET_SHUTDOWN_READ_WRITE</span> <span class="o">=</span> <span class="mi">2</span>
+<a name="gbab-73"></a><span class="p">}</span> <span class="n">ENetSocketShutdown</span><span class="p">;</span>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a><span class="cp">#define ENET_HOST_ANY       0</span>
+<a name="gbab-76"></a><span class="cp">#define ENET_HOST_BROADCAST 0xFFFFFFFFU</span>
+<a name="gbab-77"></a><span class="cp">#define ENET_PORT_ANY       0</span>
+<a name="gbab-78"></a>
+<a name="gbab-79"></a><span class="cm">/**</span>
+<a name="gbab-80"></a><span class="cm"> * Portable internet address structure. </span>
+<a name="gbab-81"></a><span class="cm"> *</span>
+<a name="gbab-82"></a><span class="cm"> * The host must be specified in network byte-order, and the port must be in host </span>
+<a name="gbab-83"></a><span class="cm"> * byte-order. The constant ENET_HOST_ANY may be used to specify the default </span>
+<a name="gbab-84"></a><span class="cm"> * server host. The constant ENET_HOST_BROADCAST may be used to specify the</span>
+<a name="gbab-85"></a><span class="cm"> * broadcast address (255.255.255.255).  This makes sense for enet_host_connect,</span>
+<a name="gbab-86"></a><span class="cm"> * but not for enet_host_create.  Once a server responds to a broadcast, the</span>
+<a name="gbab-87"></a><span class="cm"> * address is updated from ENET_HOST_BROADCAST to the server&#39;s actual IP address.</span>
+<a name="gbab-88"></a><span class="cm"> */</span>
+<a name="gbab-89"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetAddress</span>
+<a name="gbab-90"></a><span class="p">{</span>
+<a name="gbab-91"></a>   <span class="n">enet_uint32</span> <span class="n">host</span><span class="p">;</span>
+<a name="gbab-92"></a>   <span class="n">enet_uint16</span> <span class="n">port</span><span class="p">;</span>
+<a name="gbab-93"></a><span class="p">}</span> <span class="n">ENetAddress</span><span class="p">;</span>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a><span class="cm">/**</span>
+<a name="gbab-96"></a><span class="cm"> * Packet flag bit constants.</span>
+<a name="gbab-97"></a><span class="cm"> *</span>
+<a name="gbab-98"></a><span class="cm"> * The host must be specified in network byte-order, and the port must be in</span>
+<a name="gbab-99"></a><span class="cm"> * host byte-order. The constant ENET_HOST_ANY may be used to specify the</span>
+<a name="gbab-100"></a><span class="cm"> * default server host.</span>
+<a name="gbab-101"></a><span class="cm"> </span>
+<a name="gbab-102"></a><span class="cm">   @sa ENetPacket</span>
+<a name="gbab-103"></a><span class="cm">*/</span>
+<a name="gbab-104"></a><span class="k">typedef</span> <span class="k">enum</span> <span class="n">_ENetPacketFlag</span>
+<a name="gbab-105"></a><span class="p">{</span>
+<a name="gbab-106"></a>   <span class="cm">/** packet must be received by the target peer and resend attempts should be</span>
+<a name="gbab-107"></a><span class="cm">     * made until the packet is delivered */</span>
+<a name="gbab-108"></a>   <span class="n">ENET_PACKET_FLAG_RELIABLE</span>    <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">),</span>
+<a name="gbab-109"></a>   <span class="cm">/** packet will not be sequenced with other packets</span>
+<a name="gbab-110"></a><span class="cm">     * not supported for reliable packets</span>
+<a name="gbab-111"></a><span class="cm">     */</span>
+<a name="gbab-112"></a>   <span class="n">ENET_PACKET_FLAG_UNSEQUENCED</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">),</span>
+<a name="gbab-113"></a>   <span class="cm">/** packet will not allocate data, and user must supply it instead */</span>
+<a name="gbab-114"></a>   <span class="n">ENET_PACKET_FLAG_NO_ALLOCATE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">),</span>
+<a name="gbab-115"></a>   <span class="cm">/** packet will be fragmented using unreliable (instead of reliable) sends</span>
+<a name="gbab-116"></a><span class="cm">     * if it exceeds the MTU */</span>
+<a name="gbab-117"></a>   <span class="n">ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">),</span>
+<a name="gbab-118"></a>
+<a name="gbab-119"></a>   <span class="cm">/** whether the packet has been sent from all queues it has been entered into */</span>
+<a name="gbab-120"></a>   <span class="n">ENET_PACKET_FLAG_SENT</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">8</span><span class="p">)</span>
+<a name="gbab-121"></a><span class="p">}</span> <span class="n">ENetPacketFlag</span><span class="p">;</span>
+<a name="gbab-122"></a>
+<a name="gbab-123"></a><span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="n">ENET_CALLBACK</span> <span class="o">*</span> <span class="n">ENetPacketFreeCallback</span><span class="p">)</span> <span class="p">(</span><span class="k">struct</span> <span class="n">_ENetPacket</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-124"></a>
+<a name="gbab-125"></a><span class="cm">/**</span>
+<a name="gbab-126"></a><span class="cm"> * ENet packet structure.</span>
+<a name="gbab-127"></a><span class="cm"> *</span>
+<a name="gbab-128"></a><span class="cm"> * An ENet data packet that may be sent to or received from a peer. The shown </span>
+<a name="gbab-129"></a><span class="cm"> * fields should only be read and never modified. The data field contains the </span>
+<a name="gbab-130"></a><span class="cm"> * allocated data for the packet. The dataLength fields specifies the length </span>
+<a name="gbab-131"></a><span class="cm"> * of the allocated data.  The flags field is either 0 (specifying no flags), </span>
+<a name="gbab-132"></a><span class="cm"> * or a bitwise-or of any combination of the following flags:</span>
+<a name="gbab-133"></a><span class="cm"> *</span>
+<a name="gbab-134"></a><span class="cm"> *    ENET_PACKET_FLAG_RELIABLE - packet must be received by the target peer</span>
+<a name="gbab-135"></a><span class="cm"> *    and resend attempts should be made until the packet is delivered</span>
+<a name="gbab-136"></a><span class="cm"> *</span>
+<a name="gbab-137"></a><span class="cm"> *    ENET_PACKET_FLAG_UNSEQUENCED - packet will not be sequenced with other packets </span>
+<a name="gbab-138"></a><span class="cm"> *    (not supported for reliable packets)</span>
+<a name="gbab-139"></a><span class="cm"> *</span>
+<a name="gbab-140"></a><span class="cm"> *    ENET_PACKET_FLAG_NO_ALLOCATE - packet will not allocate data, and user must supply it instead</span>
+<a name="gbab-141"></a><span class="cm"> *</span>
+<a name="gbab-142"></a><span class="cm"> *    ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT - packet will be fragmented using unreliable</span>
+<a name="gbab-143"></a><span class="cm"> *    (instead of reliable) sends if it exceeds the MTU</span>
+<a name="gbab-144"></a><span class="cm"> *</span>
+<a name="gbab-145"></a><span class="cm"> *    ENET_PACKET_FLAG_SENT - whether the packet has been sent from all queues it has been entered into</span>
+<a name="gbab-146"></a><span class="cm">   @sa ENetPacketFlag</span>
+<a name="gbab-147"></a><span class="cm"> */</span>
+<a name="gbab-148"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetPacket</span>
+<a name="gbab-149"></a><span class="p">{</span>
+<a name="gbab-150"></a>   <span class="kt">size_t</span>                   <span class="n">referenceCount</span><span class="p">;</span>  <span class="cm">/**&lt; internal use only */</span>
+<a name="gbab-151"></a>   <span class="n">enet_uint32</span>              <span class="n">flags</span><span class="p">;</span>           <span class="cm">/**&lt; bitwise-or of ENetPacketFlag constants */</span>
+<a name="gbab-152"></a>   <span class="n">enet_uint8</span> <span class="o">*</span>             <span class="n">data</span><span class="p">;</span>            <span class="cm">/**&lt; allocated data for packet */</span>
+<a name="gbab-153"></a>   <span class="kt">size_t</span>                   <span class="n">dataLength</span><span class="p">;</span>      <span class="cm">/**&lt; length of data */</span>
+<a name="gbab-154"></a>   <span class="n">ENetPacketFreeCallback</span>   <span class="n">freeCallback</span><span class="p">;</span>    <span class="cm">/**&lt; function to be called when the packet is no longer in use */</span>
+<a name="gbab-155"></a>   <span class="kt">void</span> <span class="o">*</span>                   <span class="n">userData</span><span class="p">;</span>        <span class="cm">/**&lt; application private data, may be freely modified */</span>
+<a name="gbab-156"></a><span class="p">}</span> <span class="n">ENetPacket</span><span class="p">;</span>
+<a name="gbab-157"></a>
+<a name="gbab-158"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetAcknowledgement</span>
+<a name="gbab-159"></a><span class="p">{</span>
+<a name="gbab-160"></a>   <span class="n">ENetListNode</span> <span class="n">acknowledgementList</span><span class="p">;</span>
+<a name="gbab-161"></a>   <span class="n">enet_uint32</span>  <span class="n">sentTime</span><span class="p">;</span>
+<a name="gbab-162"></a>   <span class="n">ENetProtocol</span> <span class="n">command</span><span class="p">;</span>
+<a name="gbab-163"></a><span class="p">}</span> <span class="n">ENetAcknowledgement</span><span class="p">;</span>
+<a name="gbab-164"></a>
+<a name="gbab-165"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetOutgoingCommand</span>
+<a name="gbab-166"></a><span class="p">{</span>
+<a name="gbab-167"></a>   <span class="n">ENetListNode</span> <span class="n">outgoingCommandList</span><span class="p">;</span>
+<a name="gbab-168"></a>   <span class="n">enet_uint16</span>  <span class="n">reliableSequenceNumber</span><span class="p">;</span>
+<a name="gbab-169"></a>   <span class="n">enet_uint16</span>  <span class="n">unreliableSequenceNumber</span><span class="p">;</span>
+<a name="gbab-170"></a>   <span class="n">enet_uint32</span>  <span class="n">sentTime</span><span class="p">;</span>
+<a name="gbab-171"></a>   <span class="n">enet_uint32</span>  <span class="n">roundTripTimeout</span><span class="p">;</span>
+<a name="gbab-172"></a>   <span class="n">enet_uint32</span>  <span class="n">roundTripTimeoutLimit</span><span class="p">;</span>
+<a name="gbab-173"></a>   <span class="n">enet_uint32</span>  <span class="n">fragmentOffset</span><span class="p">;</span>
+<a name="gbab-174"></a>   <span class="n">enet_uint16</span>  <span class="n">fragmentLength</span><span class="p">;</span>
+<a name="gbab-175"></a>   <span class="n">enet_uint16</span>  <span class="n">sendAttempts</span><span class="p">;</span>
+<a name="gbab-176"></a>   <span class="n">ENetProtocol</span> <span class="n">command</span><span class="p">;</span>
+<a name="gbab-177"></a>   <span class="n">ENetPacket</span> <span class="o">*</span> <span class="n">packet</span><span class="p">;</span>
+<a name="gbab-178"></a><span class="p">}</span> <span class="n">ENetOutgoingCommand</span><span class="p">;</span>
+<a name="gbab-179"></a>
+<a name="gbab-180"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetIncomingCommand</span>
+<a name="gbab-181"></a><span class="p">{</span>  
+<a name="gbab-182"></a>   <span class="n">ENetListNode</span>     <span class="n">incomingCommandList</span><span class="p">;</span>
+<a name="gbab-183"></a>   <span class="n">enet_uint16</span>      <span class="n">reliableSequenceNumber</span><span class="p">;</span>
+<a name="gbab-184"></a>   <span class="n">enet_uint16</span>      <span class="n">unreliableSequenceNumber</span><span class="p">;</span>
+<a name="gbab-185"></a>   <span class="n">ENetProtocol</span>     <span class="n">command</span><span class="p">;</span>
+<a name="gbab-186"></a>   <span class="n">enet_uint32</span>      <span class="n">fragmentCount</span><span class="p">;</span>
+<a name="gbab-187"></a>   <span class="n">enet_uint32</span>      <span class="n">fragmentsRemaining</span><span class="p">;</span>
+<a name="gbab-188"></a>   <span class="n">enet_uint32</span> <span class="o">*</span>    <span class="n">fragments</span><span class="p">;</span>
+<a name="gbab-189"></a>   <span class="n">ENetPacket</span> <span class="o">*</span>     <span class="n">packet</span><span class="p">;</span>
+<a name="gbab-190"></a><span class="p">}</span> <span class="n">ENetIncomingCommand</span><span class="p">;</span>
+<a name="gbab-191"></a>
+<a name="gbab-192"></a><span class="k">typedef</span> <span class="k">enum</span> <span class="n">_ENetPeerState</span>
+<a name="gbab-193"></a><span class="p">{</span>
+<a name="gbab-194"></a>   <span class="n">ENET_PEER_STATE_DISCONNECTED</span>                <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<a name="gbab-195"></a>   <span class="n">ENET_PEER_STATE_CONNECTING</span>                  <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-196"></a>   <span class="n">ENET_PEER_STATE_ACKNOWLEDGING_CONNECT</span>       <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a name="gbab-197"></a>   <span class="n">ENET_PEER_STATE_CONNECTION_PENDING</span>          <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<a name="gbab-198"></a>   <span class="n">ENET_PEER_STATE_CONNECTION_SUCCEEDED</span>        <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<a name="gbab-199"></a>   <span class="n">ENET_PEER_STATE_CONNECTED</span>                   <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<a name="gbab-200"></a>   <span class="n">ENET_PEER_STATE_DISCONNECT_LATER</span>            <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+<a name="gbab-201"></a>   <span class="n">ENET_PEER_STATE_DISCONNECTING</span>               <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+<a name="gbab-202"></a>   <span class="n">ENET_PEER_STATE_ACKNOWLEDGING_DISCONNECT</span>    <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+<a name="gbab-203"></a>   <span class="n">ENET_PEER_STATE_ZOMBIE</span>                      <span class="o">=</span> <span class="mi">9</span> 
+<a name="gbab-204"></a><span class="p">}</span> <span class="n">ENetPeerState</span><span class="p">;</span>
+<a name="gbab-205"></a>
+<a name="gbab-206"></a><span class="cp">#ifndef ENET_BUFFER_MAXIMUM</span>
+<a name="gbab-207"></a><span class="cp">#define ENET_BUFFER_MAXIMUM (1 + 2 * ENET_PROTOCOL_MAXIMUM_PACKET_COMMANDS)</span>
+<a name="gbab-208"></a><span class="cp">#endif</span>
+<a name="gbab-209"></a>
+<a name="gbab-210"></a><span class="k">enum</span>
+<a name="gbab-211"></a><span class="p">{</span>
+<a name="gbab-212"></a>   <span class="n">ENET_HOST_RECEIVE_BUFFER_SIZE</span>          <span class="o">=</span> <span class="mi">256</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
+<a name="gbab-213"></a>   <span class="n">ENET_HOST_SEND_BUFFER_SIZE</span>             <span class="o">=</span> <span class="mi">256</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
+<a name="gbab-214"></a>   <span class="n">ENET_HOST_BANDWIDTH_THROTTLE_INTERVAL</span>  <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+<a name="gbab-215"></a>   <span class="n">ENET_HOST_DEFAULT_MTU</span>                  <span class="o">=</span> <span class="mi">1400</span><span class="p">,</span>
+<a name="gbab-216"></a>   <span class="n">ENET_HOST_DEFAULT_MAXIMUM_PACKET_SIZE</span>  <span class="o">=</span> <span class="mi">32</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
+<a name="gbab-217"></a>   <span class="n">ENET_HOST_DEFAULT_MAXIMUM_WAITING_DATA</span> <span class="o">=</span> <span class="mi">32</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
+<a name="gbab-218"></a>
+<a name="gbab-219"></a>   <span class="n">ENET_PEER_DEFAULT_ROUND_TRIP_TIME</span>      <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+<a name="gbab-220"></a>   <span class="n">ENET_PEER_DEFAULT_PACKET_THROTTLE</span>      <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+<a name="gbab-221"></a>   <span class="n">ENET_PEER_PACKET_THROTTLE_SCALE</span>        <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+<a name="gbab-222"></a>   <span class="n">ENET_PEER_PACKET_THROTTLE_COUNTER</span>      <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> 
+<a name="gbab-223"></a>   <span class="n">ENET_PEER_PACKET_THROTTLE_ACCELERATION</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a name="gbab-224"></a>   <span class="n">ENET_PEER_PACKET_THROTTLE_DECELERATION</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a name="gbab-225"></a>   <span class="n">ENET_PEER_PACKET_THROTTLE_INTERVAL</span>     <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+<a name="gbab-226"></a>   <span class="n">ENET_PEER_PACKET_LOSS_SCALE</span>            <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">),</span>
+<a name="gbab-227"></a>   <span class="n">ENET_PEER_PACKET_LOSS_INTERVAL</span>         <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+<a name="gbab-228"></a>   <span class="n">ENET_PEER_WINDOW_SIZE_SCALE</span>            <span class="o">=</span> <span class="mi">64</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
+<a name="gbab-229"></a>   <span class="n">ENET_PEER_TIMEOUT_LIMIT</span>                <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+<a name="gbab-230"></a>   <span class="n">ENET_PEER_TIMEOUT_MINIMUM</span>              <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+<a name="gbab-231"></a>   <span class="n">ENET_PEER_TIMEOUT_MAXIMUM</span>              <span class="o">=</span> <span class="mi">30000</span><span class="p">,</span>
+<a name="gbab-232"></a>   <span class="n">ENET_PEER_PING_INTERVAL</span>                <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+<a name="gbab-233"></a>   <span class="n">ENET_PEER_UNSEQUENCED_WINDOWS</span>          <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+<a name="gbab-234"></a>   <span class="n">ENET_PEER_UNSEQUENCED_WINDOW_SIZE</span>      <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+<a name="gbab-235"></a>   <span class="n">ENET_PEER_FREE_UNSEQUENCED_WINDOWS</span>     <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+<a name="gbab-236"></a>   <span class="n">ENET_PEER_RELIABLE_WINDOWS</span>             <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+<a name="gbab-237"></a>   <span class="n">ENET_PEER_RELIABLE_WINDOW_SIZE</span>         <span class="o">=</span> <span class="mh">0x1000</span><span class="p">,</span>
+<a name="gbab-238"></a>   <span class="n">ENET_PEER_FREE_RELIABLE_WINDOWS</span>        <span class="o">=</span> <span class="mi">8</span>
+<a name="gbab-239"></a><span class="p">};</span>
+<a name="gbab-240"></a>
+<a name="gbab-241"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetChannel</span>
+<a name="gbab-242"></a><span class="p">{</span>
+<a name="gbab-243"></a>   <span class="n">enet_uint16</span>  <span class="n">outgoingReliableSequenceNumber</span><span class="p">;</span>
+<a name="gbab-244"></a>   <span class="n">enet_uint16</span>  <span class="n">outgoingUnreliableSequenceNumber</span><span class="p">;</span>
+<a name="gbab-245"></a>   <span class="n">enet_uint16</span>  <span class="n">usedReliableWindows</span><span class="p">;</span>
+<a name="gbab-246"></a>   <span class="n">enet_uint16</span>  <span class="n">reliableWindows</span> <span class="p">[</span><span class="n">ENET_PEER_RELIABLE_WINDOWS</span><span class="p">];</span>
+<a name="gbab-247"></a>   <span class="n">enet_uint16</span>  <span class="n">incomingReliableSequenceNumber</span><span class="p">;</span>
+<a name="gbab-248"></a>   <span class="n">enet_uint16</span>  <span class="n">incomingUnreliableSequenceNumber</span><span class="p">;</span>
+<a name="gbab-249"></a>   <span class="n">ENetList</span>     <span class="n">incomingReliableCommands</span><span class="p">;</span>
+<a name="gbab-250"></a>   <span class="n">ENetList</span>     <span class="n">incomingUnreliableCommands</span><span class="p">;</span>
+<a name="gbab-251"></a><span class="p">}</span> <span class="n">ENetChannel</span><span class="p">;</span>
+<a name="gbab-252"></a>
+<a name="gbab-253"></a><span class="cm">/**</span>
+<a name="gbab-254"></a><span class="cm"> * An ENet peer which data packets may be sent or received from. </span>
+<a name="gbab-255"></a><span class="cm"> *</span>
+<a name="gbab-256"></a><span class="cm"> * No fields should be modified unless otherwise specified. </span>
+<a name="gbab-257"></a><span class="cm"> */</span>
+<a name="gbab-258"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetPeer</span>
+<a name="gbab-259"></a><span class="p">{</span> 
+<a name="gbab-260"></a>   <span class="n">ENetListNode</span>  <span class="n">dispatchList</span><span class="p">;</span>
+<a name="gbab-261"></a>   <span class="k">struct</span> <span class="n">_ENetHost</span> <span class="o">*</span> <span class="n">host</span><span class="p">;</span>
+<a name="gbab-262"></a>   <span class="n">enet_uint16</span>   <span class="n">outgoingPeerID</span><span class="p">;</span>
+<a name="gbab-263"></a>   <span class="n">enet_uint16</span>   <span class="n">incomingPeerID</span><span class="p">;</span>
+<a name="gbab-264"></a>   <span class="n">enet_uint32</span>   <span class="n">connectID</span><span class="p">;</span>
+<a name="gbab-265"></a>   <span class="n">enet_uint8</span>    <span class="n">outgoingSessionID</span><span class="p">;</span>
+<a name="gbab-266"></a>   <span class="n">enet_uint8</span>    <span class="n">incomingSessionID</span><span class="p">;</span>
+<a name="gbab-267"></a>   <span class="n">ENetAddress</span>   <span class="n">address</span><span class="p">;</span>            <span class="cm">/**&lt; Internet address of the peer */</span>
+<a name="gbab-268"></a>   <span class="kt">void</span> <span class="o">*</span>        <span class="n">data</span><span class="p">;</span>               <span class="cm">/**&lt; Application private data, may be freely modified */</span>
+<a name="gbab-269"></a>   <span class="n">ENetPeerState</span> <span class="n">state</span><span class="p">;</span>
+<a name="gbab-270"></a>   <span class="n">ENetChannel</span> <span class="o">*</span> <span class="n">channels</span><span class="p">;</span>
+<a name="gbab-271"></a>   <span class="kt">size_t</span>        <span class="n">channelCount</span><span class="p">;</span>       <span class="cm">/**&lt; Number of channels allocated for communication with peer */</span>
+<a name="gbab-272"></a>   <span class="n">enet_uint32</span>   <span class="n">incomingBandwidth</span><span class="p">;</span>  <span class="cm">/**&lt; Downstream bandwidth of the client in bytes/second */</span>
+<a name="gbab-273"></a>   <span class="n">enet_uint32</span>   <span class="n">outgoingBandwidth</span><span class="p">;</span>  <span class="cm">/**&lt; Upstream bandwidth of the client in bytes/second */</span>
+<a name="gbab-274"></a>   <span class="n">enet_uint32</span>   <span class="n">incomingBandwidthThrottleEpoch</span><span class="p">;</span>
+<a name="gbab-275"></a>   <span class="n">enet_uint32</span>   <span class="n">outgoingBandwidthThrottleEpoch</span><span class="p">;</span>
+<a name="gbab-276"></a>   <span class="n">enet_uint32</span>   <span class="n">incomingDataTotal</span><span class="p">;</span>
+<a name="gbab-277"></a>   <span class="n">enet_uint32</span>   <span class="n">outgoingDataTotal</span><span class="p">;</span>
+<a name="gbab-278"></a>   <span class="n">enet_uint32</span>   <span class="n">lastSendTime</span><span class="p">;</span>
+<a name="gbab-279"></a>   <span class="n">enet_uint32</span>   <span class="n">lastReceiveTime</span><span class="p">;</span>
+<a name="gbab-280"></a>   <span class="n">enet_uint32</span>   <span class="n">nextTimeout</span><span class="p">;</span>
+<a name="gbab-281"></a>   <span class="n">enet_uint32</span>   <span class="n">earliestTimeout</span><span class="p">;</span>
+<a name="gbab-282"></a>   <span class="n">enet_uint32</span>   <span class="n">packetLossEpoch</span><span class="p">;</span>
+<a name="gbab-283"></a>   <span class="n">enet_uint32</span>   <span class="n">packetsSent</span><span class="p">;</span>
+<a name="gbab-284"></a>   <span class="n">enet_uint32</span>   <span class="n">packetsLost</span><span class="p">;</span>
+<a name="gbab-285"></a>   <span class="n">enet_uint32</span>   <span class="n">packetLoss</span><span class="p">;</span>          <span class="cm">/**&lt; mean packet loss of reliable packets as a ratio with respect to the constant ENET_PEER_PACKET_LOSS_SCALE */</span>
+<a name="gbab-286"></a>   <span class="n">enet_uint32</span>   <span class="n">packetLossVariance</span><span class="p">;</span>
+<a name="gbab-287"></a>   <span class="n">enet_uint32</span>   <span class="n">packetThrottle</span><span class="p">;</span>
+<a name="gbab-288"></a>   <span class="n">enet_uint32</span>   <span class="n">packetThrottleLimit</span><span class="p">;</span>
+<a name="gbab-289"></a>   <span class="n">enet_uint32</span>   <span class="n">packetThrottleCounter</span><span class="p">;</span>
+<a name="gbab-290"></a>   <span class="n">enet_uint32</span>   <span class="n">packetThrottleEpoch</span><span class="p">;</span>
+<a name="gbab-291"></a>   <span class="n">enet_uint32</span>   <span class="n">packetThrottleAcceleration</span><span class="p">;</span>
+<a name="gbab-292"></a>   <span class="n">enet_uint32</span>   <span class="n">packetThrottleDeceleration</span><span class="p">;</span>
+<a name="gbab-293"></a>   <span class="n">enet_uint32</span>   <span class="n">packetThrottleInterval</span><span class="p">;</span>
+<a name="gbab-294"></a>   <span class="n">enet_uint32</span>   <span class="n">pingInterval</span><span class="p">;</span>
+<a name="gbab-295"></a>   <span class="n">enet_uint32</span>   <span class="n">timeoutLimit</span><span class="p">;</span>
+<a name="gbab-296"></a>   <span class="n">enet_uint32</span>   <span class="n">timeoutMinimum</span><span class="p">;</span>
+<a name="gbab-297"></a>   <span class="n">enet_uint32</span>   <span class="n">timeoutMaximum</span><span class="p">;</span>
+<a name="gbab-298"></a>   <span class="n">enet_uint32</span>   <span class="n">lastRoundTripTime</span><span class="p">;</span>
+<a name="gbab-299"></a>   <span class="n">enet_uint32</span>   <span class="n">lowestRoundTripTime</span><span class="p">;</span>
+<a name="gbab-300"></a>   <span class="n">enet_uint32</span>   <span class="n">lastRoundTripTimeVariance</span><span class="p">;</span>
+<a name="gbab-301"></a>   <span class="n">enet_uint32</span>   <span class="n">highestRoundTripTimeVariance</span><span class="p">;</span>
+<a name="gbab-302"></a>   <span class="n">enet_uint32</span>   <span class="n">roundTripTime</span><span class="p">;</span>            <span class="cm">/**&lt; mean round trip time (RTT), in milliseconds, between sending a reliable packet and receiving its acknowledgement */</span>
+<a name="gbab-303"></a>   <span class="n">enet_uint32</span>   <span class="n">roundTripTimeVariance</span><span class="p">;</span>
+<a name="gbab-304"></a>   <span class="n">enet_uint32</span>   <span class="n">mtu</span><span class="p">;</span>
+<a name="gbab-305"></a>   <span class="n">enet_uint32</span>   <span class="n">windowSize</span><span class="p">;</span>
+<a name="gbab-306"></a>   <span class="n">enet_uint32</span>   <span class="n">reliableDataInTransit</span><span class="p">;</span>
+<a name="gbab-307"></a>   <span class="n">enet_uint16</span>   <span class="n">outgoingReliableSequenceNumber</span><span class="p">;</span>
+<a name="gbab-308"></a>   <span class="n">ENetList</span>      <span class="n">acknowledgements</span><span class="p">;</span>
+<a name="gbab-309"></a>   <span class="n">ENetList</span>      <span class="n">sentReliableCommands</span><span class="p">;</span>
+<a name="gbab-310"></a>   <span class="n">ENetList</span>      <span class="n">sentUnreliableCommands</span><span class="p">;</span>
+<a name="gbab-311"></a>   <span class="n">ENetList</span>      <span class="n">outgoingReliableCommands</span><span class="p">;</span>
+<a name="gbab-312"></a>   <span class="n">ENetList</span>      <span class="n">outgoingUnreliableCommands</span><span class="p">;</span>
+<a name="gbab-313"></a>   <span class="n">ENetList</span>      <span class="n">dispatchedCommands</span><span class="p">;</span>
+<a name="gbab-314"></a>   <span class="kt">int</span>           <span class="n">needsDispatch</span><span class="p">;</span>
+<a name="gbab-315"></a>   <span class="n">enet_uint16</span>   <span class="n">incomingUnsequencedGroup</span><span class="p">;</span>
+<a name="gbab-316"></a>   <span class="n">enet_uint16</span>   <span class="n">outgoingUnsequencedGroup</span><span class="p">;</span>
+<a name="gbab-317"></a>   <span class="n">enet_uint32</span>   <span class="n">unsequencedWindow</span> <span class="p">[</span><span class="n">ENET_PEER_UNSEQUENCED_WINDOW_SIZE</span> <span class="o">/</span> <span class="mi">32</span><span class="p">];</span> 
+<a name="gbab-318"></a>   <span class="n">enet_uint32</span>   <span class="n">eventData</span><span class="p">;</span>
+<a name="gbab-319"></a>   <span class="kt">size_t</span>        <span class="n">totalWaitingData</span><span class="p">;</span>
+<a name="gbab-320"></a><span class="p">}</span> <span class="n">ENetPeer</span><span class="p">;</span>
+<a name="gbab-321"></a>
+<a name="gbab-322"></a><span class="cm">/** An ENet packet compressor for compressing UDP packets before socket sends or receives.</span>
+<a name="gbab-323"></a><span class="cm"> */</span>
+<a name="gbab-324"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetCompressor</span>
+<a name="gbab-325"></a><span class="p">{</span>
+<a name="gbab-326"></a>   <span class="cm">/** Context data for the compressor. Must be non-NULL. */</span>
+<a name="gbab-327"></a>   <span class="kt">void</span> <span class="o">*</span> <span class="n">context</span><span class="p">;</span>
+<a name="gbab-328"></a>   <span class="cm">/** Compresses from inBuffers[0:inBufferCount-1], containing inLimit bytes, to outData, outputting at most outLimit bytes. Should return 0 on failure. */</span>
+<a name="gbab-329"></a>   <span class="kt">size_t</span> <span class="p">(</span><span class="n">ENET_CALLBACK</span> <span class="o">*</span> <span class="n">compress</span><span class="p">)</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span> <span class="n">context</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetBuffer</span> <span class="o">*</span> <span class="n">inBuffers</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">inBufferCount</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">inLimit</span><span class="p">,</span> <span class="n">enet_uint8</span> <span class="o">*</span> <span class="n">outData</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">outLimit</span><span class="p">);</span>
+<a name="gbab-330"></a>   <span class="cm">/** Decompresses from inData, containing inLimit bytes, to outData, outputting at most outLimit bytes. Should return 0 on failure. */</span>
+<a name="gbab-331"></a>   <span class="kt">size_t</span> <span class="p">(</span><span class="n">ENET_CALLBACK</span> <span class="o">*</span> <span class="n">decompress</span><span class="p">)</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span> <span class="n">context</span><span class="p">,</span> <span class="k">const</span> <span class="n">enet_uint8</span> <span class="o">*</span> <span class="n">inData</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">inLimit</span><span class="p">,</span> <span class="n">enet_uint8</span> <span class="o">*</span> <span class="n">outData</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">outLimit</span><span class="p">);</span>
+<a name="gbab-332"></a>   <span class="cm">/** Destroys the context when compression is disabled or the host is destroyed. May be NULL. */</span>
+<a name="gbab-333"></a>   <span class="kt">void</span> <span class="p">(</span><span class="n">ENET_CALLBACK</span> <span class="o">*</span> <span class="n">destroy</span><span class="p">)</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span> <span class="n">context</span><span class="p">);</span>
+<a name="gbab-334"></a><span class="p">}</span> <span class="n">ENetCompressor</span><span class="p">;</span>
+<a name="gbab-335"></a>
+<a name="gbab-336"></a><span class="cm">/** Callback that computes the checksum of the data held in buffers[0:bufferCount-1] */</span>
+<a name="gbab-337"></a><span class="k">typedef</span> <span class="nf">enet_uint32</span> <span class="p">(</span><span class="n">ENET_CALLBACK</span> <span class="o">*</span> <span class="n">ENetChecksumCallback</span><span class="p">)</span> <span class="p">(</span><span class="k">const</span> <span class="n">ENetBuffer</span> <span class="o">*</span> <span class="n">buffers</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">bufferCount</span><span class="p">);</span>
+<a name="gbab-338"></a>
+<a name="gbab-339"></a><span class="cm">/** Callback for intercepting received raw UDP packets. Should return 1 to intercept, 0 to ignore, or -1 to propagate an error. */</span>
+<a name="gbab-340"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="n">ENET_CALLBACK</span> <span class="o">*</span> <span class="n">ENetInterceptCallback</span><span class="p">)</span> <span class="p">(</span><span class="k">struct</span> <span class="n">_ENetHost</span> <span class="o">*</span> <span class="n">host</span><span class="p">,</span> <span class="k">struct</span> <span class="n">_ENetEvent</span> <span class="o">*</span> <span class="n">event</span><span class="p">);</span>
+<a name="gbab-341"></a> 
+<a name="gbab-342"></a><span class="cm">/** An ENet host for communicating with peers.</span>
+<a name="gbab-343"></a><span class="cm">  *</span>
+<a name="gbab-344"></a><span class="cm">  * No fields should be modified unless otherwise stated.</span>
+<a name="gbab-345"></a>
+<a name="gbab-346"></a><span class="cm">    @sa enet_host_create()</span>
+<a name="gbab-347"></a><span class="cm">    @sa enet_host_destroy()</span>
+<a name="gbab-348"></a><span class="cm">    @sa enet_host_connect()</span>
+<a name="gbab-349"></a><span class="cm">    @sa enet_host_service()</span>
+<a name="gbab-350"></a><span class="cm">    @sa enet_host_flush()</span>
+<a name="gbab-351"></a><span class="cm">    @sa enet_host_broadcast()</span>
+<a name="gbab-352"></a><span class="cm">    @sa enet_host_compress()</span>
+<a name="gbab-353"></a><span class="cm">    @sa enet_host_compress_with_range_coder()</span>
+<a name="gbab-354"></a><span class="cm">    @sa enet_host_channel_limit()</span>
+<a name="gbab-355"></a><span class="cm">    @sa enet_host_bandwidth_limit()</span>
+<a name="gbab-356"></a><span class="cm">    @sa enet_host_bandwidth_throttle()</span>
+<a name="gbab-357"></a><span class="cm">  */</span>
+<a name="gbab-358"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetHost</span>
+<a name="gbab-359"></a><span class="p">{</span>
+<a name="gbab-360"></a>   <span class="n">ENetSocket</span>           <span class="n">socket</span><span class="p">;</span>
+<a name="gbab-361"></a>   <span class="n">ENetAddress</span>          <span class="n">address</span><span class="p">;</span>                     <span class="cm">/**&lt; Internet address of the host */</span>
+<a name="gbab-362"></a>   <span class="n">enet_uint32</span>          <span class="n">incomingBandwidth</span><span class="p">;</span>           <span class="cm">/**&lt; downstream bandwidth of the host */</span>
+<a name="gbab-363"></a>   <span class="n">enet_uint32</span>          <span class="n">outgoingBandwidth</span><span class="p">;</span>           <span class="cm">/**&lt; upstream bandwidth of the host */</span>
+<a name="gbab-364"></a>   <span class="n">enet_uint32</span>          <span class="n">bandwidthThrottleEpoch</span><span class="p">;</span>
+<a name="gbab-365"></a>   <span class="n">enet_uint32</span>          <span class="n">mtu</span><span class="p">;</span>
+<a name="gbab-366"></a>   <span class="n">enet_uint32</span>          <span class="n">randomSeed</span><span class="p">;</span>
+<a name="gbab-367"></a>   <span class="kt">int</span>                  <span class="n">recalculateBandwidthLimits</span><span class="p">;</span>
+<a name="gbab-368"></a>   <span class="n">ENetPeer</span> <span class="o">*</span>           <span class="n">peers</span><span class="p">;</span>                       <span class="cm">/**&lt; array of peers allocated for this host */</span>
+<a name="gbab-369"></a>   <span class="kt">size_t</span>               <span class="n">peerCount</span><span class="p">;</span>                   <span class="cm">/**&lt; number of peers allocated for this host */</span>
+<a name="gbab-370"></a>   <span class="kt">size_t</span>               <span class="n">channelLimit</span><span class="p">;</span>                <span class="cm">/**&lt; maximum number of channels allowed for connected peers */</span>
+<a name="gbab-371"></a>   <span class="n">enet_uint32</span>          <span class="n">serviceTime</span><span class="p">;</span>
+<a name="gbab-372"></a>   <span class="n">ENetList</span>             <span class="n">dispatchQueue</span><span class="p">;</span>
+<a name="gbab-373"></a>   <span class="kt">int</span>                  <span class="n">continueSending</span><span class="p">;</span>
+<a name="gbab-374"></a>   <span class="kt">size_t</span>               <span class="n">packetSize</span><span class="p">;</span>
+<a name="gbab-375"></a>   <span class="n">enet_uint16</span>          <span class="n">headerFlags</span><span class="p">;</span>
+<a name="gbab-376"></a>   <span class="n">ENetProtocol</span>         <span class="n">commands</span> <span class="p">[</span><span class="n">ENET_PROTOCOL_MAXIMUM_PACKET_COMMANDS</span><span class="p">];</span>
+<a name="gbab-377"></a>   <span class="kt">size_t</span>               <span class="n">commandCount</span><span class="p">;</span>
+<a name="gbab-378"></a>   <span class="n">ENetBuffer</span>           <span class="n">buffers</span> <span class="p">[</span><span class="n">ENET_BUFFER_MAXIMUM</span><span class="p">];</span>
+<a name="gbab-379"></a>   <span class="kt">size_t</span>               <span class="n">bufferCount</span><span class="p">;</span>
+<a name="gbab-380"></a>   <span class="n">ENetChecksumCallback</span> <span class="n">checksum</span><span class="p">;</span>                    <span class="cm">/**&lt; callback the user can set to enable packet checksums for this host */</span>
+<a name="gbab-381"></a>   <span class="n">ENetCompressor</span>       <span class="n">compressor</span><span class="p">;</span>
+<a name="gbab-382"></a>   <span class="n">enet_uint8</span>           <span class="n">packetData</span> <span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">ENET_PROTOCOL_MAXIMUM_MTU</span><span class="p">];</span>
+<a name="gbab-383"></a>   <span class="n">ENetAddress</span>          <span class="n">receivedAddress</span><span class="p">;</span>
+<a name="gbab-384"></a>   <span class="n">enet_uint8</span> <span class="o">*</span>         <span class="n">receivedData</span><span class="p">;</span>
+<a name="gbab-385"></a>   <span class="kt">size_t</span>               <span class="n">receivedDataLength</span><span class="p">;</span>
+<a name="gbab-386"></a>   <span class="n">enet_uint32</span>          <span class="n">totalSentData</span><span class="p">;</span>               <span class="cm">/**&lt; total data sent, user should reset to 0 as needed to prevent overflow */</span>
+<a name="gbab-387"></a>   <span class="n">enet_uint32</span>          <span class="n">totalSentPackets</span><span class="p">;</span>            <span class="cm">/**&lt; total UDP packets sent, user should reset to 0 as needed to prevent overflow */</span>
+<a name="gbab-388"></a>   <span class="n">enet_uint32</span>          <span class="n">totalReceivedData</span><span class="p">;</span>           <span class="cm">/**&lt; total data received, user should reset to 0 as needed to prevent overflow */</span>
+<a name="gbab-389"></a>   <span class="n">enet_uint32</span>          <span class="n">totalReceivedPackets</span><span class="p">;</span>        <span class="cm">/**&lt; total UDP packets received, user should reset to 0 as needed to prevent overflow */</span>
+<a name="gbab-390"></a>   <span class="n">ENetInterceptCallback</span> <span class="n">intercept</span><span class="p">;</span>                  <span class="cm">/**&lt; callback the user can set to intercept received raw UDP packets */</span>
+<a name="gbab-391"></a>   <span class="kt">size_t</span>               <span class="n">connectedPeers</span><span class="p">;</span>
+<a name="gbab-392"></a>   <span class="kt">size_t</span>               <span class="n">bandwidthLimitedPeers</span><span class="p">;</span>
+<a name="gbab-393"></a>   <span class="kt">size_t</span>               <span class="n">duplicatePeers</span><span class="p">;</span>              <span class="cm">/**&lt; optional number of allowed peers from duplicate IPs, defaults to ENET_PROTOCOL_MAXIMUM_PEER_ID */</span>
+<a name="gbab-394"></a>   <span class="kt">size_t</span>               <span class="n">maximumPacketSize</span><span class="p">;</span>           <span class="cm">/**&lt; the maximum allowable packet size that may be sent or received on a peer */</span>
+<a name="gbab-395"></a>   <span class="kt">size_t</span>               <span class="n">maximumWaitingData</span><span class="p">;</span>          <span class="cm">/**&lt; the maximum aggregate amount of buffer space a peer may use waiting for packets to be delivered */</span>
+<a name="gbab-396"></a><span class="p">}</span> <span class="n">ENetHost</span><span class="p">;</span>
+<a name="gbab-397"></a>
+<a name="gbab-398"></a><span class="cm">/**</span>
+<a name="gbab-399"></a><span class="cm"> * An ENet event type, as specified in @ref ENetEvent.</span>
+<a name="gbab-400"></a><span class="cm"> */</span>
+<a name="gbab-401"></a><span class="k">typedef</span> <span class="k">enum</span> <span class="n">_ENetEventType</span>
+<a name="gbab-402"></a><span class="p">{</span>
+<a name="gbab-403"></a>   <span class="cm">/** no event occurred within the specified time limit */</span>
+<a name="gbab-404"></a>   <span class="n">ENET_EVENT_TYPE_NONE</span>       <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>  
+<a name="gbab-405"></a>
+<a name="gbab-406"></a>   <span class="cm">/** a connection request initiated by enet_host_connect has completed.  </span>
+<a name="gbab-407"></a><span class="cm">     * The peer field contains the peer which successfully connected. </span>
+<a name="gbab-408"></a><span class="cm">     */</span>
+<a name="gbab-409"></a>   <span class="n">ENET_EVENT_TYPE_CONNECT</span>    <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>  
+<a name="gbab-410"></a>
+<a name="gbab-411"></a>   <span class="cm">/** a peer has disconnected.  This event is generated on a successful </span>
+<a name="gbab-412"></a><span class="cm">     * completion of a disconnect initiated by enet_peer_disconnect, if </span>
+<a name="gbab-413"></a><span class="cm">     * a peer has timed out, or if a connection request intialized by </span>
+<a name="gbab-414"></a><span class="cm">     * enet_host_connect has timed out.  The peer field contains the peer </span>
+<a name="gbab-415"></a><span class="cm">     * which disconnected. The data field contains user supplied data </span>
+<a name="gbab-416"></a><span class="cm">     * describing the disconnection, or 0, if none is available.</span>
+<a name="gbab-417"></a><span class="cm">     */</span>
+<a name="gbab-418"></a>   <span class="n">ENET_EVENT_TYPE_DISCONNECT</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>  
+<a name="gbab-419"></a>
+<a name="gbab-420"></a>   <span class="cm">/** a packet has been received from a peer.  The peer field specifies the</span>
+<a name="gbab-421"></a><span class="cm">     * peer which sent the packet.  The channelID field specifies the channel</span>
+<a name="gbab-422"></a><span class="cm">     * number upon which the packet was received.  The packet field contains</span>
+<a name="gbab-423"></a><span class="cm">     * the packet that was received; this packet must be destroyed with</span>
+<a name="gbab-424"></a><span class="cm">     * enet_packet_destroy after use.</span>
+<a name="gbab-425"></a><span class="cm">     */</span>
+<a name="gbab-426"></a>   <span class="n">ENET_EVENT_TYPE_RECEIVE</span>    <span class="o">=</span> <span class="mi">3</span>
+<a name="gbab-427"></a><span class="p">}</span> <span class="n">ENetEventType</span><span class="p">;</span>
+<a name="gbab-428"></a>
+<a name="gbab-429"></a><span class="cm">/**</span>
+<a name="gbab-430"></a><span class="cm"> * An ENet event as returned by enet_host_service().</span>
+<a name="gbab-431"></a><span class="cm">   </span>
+<a name="gbab-432"></a><span class="cm">   @sa enet_host_service</span>
+<a name="gbab-433"></a><span class="cm"> */</span>
+<a name="gbab-434"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">_ENetEvent</span> 
+<a name="gbab-435"></a><span class="p">{</span>
+<a name="gbab-436"></a>   <span class="n">ENetEventType</span>        <span class="n">type</span><span class="p">;</span>      <span class="cm">/**&lt; type of the event */</span>
+<a name="gbab-437"></a>   <span class="n">ENetPeer</span> <span class="o">*</span>           <span class="n">peer</span><span class="p">;</span>      <span class="cm">/**&lt; peer that generated a connect, disconnect or receive event */</span>
+<a name="gbab-438"></a>   <span class="n">enet_uint8</span>           <span class="n">channelID</span><span class="p">;</span> <span class="cm">/**&lt; channel on the peer that generated the event, if appropriate */</span>
+<a name="gbab-439"></a>   <span class="n">enet_uint32</span>          <span class="n">data</span><span class="p">;</span>      <span class="cm">/**&lt; data associated with the event, if appropriate */</span>
+<a name="gbab-440"></a>   <span class="n">ENetPacket</span> <span class="o">*</span>         <span class="n">packet</span><span class="p">;</span>    <span class="cm">/**&lt; packet associated with the event, if appropriate */</span>
+<a name="gbab-441"></a><span class="p">}</span> <span class="n">ENetEvent</span><span class="p">;</span>
+<a name="gbab-442"></a>
+<a name="gbab-443"></a><span class="cm">/** @defgroup global ENet global functions</span>
+<a name="gbab-444"></a><span class="cm">    @{ </span>
+<a name="gbab-445"></a><span class="cm">*/</span>
+<a name="gbab-446"></a>
+<a name="gbab-447"></a><span class="cm">/** </span>
+<a name="gbab-448"></a><span class="cm">  Initializes ENet globally.  Must be called prior to using any functions in</span>
+<a name="gbab-449"></a><span class="cm">  ENet.</span>
+<a name="gbab-450"></a><span class="cm">  @returns 0 on success, &lt; 0 on failure</span>
+<a name="gbab-451"></a><span class="cm">*/</span>
+<a name="gbab-452"></a><span class="n">ENET_API</span> <span class="kt">int</span> <span class="nf">enet_initialize</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-453"></a>
+<a name="gbab-454"></a><span class="cm">/** </span>
+<a name="gbab-455"></a><span class="cm">  Initializes ENet globally and supplies user-overridden callbacks. Must be called prior to using any functions in ENet. Do not use enet_initialize() if you use this variant. Make sure the ENetCallbacks structure is zeroed out so that any additional callbacks added in future versions will be properly ignored.</span>
+<a name="gbab-456"></a>
+<a name="gbab-457"></a><span class="cm">  @param version the constant ENET_VERSION should be supplied so ENet knows which version of ENetCallbacks struct to use</span>
+<a name="gbab-458"></a><span class="cm">  @param inits user-overridden callbacks where any NULL callbacks will use ENet&#39;s defaults</span>
+<a name="gbab-459"></a><span class="cm">  @returns 0 on success, &lt; 0 on failure</span>
+<a name="gbab-460"></a><span class="cm">*/</span>
+<a name="gbab-461"></a><span class="n">ENET_API</span> <span class="kt">int</span> <span class="nf">enet_initialize_with_callbacks</span> <span class="p">(</span><span class="n">ENetVersion</span> <span class="n">version</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetCallbacks</span> <span class="o">*</span> <span class="n">inits</span><span class="p">);</span>
+<a name="gbab-462"></a>
+<a name="gbab-463"></a><span class="cm">/** </span>
+<a name="gbab-464"></a><span class="cm">  Shuts down ENet globally.  Should be called when a program that has</span>
+<a name="gbab-465"></a><span class="cm">  initialized ENet exits.</span>
+<a name="gbab-466"></a><span class="cm">*/</span>
+<a name="gbab-467"></a><span class="n">ENET_API</span> <span class="kt">void</span> <span class="nf">enet_deinitialize</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-468"></a>
+<a name="gbab-469"></a><span class="cm">/**</span>
+<a name="gbab-470"></a><span class="cm">  Gives the linked version of the ENet library.</span>
+<a name="gbab-471"></a><span class="cm">  @returns the version number </span>
+<a name="gbab-472"></a><span class="cm">*/</span>
+<a name="gbab-473"></a><span class="n">ENET_API</span> <span class="n">ENetVersion</span> <span class="nf">enet_linked_version</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-474"></a>
+<a name="gbab-475"></a><span class="cm">/** @} */</span>
+<a name="gbab-476"></a>
+<a name="gbab-477"></a><span class="cm">/** @defgroup private ENet private implementation functions */</span>
+<a name="gbab-478"></a>
+<a name="gbab-479"></a><span class="cm">/**</span>
+<a name="gbab-480"></a><span class="cm">  Returns the wall-time in milliseconds.  Its initial value is unspecified</span>
+<a name="gbab-481"></a><span class="cm">  unless otherwise set.</span>
+<a name="gbab-482"></a><span class="cm">  */</span>
+<a name="gbab-483"></a><span class="n">ENET_API</span> <span class="n">enet_uint32</span> <span class="nf">enet_time_get</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-484"></a><span class="cm">/**</span>
+<a name="gbab-485"></a><span class="cm">  Sets the current wall-time in milliseconds.</span>
+<a name="gbab-486"></a><span class="cm">  */</span>
+<a name="gbab-487"></a><span class="n">ENET_API</span> <span class="kt">void</span> <span class="nf">enet_time_set</span> <span class="p">(</span><span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-488"></a>
+<a name="gbab-489"></a><span class="cm">/** @defgroup socket ENet socket functions</span>
+<a name="gbab-490"></a><span class="cm">    @{</span>
+<a name="gbab-491"></a><span class="cm">*/</span>
+<a name="gbab-492"></a><span class="n">ENET_API</span> <span class="n">ENetSocket</span> <span class="nf">enet_socket_create</span> <span class="p">(</span><span class="n">ENetSocketType</span><span class="p">);</span>
+<a name="gbab-493"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_bind</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetAddress</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-494"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_get_address</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="n">ENetAddress</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-495"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_listen</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-496"></a><span class="n">ENET_API</span> <span class="n">ENetSocket</span> <span class="nf">enet_socket_accept</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="n">ENetAddress</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-497"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_connect</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetAddress</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-498"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_send</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetAddress</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetBuffer</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">);</span>
+<a name="gbab-499"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_receive</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="n">ENetAddress</span> <span class="o">*</span><span class="p">,</span> <span class="n">ENetBuffer</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">);</span>
+<a name="gbab-500"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_wait</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="n">enet_uint32</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-501"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_set_option</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="n">ENetSocketOption</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-502"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_get_option</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="n">ENetSocketOption</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-503"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socket_shutdown</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="n">ENetSocketShutdown</span><span class="p">);</span>
+<a name="gbab-504"></a><span class="n">ENET_API</span> <span class="kt">void</span>       <span class="nf">enet_socket_destroy</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">);</span>
+<a name="gbab-505"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_socketset_select</span> <span class="p">(</span><span class="n">ENetSocket</span><span class="p">,</span> <span class="n">ENetSocketSet</span> <span class="o">*</span><span class="p">,</span> <span class="n">ENetSocketSet</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-506"></a>
+<a name="gbab-507"></a><span class="cm">/** @} */</span>
+<a name="gbab-508"></a>
+<a name="gbab-509"></a><span class="cm">/** @defgroup Address ENet address functions</span>
+<a name="gbab-510"></a><span class="cm">    @{</span>
+<a name="gbab-511"></a><span class="cm">*/</span>
+<a name="gbab-512"></a><span class="cm">/** Attempts to resolve the host named by the parameter hostName and sets</span>
+<a name="gbab-513"></a><span class="cm">    the host field in the address parameter if successful.</span>
+<a name="gbab-514"></a><span class="cm">    @param address destination to store resolved address</span>
+<a name="gbab-515"></a><span class="cm">    @param hostName host name to lookup</span>
+<a name="gbab-516"></a><span class="cm">    @retval 0 on success</span>
+<a name="gbab-517"></a><span class="cm">    @retval &lt; 0 on failure</span>
+<a name="gbab-518"></a><span class="cm">    @returns the address of the given hostName in address on success</span>
+<a name="gbab-519"></a><span class="cm">*/</span>
+<a name="gbab-520"></a><span class="n">ENET_API</span> <span class="kt">int</span> <span class="nf">enet_address_set_host</span> <span class="p">(</span><span class="n">ENetAddress</span> <span class="o">*</span> <span class="n">address</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">hostName</span><span class="p">);</span>
+<a name="gbab-521"></a>
+<a name="gbab-522"></a><span class="cm">/** Gives the printable form of the IP address specified in the address parameter.</span>
+<a name="gbab-523"></a><span class="cm">    @param address    address printed</span>
+<a name="gbab-524"></a><span class="cm">    @param hostName   destination for name, must not be NULL</span>
+<a name="gbab-525"></a><span class="cm">    @param nameLength maximum length of hostName.</span>
+<a name="gbab-526"></a><span class="cm">    @returns the null-terminated name of the host in hostName on success</span>
+<a name="gbab-527"></a><span class="cm">    @retval 0 on success</span>
+<a name="gbab-528"></a><span class="cm">    @retval &lt; 0 on failure</span>
+<a name="gbab-529"></a><span class="cm">*/</span>
+<a name="gbab-530"></a><span class="n">ENET_API</span> <span class="kt">int</span> <span class="nf">enet_address_get_host_ip</span> <span class="p">(</span><span class="k">const</span> <span class="n">ENetAddress</span> <span class="o">*</span> <span class="n">address</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">hostName</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">nameLength</span><span class="p">);</span>
+<a name="gbab-531"></a>
+<a name="gbab-532"></a><span class="cm">/** Attempts to do a reverse lookup of the host field in the address parameter.</span>
+<a name="gbab-533"></a><span class="cm">    @param address    address used for reverse lookup</span>
+<a name="gbab-534"></a><span class="cm">    @param hostName   destination for name, must not be NULL</span>
+<a name="gbab-535"></a><span class="cm">    @param nameLength maximum length of hostName.</span>
+<a name="gbab-536"></a><span class="cm">    @returns the null-terminated name of the host in hostName on success</span>
+<a name="gbab-537"></a><span class="cm">    @retval 0 on success</span>
+<a name="gbab-538"></a><span class="cm">    @retval &lt; 0 on failure</span>
+<a name="gbab-539"></a><span class="cm">*/</span>
+<a name="gbab-540"></a><span class="n">ENET_API</span> <span class="kt">int</span> <span class="nf">enet_address_get_host</span> <span class="p">(</span><span class="k">const</span> <span class="n">ENetAddress</span> <span class="o">*</span> <span class="n">address</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">hostName</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">nameLength</span><span class="p">);</span>
+<a name="gbab-541"></a>
+<a name="gbab-542"></a><span class="cm">/** @} */</span>
+<a name="gbab-543"></a>
+<a name="gbab-544"></a><span class="n">ENET_API</span> <span class="n">ENetPacket</span> <span class="o">*</span> <span class="nf">enet_packet_create</span> <span class="p">(</span><span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-545"></a><span class="n">ENET_API</span> <span class="kt">void</span>         <span class="nf">enet_packet_destroy</span> <span class="p">(</span><span class="n">ENetPacket</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-546"></a><span class="n">ENET_API</span> <span class="kt">int</span>          <span class="nf">enet_packet_resize</span>  <span class="p">(</span><span class="n">ENetPacket</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">);</span>
+<a name="gbab-547"></a><span class="n">ENET_API</span> <span class="n">enet_uint32</span>  <span class="nf">enet_crc32</span> <span class="p">(</span><span class="k">const</span> <span class="n">ENetBuffer</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">);</span>
+<a name="gbab-548"></a>                
+<a name="gbab-549"></a><span class="n">ENET_API</span> <span class="n">ENetHost</span> <span class="o">*</span> <span class="nf">enet_host_create</span> <span class="p">(</span><span class="k">const</span> <span class="n">ENetAddress</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-550"></a><span class="n">ENET_API</span> <span class="kt">void</span>       <span class="nf">enet_host_destroy</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-551"></a><span class="n">ENET_API</span> <span class="n">ENetPeer</span> <span class="o">*</span> <span class="nf">enet_host_connect</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetAddress</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-552"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_host_check_events</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">,</span> <span class="n">ENetEvent</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-553"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_host_service</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">,</span> <span class="n">ENetEvent</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-554"></a><span class="n">ENET_API</span> <span class="kt">void</span>       <span class="nf">enet_host_flush</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-555"></a><span class="n">ENET_API</span> <span class="kt">void</span>       <span class="nf">enet_host_broadcast</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint8</span><span class="p">,</span> <span class="n">ENetPacket</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-556"></a><span class="n">ENET_API</span> <span class="kt">void</span>       <span class="nf">enet_host_compress</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetCompressor</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-557"></a><span class="n">ENET_API</span> <span class="kt">int</span>        <span class="nf">enet_host_compress_with_range_coder</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span> <span class="n">host</span><span class="p">);</span>
+<a name="gbab-558"></a><span class="n">ENET_API</span> <span class="kt">void</span>       <span class="nf">enet_host_channel_limit</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">);</span>
+<a name="gbab-559"></a><span class="n">ENET_API</span> <span class="kt">void</span>       <span class="nf">enet_host_bandwidth_limit</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-560"></a><span class="k">extern</span>   <span class="kt">void</span>       <span class="nf">enet_host_bandwidth_throttle</span> <span class="p">(</span><span class="n">ENetHost</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-561"></a><span class="k">extern</span>  <span class="n">enet_uint32</span> <span class="nf">enet_host_random_seed</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-562"></a>
+<a name="gbab-563"></a><span class="n">ENET_API</span> <span class="kt">int</span>                 <span class="nf">enet_peer_send</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint8</span><span class="p">,</span> <span class="n">ENetPacket</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-564"></a><span class="n">ENET_API</span> <span class="n">ENetPacket</span> <span class="o">*</span>        <span class="nf">enet_peer_receive</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint8</span> <span class="o">*</span> <span class="n">channelID</span><span class="p">);</span>
+<a name="gbab-565"></a><span class="n">ENET_API</span> <span class="kt">void</span>                <span class="nf">enet_peer_ping</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-566"></a><span class="n">ENET_API</span> <span class="kt">void</span>                <span class="nf">enet_peer_ping_interval</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-567"></a><span class="n">ENET_API</span> <span class="kt">void</span>                <span class="nf">enet_peer_timeout</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-568"></a><span class="n">ENET_API</span> <span class="kt">void</span>                <span class="nf">enet_peer_reset</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-569"></a><span class="n">ENET_API</span> <span class="kt">void</span>                <span class="nf">enet_peer_disconnect</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-570"></a><span class="n">ENET_API</span> <span class="kt">void</span>                <span class="nf">enet_peer_disconnect_now</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-571"></a><span class="n">ENET_API</span> <span class="kt">void</span>                <span class="nf">enet_peer_disconnect_later</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-572"></a><span class="n">ENET_API</span> <span class="kt">void</span>                <span class="nf">enet_peer_throttle_configure</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-573"></a><span class="k">extern</span> <span class="kt">int</span>                   <span class="nf">enet_peer_throttle</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-574"></a><span class="k">extern</span> <span class="kt">void</span>                  <span class="nf">enet_peer_reset_queues</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-575"></a><span class="k">extern</span> <span class="kt">void</span>                  <span class="nf">enet_peer_setup_outgoing_command</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">ENetOutgoingCommand</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-576"></a><span class="k">extern</span> <span class="n">ENetOutgoingCommand</span> <span class="o">*</span> <span class="nf">enet_peer_queue_outgoing_command</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetProtocol</span> <span class="o">*</span><span class="p">,</span> <span class="n">ENetPacket</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">,</span> <span class="n">enet_uint16</span><span class="p">);</span>
+<a name="gbab-577"></a><span class="k">extern</span> <span class="n">ENetIncomingCommand</span> <span class="o">*</span> <span class="nf">enet_peer_queue_incoming_command</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetProtocol</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">,</span> <span class="n">enet_uint32</span><span class="p">);</span>
+<a name="gbab-578"></a><span class="k">extern</span> <span class="n">ENetAcknowledgement</span> <span class="o">*</span> <span class="nf">enet_peer_queue_acknowledgement</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetProtocol</span> <span class="o">*</span><span class="p">,</span> <span class="n">enet_uint16</span><span class="p">);</span>
+<a name="gbab-579"></a><span class="k">extern</span> <span class="kt">void</span>                  <span class="nf">enet_peer_dispatch_incoming_unreliable_commands</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">ENetChannel</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-580"></a><span class="k">extern</span> <span class="kt">void</span>                  <span class="nf">enet_peer_dispatch_incoming_reliable_commands</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">,</span> <span class="n">ENetChannel</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-581"></a><span class="k">extern</span> <span class="kt">void</span>                  <span class="nf">enet_peer_on_connect</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-582"></a><span class="k">extern</span> <span class="kt">void</span>                  <span class="nf">enet_peer_on_disconnect</span> <span class="p">(</span><span class="n">ENetPeer</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-583"></a>
+<a name="gbab-584"></a><span class="n">ENET_API</span> <span class="kt">void</span> <span class="o">*</span> <span class="nf">enet_range_coder_create</span> <span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-585"></a><span class="n">ENET_API</span> <span class="kt">void</span>   <span class="nf">enet_range_coder_destroy</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-586"></a><span class="n">ENET_API</span> <span class="kt">size_t</span> <span class="nf">enet_range_coder_compress</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENetBuffer</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">,</span> <span class="n">enet_uint8</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">);</span>
+<a name="gbab-587"></a><span class="n">ENET_API</span> <span class="kt">size_t</span> <span class="nf">enet_range_coder_decompress</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">enet_uint8</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">,</span> <span class="n">enet_uint8</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">);</span>
+<a name="gbab-588"></a>   
+<a name="gbab-589"></a><span class="k">extern</span> <span class="kt">size_t</span> <span class="nf">enet_protocol_command_size</span> <span class="p">(</span><span class="n">enet_uint8</span><span class="p">);</span>
+<a name="gbab-590"></a>
+<a name="gbab-591"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-592"></a><span class="p">}</span>
+<a name="gbab-593"></a><span class="cp">#endif</span>
+<a name="gbab-594"></a>
+<a name="gbab-595"></a><span class="cp">#endif </span><span class="cm">/* __ENET_ENET_H__ */</span><span class="cp"></span>
+</pre></div>
+</td></tr></table>

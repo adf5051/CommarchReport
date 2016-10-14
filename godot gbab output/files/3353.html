@@ -1,0 +1,391 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*  physics_2d_server_wrap_mt.cpp                                        */</span>
+<a name="gbab-3"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-4"></a><span class="cm">/*                       This file is part of:                           */</span>
+<a name="gbab-5"></a><span class="cm">/*                           GODOT ENGINE                                */</span>
+<a name="gbab-6"></a><span class="cm">/*                    http://www.godotengine.org                         */</span>
+<a name="gbab-7"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-8"></a><span class="cm">/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-10"></a><span class="cm">/* Permission is hereby granted, free of charge, to any person obtaining */</span>
+<a name="gbab-11"></a><span class="cm">/* a copy of this software and associated documentation files (the       */</span>
+<a name="gbab-12"></a><span class="cm">/* &quot;Software&quot;), to deal in the Software without restriction, including   */</span>
+<a name="gbab-13"></a><span class="cm">/* without limitation the rights to use, copy, modify, merge, publish,   */</span>
+<a name="gbab-14"></a><span class="cm">/* distribute, sublicense, and/or sell copies of the Software, and to    */</span>
+<a name="gbab-15"></a><span class="cm">/* permit persons to whom the Software is furnished to do so, subject to */</span>
+<a name="gbab-16"></a><span class="cm">/* the following conditions:                                             */</span>
+<a name="gbab-17"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-18"></a><span class="cm">/* The above copyright notice and this permission notice shall be        */</span>
+<a name="gbab-19"></a><span class="cm">/* included in all copies or substantial portions of the Software.       */</span>
+<a name="gbab-20"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-21"></a><span class="cm">/* THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,       */</span>
+<a name="gbab-22"></a><span class="cm">/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */</span>
+<a name="gbab-23"></a><span class="cm">/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/</span>
+<a name="gbab-24"></a><span class="cm">/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */</span>
+<a name="gbab-25"></a><span class="cm">/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */</span>
+<a name="gbab-26"></a><span class="cm">/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */</span>
+<a name="gbab-27"></a><span class="cm">/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */</span>
+<a name="gbab-28"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-29"></a><span class="cp">#include</span> <span class="cpf">&quot;physics_2d_server_wrap_mt.h&quot;</span><span class="cp"></span>
+<a name="gbab-30"></a>
+<a name="gbab-31"></a><span class="cp">#include</span> <span class="cpf">&quot;os/os.h&quot;</span><span class="cp"></span>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">thread_exit</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a>	<span class="n">exit</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-36"></a><span class="p">}</span>
+<a name="gbab-37"></a>
+<a name="gbab-38"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">thread_step</span><span class="p">(</span><span class="kt">float</span> <span class="n">p_delta</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-39"></a>
+<a name="gbab-40"></a>	<span class="n">physics_2d_server</span><span class="o">-&gt;</span><span class="n">step</span><span class="p">(</span><span class="n">p_delta</span><span class="p">);</span>
+<a name="gbab-41"></a>	<span class="n">step_sem</span><span class="o">-&gt;</span><span class="n">post</span><span class="p">();</span>
+<a name="gbab-42"></a>
+<a name="gbab-43"></a><span class="p">}</span>
+<a name="gbab-44"></a>
+<a name="gbab-45"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">_thread_callback</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">_instance</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-46"></a>
+<a name="gbab-47"></a>	<span class="n">Physics2DServerWrapMT</span> <span class="o">*</span><span class="n">vsmt</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">Physics2DServerWrapMT</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">_instance</span><span class="p">);</span>
+<a name="gbab-48"></a>
+<a name="gbab-49"></a>
+<a name="gbab-50"></a>	<span class="n">vsmt</span><span class="o">-&gt;</span><span class="n">thread_loop</span><span class="p">();</span>
+<a name="gbab-51"></a><span class="p">}</span>
+<a name="gbab-52"></a>
+<a name="gbab-53"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">thread_loop</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-54"></a>
+<a name="gbab-55"></a>	<span class="n">server_thread</span><span class="o">=</span><span class="n">Thread</span><span class="o">::</span><span class="n">get_caller_ID</span><span class="p">();</span>
+<a name="gbab-56"></a>
+<a name="gbab-57"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">make_rendering_thread</span><span class="p">();</span>
+<a name="gbab-58"></a>
+<a name="gbab-59"></a>	<span class="n">physics_2d_server</span><span class="o">-&gt;</span><span class="n">init</span><span class="p">();</span>
+<a name="gbab-60"></a>
+<a name="gbab-61"></a>	<span class="n">exit</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-62"></a>	<span class="n">step_thread_up</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-63"></a>	<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">exit</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-64"></a>		<span class="c1">// flush commands one by one, until exit is requested</span>
+<a name="gbab-65"></a>		<span class="n">command_queue</span><span class="p">.</span><span class="n">wait_and_flush_one</span><span class="p">();</span>
+<a name="gbab-66"></a>	<span class="p">}</span>
+<a name="gbab-67"></a>
+<a name="gbab-68"></a>	<span class="n">command_queue</span><span class="p">.</span><span class="n">flush_all</span><span class="p">();</span> <span class="c1">// flush all</span>
+<a name="gbab-69"></a>
+<a name="gbab-70"></a>	<span class="n">physics_2d_server</span><span class="o">-&gt;</span><span class="n">finish</span><span class="p">();</span>
+<a name="gbab-71"></a>
+<a name="gbab-72"></a><span class="p">}</span>
+<a name="gbab-73"></a>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a><span class="cm">/* EVENT QUEUING */</span>
+<a name="gbab-76"></a>
+<a name="gbab-77"></a>
+<a name="gbab-78"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">step</span><span class="p">(</span><span class="kt">float</span> <span class="n">p_step</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-79"></a>
+<a name="gbab-80"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">create_thread</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-81"></a>
+<a name="gbab-82"></a>		<span class="n">command_queue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">thread_step</span><span class="p">,</span><span class="n">p_step</span><span class="p">);</span>
+<a name="gbab-83"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-84"></a>
+<a name="gbab-85"></a>		<span class="n">command_queue</span><span class="p">.</span><span class="n">flush_all</span><span class="p">();</span> <span class="c1">//flush all pending from other threads</span>
+<a name="gbab-86"></a>		<span class="n">physics_2d_server</span><span class="o">-&gt;</span><span class="n">step</span><span class="p">(</span><span class="n">p_step</span><span class="p">);</span>
+<a name="gbab-87"></a>	<span class="p">}</span>
+<a name="gbab-88"></a><span class="p">}</span>
+<a name="gbab-89"></a>
+<a name="gbab-90"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">sync</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-91"></a>
+<a name="gbab-92"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">step_sem</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-93"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">first_frame</span><span class="p">)</span>
+<a name="gbab-94"></a>			<span class="n">first_frame</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-95"></a>		<span class="k">else</span>
+<a name="gbab-96"></a>			<span class="n">step_sem</span><span class="o">-&gt;</span><span class="n">wait</span><span class="p">();</span> <span class="c1">//must not wait if a step was not issued</span>
+<a name="gbab-97"></a>	<span class="p">}</span>
+<a name="gbab-98"></a>	<span class="n">physics_2d_server</span><span class="o">-&gt;</span><span class="n">sync</span><span class="p">();;</span>
+<a name="gbab-99"></a><span class="p">}</span>
+<a name="gbab-100"></a>
+<a name="gbab-101"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">flush_queries</span><span class="p">(){</span>
+<a name="gbab-102"></a>
+<a name="gbab-103"></a>	<span class="n">physics_2d_server</span><span class="o">-&gt;</span><span class="n">flush_queries</span><span class="p">();</span>
+<a name="gbab-104"></a><span class="p">}</span>
+<a name="gbab-105"></a>
+<a name="gbab-106"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">end_sync</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-107"></a>
+<a name="gbab-108"></a>	<span class="n">physics_2d_server</span><span class="o">-&gt;</span><span class="n">end_sync</span><span class="p">();;</span>
+<a name="gbab-109"></a><span class="p">}</span>
+<a name="gbab-110"></a>
+<a name="gbab-111"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-112"></a>
+<a name="gbab-113"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">create_thread</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-114"></a>
+<a name="gbab-115"></a>		<span class="n">step_sem</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+<a name="gbab-116"></a>		<span class="n">print_line</span><span class="p">(</span><span class="s">&quot;CREATING PHYSICS 2D THREAD&quot;</span><span class="p">);</span>
+<a name="gbab-117"></a>		<span class="c1">//OS::get_singleton()-&gt;release_rendering_thread();</span>
+<a name="gbab-118"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">create_thread</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-119"></a>			<span class="kr">thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">::</span><span class="n">create</span><span class="p">(</span> <span class="n">_thread_callback</span><span class="p">,</span> <span class="k">this</span> <span class="p">);</span>
+<a name="gbab-120"></a>			<span class="n">print_line</span><span class="p">(</span><span class="s">&quot;STARTING PHYISICS 2D THREAD&quot;</span><span class="p">);</span>
+<a name="gbab-121"></a>		<span class="p">}</span>
+<a name="gbab-122"></a>		<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">step_thread_up</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-123"></a>			<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">delay_usec</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<a name="gbab-124"></a>		<span class="p">}</span>
+<a name="gbab-125"></a>		<span class="n">print_line</span><span class="p">(</span><span class="s">&quot;DONE PHYSICS 2D THREAD&quot;</span><span class="p">);</span>
+<a name="gbab-126"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-127"></a>
+<a name="gbab-128"></a>		<span class="n">physics_2d_server</span><span class="o">-&gt;</span><span class="n">init</span><span class="p">();</span>
+<a name="gbab-129"></a>	<span class="p">}</span>
+<a name="gbab-130"></a>
+<a name="gbab-131"></a><span class="p">}</span>
+<a name="gbab-132"></a>
+<a name="gbab-133"></a><span class="kt">void</span> <span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">finish</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-134"></a>
+<a name="gbab-135"></a>
+<a name="gbab-136"></a>	<span class="k">if</span> <span class="p">(</span><span class="kr">thread</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-137"></a>
+<a name="gbab-138"></a>		<span class="n">command_queue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">thread_exit</span><span class="p">);</span>
+<a name="gbab-139"></a>		<span class="n">Thread</span><span class="o">::</span><span class="n">wait_to_finish</span><span class="p">(</span> <span class="kr">thread</span> <span class="p">);</span>
+<a name="gbab-140"></a>		<span class="n">memdelete</span><span class="p">(</span><span class="kr">thread</span><span class="p">);</span>
+<a name="gbab-141"></a>
+<a name="gbab-142"></a><span class="cm">/*</span>
+<a name="gbab-143"></a><span class="cm">		shape_free_cached_ids();</span>
+<a name="gbab-144"></a><span class="cm">		area_free_cached_ids();</span>
+<a name="gbab-145"></a><span class="cm">		body_free_cached_ids();</span>
+<a name="gbab-146"></a><span class="cm">		pin_joint_free_cached_ids();</span>
+<a name="gbab-147"></a><span class="cm">		groove_joint_free_cached_ids();</span>
+<a name="gbab-148"></a><span class="cm">		damped_string_free_cached_ids();</span>
+<a name="gbab-149"></a><span class="cm">*/</span>
+<a name="gbab-150"></a>		<span class="kr">thread</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+<a name="gbab-151"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-152"></a>		<span class="n">physics_2d_server</span><span class="o">-&gt;</span><span class="n">finish</span><span class="p">();</span>
+<a name="gbab-153"></a>	<span class="p">}</span>
+<a name="gbab-154"></a>
+<a name="gbab-155"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">step_sem</span><span class="p">)</span>
+<a name="gbab-156"></a>		<span class="n">memdelete</span><span class="p">(</span><span class="n">step_sem</span><span class="p">);</span>
+<a name="gbab-157"></a>
+<a name="gbab-158"></a><span class="p">}</span>
+<a name="gbab-159"></a>
+<a name="gbab-160"></a>
+<a name="gbab-161"></a><span class="n">Physics2DServerWrapMT</span><span class="o">::</span><span class="n">Physics2DServerWrapMT</span><span class="p">(</span><span class="n">Physics2DServer</span><span class="o">*</span> <span class="n">p_contained</span><span class="p">,</span><span class="kt">bool</span> <span class="n">p_create_thread</span><span class="p">)</span> <span class="o">:</span> <span class="n">command_queue</span><span class="p">(</span><span class="n">p_create_thread</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-162"></a>
+<a name="gbab-163"></a>	<span class="n">physics_2d_server</span><span class="o">=</span><span class="n">p_contained</span><span class="p">;</span>
+<a name="gbab-164"></a>	<span class="n">create_thread</span><span class="o">=</span><span class="n">p_create_thread</span><span class="p">;</span>
+<a name="gbab-165"></a>	<span class="kr">thread</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+<a name="gbab-166"></a>	<span class="n">step_sem</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+<a name="gbab-167"></a>	<span class="n">step_pending</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-168"></a>	<span class="n">step_thread_up</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-169"></a>	<span class="n">alloc_mutex</span><span class="o">=</span><span class="n">Mutex</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+<a name="gbab-170"></a>
+<a name="gbab-171"></a>	<span class="n">shape_pool_max_size</span><span class="o">=</span><span class="n">GLOBAL_DEF</span><span class="p">(</span><span class="s">&quot;core/thread_rid_pool_prealloc&quot;</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<a name="gbab-172"></a>	<span class="n">area_pool_max_size</span><span class="o">=</span><span class="n">GLOBAL_DEF</span><span class="p">(</span><span class="s">&quot;core/thread_rid_pool_prealloc&quot;</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<a name="gbab-173"></a>	<span class="n">body_pool_max_size</span><span class="o">=</span><span class="n">GLOBAL_DEF</span><span class="p">(</span><span class="s">&quot;core/thread_rid_pool_prealloc&quot;</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<a name="gbab-174"></a>	<span class="n">pin_joint_pool_max_size</span><span class="o">=</span><span class="n">GLOBAL_DEF</span><span class="p">(</span><span class="s">&quot;core/thread_rid_pool_prealloc&quot;</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<a name="gbab-175"></a>	<span class="n">groove_joint_pool_max_size</span><span class="o">=</span><span class="n">GLOBAL_DEF</span><span class="p">(</span><span class="s">&quot;core/thread_rid_pool_prealloc&quot;</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<a name="gbab-176"></a>	<span class="n">damped_spring_joint_pool_max_size</span><span class="o">=</span><span class="n">GLOBAL_DEF</span><span class="p">(</span><span class="s">&quot;core/thread_rid_pool_prealloc&quot;</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<a name="gbab-177"></a>
+<a name="gbab-178"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">p_create_thread</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-179"></a>		<span class="n">server_thread</span><span class="o">=</span><span class="n">Thread</span><span class="o">::</span><span class="n">get_caller_ID</span><span class="p">();</span>
+<a name="gbab-180"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-181"></a>		<span class="n">server_thread</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-182"></a>	<span class="p">}</span>
+<a name="gbab-183"></a>
+<a name="gbab-184"></a>	<span class="n">main_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">::</span><span class="n">get_caller_ID</span><span class="p">();</span>
+<a name="gbab-185"></a>	<span class="n">first_frame</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-186"></a><span class="p">}</span>
+<a name="gbab-187"></a>
+<a name="gbab-188"></a>
+<a name="gbab-189"></a><span class="n">Physics2DServerWrapMT</span><span class="o">::~</span><span class="n">Physics2DServerWrapMT</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-190"></a>
+<a name="gbab-191"></a>	<span class="n">memdelete</span><span class="p">(</span><span class="n">physics_2d_server</span><span class="p">);</span>
+<a name="gbab-192"></a>	<span class="n">memdelete</span><span class="p">(</span><span class="n">alloc_mutex</span><span class="p">);</span>
+<a name="gbab-193"></a>	<span class="c1">//finish();</span>
+<a name="gbab-194"></a>
+<a name="gbab-195"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

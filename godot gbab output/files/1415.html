@@ -1,0 +1,561 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*</span>
+<a name="gbab-2"></a><span class="cm"> * Copyright 2000 Computing Research Labs, New Mexico State University</span>
+<a name="gbab-3"></a><span class="cm"> * Copyright 2001-2004, 2011 Francesco Zappa Nardelli</span>
+<a name="gbab-4"></a><span class="cm"> *</span>
+<a name="gbab-5"></a><span class="cm"> * Permission is hereby granted, free of charge, to any person obtaining a</span>
+<a name="gbab-6"></a><span class="cm"> * copy of this software and associated documentation files (the &quot;Software&quot;),</span>
+<a name="gbab-7"></a><span class="cm"> * to deal in the Software without restriction, including without limitation</span>
+<a name="gbab-8"></a><span class="cm"> * the rights to use, copy, modify, merge, publish, distribute, sublicense,</span>
+<a name="gbab-9"></a><span class="cm"> * and/or sell copies of the Software, and to permit persons to whom the</span>
+<a name="gbab-10"></a><span class="cm"> * Software is furnished to do so, subject to the following conditions:</span>
+<a name="gbab-11"></a><span class="cm"> *</span>
+<a name="gbab-12"></a><span class="cm"> * The above copyright notice and this permission notice shall be included in</span>
+<a name="gbab-13"></a><span class="cm"> * all copies or substantial portions of the Software.</span>
+<a name="gbab-14"></a><span class="cm"> *</span>
+<a name="gbab-15"></a><span class="cm"> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<a name="gbab-16"></a><span class="cm"> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<a name="gbab-17"></a><span class="cm"> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL</span>
+<a name="gbab-18"></a><span class="cm"> * THE COMPUTING RESEARCH LAB OR NEW MEXICO STATE UNIVERSITY BE LIABLE FOR ANY</span>
+<a name="gbab-19"></a><span class="cm"> * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT</span>
+<a name="gbab-20"></a><span class="cm"> * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR</span>
+<a name="gbab-21"></a><span class="cm"> * THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span>
+<a name="gbab-22"></a><span class="cm"> */</span>
+<a name="gbab-23"></a>
+<a name="gbab-24"></a>
+<a name="gbab-25"></a><span class="cp">#ifndef BDF_H_</span>
+<a name="gbab-26"></a><span class="cp">#define BDF_H_</span>
+<a name="gbab-27"></a>
+<a name="gbab-28"></a>
+<a name="gbab-29"></a><span class="cm">/*</span>
+<a name="gbab-30"></a><span class="cm"> * Based on bdf.h,v 1.16 2000/03/16 20:08:51 mleisher</span>
+<a name="gbab-31"></a><span class="cm"> */</span>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a><span class="cp">#include</span> <span class="cpf">&lt;ft2build.h&gt;</span><span class="cp"></span>
+<a name="gbab-34"></a><span class="cp">#include</span> <span class="cpf">FT_INTERNAL_OBJECTS_H</span><span class="cp"></span>
+<a name="gbab-35"></a><span class="cp">#include</span> <span class="cpf">FT_INTERNAL_STREAM_H</span><span class="cp"></span>
+<a name="gbab-36"></a><span class="cp">#include</span> <span class="cpf">FT_INTERNAL_HASH_H</span><span class="cp"></span>
+<a name="gbab-37"></a>
+<a name="gbab-38"></a>
+<a name="gbab-39"></a><span class="n">FT_BEGIN_HEADER</span>
+<a name="gbab-40"></a>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a><span class="cm">/* Imported from bdfP.h */</span>
+<a name="gbab-43"></a>
+<a name="gbab-44"></a><span class="cp">#define _bdf_glyph_modified( map, e )                 \</span>
+<a name="gbab-45"></a><span class="cp">          ( (map)[(e) &gt;&gt; 5] &amp; ( 1UL &lt;&lt; ( (e) &amp; 31 ) ) )</span>
+<a name="gbab-46"></a><span class="cp">#define _bdf_set_glyph_modified( map, e )              \</span>
+<a name="gbab-47"></a><span class="cp">          ( (map)[(e) &gt;&gt; 5] |= ( 1UL &lt;&lt; ( (e) &amp; 31 ) ) )</span>
+<a name="gbab-48"></a><span class="cp">#define _bdf_clear_glyph_modified( map, e )             \</span>
+<a name="gbab-49"></a><span class="cp">          ( (map)[(e) &gt;&gt; 5] &amp;= ~( 1UL &lt;&lt; ( (e) &amp; 31 ) ) )</span>
+<a name="gbab-50"></a>
+<a name="gbab-51"></a><span class="cm">/* end of bdfP.h */</span>
+<a name="gbab-52"></a>
+<a name="gbab-53"></a>
+<a name="gbab-54"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-55"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-56"></a>  <span class="cm">/* BDF font options macros and types.                                    */</span>
+<a name="gbab-57"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-58"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-59"></a>
+<a name="gbab-60"></a>
+<a name="gbab-61"></a><span class="cp">#define BDF_CORRECT_METRICS  0x01 </span><span class="cm">/* Correct invalid metrics when loading. */</span><span class="cp"></span>
+<a name="gbab-62"></a><span class="cp">#define BDF_KEEP_COMMENTS    0x02 </span><span class="cm">/* Preserve the font comments.           */</span><span class="cp"></span>
+<a name="gbab-63"></a><span class="cp">#define BDF_KEEP_UNENCODED   0x04 </span><span class="cm">/* Keep the unencoded glyphs.            */</span><span class="cp"></span>
+<a name="gbab-64"></a><span class="cp">#define BDF_PROPORTIONAL     0x08 </span><span class="cm">/* Font has proportional spacing.        */</span><span class="cp"></span>
+<a name="gbab-65"></a><span class="cp">#define BDF_MONOWIDTH        0x10 </span><span class="cm">/* Font has mono width.                  */</span><span class="cp"></span>
+<a name="gbab-66"></a><span class="cp">#define BDF_CHARCELL         0x20 </span><span class="cm">/* Font has charcell spacing.            */</span><span class="cp"></span>
+<a name="gbab-67"></a>
+<a name="gbab-68"></a><span class="cp">#define BDF_ALL_SPACING  ( BDF_PROPORTIONAL | \</span>
+<a name="gbab-69"></a><span class="cp">                           BDF_MONOWIDTH    | \</span>
+<a name="gbab-70"></a><span class="cp">                           BDF_CHARCELL     )</span>
+<a name="gbab-71"></a>
+<a name="gbab-72"></a><span class="cp">#define BDF_DEFAULT_LOAD_OPTIONS  ( BDF_CORRECT_METRICS | \</span>
+<a name="gbab-73"></a><span class="cp">                                    BDF_KEEP_COMMENTS   | \</span>
+<a name="gbab-74"></a><span class="cp">                                    BDF_KEEP_UNENCODED  | \</span>
+<a name="gbab-75"></a><span class="cp">                                    BDF_PROPORTIONAL    )</span>
+<a name="gbab-76"></a>
+<a name="gbab-77"></a>
+<a name="gbab-78"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">bdf_options_t_</span>
+<a name="gbab-79"></a>  <span class="p">{</span>
+<a name="gbab-80"></a>    <span class="kt">int</span>            <span class="n">correct_metrics</span><span class="p">;</span>
+<a name="gbab-81"></a>    <span class="kt">int</span>            <span class="n">keep_unencoded</span><span class="p">;</span>
+<a name="gbab-82"></a>    <span class="kt">int</span>            <span class="n">keep_comments</span><span class="p">;</span>
+<a name="gbab-83"></a>    <span class="kt">int</span>            <span class="n">font_spacing</span><span class="p">;</span>
+<a name="gbab-84"></a>
+<a name="gbab-85"></a>  <span class="p">}</span> <span class="n">bdf_options_t</span><span class="p">;</span>
+<a name="gbab-86"></a>
+<a name="gbab-87"></a>
+<a name="gbab-88"></a>  <span class="cm">/* Callback function type for unknown configuration options. */</span>
+<a name="gbab-89"></a>  <span class="k">typedef</span> <span class="nf">int</span>
+<a name="gbab-90"></a>  <span class="p">(</span><span class="o">*</span><span class="n">bdf_options_callback_t</span><span class="p">)(</span> <span class="n">bdf_options_t</span><span class="o">*</span>  <span class="n">opts</span><span class="p">,</span>
+<a name="gbab-91"></a>                             <span class="kt">char</span><span class="o">**</span>          <span class="n">params</span><span class="p">,</span>
+<a name="gbab-92"></a>                             <span class="kt">unsigned</span> <span class="kt">long</span>   <span class="n">nparams</span><span class="p">,</span>
+<a name="gbab-93"></a>                             <span class="kt">void</span><span class="o">*</span>           <span class="n">client_data</span> <span class="p">);</span>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a>
+<a name="gbab-96"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-97"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-98"></a>  <span class="cm">/* BDF font property macros and types.                                   */</span>
+<a name="gbab-99"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-100"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-101"></a>
+<a name="gbab-102"></a>
+<a name="gbab-103"></a><span class="cp">#define BDF_ATOM      1</span>
+<a name="gbab-104"></a><span class="cp">#define BDF_INTEGER   2</span>
+<a name="gbab-105"></a><span class="cp">#define BDF_CARDINAL  3</span>
+<a name="gbab-106"></a>
+<a name="gbab-107"></a>
+<a name="gbab-108"></a>  <span class="cm">/* This structure represents a particular property of a font. */</span>
+<a name="gbab-109"></a>  <span class="cm">/* There are a set of defaults and each font has their own.   */</span>
+<a name="gbab-110"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">bdf_property_t_</span>
+<a name="gbab-111"></a>  <span class="p">{</span>
+<a name="gbab-112"></a>    <span class="kt">char</span><span class="o">*</span>  <span class="n">name</span><span class="p">;</span>         <span class="cm">/* Name of the property.   */</span>
+<a name="gbab-113"></a>    <span class="kt">int</span>    <span class="n">format</span><span class="p">;</span>       <span class="cm">/* Format of the property. */</span>
+<a name="gbab-114"></a>    <span class="kt">int</span>    <span class="n">builtin</span><span class="p">;</span>      <span class="cm">/* A builtin property.     */</span>
+<a name="gbab-115"></a>    <span class="k">union</span>
+<a name="gbab-116"></a>    <span class="p">{</span>
+<a name="gbab-117"></a>      <span class="kt">char</span><span class="o">*</span>          <span class="n">atom</span><span class="p">;</span>
+<a name="gbab-118"></a>      <span class="kt">long</span>           <span class="n">l</span><span class="p">;</span>
+<a name="gbab-119"></a>      <span class="kt">unsigned</span> <span class="kt">long</span>  <span class="n">ul</span><span class="p">;</span>
+<a name="gbab-120"></a>
+<a name="gbab-121"></a>    <span class="p">}</span> <span class="n">value</span><span class="p">;</span>             <span class="cm">/* Value of the property.  */</span>
+<a name="gbab-122"></a>
+<a name="gbab-123"></a>  <span class="p">}</span> <span class="n">bdf_property_t</span><span class="p">;</span>
+<a name="gbab-124"></a>
+<a name="gbab-125"></a>
+<a name="gbab-126"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-127"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-128"></a>  <span class="cm">/* BDF font metric and glyph types.                                      */</span>
+<a name="gbab-129"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-130"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-131"></a>
+<a name="gbab-132"></a>
+<a name="gbab-133"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">bdf_bbx_t_</span>
+<a name="gbab-134"></a>  <span class="p">{</span>
+<a name="gbab-135"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>  <span class="n">width</span><span class="p">;</span>
+<a name="gbab-136"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>  <span class="n">height</span><span class="p">;</span>
+<a name="gbab-137"></a>
+<a name="gbab-138"></a>    <span class="kt">short</span>           <span class="n">x_offset</span><span class="p">;</span>
+<a name="gbab-139"></a>    <span class="kt">short</span>           <span class="n">y_offset</span><span class="p">;</span>
+<a name="gbab-140"></a>
+<a name="gbab-141"></a>    <span class="kt">short</span>           <span class="n">ascent</span><span class="p">;</span>
+<a name="gbab-142"></a>    <span class="kt">short</span>           <span class="n">descent</span><span class="p">;</span>
+<a name="gbab-143"></a>
+<a name="gbab-144"></a>  <span class="p">}</span> <span class="n">bdf_bbx_t</span><span class="p">;</span>
+<a name="gbab-145"></a>
+<a name="gbab-146"></a>
+<a name="gbab-147"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">bdf_glyph_t_</span>
+<a name="gbab-148"></a>  <span class="p">{</span>
+<a name="gbab-149"></a>    <span class="kt">char</span><span class="o">*</span>           <span class="n">name</span><span class="p">;</span>        <span class="cm">/* Glyph name.                          */</span>
+<a name="gbab-150"></a>    <span class="kt">long</span>            <span class="n">encoding</span><span class="p">;</span>    <span class="cm">/* Glyph encoding.                      */</span>
+<a name="gbab-151"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>  <span class="n">swidth</span><span class="p">;</span>      <span class="cm">/* Scalable width.                      */</span>
+<a name="gbab-152"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>  <span class="n">dwidth</span><span class="p">;</span>      <span class="cm">/* Device width.                        */</span>
+<a name="gbab-153"></a>    <span class="n">bdf_bbx_t</span>       <span class="n">bbx</span><span class="p">;</span>         <span class="cm">/* Glyph bounding box.                  */</span>
+<a name="gbab-154"></a>    <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span>  <span class="n">bitmap</span><span class="p">;</span>      <span class="cm">/* Glyph bitmap.                        */</span>
+<a name="gbab-155"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>   <span class="n">bpr</span><span class="p">;</span>         <span class="cm">/* Number of bytes used per row.        */</span>
+<a name="gbab-156"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>  <span class="n">bytes</span><span class="p">;</span>       <span class="cm">/* Number of bytes used for the bitmap. */</span>
+<a name="gbab-157"></a>
+<a name="gbab-158"></a>  <span class="p">}</span> <span class="n">bdf_glyph_t</span><span class="p">;</span>
+<a name="gbab-159"></a>
+<a name="gbab-160"></a>
+<a name="gbab-161"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">bdf_glyphlist_t_</span>
+<a name="gbab-162"></a>  <span class="p">{</span>
+<a name="gbab-163"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>  <span class="n">pad</span><span class="p">;</span>          <span class="cm">/* Pad to 4-byte boundary.              */</span>
+<a name="gbab-164"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>  <span class="n">bpp</span><span class="p">;</span>          <span class="cm">/* Bits per pixel.                      */</span>
+<a name="gbab-165"></a>    <span class="kt">long</span>            <span class="n">start</span><span class="p">;</span>        <span class="cm">/* Beginning encoding value of glyphs.  */</span>
+<a name="gbab-166"></a>    <span class="kt">long</span>            <span class="n">end</span><span class="p">;</span>          <span class="cm">/* Ending encoding value of glyphs.     */</span>
+<a name="gbab-167"></a>    <span class="n">bdf_glyph_t</span><span class="o">*</span>    <span class="n">glyphs</span><span class="p">;</span>       <span class="cm">/* Glyphs themselves.                   */</span>
+<a name="gbab-168"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>   <span class="n">glyphs_size</span><span class="p">;</span>  <span class="cm">/* Glyph structures allocated.          */</span>
+<a name="gbab-169"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>   <span class="n">glyphs_used</span><span class="p">;</span>  <span class="cm">/* Glyph structures used.               */</span>
+<a name="gbab-170"></a>    <span class="n">bdf_bbx_t</span>       <span class="n">bbx</span><span class="p">;</span>          <span class="cm">/* Overall bounding box of glyphs.      */</span>
+<a name="gbab-171"></a>
+<a name="gbab-172"></a>  <span class="p">}</span> <span class="n">bdf_glyphlist_t</span><span class="p">;</span>
+<a name="gbab-173"></a>
+<a name="gbab-174"></a>
+<a name="gbab-175"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">bdf_font_t_</span>
+<a name="gbab-176"></a>  <span class="p">{</span>
+<a name="gbab-177"></a>    <span class="kt">char</span><span class="o">*</span>            <span class="n">name</span><span class="p">;</span>           <span class="cm">/* Name of the font.                   */</span>
+<a name="gbab-178"></a>    <span class="n">bdf_bbx_t</span>        <span class="n">bbx</span><span class="p">;</span>            <span class="cm">/* Font bounding box.                  */</span>
+<a name="gbab-179"></a>
+<a name="gbab-180"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">point_size</span><span class="p">;</span>     <span class="cm">/* Point size of the font.             */</span>
+<a name="gbab-181"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">resolution_x</span><span class="p">;</span>   <span class="cm">/* Font horizontal resolution.         */</span>
+<a name="gbab-182"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">resolution_y</span><span class="p">;</span>   <span class="cm">/* Font vertical resolution.           */</span>
+<a name="gbab-183"></a>
+<a name="gbab-184"></a>    <span class="kt">int</span>              <span class="n">spacing</span><span class="p">;</span>        <span class="cm">/* Font spacing value.                 */</span>
+<a name="gbab-185"></a>
+<a name="gbab-186"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>   <span class="n">monowidth</span><span class="p">;</span>      <span class="cm">/* Logical width for monowidth font.   */</span>
+<a name="gbab-187"></a>
+<a name="gbab-188"></a>    <span class="kt">long</span>             <span class="n">default_char</span><span class="p">;</span>   <span class="cm">/* Encoding of the default glyph.      */</span>
+<a name="gbab-189"></a>
+<a name="gbab-190"></a>    <span class="kt">long</span>             <span class="n">font_ascent</span><span class="p">;</span>    <span class="cm">/* Font ascent.                        */</span>
+<a name="gbab-191"></a>    <span class="kt">long</span>             <span class="n">font_descent</span><span class="p">;</span>   <span class="cm">/* Font descent.                       */</span>
+<a name="gbab-192"></a>
+<a name="gbab-193"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">glyphs_size</span><span class="p">;</span>    <span class="cm">/* Glyph structures allocated.         */</span>
+<a name="gbab-194"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">glyphs_used</span><span class="p">;</span>    <span class="cm">/* Glyph structures used.              */</span>
+<a name="gbab-195"></a>    <span class="n">bdf_glyph_t</span><span class="o">*</span>     <span class="n">glyphs</span><span class="p">;</span>         <span class="cm">/* Glyphs themselves.                  */</span>
+<a name="gbab-196"></a>
+<a name="gbab-197"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">unencoded_size</span><span class="p">;</span> <span class="cm">/* Unencoded glyph struct. allocated.  */</span>
+<a name="gbab-198"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">unencoded_used</span><span class="p">;</span> <span class="cm">/* Unencoded glyph struct. used.       */</span>
+<a name="gbab-199"></a>    <span class="n">bdf_glyph_t</span><span class="o">*</span>     <span class="n">unencoded</span><span class="p">;</span>      <span class="cm">/* Unencoded glyphs themselves.        */</span>
+<a name="gbab-200"></a>
+<a name="gbab-201"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">props_size</span><span class="p">;</span>     <span class="cm">/* Font properties allocated.          */</span>
+<a name="gbab-202"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">props_used</span><span class="p">;</span>     <span class="cm">/* Font properties used.               */</span>
+<a name="gbab-203"></a>    <span class="n">bdf_property_t</span><span class="o">*</span>  <span class="n">props</span><span class="p">;</span>          <span class="cm">/* Font properties themselves.         */</span>
+<a name="gbab-204"></a>
+<a name="gbab-205"></a>    <span class="kt">char</span><span class="o">*</span>            <span class="n">comments</span><span class="p">;</span>       <span class="cm">/* Font comments.                      */</span>
+<a name="gbab-206"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">comments_len</span><span class="p">;</span>   <span class="cm">/* Length of comment string.           */</span>
+<a name="gbab-207"></a>
+<a name="gbab-208"></a>    <span class="n">bdf_glyphlist_t</span>  <span class="n">overflow</span><span class="p">;</span>       <span class="cm">/* Storage used for glyph insertion.   */</span>
+<a name="gbab-209"></a>
+<a name="gbab-210"></a>    <span class="kt">void</span><span class="o">*</span>            <span class="n">internal</span><span class="p">;</span>       <span class="cm">/* Internal data for the font.         */</span>
+<a name="gbab-211"></a>
+<a name="gbab-212"></a>    <span class="cm">/* The size of the next two arrays must be in sync with the */</span>
+<a name="gbab-213"></a>    <span class="cm">/* size of the `have&#39; array in the `bdf_parse_t&#39; structure. */</span>
+<a name="gbab-214"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">nmod</span><span class="p">[</span><span class="mi">34816</span><span class="p">];</span>    <span class="cm">/* Bitmap indicating modified glyphs.  */</span>
+<a name="gbab-215"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">umod</span><span class="p">[</span><span class="mi">34816</span><span class="p">];</span>    <span class="cm">/* Bitmap indicating modified          */</span>
+<a name="gbab-216"></a>                                     <span class="cm">/* unencoded glyphs.                   */</span>
+<a name="gbab-217"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>   <span class="n">modified</span><span class="p">;</span>       <span class="cm">/* Boolean indicating font modified.   */</span>
+<a name="gbab-218"></a>    <span class="kt">unsigned</span> <span class="kt">short</span>   <span class="n">bpp</span><span class="p">;</span>            <span class="cm">/* Bits per pixel.                     */</span>
+<a name="gbab-219"></a>
+<a name="gbab-220"></a>    <span class="n">FT_Memory</span>        <span class="n">memory</span><span class="p">;</span>
+<a name="gbab-221"></a>
+<a name="gbab-222"></a>    <span class="n">bdf_property_t</span><span class="o">*</span>  <span class="n">user_props</span><span class="p">;</span>
+<a name="gbab-223"></a>    <span class="kt">unsigned</span> <span class="kt">long</span>    <span class="n">nuser_props</span><span class="p">;</span>
+<a name="gbab-224"></a>    <span class="n">FT_HashRec</span>       <span class="n">proptbl</span><span class="p">;</span>
+<a name="gbab-225"></a>
+<a name="gbab-226"></a>  <span class="p">}</span> <span class="n">bdf_font_t</span><span class="p">;</span>
+<a name="gbab-227"></a>
+<a name="gbab-228"></a>
+<a name="gbab-229"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-230"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-231"></a>  <span class="cm">/* Types for load/save callbacks.                                        */</span>
+<a name="gbab-232"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-233"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-234"></a>
+<a name="gbab-235"></a>
+<a name="gbab-236"></a>  <span class="cm">/* Error codes. */</span>
+<a name="gbab-237"></a><span class="cp">#define BDF_MISSING_START       -1</span>
+<a name="gbab-238"></a><span class="cp">#define BDF_MISSING_FONTNAME    -2</span>
+<a name="gbab-239"></a><span class="cp">#define BDF_MISSING_SIZE        -3</span>
+<a name="gbab-240"></a><span class="cp">#define BDF_MISSING_CHARS       -4</span>
+<a name="gbab-241"></a><span class="cp">#define BDF_MISSING_STARTCHAR   -5</span>
+<a name="gbab-242"></a><span class="cp">#define BDF_MISSING_ENCODING    -6</span>
+<a name="gbab-243"></a><span class="cp">#define BDF_MISSING_BBX         -7</span>
+<a name="gbab-244"></a>
+<a name="gbab-245"></a><span class="cp">#define BDF_OUT_OF_MEMORY      -20</span>
+<a name="gbab-246"></a>
+<a name="gbab-247"></a><span class="cp">#define BDF_INVALID_LINE      -100</span>
+<a name="gbab-248"></a>
+<a name="gbab-249"></a>
+<a name="gbab-250"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-251"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-252"></a>  <span class="cm">/* BDF font API.                                                         */</span>
+<a name="gbab-253"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-254"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-255"></a>
+<a name="gbab-256"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-257"></a>  <span class="n">bdf_load_font</span><span class="p">(</span> <span class="n">FT_Stream</span>       <span class="n">stream</span><span class="p">,</span>
+<a name="gbab-258"></a>                 <span class="n">FT_Memory</span>       <span class="n">memory</span><span class="p">,</span>
+<a name="gbab-259"></a>                 <span class="n">bdf_options_t</span><span class="o">*</span>  <span class="n">opts</span><span class="p">,</span>
+<a name="gbab-260"></a>                 <span class="n">bdf_font_t</span><span class="o">*</span>    <span class="o">*</span><span class="n">font</span> <span class="p">);</span>
+<a name="gbab-261"></a>
+<a name="gbab-262"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span>
+<a name="gbab-263"></a>  <span class="n">bdf_free_font</span><span class="p">(</span> <span class="n">bdf_font_t</span><span class="o">*</span>  <span class="n">font</span> <span class="p">);</span>
+<a name="gbab-264"></a>
+<a name="gbab-265"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">bdf_property_t</span> <span class="o">*</span> <span class="p">)</span>
+<a name="gbab-266"></a>  <span class="n">bdf_get_property</span><span class="p">(</span> <span class="kt">char</span><span class="o">*</span>        <span class="n">name</span><span class="p">,</span>
+<a name="gbab-267"></a>                    <span class="n">bdf_font_t</span><span class="o">*</span>  <span class="n">font</span> <span class="p">);</span>
+<a name="gbab-268"></a>
+<a name="gbab-269"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">bdf_property_t</span> <span class="o">*</span> <span class="p">)</span>
+<a name="gbab-270"></a>  <span class="n">bdf_get_font_property</span><span class="p">(</span> <span class="n">bdf_font_t</span><span class="o">*</span>  <span class="n">font</span><span class="p">,</span>
+<a name="gbab-271"></a>                         <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>  <span class="n">name</span> <span class="p">);</span>
+<a name="gbab-272"></a>
+<a name="gbab-273"></a>
+<a name="gbab-274"></a><span class="n">FT_END_HEADER</span>
+<a name="gbab-275"></a>
+<a name="gbab-276"></a>
+<a name="gbab-277"></a><span class="cp">#endif </span><span class="cm">/* BDF_H_ */</span><span class="cp"></span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a>
+<a name="gbab-280"></a><span class="cm">/* END */</span>
+</pre></div>
+</td></tr></table>

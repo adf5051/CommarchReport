@@ -1,0 +1,1503 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*  cp_loader_xm.cpp                                                     */</span>
+<a name="gbab-3"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-4"></a><span class="cm">/*                       This file is part of:                           */</span>
+<a name="gbab-5"></a><span class="cm">/*                           GODOT ENGINE                                */</span>
+<a name="gbab-6"></a><span class="cm">/*                    http://www.godotengine.org                         */</span>
+<a name="gbab-7"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-8"></a><span class="cm">/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-10"></a><span class="cm">/* Permission is hereby granted, free of charge, to any person obtaining */</span>
+<a name="gbab-11"></a><span class="cm">/* a copy of this software and associated documentation files (the       */</span>
+<a name="gbab-12"></a><span class="cm">/* &quot;Software&quot;), to deal in the Software without restriction, including   */</span>
+<a name="gbab-13"></a><span class="cm">/* without limitation the rights to use, copy, modify, merge, publish,   */</span>
+<a name="gbab-14"></a><span class="cm">/* distribute, sublicense, and/or sell copies of the Software, and to    */</span>
+<a name="gbab-15"></a><span class="cm">/* permit persons to whom the Software is furnished to do so, subject to */</span>
+<a name="gbab-16"></a><span class="cm">/* the following conditions:                                             */</span>
+<a name="gbab-17"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-18"></a><span class="cm">/* The above copyright notice and this permission notice shall be        */</span>
+<a name="gbab-19"></a><span class="cm">/* included in all copies or substantial portions of the Software.       */</span>
+<a name="gbab-20"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-21"></a><span class="cm">/* THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,       */</span>
+<a name="gbab-22"></a><span class="cm">/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */</span>
+<a name="gbab-23"></a><span class="cm">/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/</span>
+<a name="gbab-24"></a><span class="cm">/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */</span>
+<a name="gbab-25"></a><span class="cm">/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */</span>
+<a name="gbab-26"></a><span class="cm">/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */</span>
+<a name="gbab-27"></a><span class="cm">/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */</span>
+<a name="gbab-28"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-29"></a>
+<a name="gbab-30"></a><span class="cp">#include</span> <span class="cpf">&quot;cp_loader_xm.h&quot;</span><span class="cp"></span>
+<a name="gbab-31"></a><span class="cp">#include</span> <span class="cpf">&quot;cp_tables.h&quot;</span><span class="cp"></span>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a><span class="cp">#define ABORT_LOAD  { file-&gt;close(); return FILE_CORRUPTED; }</span>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a>
+<a name="gbab-36"></a>
+<a name="gbab-37"></a>
+<a name="gbab-38"></a><span class="n">CPLoader</span><span class="o">::</span><span class="n">Error</span> <span class="n">CPLoader_XM</span><span class="o">::</span><span class="n">load_song</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_file</span><span class="p">,</span><span class="n">CPSong</span> <span class="o">*</span><span class="n">p_song</span><span class="p">,</span><span class="kt">bool</span> <span class="n">p_sampleset</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-39"></a>
+<a name="gbab-40"></a>	<span class="n">song</span><span class="o">=</span><span class="n">p_song</span><span class="p">;</span>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">open</span><span class="p">(</span><span class="n">p_file</span><span class="p">,</span><span class="n">CPFileAccessWrapper</span><span class="o">::</span><span class="n">READ</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-43"></a>
+<a name="gbab-44"></a>		<span class="k">return</span> <span class="n">FILE_CANNOT_OPEN</span><span class="p">;</span>
+<a name="gbab-45"></a>        <span class="p">};</span>
+<a name="gbab-46"></a>
+<a name="gbab-47"></a>
+<a name="gbab-48"></a>        <span class="cm">/**************************************</span>
+<a name="gbab-49"></a><span class="cm">        LOAD HEADER</span>
+<a name="gbab-50"></a><span class="cm">        ***************************************/</span>
+<a name="gbab-51"></a>
+<a name="gbab-52"></a>  	<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">(</span><span class="n">header</span><span class="p">.</span><span class="n">idtext</span><span class="p">,</span><span class="mi">17</span><span class="p">);</span>
+<a name="gbab-53"></a>   	<span class="n">header</span><span class="p">.</span><span class="n">idtext</span><span class="p">[</span><span class="mi">17</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-54"></a>
+<a name="gbab-55"></a>  	<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">(</span><span class="n">header</span><span class="p">.</span><span class="n">songname</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<a name="gbab-56"></a>	
+<a name="gbab-57"></a>
+<a name="gbab-58"></a>
+<a name="gbab-59"></a>   	<span class="n">header</span><span class="p">.</span><span class="n">songname</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-60"></a>  	<span class="n">header</span><span class="p">.</span><span class="n">hex1a</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-61"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">.</span><span class="n">hex1a</span><span class="o">!=</span><span class="mh">0x1A</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//XM &quot;magic&quot; byte..  this sucks :)</span>
+<a name="gbab-62"></a>
+<a name="gbab-63"></a>		<span class="n">file</span><span class="o">-&gt;</span><span class="n">close</span><span class="p">();</span> 
+<a name="gbab-64"></a>		<span class="k">return</span> <span class="n">FILE_UNRECOGNIZED</span><span class="p">;</span>
+<a name="gbab-65"></a>      		
+<a name="gbab-66"></a>        <span class="p">}</span>
+<a name="gbab-67"></a>
+<a name="gbab-68"></a>	
+<a name="gbab-69"></a>	<span class="c1">//magic byte sucks, but can&#39;t do much about it.. </span>
+<a name="gbab-70"></a>	
+<a name="gbab-71"></a>	<span class="n">song</span><span class="o">-&gt;</span><span class="n">reset</span><span class="p">();</span> <span class="c1">//must reset the song</span>
+<a name="gbab-72"></a>
+<a name="gbab-73"></a>	<span class="n">song</span><span class="o">-&gt;</span><span class="n">set_name</span><span class="p">(</span> <span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">header</span><span class="p">.</span><span class="n">songname</span> <span class="p">);</span>
+<a name="gbab-74"></a>	
+<a name="gbab-75"></a>  	<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">(</span><span class="n">header</span><span class="p">.</span><span class="n">trackername</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+<a name="gbab-76"></a>  	<span class="n">header</span><span class="p">.</span><span class="n">trackername</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-77"></a>
+<a name="gbab-78"></a>
+<a name="gbab-79"></a>  	<span class="n">header</span><span class="p">.</span><span class="n">version</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-80"></a>
+<a name="gbab-81"></a>  	<span class="n">header</span><span class="p">.</span><span class="n">headersize</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_dword</span><span class="p">();</span>
+<a name="gbab-82"></a>
+<a name="gbab-83"></a>	<span class="n">header</span><span class="p">.</span><span class="n">songlength</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-84"></a>
+<a name="gbab-85"></a>  	<span class="n">header</span><span class="p">.</span><span class="n">restart_pos</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-86"></a>
+<a name="gbab-87"></a>  	<span class="n">header</span><span class="p">.</span><span class="n">channels_used</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-88"></a>
+<a name="gbab-89"></a>  	<span class="n">header</span><span class="p">.</span><span class="n">patterns_used</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-90"></a>
+<a name="gbab-91"></a>  	<span class="n">header</span><span class="p">.</span><span class="n">instruments_used</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-92"></a>
+<a name="gbab-93"></a>	<span class="n">song</span><span class="o">-&gt;</span><span class="n">set_linear_slides</span><span class="p">(</span> <span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">()</span> <span class="p">);</span>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a>	<span class="n">song</span><span class="o">-&gt;</span><span class="n">set_speed</span><span class="p">(</span> <span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">()</span> <span class="p">);</span>
+<a name="gbab-96"></a>
+<a name="gbab-97"></a>	<span class="n">song</span><span class="o">-&gt;</span><span class="n">set_tempo</span><span class="p">(</span> <span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">()</span> <span class="p">);</span>
+<a name="gbab-98"></a>	<span class="n">song</span><span class="o">-&gt;</span><span class="n">set_instruments</span><span class="p">(</span> <span class="nb">true</span> <span class="p">);</span>
+<a name="gbab-99"></a>
+<a name="gbab-100"></a>  	<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">(</span><span class="n">header</span><span class="p">.</span><span class="n">orderlist</span><span class="p">,</span><span class="mi">256</span><span class="p">);</span>
+<a name="gbab-101"></a>	
+<a name="gbab-102"></a>	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">header</span><span class="p">.</span><span class="n">songlength</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-103"></a>
+<a name="gbab-104"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">199</span><span class="p">)</span>
+<a name="gbab-105"></a>			<span class="k">break</span><span class="p">;</span>
+<a name="gbab-106"></a>		<span class="n">song</span><span class="o">-&gt;</span><span class="n">set_order</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">header</span><span class="p">.</span><span class="n">orderlist</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<a name="gbab-107"></a>	<span class="p">}</span>
+<a name="gbab-108"></a>
+<a name="gbab-109"></a>        <span class="cm">/**************************************</span>
+<a name="gbab-110"></a><span class="cm">        LOAD PATTERNS</span>
+<a name="gbab-111"></a><span class="cm">        ***************************************/</span>
+<a name="gbab-112"></a>
+<a name="gbab-113"></a>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">header</span><span class="p">.</span><span class="n">patterns_used</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-114"></a>
+<a name="gbab-115"></a>          	<span class="kt">uint32_t</span> <span class="n">aux</span><span class="p">,</span><span class="n">rows</span><span class="p">;</span>
+<a name="gbab-116"></a>
+<a name="gbab-117"></a>           	<span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_dword</span><span class="p">();</span> <span class="c1">//length</span>
+<a name="gbab-118"></a>           	<span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span> <span class="c1">//packing type</span>
+<a name="gbab-119"></a>           	<span class="n">rows</span><span class="o">=</span><span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span> <span class="c1">//rows!</span>
+<a name="gbab-120"></a>
+<a name="gbab-121"></a>		<span class="n">song</span><span class="o">-&gt;</span><span class="n">get_pattern</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">set_length</span><span class="p">(</span> <span class="n">aux</span> <span class="p">);</span>
+<a name="gbab-122"></a>
+<a name="gbab-123"></a>           	<span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span> <span class="c1">//packed size</span>
+<a name="gbab-124"></a>            	<span class="k">if</span> <span class="p">(</span><span class="n">aux</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+<a name="gbab-125"></a>             		<span class="k">continue</span><span class="p">;</span>
+<a name="gbab-126"></a>                <span class="c1">//unpaaack!</span>
+<a name="gbab-127"></a>		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">rows</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+<a name="gbab-128"></a>			<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">header</span><span class="p">.</span><span class="n">channels_used</span><span class="p">;</span><span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-129"></a>
+<a name="gbab-130"></a>				<span class="n">CPNote</span> <span class="n">aux_note</span><span class="p">;</span>
+<a name="gbab-131"></a>         			<span class="kt">uint8_t</span> <span class="n">aux_byte</span><span class="p">;</span>
+<a name="gbab-132"></a>				<span class="c1">//uint8_t field;</span>
+<a name="gbab-133"></a>	                    	<span class="n">aux_byte</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span> <span class="c1">//packing type</span>
+<a name="gbab-134"></a>                      		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">aux_byte</span><span class="o">&amp;</span><span class="mh">0x80</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-135"></a>
+<a name="gbab-136"></a>                          		<span class="n">aux_note</span><span class="p">.</span><span class="n">note</span><span class="o">=</span><span class="n">aux_byte</span><span class="p">;</span>
+<a name="gbab-137"></a>                        		<span class="n">aux_byte</span><span class="o">=</span><span class="mh">0xFE</span><span class="p">;</span> <span class="c1">//if bit 7 not set, read all of them except the note</span>
+<a name="gbab-138"></a>                          	<span class="p">}</span>
+<a name="gbab-139"></a>
+<a name="gbab-140"></a>                       		<span class="k">if</span> <span class="p">(</span><span class="n">aux_byte</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">note</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-141"></a>                         	<span class="k">if</span> <span class="p">(</span><span class="n">aux_byte</span><span class="o">&amp;</span><span class="mi">2</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">instrument</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-142"></a>                         	<span class="k">if</span> <span class="p">(</span><span class="n">aux_byte</span><span class="o">&amp;</span><span class="mi">4</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-143"></a>                         	<span class="k">if</span> <span class="p">(</span><span class="n">aux_byte</span><span class="o">&amp;</span><span class="mi">8</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-144"></a>                         	<span class="k">if</span> <span class="p">(</span><span class="n">aux_byte</span><span class="o">&amp;</span><span class="mi">16</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-145"></a>
+<a name="gbab-146"></a>				<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">note</span><span class="o">!=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-147"></a>
+<a name="gbab-148"></a>					<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">note</span><span class="o">==</span><span class="mi">97</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">note</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">OFF</span><span class="p">;</span>
+<a name="gbab-149"></a>                                  	<span class="k">else</span> <span class="p">{</span>
+<a name="gbab-150"></a>                                  		<span class="n">aux_note</span><span class="p">.</span><span class="n">note</span><span class="o">+=</span><span class="mi">11</span><span class="p">;</span> <span class="c1">//octave minus one (XM C-0 is 1, not zero )</span>
+<a name="gbab-151"></a>                                   	<span class="p">}</span>
+<a name="gbab-152"></a>                             	<span class="p">}</span>
+<a name="gbab-153"></a>				<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">instrument</span><span class="o">!=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-154"></a>
+<a name="gbab-155"></a>                                 	<span class="k">if</span> <span class="p">((</span><span class="n">aux_note</span><span class="p">.</span><span class="n">instrument</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">instrument</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">))</span>
+<a name="gbab-156"></a>                                  		 <span class="n">aux_note</span><span class="p">.</span><span class="n">instrument</span><span class="o">--</span><span class="p">;</span>
+<a name="gbab-157"></a>                                     	<span class="k">else</span>
+<a name="gbab-158"></a>						 <span class="n">aux_note</span><span class="p">.</span><span class="n">instrument</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span>
+<a name="gbab-159"></a>                             	<span class="p">}</span>
+<a name="gbab-160"></a>				<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">!=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-161"></a>
+<a name="gbab-162"></a>                                 	<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0x10</span><span class="p">)</span> <span class="p">{}</span>
+<a name="gbab-163"></a>                                  	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0x50</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-164"></a>
+<a name="gbab-165"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">-=</span><span class="mh">0x10</span><span class="p">;</span>
+<a name="gbab-166"></a>
+<a name="gbab-167"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0x60</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-168"></a>                                                <span class="c1">//</span>
+<a name="gbab-169"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span>
+<a name="gbab-170"></a>
+<a name="gbab-171"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0x70</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-172"></a>                                                <span class="c1">//60 -- volume slide down</span>
+<a name="gbab-173"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">-=</span><span class="mh">0x60</span><span class="p">;</span>
+<a name="gbab-174"></a>      						<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&gt;</span><span class="mi">9</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="mi">9</span><span class="p">;</span>
+<a name="gbab-175"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">+=</span><span class="mi">95</span><span class="p">;</span>
+<a name="gbab-176"></a>						
+<a name="gbab-177"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0x80</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-178"></a>                                                <span class="c1">//70 -- volume slide up</span>
+<a name="gbab-179"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">-=</span><span class="mh">0x70</span><span class="p">;</span>
+<a name="gbab-180"></a>      						<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&gt;</span><span class="mi">9</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="mi">9</span><span class="p">;</span>
+<a name="gbab-181"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">+=</span><span class="mi">85</span><span class="p">;</span>
+<a name="gbab-182"></a>
+<a name="gbab-183"></a>
+<a name="gbab-184"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0x90</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-185"></a>                                                <span class="c1">//80 -- fine volume slide down</span>
+<a name="gbab-186"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">-=</span><span class="mh">0x80</span><span class="p">;</span>
+<a name="gbab-187"></a>      						<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&gt;</span><span class="mi">9</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="mi">9</span><span class="p">;</span>
+<a name="gbab-188"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">+=</span><span class="mi">75</span><span class="p">;</span>
+<a name="gbab-189"></a>
+<a name="gbab-190"></a>
+<a name="gbab-191"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0xA0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-192"></a>                                                <span class="c1">//9 -- fine volume slide up</span>
+<a name="gbab-193"></a>
+<a name="gbab-194"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">-=</span><span class="mh">0x90</span><span class="p">;</span>
+<a name="gbab-195"></a>      						<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&gt;</span><span class="mi">9</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="mi">9</span><span class="p">;</span>
+<a name="gbab-196"></a>
+<a name="gbab-197"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">+=</span><span class="mi">65</span><span class="p">;</span>
+<a name="gbab-198"></a>
+<a name="gbab-199"></a>
+<a name="gbab-200"></a>
+<a name="gbab-201"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0xB0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-202"></a>                                                <span class="c1">//A -- set vibrato speed</span>
+<a name="gbab-203"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span>
+<a name="gbab-204"></a>
+<a name="gbab-205"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0xC0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-206"></a>                                                <span class="c1">//B -- vibrato</span>
+<a name="gbab-207"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">-=</span><span class="mh">0xB0</span><span class="p">;</span>
+<a name="gbab-208"></a>      						<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&gt;</span><span class="mi">9</span><span class="p">)</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="mi">9</span><span class="p">;</span>
+<a name="gbab-209"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">+=</span><span class="mi">203</span><span class="p">;</span>
+<a name="gbab-210"></a>
+<a name="gbab-211"></a>
+<a name="gbab-212"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0xD0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-213"></a>                                                <span class="c1">//C -- set panning</span>
+<a name="gbab-214"></a>                                                <span class="kt">int</span> <span class="n">aux</span><span class="o">=</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">-=</span><span class="mh">0xC0</span><span class="p">;</span>
+<a name="gbab-215"></a>						<span class="n">aux</span><span class="o">=</span><span class="n">aux</span><span class="o">*</span><span class="mi">65</span><span class="o">/</span><span class="mh">0xF</span><span class="p">;</span>
+<a name="gbab-216"></a>      						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="mi">128</span><span class="o">+</span><span class="n">aux</span><span class="p">;</span>
+<a name="gbab-217"></a>
+<a name="gbab-218"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0xE0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-219"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span>
+<a name="gbab-220"></a>
+<a name="gbab-221"></a>
+<a name="gbab-222"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">&lt;</span><span class="mh">0xF0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-223"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span>
+<a name="gbab-224"></a>
+<a name="gbab-225"></a>
+<a name="gbab-226"></a>                                     	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-227"></a>                                                <span class="c1">//F -- tone porta</span>
+<a name="gbab-228"></a>						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">-=</span><span class="mh">0xF0</span><span class="p">;</span>
+<a name="gbab-229"></a>      						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">*=</span><span class="mi">9</span><span class="p">;</span>
+<a name="gbab-230"></a>      						<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">/=</span><span class="mh">0xF</span><span class="p">;</span>
+<a name="gbab-231"></a>            					<span class="n">aux_note</span><span class="p">.</span><span class="n">volume</span><span class="o">+=</span><span class="mi">193</span><span class="p">;</span>
+<a name="gbab-232"></a>      					<span class="p">}</span>
+<a name="gbab-233"></a>                             	<span class="p">}</span>
+<a name="gbab-234"></a>				<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">!=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-235"></a>
+<a name="gbab-236"></a>                                   	<span class="k">switch</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-237"></a>
+<a name="gbab-238"></a>                                                <span class="k">case</span> <span class="mh">0x0</span><span class="o">:</span>
+<a name="gbab-239"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;J&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-240"></a>              						<span class="k">break</span><span class="p">;</span>		
+<a name="gbab-241"></a>                                                <span class="k">case</span> <span class="mh">0x1</span><span class="o">:</span>
+<a name="gbab-242"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;F&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-243"></a>              						<span class="k">break</span><span class="p">;</span>
+<a name="gbab-244"></a>                                                <span class="k">case</span> <span class="mh">0x2</span><span class="o">:</span>
+<a name="gbab-245"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;E&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-246"></a>              						<span class="k">break</span><span class="p">;</span>
+<a name="gbab-247"></a>                                                <span class="k">case</span> <span class="mh">0x3</span><span class="o">:</span>
+<a name="gbab-248"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;G&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-249"></a>              						<span class="k">break</span><span class="p">;</span>
+<a name="gbab-250"></a>                                                <span class="k">case</span> <span class="mh">0x4</span><span class="o">:</span>
+<a name="gbab-251"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;H&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-252"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-253"></a>                                                <span class="k">case</span> <span class="mh">0x5</span><span class="o">:</span>
+<a name="gbab-254"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;L&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-255"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-256"></a>                                                <span class="k">case</span> <span class="mh">0x6</span><span class="o">:</span>
+<a name="gbab-257"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;K&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-258"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-259"></a>                                                <span class="k">case</span> <span class="mh">0x7</span><span class="o">:</span>
+<a name="gbab-260"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;R&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-261"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-262"></a>                                                <span class="k">case</span> <span class="mh">0x8</span><span class="o">:</span>
+<a name="gbab-263"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;X&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-264"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-265"></a>                                                <span class="k">case</span> <span class="mh">0x9</span><span class="o">:</span>
+<a name="gbab-266"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;O&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-267"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-268"></a>                                                <span class="k">case</span> <span class="mh">0xa</span><span class="o">:</span>
+<a name="gbab-269"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;D&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-270"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-271"></a>                                                <span class="k">case</span> <span class="mh">0xb</span><span class="o">:</span>
+<a name="gbab-272"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;B&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-273"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-274"></a>                                                <span class="k">case</span> <span class="mh">0xc</span><span class="o">:</span>
+<a name="gbab-275"></a>        						<span class="c1">//printf(&quot;XM Import: Warning! effect C (set volume) not implemented!\n&quot;);</span>
+<a name="gbab-276"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-277"></a>                                                <span class="k">case</span> <span class="mh">0xd</span><span class="o">:</span>
+<a name="gbab-278"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;C&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-279"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-280"></a>
+<a name="gbab-281"></a>                                                <span class="k">case</span> <span class="mh">0xe</span><span class="o">:</span> <span class="cm">/* Extended effects */</span>
+<a name="gbab-282"></a>
+<a name="gbab-283"></a>                                                	<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;S&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-284"></a>                                                        <span class="k">switch</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-285"></a>                                                                <span class="k">case</span> <span class="mh">0x1</span><span class="o">:</span> <span class="cm">/* XM fine porta up */</span>
+<a name="gbab-286"></a>									<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">))</span> <span class="p">{</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+<a name="gbab-287"></a>                                                                	<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;F&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-288"></a>                                                            	        <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mh">0xF0</span><span class="o">|</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">);</span>
+<a name="gbab-289"></a>                                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-290"></a>                                                                <span class="k">case</span> <span class="mh">0x2</span><span class="o">:</span> <span class="cm">/* XM fine porta down */</span>
+<a name="gbab-291"></a>									<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">))</span> <span class="p">{</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+<a name="gbab-292"></a>                                                                	<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;E&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-293"></a>                                                            	        <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mh">0xF0</span><span class="o">|</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">);</span>
+<a name="gbab-294"></a>                                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-295"></a>                                                                <span class="k">case</span> <span class="mh">0xa</span><span class="o">:</span> <span class="cm">/* XM fine volume up */</span>
+<a name="gbab-296"></a>									<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">))</span> <span class="p">{</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+<a name="gbab-297"></a>                                                                	<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;D&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-298"></a>                                                            	        <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mh">0x0F</span><span class="o">|</span><span class="p">((</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="mi">4</span><span class="p">);</span>
+<a name="gbab-299"></a>
+<a name="gbab-300"></a>                                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-301"></a>                                                                <span class="k">case</span> <span class="mh">0xb</span><span class="o">:</span> <span class="cm">/* XM fine volume down */</span>
+<a name="gbab-302"></a>									<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">))</span> <span class="p">{</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+<a name="gbab-303"></a>                                                                	<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;D&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-304"></a>                                                            	        <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mh">0xF0</span><span class="o">|</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">);</span>
+<a name="gbab-305"></a>
+<a name="gbab-306"></a>                                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-307"></a>                                                                <span class="k">case</span> <span class="mh">0x9</span><span class="o">:</span> <span class="cm">/* XM fine volume down */</span>
+<a name="gbab-308"></a>									<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">))</span> <span class="p">{</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span> <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span> <span class="p">}</span>
+<a name="gbab-309"></a>                                                                	<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;Q&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-310"></a>                                                            	        <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mh">0x00</span><span class="o">|</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">);</span>
+<a name="gbab-311"></a>                                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-312"></a>
+<a name="gbab-313"></a>                                                                <span class="k">case</span> <span class="mh">0xc</span><span class="o">:</span> <span class="c1">//notecut</span>
+<a name="gbab-314"></a>                                                                	
+<a name="gbab-315"></a>                                                            	        <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mh">0xC0</span><span class="o">|</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">);</span>
+<a name="gbab-316"></a>                                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-317"></a>
+<a name="gbab-318"></a>                                                                <span class="k">case</span> <span class="mh">0xd</span><span class="o">:</span> <span class="c1">//notedelay</span>
+<a name="gbab-319"></a>                                                                	
+<a name="gbab-320"></a>                                                            	        <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mh">0xD0</span><span class="o">|</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">);</span>
+<a name="gbab-321"></a>                                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-322"></a>
+<a name="gbab-323"></a>                                                                <span class="k">case</span> <span class="mh">0xe</span><span class="o">:</span> <span class="c1">//patterndelay</span>
+<a name="gbab-324"></a>                                                                	
+<a name="gbab-325"></a>                                                            	        <span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">=</span><span class="mh">0xE0</span><span class="o">|</span><span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">);</span>
+<a name="gbab-326"></a>                                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-327"></a>                                                        <span class="p">}</span>
+<a name="gbab-328"></a>
+<a name="gbab-329"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-330"></a>                                                <span class="k">case</span> <span class="mh">0xf</span><span class="o">:</span>
+<a name="gbab-331"></a>                                                	<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">parameter</span><span class="o">&lt;</span><span class="mi">32</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-332"></a>	        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;A&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-333"></a>               						<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-334"></a>	        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;T&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-335"></a>                       					<span class="p">}</span>
+<a name="gbab-336"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-337"></a>                                                <span class="k">case</span> <span class="sc">&#39;G&#39;</span><span class="o">-</span><span class="mi">55</span><span class="o">:</span>
+<a name="gbab-338"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;V&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-339"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-340"></a>                                                <span class="k">case</span> <span class="sc">&#39;H&#39;</span><span class="o">-</span><span class="mi">55</span><span class="o">:</span>
+<a name="gbab-341"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;W&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-342"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-343"></a>                                                <span class="k">case</span> <span class="sc">&#39;K&#39;</span><span class="o">-</span><span class="mi">55</span><span class="o">:</span>
+<a name="gbab-344"></a>							<span class="k">if</span> <span class="p">(</span><span class="n">aux_note</span><span class="p">.</span><span class="n">note</span><span class="o">!=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-345"></a>							<span class="n">aux_note</span><span class="p">.</span><span class="n">note</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">OFF</span><span class="p">;</span>
+<a name="gbab-346"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-347"></a>                                                <span class="k">case</span> <span class="sc">&#39;P&#39;</span><span class="o">-</span><span class="mi">55</span><span class="o">:</span>
+<a name="gbab-348"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;P&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-349"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-350"></a>                                                <span class="k">case</span> <span class="sc">&#39;R&#39;</span><span class="o">-</span><span class="mi">55</span><span class="o">:</span>
+<a name="gbab-351"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;Q&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-352"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-353"></a>              					<span class="k">case</span> <span class="sc">&#39;T&#39;</span><span class="o">-</span><span class="mi">55</span><span class="o">:</span>
+<a name="gbab-354"></a>        						<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="sc">&#39;I&#39;</span><span class="o">-</span><span class="sc">&#39;A&#39;</span><span class="p">;</span>
+<a name="gbab-355"></a>                                                        <span class="k">break</span><span class="p">;</span>
+<a name="gbab-356"></a>              					<span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+<a name="gbab-357"></a>
+<a name="gbab-358"></a>							<span class="n">aux_note</span><span class="p">.</span><span class="n">command</span><span class="o">=</span><span class="n">CPNote</span><span class="o">::</span><span class="n">EMPTY</span><span class="p">;</span>
+<a name="gbab-359"></a>                     				<span class="p">}</span>
+<a name="gbab-360"></a>              				<span class="p">}</span>
+<a name="gbab-361"></a>
+<a name="gbab-362"></a>
+<a name="gbab-363"></a>				<span class="p">}</span>
+<a name="gbab-364"></a>
+<a name="gbab-365"></a>				<span class="n">song</span><span class="o">-&gt;</span><span class="n">get_pattern</span><span class="p">(</span> <span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">set_note</span><span class="p">(</span> <span class="n">k</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">aux_note</span> <span class="p">);</span>
+<a name="gbab-366"></a>		    <span class="p">}</span>
+<a name="gbab-367"></a>	<span class="p">}</span>
+<a name="gbab-368"></a>
+<a name="gbab-369"></a>        <span class="cm">/**************************************</span>
+<a name="gbab-370"></a><span class="cm">        LOAD INSTRUMENTS!</span>
+<a name="gbab-371"></a><span class="cm">        ***************************************/</span>
+<a name="gbab-372"></a>
+<a name="gbab-373"></a>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">header</span><span class="p">.</span><span class="n">instruments_used</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-374"></a>
+<a name="gbab-375"></a>
+<a name="gbab-376"></a>          	<span class="kt">uint32_t</span> <span class="n">aux</span><span class="p">;</span>
+<a name="gbab-377"></a>           	<span class="kt">int</span> <span class="n">sampnum</span><span class="p">;</span>
+<a name="gbab-378"></a>		
+<a name="gbab-379"></a>		<span class="n">CPInstrument</span> <span class="o">&amp;</span><span class="n">instrument</span><span class="o">=*</span><span class="n">song</span><span class="o">-&gt;</span><span class="n">get_instrument</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<a name="gbab-380"></a>                <span class="kt">uint32_t</span> <span class="n">cpos</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_pos</span><span class="p">();</span>
+<a name="gbab-381"></a>		<span class="c1">//printf(&quot;pos is %i\n&quot;,cpos);</span>
+<a name="gbab-382"></a>
+<a name="gbab-383"></a>
+<a name="gbab-384"></a>
+<a name="gbab-385"></a><span class="cm">/* +4 */</span>	<span class="kt">uint32_t</span> <span class="n">hsize</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_dword</span><span class="p">();</span> <span class="c1">//header length</span>
+<a name="gbab-386"></a>
+<a name="gbab-387"></a>		<span class="kt">char</span> <span class="n">instrname</span><span class="p">[</span><span class="mi">23</span><span class="p">];</span>
+<a name="gbab-388"></a>		<span class="n">instrname</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-389"></a>		
+<a name="gbab-390"></a>  		<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">instrname</span><span class="p">,</span><span class="mi">22</span><span class="p">);</span>
+<a name="gbab-391"></a><span class="c1">//XM_LOAD_DEBUG printf(&quot;name is %s\n&quot;,instrname);</span>
+<a name="gbab-392"></a>
+<a name="gbab-393"></a><span class="cm">/* +27 */</span>	<span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span> <span class="c1">//byte that must be ignored</span>
+<a name="gbab-394"></a><span class="c1">//XM_LOAD_DEBUG printf(&quot;header size is %i\n&quot;,hsize);</span>
+<a name="gbab-395"></a>
+<a name="gbab-396"></a><span class="cm">/* +29 */</span>	<span class="n">sampnum</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span> 
+<a name="gbab-397"></a>
+<a name="gbab-398"></a><span class="c1">//XM_LOAD_DEBUG printf(&quot;samples %i\n&quot;,sampnum);</span>
+<a name="gbab-399"></a>
+<a name="gbab-400"></a>
+<a name="gbab-401"></a>		<span class="n">instrument</span><span class="p">.</span><span class="n">set_name</span><span class="p">(</span> <span class="n">instrname</span> <span class="p">);</span>
+<a name="gbab-402"></a><span class="c1">//		printf(&quot;Header Len: %i, CPInstrument %i, %i samples , name:  s,\n&quot;,hsize,i,sampnum,instrname);</span>
+<a name="gbab-403"></a>		
+<a name="gbab-404"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">sampnum</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-405"></a>			<span class="c1">//aux=file-&gt;get_dword(); //Why is this for? -- for nothing, skipped</span>
+<a name="gbab-406"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">hsize</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-407"></a>				
+<a name="gbab-408"></a>				<span class="n">file</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span> <span class="n">cpos</span><span class="o">+</span><span class="n">hsize</span> <span class="p">);</span> <span class="c1">//skip header if size has been specified</span>
+<a name="gbab-409"></a>			<span class="p">}</span>
+<a name="gbab-410"></a>			<span class="k">continue</span><span class="p">;</span>
+<a name="gbab-411"></a>		<span class="p">}</span>
+<a name="gbab-412"></a>
+<a name="gbab-413"></a><span class="cm">/* +33 */</span>      	<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_dword</span><span class="p">();</span> 
+<a name="gbab-414"></a>
+<a name="gbab-415"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">Error</span> <span class="n">result</span><span class="o">=</span><span class="n">load_instrument_internal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">instrument</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="n">cpos</span><span class="p">,</span><span class="n">hsize</span><span class="p">,</span><span class="n">sampnum</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-416"></a>
+<a name="gbab-417"></a>			<span class="n">CP_PRINTERR</span><span class="p">(</span><span class="s">&quot;Error loading instrument&quot;</span><span class="p">);</span>
+<a name="gbab-418"></a>			<span class="n">file</span><span class="o">-&gt;</span><span class="n">close</span><span class="p">();</span>
+<a name="gbab-419"></a>			<span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<a name="gbab-420"></a>		<span class="p">}</span>
+<a name="gbab-421"></a>
+<a name="gbab-422"></a>	<span class="p">}</span>
+<a name="gbab-423"></a><span class="c1">// </span>
+<a name="gbab-424"></a>	<span class="n">file</span><span class="o">-&gt;</span><span class="n">close</span><span class="p">();</span>
+<a name="gbab-425"></a>	<span class="k">return</span> <span class="n">FILE_OK</span><span class="p">;</span>
+<a name="gbab-426"></a><span class="p">}</span>
+<a name="gbab-427"></a>
+<a name="gbab-428"></a><span class="n">CPLoader</span><span class="o">::</span><span class="n">Error</span> <span class="n">CPLoader_XM</span><span class="o">::</span><span class="n">load_instrument_internal</span><span class="p">(</span><span class="n">CPInstrument</span> <span class="o">*</span><span class="n">p_instr</span><span class="p">,</span><span class="kt">bool</span> <span class="n">p_xi</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_cpos</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_hsize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_sampnum</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-429"></a>
+<a name="gbab-430"></a>		<span class="kt">int</span> <span class="n">sampnum</span><span class="p">;</span>
+<a name="gbab-431"></a>		<span class="kt">uint32_t</span> <span class="n">aux</span><span class="p">;</span>
+<a name="gbab-432"></a>		<span class="kt">uint8_t</span> <span class="n">notenumb</span><span class="p">[</span><span class="mi">96</span><span class="p">];</span>
+<a name="gbab-433"></a>		<span class="kt">uint16_t</span> <span class="n">panenv</span><span class="p">[</span><span class="mi">24</span><span class="p">],</span><span class="n">volenv</span><span class="p">[</span><span class="mi">24</span><span class="p">];</span>
+<a name="gbab-434"></a>		<span class="kt">int</span> <span class="n">volpoints</span><span class="p">,</span><span class="n">panpoints</span><span class="p">;</span>
+<a name="gbab-435"></a>		<span class="kt">int</span> <span class="n">vol_loop_begin</span><span class="p">,</span><span class="n">vol_loop_end</span><span class="p">,</span><span class="n">vol_sustain_loop</span><span class="p">;</span>
+<a name="gbab-436"></a>		<span class="kt">int</span> <span class="n">pan_loop_begin</span><span class="p">,</span><span class="n">pan_loop_end</span><span class="p">,</span><span class="n">pan_sustain_loop</span><span class="p">;</span>
+<a name="gbab-437"></a>		<span class="kt">char</span> <span class="n">instrname</span><span class="p">[</span><span class="mi">23</span><span class="p">];</span>
+<a name="gbab-438"></a>		<span class="kt">int</span> <span class="n">sample_index</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span> <span class="c1">//-1 means no index!</span>
+<a name="gbab-439"></a>
+<a name="gbab-440"></a>		<span class="n">instrname</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-441"></a>
+<a name="gbab-442"></a>
+<a name="gbab-443"></a><span class="cm">/* +129 */</span>	<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">notenumb</span><span class="p">,</span><span class="mi">96</span><span class="p">);</span>
+<a name="gbab-444"></a>		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="mi">24</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-445"></a>			<span class="n">volenv</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-446"></a>		<span class="p">}</span>
+<a name="gbab-447"></a>		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="mi">24</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-448"></a>			<span class="n">panenv</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-449"></a>		<span class="p">}</span>
+<a name="gbab-450"></a>
+<a name="gbab-451"></a><span class="cm">/* +177 */</span>
+<a name="gbab-452"></a><span class="cm">/* +225 */</span>
+<a name="gbab-453"></a><span class="cm">/* +226 */</span>	<span class="n">volpoints</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-454"></a><span class="cm">/* +227 */</span>	<span class="n">panpoints</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-455"></a><span class="cm">/* +230 */</span>	<span class="n">vol_sustain_loop</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-456"></a><span class="cm">/* +228 */</span>	<span class="n">vol_loop_begin</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-457"></a><span class="cm">/* +229 */</span>	<span class="n">vol_loop_end</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-458"></a>
+<a name="gbab-459"></a><span class="c1">//XM_LOAD_DEBUG 	printf(&quot;1- volpoints: %i, panpoints: %i, susloop: %i, loop begin: %i, loop end %i\n&quot;,volpoints,panpoints,vol_sustain_loop,vol_loop_begin,vol_loop_end);</span>
+<a name="gbab-460"></a>		<span class="n">pan_sustain_loop</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-461"></a><span class="cm">/* +231 */</span>	<span class="n">pan_loop_begin</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-462"></a><span class="cm">/* +232 */</span>	<span class="n">pan_loop_end</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-463"></a>
+<a name="gbab-464"></a>
+<a name="gbab-465"></a>
+<a name="gbab-466"></a><span class="cm">/* +234 */</span>	<span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-467"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">reset</span><span class="p">();</span>
+<a name="gbab-468"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_enabled</span><span class="p">(</span><span class="n">aux</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-469"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_sustain_loop_enabled</span><span class="p">((</span><span class="n">aux</span><span class="o">&amp;</span><span class="mi">2</span><span class="p">)</span><span class="o">?</span><span class="nb">true</span><span class="o">:</span><span class="nb">false</span><span class="p">);</span>
+<a name="gbab-470"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_loop_enabled</span><span class="p">((</span><span class="n">aux</span><span class="o">&amp;</span><span class="mi">4</span><span class="p">)</span><span class="o">?</span><span class="nb">true</span><span class="o">:</span><span class="nb">false</span><span class="p">);</span>
+<a name="gbab-471"></a><span class="cm">/* +235 */</span>	<span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-472"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">reset</span><span class="p">();</span>
+<a name="gbab-473"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_enabled</span><span class="p">(</span><span class="n">aux</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-474"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_sustain_loop_enabled</span><span class="p">((</span><span class="n">aux</span><span class="o">&amp;</span><span class="mi">2</span><span class="p">)</span><span class="o">?</span><span class="nb">true</span><span class="o">:</span><span class="nb">false</span><span class="p">);</span>
+<a name="gbab-475"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_loop_enabled</span><span class="p">((</span><span class="n">aux</span><span class="o">&amp;</span><span class="mi">4</span><span class="p">)</span><span class="o">?</span><span class="nb">true</span><span class="o">:</span><span class="nb">false</span><span class="p">);</span>
+<a name="gbab-476"></a>
+<a name="gbab-477"></a><span class="cm">/* +239 */</span>	<span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_dword</span><span class="p">();</span> <span class="c1">// sadly, cant use those</span>
+<a name="gbab-478"></a><span class="cm">/* +241 */</span>     	<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">set_volume_fadeout</span><span class="p">(</span> <span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span> <span class="p">);</span>
+<a name="gbab-479"></a><span class="cm">/* +243 */</span>	<span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span> <span class="c1">// reserved!</span>
+<a name="gbab-480"></a>
+<a name="gbab-481"></a>
+<a name="gbab-482"></a>
+<a name="gbab-483"></a>		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">volpoints</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-484"></a>			<span class="kt">int</span> <span class="n">ofs</span><span class="o">=</span><span class="n">volenv</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="p">];</span>
+<a name="gbab-485"></a>			<span class="kt">int</span> <span class="n">val</span><span class="o">=</span><span class="n">volenv</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<a name="gbab-486"></a>			<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">add_position</span><span class="p">(</span><span class="n">ofs</span><span class="p">,</span><span class="n">val</span><span class="p">);</span>
+<a name="gbab-487"></a>
+<a name="gbab-488"></a>		<span class="p">}</span>
+<a name="gbab-489"></a>
+<a name="gbab-490"></a>		<span class="c1">//make sure minimum is 2</span>
+<a name="gbab-491"></a>		<span class="k">while</span> <span class="p">(</span><span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_node_count</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-492"></a>			
+<a name="gbab-493"></a>			<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">add_position</span><span class="p">(</span> <span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_node_count</span><span class="p">()</span><span class="o">*</span><span class="mi">20</span><span class="p">,</span><span class="mi">64</span> <span class="p">);</span>
+<a name="gbab-494"></a>		<span class="p">}</span>
+<a name="gbab-495"></a>		
+<a name="gbab-496"></a>		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">panpoints</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-497"></a>			<span class="kt">int</span> <span class="n">ofs</span><span class="o">=</span><span class="n">panenv</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="p">];</span>
+<a name="gbab-498"></a>			<span class="kt">int</span> <span class="n">val</span><span class="o">=</span><span class="n">panenv</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<a name="gbab-499"></a>			<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">add_position</span><span class="p">(</span><span class="n">ofs</span><span class="p">,</span><span class="n">val</span><span class="o">-</span><span class="mi">32</span><span class="p">);</span>
+<a name="gbab-500"></a>		<span class="p">}</span>
+<a name="gbab-501"></a>		
+<a name="gbab-502"></a>		<span class="c1">//make sure minimum is 2</span>
+<a name="gbab-503"></a>		<span class="k">while</span> <span class="p">(</span><span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_node_count</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-504"></a>			
+<a name="gbab-505"></a>			<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">add_position</span><span class="p">(</span> <span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_node_count</span><span class="p">()</span><span class="o">*</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span> <span class="p">);</span>
+<a name="gbab-506"></a>		<span class="p">}</span>
+<a name="gbab-507"></a>		
+<a name="gbab-508"></a>		
+<a name="gbab-509"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_loop_begin</span><span class="p">(</span><span class="n">vol_loop_begin</span><span class="p">);</span>
+<a name="gbab-510"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_loop_end</span><span class="p">(</span><span class="n">vol_loop_end</span><span class="p">);</span>
+<a name="gbab-511"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_sustain_loop_end</span><span class="p">(</span><span class="n">vol_sustain_loop</span><span class="p">);</span>
+<a name="gbab-512"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_volume_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_sustain_loop_begin</span><span class="p">(</span><span class="n">vol_sustain_loop</span><span class="p">);</span>
+<a name="gbab-513"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_loop_begin</span><span class="p">(</span><span class="n">pan_loop_begin</span><span class="p">);</span>
+<a name="gbab-514"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_loop_end</span><span class="p">(</span><span class="n">pan_loop_end</span><span class="p">);</span>
+<a name="gbab-515"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_sustain_loop_end</span><span class="p">(</span><span class="n">pan_sustain_loop</span><span class="p">);</span>
+<a name="gbab-516"></a>		<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">get_pan_envelope</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_sustain_loop_begin</span><span class="p">(</span><span class="n">pan_sustain_loop</span><span class="p">);</span>
+<a name="gbab-517"></a>
+<a name="gbab-518"></a>
+<a name="gbab-519"></a>		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">p_xi</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-520"></a>
+<a name="gbab-521"></a>			<span class="k">if</span> <span class="p">((</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_pos</span><span class="p">()</span><span class="o">-</span><span class="n">p_cpos</span><span class="p">)</span><span class="o">&lt;</span><span class="n">p_hsize</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-522"></a>
+<a name="gbab-523"></a>				<span class="kt">uint8_t</span> <span class="n">junkbuster</span><span class="p">[</span><span class="mi">500</span><span class="p">];</span>
+<a name="gbab-524"></a>
+<a name="gbab-525"></a>				<span class="c1">//printf(&quot;extra junk XM instrument in header! hsize is %i, extra junk: %i\n&quot;,p_hsize,(file-&gt;get_pos()-p_cpos));</span>
+<a name="gbab-526"></a>				<span class="c1">//printf(&quot;extra: %i\n&quot;,p_hsize-(file-&gt;get_pos()-p_cpos));</span>
+<a name="gbab-527"></a>				<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">junkbuster</span><span class="p">,</span><span class="n">p_hsize</span><span class="o">-</span><span class="p">(</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_pos</span><span class="p">()</span><span class="o">-</span><span class="n">p_cpos</span><span class="p">));</span>
+<a name="gbab-528"></a>			<span class="p">}</span>
+<a name="gbab-529"></a>			
+<a name="gbab-530"></a>			<span class="n">sampnum</span><span class="o">=</span><span class="n">p_sampnum</span><span class="p">;</span>
+<a name="gbab-531"></a>		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-532"></a>
+<a name="gbab-533"></a>			<span class="kt">uint8_t</span> <span class="n">junkbuster</span><span class="p">[</span><span class="mi">500</span><span class="p">];</span>
+<a name="gbab-534"></a>			<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">junkbuster</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>	<span class="c1">//14 bytes?</span>
+<a name="gbab-535"></a>
+<a name="gbab-536"></a>			<span class="n">sampnum</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-537"></a>
+<a name="gbab-538"></a>		<span class="p">}</span>
+<a name="gbab-539"></a>
+<a name="gbab-540"></a>
+<a name="gbab-541"></a>		<span class="n">CPSampleManager</span> <span class="o">*</span><span class="n">sm</span><span class="o">=</span><span class="n">CPSampleManager</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">();</span>
+<a name="gbab-542"></a>
+<a name="gbab-543"></a>		<span class="cm">/*SAMPLE!!*/</span>
+<a name="gbab-544"></a>
+<a name="gbab-545"></a>		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">sampnum</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-546"></a>
+<a name="gbab-547"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">&gt;</span><span class="mi">16</span><span class="p">)</span> <span class="n">ABORT_LOAD</span><span class="p">;</span>
+<a name="gbab-548"></a>
+<a name="gbab-549"></a>			
+<a name="gbab-550"></a>			<span class="kt">int</span> <span class="n">s_idx</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+<a name="gbab-551"></a>			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">s</span><span class="o">&lt;</span><span class="n">CPSong</span><span class="o">::</span><span class="n">MAX_SAMPLES</span><span class="p">;</span><span class="n">s</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-552"></a>				
+<a name="gbab-553"></a>				<span class="k">if</span> <span class="p">(</span><span class="n">song</span><span class="o">-&gt;</span><span class="n">get_sample</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">get_sample_data</span><span class="p">().</span><span class="n">is_null</span><span class="p">())</span> <span class="p">{</span>
+<a name="gbab-554"></a>					<span class="c1">//empty sample!</span>
+<a name="gbab-555"></a>					<span class="n">s_idx</span><span class="o">=</span><span class="n">s</span><span class="p">;</span>
+<a name="gbab-556"></a>					<span class="k">break</span><span class="p">;</span>
+<a name="gbab-557"></a>				<span class="p">}</span>
+<a name="gbab-558"></a>			<span class="p">}</span>
+<a name="gbab-559"></a>				
+<a name="gbab-560"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">s_idx</span><span class="o">==-</span><span class="mi">1</span><span class="p">)</span> <span class="n">ABORT_LOAD</span><span class="p">;</span>
+<a name="gbab-561"></a>			<span class="c1">//printf(&quot;free sample: %i\n&quot;,s_idx);</span>
+<a name="gbab-562"></a>			
+<a name="gbab-563"></a>			
+<a name="gbab-564"></a>			<span class="n">CPSample</span><span class="o">&amp;</span> <span class="n">sample</span><span class="o">=*</span><span class="n">song</span><span class="o">-&gt;</span><span class="n">get_sample</span><span class="p">(</span><span class="n">s_idx</span><span class="p">);</span>
+<a name="gbab-565"></a>			
+<a name="gbab-566"></a>			<span class="kt">int</span> <span class="n">sample_size</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_dword</span><span class="p">();</span>
+<a name="gbab-567"></a>			<span class="kt">int</span> <span class="n">tmp_loop_begin</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_dword</span><span class="p">();</span>
+<a name="gbab-568"></a>
+<a name="gbab-569"></a>			<span class="kt">int</span> <span class="n">tmp_loop_end</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_dword</span><span class="p">();</span>
+<a name="gbab-570"></a>			
+<a name="gbab-571"></a>			<span class="n">sample</span><span class="p">.</span><span class="n">set_default_volume</span><span class="p">(</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">());</span>
+<a name="gbab-572"></a>
+<a name="gbab-573"></a>			<span class="kt">uint8_t</span> <span class="n">ftb</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-574"></a>			<span class="kt">int8_t</span> <span class="o">*</span><span class="n">fts</span><span class="o">=</span><span class="p">(</span><span class="kt">int8_t</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">ftb</span><span class="p">;</span>
+<a name="gbab-575"></a>			<span class="kt">int</span> <span class="n">finetune</span><span class="o">=*</span><span class="n">fts</span><span class="p">;</span>
+<a name="gbab-576"></a>			<span class="kt">uint32_t</span> <span class="n">flags</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-577"></a>			
+<a name="gbab-578"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="o">&amp;</span><span class="mi">16</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// is 16 bits.. at flag 16.. fun :)</span>
+<a name="gbab-579"></a>				
+<a name="gbab-580"></a>				<span class="n">tmp_loop_end</span><span class="o">/=</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-581"></a>				<span class="n">tmp_loop_begin</span><span class="o">/=</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-582"></a>				<span class="n">sample_size</span><span class="o">/=</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-583"></a>			<span class="p">}</span>
+<a name="gbab-584"></a>			
+<a name="gbab-585"></a>			
+<a name="gbab-586"></a>			<span class="n">CPSample_ID</span> <span class="n">sample_data</span><span class="o">=</span><span class="n">sm</span><span class="o">-&gt;</span><span class="n">create</span><span class="p">(</span> <span class="n">flags</span><span class="o">&amp;</span><span class="mi">16</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="n">sample_size</span> <span class="p">);</span>
+<a name="gbab-587"></a>			
+<a name="gbab-588"></a>			<span class="n">sample</span><span class="p">.</span><span class="n">set_sample_data</span><span class="p">(</span><span class="n">sample_data</span><span class="p">);</span>
+<a name="gbab-589"></a>			<span class="n">sm</span><span class="o">-&gt;</span><span class="n">set_loop_begin</span><span class="p">(</span><span class="n">sample_data</span><span class="p">,</span><span class="n">tmp_loop_begin</span><span class="p">);</span>
+<a name="gbab-590"></a>			<span class="n">sm</span><span class="o">-&gt;</span><span class="n">set_loop_end</span><span class="p">(</span><span class="n">sample_data</span><span class="p">,</span><span class="n">tmp_loop_end</span><span class="o">+</span><span class="n">tmp_loop_begin</span><span class="p">);</span>
+<a name="gbab-591"></a>			
+<a name="gbab-592"></a>			<span class="n">sm</span><span class="o">-&gt;</span><span class="n">set_loop_type</span><span class="p">(</span> <span class="n">sample_data</span><span class="p">,</span> <span class="p">(</span><span class="n">flags</span><span class="o">&amp;</span><span class="mi">3</span><span class="p">)</span><span class="o">?</span><span class="p">(</span> <span class="p">(</span><span class="n">flags</span><span class="o">&amp;</span><span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="nl">CP_LOOP_BIDI</span> <span class="p">:</span> <span class="n">CP_LOOP_FORWARD</span> <span class="p">)</span><span class="o">:</span><span class="n">CP_LOOP_NONE</span> <span class="p">);</span>
+<a name="gbab-593"></a>			
+<a name="gbab-594"></a>			
+<a name="gbab-595"></a>
+<a name="gbab-596"></a>			<span class="n">sample</span><span class="p">.</span><span class="n">set_pan_enabled</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<a name="gbab-597"></a>			<span class="n">sample</span><span class="p">.</span><span class="n">set_pan</span><span class="p">(</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">()</span><span class="o">*</span><span class="mi">64</span><span class="o">/</span><span class="mi">255</span><span class="p">);</span>
+<a name="gbab-598"></a>			<span class="kt">uint8_t</span> <span class="n">noteb</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-599"></a>			<span class="kt">int8_t</span> <span class="o">*</span><span class="n">notes</span><span class="o">=</span><span class="p">(</span><span class="kt">int8_t</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">noteb</span><span class="p">;</span>
+<a name="gbab-600"></a>			<span class="kt">int</span> <span class="n">note_offset</span><span class="o">=*</span><span class="n">notes</span><span class="p">;</span>
+<a name="gbab-601"></a>			<span class="n">note_offset</span><span class="o">+=</span><span class="mi">48</span><span class="p">;</span>
+<a name="gbab-602"></a>			<span class="c1">//note_offset+=60;</span>
+<a name="gbab-603"></a>			
+<a name="gbab-604"></a>			
+<a name="gbab-605"></a>			
+<a name="gbab-606"></a>			<span class="c1">//int linear_period=10*12*16*4 - (note_offset)*16*4 - finetune/2;</span>
+<a name="gbab-607"></a>			<span class="c1">//int freq=(int)(8363*pow(2.0,(double)(6*12*16*4 - linear_period) / (double)(12*16*4)));</span>
+<a name="gbab-608"></a>			
+<a name="gbab-609"></a>			<span class="c1">//sm-&gt;set_c5_freq( sample_data, freq);</span>
+<a name="gbab-610"></a>			<span class="n">sm</span><span class="o">-&gt;</span><span class="n">set_c5_freq</span><span class="p">(</span> <span class="n">sample_data</span><span class="p">,</span> <span class="n">CPTables</span><span class="o">::</span><span class="n">get_linear_frequency</span><span class="p">(</span><span class="n">CPTables</span><span class="o">::</span><span class="n">get_linear_period</span><span class="p">(</span><span class="n">note_offset</span><span class="o">&lt;&lt;</span><span class="mi">1</span><span class="p">,</span><span class="n">finetune</span><span class="p">))</span> <span class="p">);</span>
+<a name="gbab-611"></a>			<span class="c1">//printf(&quot;NOTE %i,fine %i\n&quot;,note_offset,finetune);</span>
+<a name="gbab-612"></a>
+<a name="gbab-613"></a>			<span class="kt">char</span> <span class="n">auxb</span><span class="p">;</span>
+<a name="gbab-614"></a>			<span class="n">auxb</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span> <span class="c1">//reserved?</span>
+<a name="gbab-615"></a>			<span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">instrname</span><span class="p">,</span><span class="mi">22</span><span class="p">);</span>
+<a name="gbab-616"></a>			<span class="n">sample</span><span class="p">.</span><span class="n">set_name</span><span class="p">(</span><span class="n">instrname</span><span class="p">);</span>
+<a name="gbab-617"></a>
+<a name="gbab-618"></a>			<span class="n">sample_index</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="n">s_idx</span><span class="p">;</span>
+<a name="gbab-619"></a>		<span class="p">}</span>
+<a name="gbab-620"></a>
+<a name="gbab-621"></a>		<span class="cm">/*SAMPLE __DATA__!!*/</span>
+<a name="gbab-622"></a>
+<a name="gbab-623"></a>		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">sampnum</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-624"></a>
+<a name="gbab-625"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">sample_index</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">==-</span><span class="mi">1</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+<a name="gbab-626"></a>
+<a name="gbab-627"></a>			<span class="n">CPSample</span> <span class="o">*</span><span class="n">sample</span><span class="o">=</span><span class="n">song</span><span class="o">-&gt;</span><span class="n">get_sample</span><span class="p">(</span><span class="n">sample_index</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+<a name="gbab-628"></a>			<span class="n">CPSample_ID</span> <span class="n">sid</span><span class="o">=</span><span class="n">sample</span><span class="o">-&gt;</span><span class="n">get_sample_data</span><span class="p">();</span>
+<a name="gbab-629"></a>
+<a name="gbab-630"></a>			<span class="n">sm</span><span class="o">-&gt;</span><span class="n">lock_data</span><span class="p">(</span><span class="n">sid</span><span class="p">);</span>
+<a name="gbab-631"></a>
+<a name="gbab-632"></a>			<span class="kt">void</span><span class="o">*</span><span class="n">dataptr</span><span class="o">=</span><span class="n">sm</span><span class="o">-&gt;</span><span class="n">get_data</span><span class="p">(</span><span class="n">sid</span><span class="p">);</span>
+<a name="gbab-633"></a>
+<a name="gbab-634"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">sm</span><span class="o">-&gt;</span><span class="n">is_16bits</span><span class="p">(</span> <span class="n">sid</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-635"></a>
+<a name="gbab-636"></a>				<span class="kt">int16_t</span> <span class="n">old</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-637"></a>
+<a name="gbab-638"></a>
+<a name="gbab-639"></a>				<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">sm</span><span class="o">-&gt;</span><span class="n">get_size</span><span class="p">(</span><span class="n">sid</span><span class="p">);</span><span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-640"></a>
+<a name="gbab-641"></a>					<span class="kt">int16_t</span> <span class="n">newsample</span><span class="p">;</span>
+<a name="gbab-642"></a>					<span class="kt">int16_t</span> <span class="n">sampleval</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span>
+<a name="gbab-643"></a>					<span class="n">newsample</span><span class="o">=</span><span class="n">sampleval</span><span class="o">+</span><span class="n">old</span><span class="p">;</span>
+<a name="gbab-644"></a>					<span class="n">old</span><span class="o">=</span><span class="n">newsample</span><span class="p">;</span>
+<a name="gbab-645"></a>					
+<a name="gbab-646"></a>					<span class="p">((</span><span class="kt">int16_t</span><span class="o">*</span><span class="p">)</span><span class="n">dataptr</span><span class="p">)[</span><span class="n">k</span><span class="p">]</span><span class="o">=</span><span class="n">newsample</span><span class="p">;</span>
+<a name="gbab-647"></a>					<span class="c1">//sm-&gt;set_data( sid, k, newsample );</span>
+<a name="gbab-648"></a>				<span class="p">}</span>
+<a name="gbab-649"></a>			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-650"></a>
+<a name="gbab-651"></a>				<span class="kt">int8_t</span> <span class="n">old</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-652"></a>
+<a name="gbab-653"></a>
+<a name="gbab-654"></a>				<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">sm</span><span class="o">-&gt;</span><span class="n">get_size</span><span class="p">(</span><span class="n">sid</span><span class="p">);</span><span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-655"></a>
+<a name="gbab-656"></a>					<span class="kt">int8_t</span> <span class="n">newsample</span><span class="p">;</span>
+<a name="gbab-657"></a>					<span class="kt">int8_t</span> <span class="n">sampleval</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span>
+<a name="gbab-658"></a>					<span class="n">newsample</span><span class="o">=</span><span class="n">sampleval</span><span class="o">+</span><span class="n">old</span><span class="p">;</span>
+<a name="gbab-659"></a>					<span class="n">old</span><span class="o">=</span><span class="n">newsample</span><span class="p">;</span>
+<a name="gbab-660"></a>					
+<a name="gbab-661"></a>					<span class="p">((</span><span class="kt">int8_t</span><span class="o">*</span><span class="p">)</span><span class="n">dataptr</span><span class="p">)[</span><span class="n">k</span><span class="p">]</span><span class="o">=</span><span class="n">newsample</span><span class="p">;</span>
+<a name="gbab-662"></a>
+<a name="gbab-663"></a>					<span class="c1">//sm-&gt;set_data( sid, k, (int16_t)newsample &lt;&lt; 8 );</span>
+<a name="gbab-664"></a>					
+<a name="gbab-665"></a>				<span class="p">}</span>
+<a name="gbab-666"></a>			<span class="p">}</span>
+<a name="gbab-667"></a>
+<a name="gbab-668"></a>			<span class="n">sm</span><span class="o">-&gt;</span><span class="n">unlock_data</span><span class="p">(</span><span class="n">sid</span><span class="p">);</span>
+<a name="gbab-669"></a>
+<a name="gbab-670"></a>		<span class="p">}</span>
+<a name="gbab-671"></a>
+<a name="gbab-672"></a>		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="mi">96</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-673"></a>
+<a name="gbab-674"></a>			<span class="kt">int</span> <span class="n">val</span><span class="o">=</span><span class="n">notenumb</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<a name="gbab-675"></a>			<span class="k">if</span> <span class="p">((</span><span class="n">val</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">val</span><span class="o">&gt;</span><span class="mi">15</span><span class="p">))</span> <span class="k">continue</span><span class="p">;</span>
+<a name="gbab-676"></a>			<span class="k">else</span> <span class="n">val</span><span class="o">=</span><span class="n">sample_index</span><span class="p">[</span><span class="n">val</span><span class="p">];</span>
+<a name="gbab-677"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">val</span><span class="o">==-</span><span class="mi">1</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+<a name="gbab-678"></a>			<span class="n">p_instr</span><span class="o">-&gt;</span><span class="n">set_sample_number</span><span class="p">(</span> <span class="mi">12</span><span class="o">+</span><span class="n">j</span><span class="p">,</span><span class="n">val</span> <span class="p">);</span>
+<a name="gbab-679"></a>		<span class="p">}</span>
+<a name="gbab-680"></a>
+<a name="gbab-681"></a>
+<a name="gbab-682"></a>	<span class="k">return</span> <span class="n">FILE_OK</span><span class="p">;</span>
+<a name="gbab-683"></a><span class="p">}</span>
+<a name="gbab-684"></a>
+<a name="gbab-685"></a>
+<a name="gbab-686"></a>
+<a name="gbab-687"></a><span class="n">CPLoader</span><span class="o">::</span><span class="n">Error</span> <span class="n">CPLoader_XM</span><span class="o">::</span><span class="n">load_sample</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_file</span><span class="p">,</span><span class="n">CPSample</span> <span class="o">*</span><span class="n">p_sample</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-688"></a>	
+<a name="gbab-689"></a>	<span class="k">return</span> <span class="n">FILE_UNRECOGNIZED</span><span class="p">;</span>
+<a name="gbab-690"></a><span class="p">}</span>
+<a name="gbab-691"></a>
+<a name="gbab-692"></a>
+<a name="gbab-693"></a><span class="cm">/* Compute CPInstrument Info */</span>
+<a name="gbab-694"></a><span class="n">CPLoader</span><span class="o">::</span><span class="n">Error</span> <span class="n">CPLoader_XM</span><span class="o">::</span><span class="n">load_instrument</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_file</span><span class="p">,</span><span class="n">CPSong</span> <span class="o">*</span><span class="n">p_song</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_instr_idx</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-695"></a>
+<a name="gbab-696"></a>	<span class="k">if</span> <span class="p">(</span> <span class="n">file</span><span class="o">-&gt;</span><span class="n">open</span><span class="p">(</span><span class="n">p_file</span><span class="p">,</span><span class="n">CPFileAccessWrapper</span><span class="o">::</span><span class="n">READ</span><span class="p">)</span> <span class="p">)</span> <span class="k">return</span> <span class="n">FILE_CANNOT_OPEN</span><span class="p">;</span>	
+<a name="gbab-697"></a>	<span class="c1">//int i;</span>
+<a name="gbab-698"></a>	<span class="n">song</span><span class="o">=</span><span class="n">p_song</span><span class="p">;</span>
+<a name="gbab-699"></a>	<span class="n">CPInstrument</span><span class="o">&amp;</span> <span class="n">instr</span><span class="o">=*</span><span class="n">p_song</span><span class="o">-&gt;</span><span class="n">get_instrument</span><span class="p">(</span> <span class="n">p_instr_idx</span> <span class="p">);</span>
+<a name="gbab-700"></a>  	<span class="kt">int</span> <span class="n">aux</span><span class="p">;</span>
+<a name="gbab-701"></a>
+<a name="gbab-702"></a>
+<a name="gbab-703"></a>        <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">500</span><span class="p">];</span>
+<a name="gbab-704"></a>        <span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">buffer</span><span class="p">,</span><span class="mh">0x15</span><span class="p">);</span>
+<a name="gbab-705"></a>        <span class="n">buffer</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-706"></a>	<span class="k">if</span> <span class="p">(</span>	<span class="n">buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="sc">&#39;E&#39;</span> <span class="o">||</span>
+<a name="gbab-707"></a>		<span class="n">buffer</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">!=</span><span class="sc">&#39;x&#39;</span> <span class="o">||</span>
+<a name="gbab-708"></a>		<span class="n">buffer</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">!=</span><span class="sc">&#39;t&#39;</span> <span class="o">||</span>
+<a name="gbab-709"></a>		<span class="n">buffer</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">!=</span><span class="sc">&#39;e&#39;</span> <span class="o">||</span>
+<a name="gbab-710"></a>		<span class="n">buffer</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">!=</span><span class="sc">&#39;n&#39;</span> <span class="o">||</span>
+<a name="gbab-711"></a>		<span class="n">buffer</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">!=</span><span class="sc">&#39;d&#39;</span> <span class="o">||</span>
+<a name="gbab-712"></a>		<span class="n">buffer</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">!=</span><span class="sc">&#39;e&#39;</span> <span class="o">||</span>
+<a name="gbab-713"></a>		       <span class="n">buffer</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">!=</span><span class="sc">&#39;d&#39;</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-714"></a>		<span class="n">file</span><span class="o">-&gt;</span><span class="n">close</span><span class="p">();</span>
+<a name="gbab-715"></a>		<span class="k">return</span> <span class="n">FILE_UNRECOGNIZED</span><span class="p">;</span>
+<a name="gbab-716"></a>        <span class="p">}</span>
+<a name="gbab-717"></a>
+<a name="gbab-718"></a>        <span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">buffer</span><span class="p">,</span><span class="mh">0x16</span><span class="p">);</span>
+<a name="gbab-719"></a>        <span class="n">buffer</span><span class="p">[</span><span class="mh">0x16</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-720"></a>	<span class="n">instr</span><span class="p">.</span><span class="n">set_name</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span>
+<a name="gbab-721"></a>	<span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte</span><span class="p">();</span> <span class="c1">//says ignore ti</span>
+<a name="gbab-722"></a>	<span class="cm">/*if(aux!=0x1a) { I&#39;m not sure. this is supposed to be ignored...</span>
+<a name="gbab-723"></a>
+<a name="gbab-724"></a><span class="cm">		file-&gt;close();</span>
+<a name="gbab-725"></a><span class="cm">		return FILE_UNRECOGNIZED;</span>
+<a name="gbab-726"></a><span class="cm">	} */</span>
+<a name="gbab-727"></a>
+<a name="gbab-728"></a>        <span class="n">file</span><span class="o">-&gt;</span><span class="n">get_byte_array</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">buffer</span><span class="p">,</span><span class="mh">0x14</span><span class="p">);</span> <span class="c1">//somethingaboutthename</span>
+<a name="gbab-729"></a>        <span class="n">aux</span><span class="o">=</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_word</span><span class="p">();</span> <span class="c1">//version or blahblah</span>
+<a name="gbab-730"></a> 	
+<a name="gbab-731"></a>  	<span class="k">if</span> <span class="p">(</span><span class="n">load_instrument_internal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">instr</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-732"></a>
+<a name="gbab-733"></a>		<span class="n">file</span><span class="o">-&gt;</span><span class="n">close</span><span class="p">();</span>
+<a name="gbab-734"></a>		<span class="k">return</span> <span class="n">FILE_CORRUPTED</span><span class="p">;</span>
+<a name="gbab-735"></a>	<span class="p">}</span>
+<a name="gbab-736"></a>
+<a name="gbab-737"></a>	<span class="n">file</span><span class="o">-&gt;</span><span class="n">close</span><span class="p">();</span> <span class="c1">//ook, we got it..</span>
+<a name="gbab-738"></a>
+<a name="gbab-739"></a>
+<a name="gbab-740"></a>	<span class="k">return</span> <span class="n">FILE_OK</span><span class="p">;</span>
+<a name="gbab-741"></a>
+<a name="gbab-742"></a><span class="p">}</span>
+<a name="gbab-743"></a>
+<a name="gbab-744"></a>
+<a name="gbab-745"></a>
+<a name="gbab-746"></a><span class="n">CPLoader_XM</span><span class="o">::</span><span class="n">CPLoader_XM</span><span class="p">(</span><span class="n">CPFileAccessWrapper</span> <span class="o">*</span><span class="n">p_file</span><span class="p">){</span>
+<a name="gbab-747"></a>	
+<a name="gbab-748"></a>	<span class="n">file</span><span class="o">=</span><span class="n">p_file</span><span class="p">;</span>
+<a name="gbab-749"></a><span class="p">}</span>
+<a name="gbab-750"></a><span class="n">CPLoader_XM</span><span class="o">::~</span><span class="n">CPLoader_XM</span><span class="p">(){</span>
+<a name="gbab-751"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

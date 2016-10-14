@@ -1,0 +1,257 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/********************************************************************</span>
+<a name="gbab-2"></a><span class="cm"> *                                                                  *</span>
+<a name="gbab-3"></a><span class="cm"> * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *</span>
+<a name="gbab-4"></a><span class="cm"> * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *</span>
+<a name="gbab-5"></a><span class="cm"> * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *</span>
+<a name="gbab-6"></a><span class="cm"> * IN &#39;COPYING&#39;. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *</span>
+<a name="gbab-7"></a><span class="cm"> *                                                                  *</span>
+<a name="gbab-8"></a><span class="cm"> * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009                *</span>
+<a name="gbab-9"></a><span class="cm"> * by the Xiph.Org Foundation and contributors http://www.xiph.org/ *</span>
+<a name="gbab-10"></a><span class="cm"> *                                                                  *</span>
+<a name="gbab-11"></a><span class="cm"> ********************************************************************</span>
+<a name="gbab-12"></a>
+<a name="gbab-13"></a><span class="cm">  function:</span>
+<a name="gbab-14"></a><span class="cm">    last mod: $Id: ocintrin.h 16503 2009-08-22 18:14:02Z giles $</span>
+<a name="gbab-15"></a>
+<a name="gbab-16"></a><span class="cm"> ********************************************************************/</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a><span class="cm">/*Some common macros for potential platform-specific optimization.*/</span>
+<a name="gbab-19"></a><span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<a name="gbab-20"></a><span class="cp">#if !defined(_ocintrin_H)</span>
+<a name="gbab-21"></a><span class="cp"># define _ocintrin_H (1)</span>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="cm">/*Some specific platforms may have optimized intrinsic or inline assembly</span>
+<a name="gbab-24"></a><span class="cm">   versions of these functions which can substantially improve performance.</span>
+<a name="gbab-25"></a><span class="cm">  We define macros for them to allow easy incorporation of these non-ANSI</span>
+<a name="gbab-26"></a><span class="cm">   features.*/</span>
+<a name="gbab-27"></a>
+<a name="gbab-28"></a><span class="cm">/*Note that we do not provide a macro for abs(), because it is provided as a</span>
+<a name="gbab-29"></a><span class="cm">   library function, which we assume is translated into an intrinsic to avoid</span>
+<a name="gbab-30"></a><span class="cm">   the function call overhead and then implemented in the smartest way for the</span>
+<a name="gbab-31"></a><span class="cm">   target platform.</span>
+<a name="gbab-32"></a><span class="cm">  With modern gcc (4.x), this is true: it uses cmov instructions if the</span>
+<a name="gbab-33"></a><span class="cm">   architecture supports it and branchless bit-twiddling if it does not (the</span>
+<a name="gbab-34"></a><span class="cm">   speed difference between the two approaches is not measurable).</span>
+<a name="gbab-35"></a><span class="cm">  Interestingly, the bit-twiddling method was patented in 2000 (US 6,073,150)</span>
+<a name="gbab-36"></a><span class="cm">   by Sun Microsystems, despite prior art dating back to at least 1996:</span>
+<a name="gbab-37"></a><span class="cm">   http://web.archive.org/web/19961201174141/www.x86.org/ftp/articles/pentopt/PENTOPT.TXT</span>
+<a name="gbab-38"></a><span class="cm">  On gcc 3.x, however, our assumption is not true, as abs() is translated to a</span>
+<a name="gbab-39"></a><span class="cm">   conditional jump, which is horrible on deeply piplined architectures (e.g.,</span>
+<a name="gbab-40"></a><span class="cm">   all consumer architectures for the past decade or more).</span>
+<a name="gbab-41"></a><span class="cm">  Also be warned that -C*abs(x) where C is a constant is mis-optimized as</span>
+<a name="gbab-42"></a><span class="cm">   abs(C*x) on every gcc release before 4.2.3.</span>
+<a name="gbab-43"></a><span class="cm">  See bug http://gcc.gnu.org/bugzilla/show_bug.cgi?id=34130 */</span>
+<a name="gbab-44"></a>
+<a name="gbab-45"></a><span class="cm">/*Modern gcc (4.x) can compile the naive versions of min and max with cmov if</span>
+<a name="gbab-46"></a><span class="cm">   given an appropriate architecture, but the branchless bit-twiddling versions</span>
+<a name="gbab-47"></a><span class="cm">   are just as fast, and do not require any special target architecture.</span>
+<a name="gbab-48"></a><span class="cm">  Earlier gcc versions (3.x) compiled both code to the same assembly</span>
+<a name="gbab-49"></a><span class="cm">   instructions, because of the way they represented ((_b)&gt;(_a)) internally.*/</span>
+<a name="gbab-50"></a><span class="cp">#define OC_MAXI(_a,_b)      ((_a)-((_a)-(_b)&amp;-((_b)&gt;(_a))))</span>
+<a name="gbab-51"></a><span class="cp">#define OC_MINI(_a,_b)      ((_a)+((_b)-(_a)&amp;-((_b)&lt;(_a))))</span>
+<a name="gbab-52"></a><span class="cm">/*Clamps an integer into the given range.</span>
+<a name="gbab-53"></a><span class="cm">  If _a&gt;_c, then the lower bound _a is respected over the upper bound _c (this</span>
+<a name="gbab-54"></a><span class="cm">   behavior is required to meet our documented API behavior).</span>
+<a name="gbab-55"></a><span class="cm">  _a: The lower bound.</span>
+<a name="gbab-56"></a><span class="cm">  _b: The value to clamp.</span>
+<a name="gbab-57"></a><span class="cm">  _c: The upper boud.*/</span>
+<a name="gbab-58"></a><span class="cp">#define OC_CLAMPI(_a,_b,_c) (OC_MAXI(_a,OC_MINI(_b,_c)))</span>
+<a name="gbab-59"></a><span class="cp">#define OC_CLAMP255(_x)     ((unsigned char)((((_x)&lt;0)-1)&amp;((_x)|-((_x)&gt;255))))</span>
+<a name="gbab-60"></a><span class="cm">/*This has a chance of compiling branchless, and is just as fast as the</span>
+<a name="gbab-61"></a><span class="cm">   bit-twiddling method, which is slightly less portable, since it relies on a</span>
+<a name="gbab-62"></a><span class="cm">   sign-extended rightshift, which is not guaranteed by ANSI (but present on</span>
+<a name="gbab-63"></a><span class="cm">   every relevant platform).*/</span>
+<a name="gbab-64"></a><span class="cp">#define OC_SIGNI(_a)        (((_a)&gt;0)-((_a)&lt;0))</span>
+<a name="gbab-65"></a><span class="cm">/*Slightly more portable than relying on a sign-extended right-shift (which is</span>
+<a name="gbab-66"></a><span class="cm">   not guaranteed by ANSI), and just as fast, since gcc (3.x and 4.x both)</span>
+<a name="gbab-67"></a><span class="cm">   compile it into the right-shift anyway.*/</span>
+<a name="gbab-68"></a><span class="cp">#define OC_SIGNMASK(_a)     (-((_a)&lt;0))</span>
+<a name="gbab-69"></a><span class="cm">/*Divides an integer by a power of two, truncating towards 0.</span>
+<a name="gbab-70"></a><span class="cm">  _dividend: The integer to divide.</span>
+<a name="gbab-71"></a><span class="cm">  _shift:    The non-negative power of two to divide by.</span>
+<a name="gbab-72"></a><span class="cm">  _rmask:    (1&lt;&lt;_shift)-1*/</span>
+<a name="gbab-73"></a><span class="cp">#define OC_DIV_POW2(_dividend,_shift,_rmask)\</span>
+<a name="gbab-74"></a><span class="cp">  ((_dividend)+(OC_SIGNMASK(_dividend)&amp;(_rmask))&gt;&gt;(_shift))</span>
+<a name="gbab-75"></a><span class="cm">/*Divides _x by 65536, truncating towards 0.*/</span>
+<a name="gbab-76"></a><span class="cp">#define OC_DIV2_16(_x) OC_DIV_POW2(_x,16,0xFFFF)</span>
+<a name="gbab-77"></a><span class="cm">/*Divides _x by 2, truncating towards 0.*/</span>
+<a name="gbab-78"></a><span class="cp">#define OC_DIV2(_x) OC_DIV_POW2(_x,1,0x1)</span>
+<a name="gbab-79"></a><span class="cm">/*Divides _x by 8, truncating towards 0.*/</span>
+<a name="gbab-80"></a><span class="cp">#define OC_DIV8(_x) OC_DIV_POW2(_x,3,0x7)</span>
+<a name="gbab-81"></a><span class="cm">/*Divides _x by 16, truncating towards 0.*/</span>
+<a name="gbab-82"></a><span class="cp">#define OC_DIV16(_x) OC_DIV_POW2(_x,4,0xF)</span>
+<a name="gbab-83"></a><span class="cm">/*Right shifts _dividend by _shift, adding _rval, and subtracting one for</span>
+<a name="gbab-84"></a><span class="cm">   negative dividends first.</span>
+<a name="gbab-85"></a><span class="cm">  When _rval is (1&lt;&lt;_shift-1), this is equivalent to division with rounding</span>
+<a name="gbab-86"></a><span class="cm">   ties away from zero.*/</span>
+<a name="gbab-87"></a><span class="cp">#define OC_DIV_ROUND_POW2(_dividend,_shift,_rval)\</span>
+<a name="gbab-88"></a><span class="cp">  ((_dividend)+OC_SIGNMASK(_dividend)+(_rval)&gt;&gt;(_shift))</span>
+<a name="gbab-89"></a><span class="cm">/*Divides a _x by 2, rounding towards even numbers.*/</span>
+<a name="gbab-90"></a><span class="cp">#define OC_DIV2_RE(_x) ((_x)+((_x)&gt;&gt;1&amp;1)&gt;&gt;1)</span>
+<a name="gbab-91"></a><span class="cm">/*Divides a _x by (1&lt;&lt;(_shift)), rounding towards even numbers.*/</span>
+<a name="gbab-92"></a><span class="cp">#define OC_DIV_POW2_RE(_x,_shift) \</span>
+<a name="gbab-93"></a><span class="cp">  ((_x)+((_x)&gt;&gt;(_shift)&amp;1)+((1&lt;&lt;(_shift))-1&gt;&gt;1)&gt;&gt;(_shift))</span>
+<a name="gbab-94"></a><span class="cm">/*Swaps two integers _a and _b if _a&gt;_b.*/</span>
+<a name="gbab-95"></a><span class="cp">#define OC_SORT2I(_a,_b) \</span>
+<a name="gbab-96"></a><span class="cp">  do{ \</span>
+<a name="gbab-97"></a><span class="cp">    int t__; \</span>
+<a name="gbab-98"></a><span class="cp">    t__=((_a)^(_b))&amp;-((_b)&lt;(_a)); \</span>
+<a name="gbab-99"></a><span class="cp">    (_a)^=t__; \</span>
+<a name="gbab-100"></a><span class="cp">    (_b)^=t__; \</span>
+<a name="gbab-101"></a><span class="cp">  } \</span>
+<a name="gbab-102"></a><span class="cp">  while(0)</span>
+<a name="gbab-103"></a>
+<a name="gbab-104"></a><span class="cm">/*Accesses one of four (signed) bytes given an index.</span>
+<a name="gbab-105"></a><span class="cm">  This can be used to avoid small lookup tables.*/</span>
+<a name="gbab-106"></a><span class="cp">#define OC_BYTE_TABLE32(_a,_b,_c,_d,_i) \</span>
+<a name="gbab-107"></a><span class="cp">  ((signed char) \</span>
+<a name="gbab-108"></a><span class="cp">   (((_a)&amp;0xFF|((_b)&amp;0xFF)&lt;&lt;8|((_c)&amp;0xFF)&lt;&lt;16|((_d)&amp;0xFF)&lt;&lt;24)&gt;&gt;(_i)*8))</span>
+<a name="gbab-109"></a><span class="cm">/*Accesses one of eight (unsigned) nibbles given an index.</span>
+<a name="gbab-110"></a><span class="cm">  This can be used to avoid small lookup tables.*/</span>
+<a name="gbab-111"></a><span class="cp">#define OC_UNIBBLE_TABLE32(_a,_b,_c,_d,_e,_f,_g,_h,_i) \</span>
+<a name="gbab-112"></a><span class="cp">  ((((_a)&amp;0xF|((_b)&amp;0xF)&lt;&lt;4|((_c)&amp;0xF)&lt;&lt;8|((_d)&amp;0xF)&lt;&lt;12| \</span>
+<a name="gbab-113"></a><span class="cp">   ((_e)&amp;0xF)&lt;&lt;16|((_f)&amp;0xF)&lt;&lt;20|((_g)&amp;0xF)&lt;&lt;24|((_h)&amp;0xF)&lt;&lt;28)&gt;&gt;(_i)*4)&amp;0xF)</span>
+<a name="gbab-114"></a>
+<a name="gbab-115"></a>
+<a name="gbab-116"></a>
+<a name="gbab-117"></a><span class="cm">/*All of these macros should expect floats as arguments.*/</span>
+<a name="gbab-118"></a><span class="cp">#define OC_MAXF(_a,_b)      ((_a)&lt;(_b)?(_b):(_a))</span>
+<a name="gbab-119"></a><span class="cp">#define OC_MINF(_a,_b)      ((_a)&gt;(_b)?(_b):(_a))</span>
+<a name="gbab-120"></a><span class="cp">#define OC_CLAMPF(_a,_b,_c) (OC_MINF(_a,OC_MAXF(_b,_c)))</span>
+<a name="gbab-121"></a><span class="cp">#define OC_FABSF(_f)        ((float)fabs(_f))</span>
+<a name="gbab-122"></a><span class="cp">#define OC_SQRTF(_f)        ((float)sqrt(_f))</span>
+<a name="gbab-123"></a><span class="cp">#define OC_POWF(_b,_e)      ((float)pow(_b,_e))</span>
+<a name="gbab-124"></a><span class="cp">#define OC_LOGF(_f)         ((float)log(_f))</span>
+<a name="gbab-125"></a><span class="cp">#define OC_IFLOORF(_f)      ((int)floor(_f))</span>
+<a name="gbab-126"></a><span class="cp">#define OC_ICEILF(_f)       ((int)ceil(_f))</span>
+<a name="gbab-127"></a>
+<a name="gbab-128"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

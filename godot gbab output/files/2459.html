@@ -1,0 +1,601 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="c1">// Copyright 2011 Google Inc. All Rights Reserved.</span>
+<a name="gbab-2"></a><span class="c1">//</span>
+<a name="gbab-3"></a><span class="c1">// Use of this source code is governed by a BSD-style license</span>
+<a name="gbab-4"></a><span class="c1">// that can be found in the COPYING file in the root of the source</span>
+<a name="gbab-5"></a><span class="c1">// tree. An additional intellectual property rights grant can be found</span>
+<a name="gbab-6"></a><span class="c1">// in the file PATENTS. All contributing project authors may</span>
+<a name="gbab-7"></a><span class="c1">// be found in the AUTHORS file in the root of the source tree.</span>
+<a name="gbab-8"></a><span class="c1">// -----------------------------------------------------------------------------</span>
+<a name="gbab-9"></a><span class="c1">//</span>
+<a name="gbab-10"></a><span class="c1">// NEON version of YUV to RGB upsampling functions.</span>
+<a name="gbab-11"></a><span class="c1">//</span>
+<a name="gbab-12"></a><span class="c1">// Author: mans@mansr.com (Mans Rullgard)</span>
+<a name="gbab-13"></a><span class="c1">// Based on SSE code by: somnath@google.com (Somnath Banerjee)</span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="cp">#include</span> <span class="cpf">&quot;./dsp.h&quot;</span><span class="cp"></span>
+<a name="gbab-16"></a>
+<a name="gbab-17"></a><span class="cp">#if defined(WEBP_USE_NEON)</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
+<a name="gbab-20"></a><span class="cp">#include</span> <span class="cpf">&lt;arm_neon.h&gt;</span><span class="cp"></span>
+<a name="gbab-21"></a><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+<a name="gbab-22"></a><span class="cp">#include</span> <span class="cpf">&quot;./neon.h&quot;</span><span class="cp"></span>
+<a name="gbab-23"></a><span class="cp">#include</span> <span class="cpf">&quot;./yuv.h&quot;</span><span class="cp"></span>
+<a name="gbab-24"></a>
+<a name="gbab-25"></a><span class="cp">#ifdef FANCY_UPSAMPLING</span>
+<a name="gbab-26"></a>
+<a name="gbab-27"></a><span class="c1">//-----------------------------------------------------------------------------</span>
+<a name="gbab-28"></a><span class="c1">// U/V upsampling</span>
+<a name="gbab-29"></a>
+<a name="gbab-30"></a><span class="c1">// Loads 9 pixels each from rows r1 and r2 and generates 16 pixels.</span>
+<a name="gbab-31"></a><span class="cp">#define UPSAMPLE_16PIXELS(r1, r2, out) {                                \</span>
+<a name="gbab-32"></a><span class="cp">  uint8x8_t a = vld1_u8(r1);                                            \</span>
+<a name="gbab-33"></a><span class="cp">  uint8x8_t b = vld1_u8(r1 + 1);                                        \</span>
+<a name="gbab-34"></a><span class="cp">  uint8x8_t c = vld1_u8(r2);                                            \</span>
+<a name="gbab-35"></a><span class="cp">  uint8x8_t d = vld1_u8(r2 + 1);                                        \</span>
+<a name="gbab-36"></a><span class="cp">                                                                        \</span>
+<a name="gbab-37"></a><span class="cp">  uint16x8_t al = vshll_n_u8(a, 1);                                     \</span>
+<a name="gbab-38"></a><span class="cp">  uint16x8_t bl = vshll_n_u8(b, 1);                                     \</span>
+<a name="gbab-39"></a><span class="cp">  uint16x8_t cl = vshll_n_u8(c, 1);                                     \</span>
+<a name="gbab-40"></a><span class="cp">  uint16x8_t dl = vshll_n_u8(d, 1);                                     \</span>
+<a name="gbab-41"></a><span class="cp">                                                                        \</span>
+<a name="gbab-42"></a><span class="cp">  uint8x8_t diag1, diag2;                                               \</span>
+<a name="gbab-43"></a><span class="cp">  uint16x8_t sl;                                                        \</span>
+<a name="gbab-44"></a><span class="cp">                                                                        \</span>
+<a name="gbab-45"></a><span class="cp">  </span><span class="cm">/* a + b + c + d */</span><span class="cp">                                                   \</span>
+<a name="gbab-46"></a><span class="cp">  sl = vaddl_u8(a,  b);                                                 \</span>
+<a name="gbab-47"></a><span class="cp">  sl = vaddw_u8(sl, c);                                                 \</span>
+<a name="gbab-48"></a><span class="cp">  sl = vaddw_u8(sl, d);                                                 \</span>
+<a name="gbab-49"></a><span class="cp">                                                                        \</span>
+<a name="gbab-50"></a><span class="cp">  al = vaddq_u16(sl, al); </span><span class="cm">/* 3a +  b +  c +  d */</span><span class="cp">                       \</span>
+<a name="gbab-51"></a><span class="cp">  bl = vaddq_u16(sl, bl); </span><span class="cm">/*  a + 3b +  c +  d */</span><span class="cp">                       \</span>
+<a name="gbab-52"></a><span class="cp">                                                                        \</span>
+<a name="gbab-53"></a><span class="cp">  al = vaddq_u16(al, dl); </span><span class="cm">/* 3a +  b +  c + 3d */</span><span class="cp">                       \</span>
+<a name="gbab-54"></a><span class="cp">  bl = vaddq_u16(bl, cl); </span><span class="cm">/*  a + 3b + 3c +  d */</span><span class="cp">                       \</span>
+<a name="gbab-55"></a><span class="cp">                                                                        \</span>
+<a name="gbab-56"></a><span class="cp">  diag2 = vshrn_n_u16(al, 3);                                           \</span>
+<a name="gbab-57"></a><span class="cp">  diag1 = vshrn_n_u16(bl, 3);                                           \</span>
+<a name="gbab-58"></a><span class="cp">                                                                        \</span>
+<a name="gbab-59"></a><span class="cp">  a = vrhadd_u8(a, diag1);                                              \</span>
+<a name="gbab-60"></a><span class="cp">  b = vrhadd_u8(b, diag2);                                              \</span>
+<a name="gbab-61"></a><span class="cp">  c = vrhadd_u8(c, diag2);                                              \</span>
+<a name="gbab-62"></a><span class="cp">  d = vrhadd_u8(d, diag1);                                              \</span>
+<a name="gbab-63"></a><span class="cp">                                                                        \</span>
+<a name="gbab-64"></a><span class="cp">  {                                                                     \</span>
+<a name="gbab-65"></a><span class="cp">    uint8x8x2_t a_b, c_d;                                               \</span>
+<a name="gbab-66"></a><span class="cp">    INIT_VECTOR2(a_b, a, b);                                            \</span>
+<a name="gbab-67"></a><span class="cp">    INIT_VECTOR2(c_d, c, d);                                            \</span>
+<a name="gbab-68"></a><span class="cp">    vst2_u8(out,      a_b);                                             \</span>
+<a name="gbab-69"></a><span class="cp">    vst2_u8(out + 32, c_d);                                             \</span>
+<a name="gbab-70"></a><span class="cp">  }                                                                     \</span>
+<a name="gbab-71"></a><span class="cp">}</span>
+<a name="gbab-72"></a>
+<a name="gbab-73"></a><span class="c1">// Turn the macro into a function for reducing code-size when non-critical</span>
+<a name="gbab-74"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">Upsample16Pixels</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">r1</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">r2</span><span class="p">,</span>
+<a name="gbab-75"></a>                             <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-76"></a>  <span class="n">UPSAMPLE_16PIXELS</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">out</span><span class="p">);</span>
+<a name="gbab-77"></a><span class="p">}</span>
+<a name="gbab-78"></a>
+<a name="gbab-79"></a><span class="cp">#define UPSAMPLE_LAST_BLOCK(tb, bb, num_pixels, out) {                  \</span>
+<a name="gbab-80"></a><span class="cp">  uint8_t r1[9], r2[9];                                                 \</span>
+<a name="gbab-81"></a><span class="cp">  memcpy(r1, (tb), (num_pixels));                                       \</span>
+<a name="gbab-82"></a><span class="cp">  memcpy(r2, (bb), (num_pixels));                                       \</span>
+<a name="gbab-83"></a><span class="cp">  </span><span class="cm">/* replicate last byte */</span><span class="cp">                                             \</span>
+<a name="gbab-84"></a><span class="cp">  memset(r1 + (num_pixels), r1[(num_pixels) - 1], 9 - (num_pixels));    \</span>
+<a name="gbab-85"></a><span class="cp">  memset(r2 + (num_pixels), r2[(num_pixels) - 1], 9 - (num_pixels));    \</span>
+<a name="gbab-86"></a><span class="cp">  Upsample16Pixels(r1, r2, out);                                        \</span>
+<a name="gbab-87"></a><span class="cp">}</span>
+<a name="gbab-88"></a>
+<a name="gbab-89"></a><span class="c1">//-----------------------------------------------------------------------------</span>
+<a name="gbab-90"></a><span class="c1">// YUV-&gt;RGB conversion</span>
+<a name="gbab-91"></a>
+<a name="gbab-92"></a><span class="c1">// note: we represent the 33050 large constant as 32768 + 282</span>
+<a name="gbab-93"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">int16_t</span> <span class="n">kCoeffs1</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">19077</span><span class="p">,</span> <span class="mi">26149</span><span class="p">,</span> <span class="mi">6419</span><span class="p">,</span> <span class="mi">13320</span> <span class="p">};</span>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a><span class="cp">#define v255 vdup_n_u8(255)</span>
+<a name="gbab-96"></a><span class="cp">#define v_0x0f vdup_n_u8(15)</span>
+<a name="gbab-97"></a>
+<a name="gbab-98"></a><span class="cp">#define STORE_Rgb(out, r, g, b) do {                                    \</span>
+<a name="gbab-99"></a><span class="cp">  uint8x8x3_t r_g_b;                                                    \</span>
+<a name="gbab-100"></a><span class="cp">  INIT_VECTOR3(r_g_b, r, g, b);                                         \</span>
+<a name="gbab-101"></a><span class="cp">  vst3_u8(out, r_g_b);                                                  \</span>
+<a name="gbab-102"></a><span class="cp">} while (0)</span>
+<a name="gbab-103"></a>
+<a name="gbab-104"></a><span class="cp">#define STORE_Bgr(out, r, g, b) do {                                    \</span>
+<a name="gbab-105"></a><span class="cp">  uint8x8x3_t b_g_r;                                                    \</span>
+<a name="gbab-106"></a><span class="cp">  INIT_VECTOR3(b_g_r, b, g, r);                                         \</span>
+<a name="gbab-107"></a><span class="cp">  vst3_u8(out, b_g_r);                                                  \</span>
+<a name="gbab-108"></a><span class="cp">} while (0)</span>
+<a name="gbab-109"></a>
+<a name="gbab-110"></a><span class="cp">#define STORE_Rgba(out, r, g, b) do {                                   \</span>
+<a name="gbab-111"></a><span class="cp">  uint8x8x4_t r_g_b_v255;                                               \</span>
+<a name="gbab-112"></a><span class="cp">  INIT_VECTOR4(r_g_b_v255, r, g, b, v255);                              \</span>
+<a name="gbab-113"></a><span class="cp">  vst4_u8(out, r_g_b_v255);                                             \</span>
+<a name="gbab-114"></a><span class="cp">} while (0)</span>
+<a name="gbab-115"></a>
+<a name="gbab-116"></a><span class="cp">#define STORE_Bgra(out, r, g, b) do {                                   \</span>
+<a name="gbab-117"></a><span class="cp">  uint8x8x4_t b_g_r_v255;                                               \</span>
+<a name="gbab-118"></a><span class="cp">  INIT_VECTOR4(b_g_r_v255, b, g, r, v255);                              \</span>
+<a name="gbab-119"></a><span class="cp">  vst4_u8(out, b_g_r_v255);                                             \</span>
+<a name="gbab-120"></a><span class="cp">} while (0)</span>
+<a name="gbab-121"></a>
+<a name="gbab-122"></a><span class="cp">#define STORE_Argb(out, r, g, b) do {                                   \</span>
+<a name="gbab-123"></a><span class="cp">  uint8x8x4_t v255_r_g_b;                                               \</span>
+<a name="gbab-124"></a><span class="cp">  INIT_VECTOR4(v255_r_g_b, v255, r, g, b);                              \</span>
+<a name="gbab-125"></a><span class="cp">  vst4_u8(out, v255_r_g_b);                                             \</span>
+<a name="gbab-126"></a><span class="cp">} while (0)</span>
+<a name="gbab-127"></a>
+<a name="gbab-128"></a><span class="cp">#if !defined(WEBP_SWAP_16BIT_CSP)</span>
+<a name="gbab-129"></a><span class="cp">#define ZIP_U8(lo, hi) vzip_u8((lo), (hi))</span>
+<a name="gbab-130"></a><span class="cp">#else</span>
+<a name="gbab-131"></a><span class="cp">#define ZIP_U8(lo, hi) vzip_u8((hi), (lo))</span>
+<a name="gbab-132"></a><span class="cp">#endif</span>
+<a name="gbab-133"></a>
+<a name="gbab-134"></a><span class="cp">#define STORE_Rgba4444(out, r, g, b) do {                               \</span>
+<a name="gbab-135"></a><span class="cp">  const uint8x8_t r1 = vshl_n_u8(vshr_n_u8(r, 4), 4);  </span><span class="cm">/* 4bits */</span><span class="cp">      \</span>
+<a name="gbab-136"></a><span class="cp">  const uint8x8_t g1 = vshr_n_u8(g, 4);                                 \</span>
+<a name="gbab-137"></a><span class="cp">  const uint8x8_t ba = vorr_u8(b, v_0x0f);                              \</span>
+<a name="gbab-138"></a><span class="cp">  const uint8x8_t rg = vorr_u8(r1, g1);                                 \</span>
+<a name="gbab-139"></a><span class="cp">  const uint8x8x2_t rgba4444 = ZIP_U8(rg, ba);                          \</span>
+<a name="gbab-140"></a><span class="cp">  vst1q_u8(out, vcombine_u8(rgba4444.val[0], rgba4444.val[1]));         \</span>
+<a name="gbab-141"></a><span class="cp">} while (0)</span>
+<a name="gbab-142"></a>
+<a name="gbab-143"></a><span class="cp">#define STORE_Rgb565(out, r, g, b) do {                                 \</span>
+<a name="gbab-144"></a><span class="cp">  const uint8x8_t r1 = vshl_n_u8(vshr_n_u8(r, 3), 3);  </span><span class="cm">/* 5bits */</span><span class="cp">      \</span>
+<a name="gbab-145"></a><span class="cp">  const uint8x8_t g1 = vshr_n_u8(g, 5);                </span><span class="cm">/* upper 3bits */</span><span class="cp">\</span>
+<a name="gbab-146"></a><span class="cp">  const uint8x8_t g2 = vshl_n_u8(vshr_n_u8(g, 2), 5);  </span><span class="cm">/* lower 3bits */</span><span class="cp">\</span>
+<a name="gbab-147"></a><span class="cp">  const uint8x8_t b1 = vshr_n_u8(b, 3);                </span><span class="cm">/* 5bits */</span><span class="cp">      \</span>
+<a name="gbab-148"></a><span class="cp">  const uint8x8_t rg = vorr_u8(r1, g1);                                 \</span>
+<a name="gbab-149"></a><span class="cp">  const uint8x8_t gb = vorr_u8(g2, b1);                                 \</span>
+<a name="gbab-150"></a><span class="cp">  const uint8x8x2_t rgb565 = ZIP_U8(rg, gb);                            \</span>
+<a name="gbab-151"></a><span class="cp">  vst1q_u8(out, vcombine_u8(rgb565.val[0], rgb565.val[1]));             \</span>
+<a name="gbab-152"></a><span class="cp">} while (0)</span>
+<a name="gbab-153"></a>
+<a name="gbab-154"></a><span class="cp">#define CONVERT8(FMT, XSTEP, N, src_y, src_uv, out, cur_x) do {         \</span>
+<a name="gbab-155"></a><span class="cp">  int i;                                                                \</span>
+<a name="gbab-156"></a><span class="cp">  for (i = 0; i &lt; N; i += 8) {                                          \</span>
+<a name="gbab-157"></a><span class="cp">    const int off = ((cur_x) + i) * XSTEP;                              \</span>
+<a name="gbab-158"></a><span class="cp">    const uint8x8_t y  = vld1_u8((src_y) + (cur_x)  + i);               \</span>
+<a name="gbab-159"></a><span class="cp">    const uint8x8_t u  = vld1_u8((src_uv) + i +  0);                    \</span>
+<a name="gbab-160"></a><span class="cp">    const uint8x8_t v  = vld1_u8((src_uv) + i + 16);                    \</span>
+<a name="gbab-161"></a><span class="cp">    const int16x8_t Y0 = vreinterpretq_s16_u16(vshll_n_u8(y, 7));       \</span>
+<a name="gbab-162"></a><span class="cp">    const int16x8_t U0 = vreinterpretq_s16_u16(vshll_n_u8(u, 7));       \</span>
+<a name="gbab-163"></a><span class="cp">    const int16x8_t V0 = vreinterpretq_s16_u16(vshll_n_u8(v, 7));       \</span>
+<a name="gbab-164"></a><span class="cp">    const int16x8_t Y1 = vqdmulhq_lane_s16(Y0, coeff1, 0);              \</span>
+<a name="gbab-165"></a><span class="cp">    const int16x8_t R0 = vqdmulhq_lane_s16(V0, coeff1, 1);              \</span>
+<a name="gbab-166"></a><span class="cp">    const int16x8_t G0 = vqdmulhq_lane_s16(U0, coeff1, 2);              \</span>
+<a name="gbab-167"></a><span class="cp">    const int16x8_t G1 = vqdmulhq_lane_s16(V0, coeff1, 3);              \</span>
+<a name="gbab-168"></a><span class="cp">    const int16x8_t B0 = vqdmulhq_n_s16(U0, 282);                       \</span>
+<a name="gbab-169"></a><span class="cp">    const int16x8_t R1 = vqaddq_s16(Y1, R_Rounder);                     \</span>
+<a name="gbab-170"></a><span class="cp">    const int16x8_t G2 = vqaddq_s16(Y1, G_Rounder);                     \</span>
+<a name="gbab-171"></a><span class="cp">    const int16x8_t B1 = vqaddq_s16(Y1, B_Rounder);                     \</span>
+<a name="gbab-172"></a><span class="cp">    const int16x8_t R2 = vqaddq_s16(R0, R1);                            \</span>
+<a name="gbab-173"></a><span class="cp">    const int16x8_t G3 = vqaddq_s16(G0, G1);                            \</span>
+<a name="gbab-174"></a><span class="cp">    const int16x8_t B2 = vqaddq_s16(B0, B1);                            \</span>
+<a name="gbab-175"></a><span class="cp">    const int16x8_t G4 = vqsubq_s16(G2, G3);                            \</span>
+<a name="gbab-176"></a><span class="cp">    const int16x8_t B3 = vqaddq_s16(B2, U0);                            \</span>
+<a name="gbab-177"></a><span class="cp">    const uint8x8_t R = vqshrun_n_s16(R2, YUV_FIX2);                    \</span>
+<a name="gbab-178"></a><span class="cp">    const uint8x8_t G = vqshrun_n_s16(G4, YUV_FIX2);                    \</span>
+<a name="gbab-179"></a><span class="cp">    const uint8x8_t B = vqshrun_n_s16(B3, YUV_FIX2);                    \</span>
+<a name="gbab-180"></a><span class="cp">    STORE_ ## FMT(out + off, R, G, B);                                  \</span>
+<a name="gbab-181"></a><span class="cp">  }                                                                     \</span>
+<a name="gbab-182"></a><span class="cp">} while (0)</span>
+<a name="gbab-183"></a>
+<a name="gbab-184"></a><span class="cp">#define CONVERT1(FUNC, XSTEP, N, src_y, src_uv, rgb, cur_x) {           \</span>
+<a name="gbab-185"></a><span class="cp">  int i;                                                                \</span>
+<a name="gbab-186"></a><span class="cp">  for (i = 0; i &lt; N; i++) {                                             \</span>
+<a name="gbab-187"></a><span class="cp">    const int off = ((cur_x) + i) * XSTEP;                              \</span>
+<a name="gbab-188"></a><span class="cp">    const int y = src_y[(cur_x) + i];                                   \</span>
+<a name="gbab-189"></a><span class="cp">    const int u = (src_uv)[i];                                          \</span>
+<a name="gbab-190"></a><span class="cp">    const int v = (src_uv)[i + 16];                                     \</span>
+<a name="gbab-191"></a><span class="cp">    FUNC(y, u, v, rgb + off);                                           \</span>
+<a name="gbab-192"></a><span class="cp">  }                                                                     \</span>
+<a name="gbab-193"></a><span class="cp">}</span>
+<a name="gbab-194"></a>
+<a name="gbab-195"></a><span class="cp">#define CONVERT2RGB_8(FMT, XSTEP, top_y, bottom_y, uv,                  \</span>
+<a name="gbab-196"></a><span class="cp">                      top_dst, bottom_dst, cur_x, len) {                \</span>
+<a name="gbab-197"></a><span class="cp">  CONVERT8(FMT, XSTEP, len, top_y, uv, top_dst, cur_x);                 \</span>
+<a name="gbab-198"></a><span class="cp">  if (bottom_y != NULL) {                                               \</span>
+<a name="gbab-199"></a><span class="cp">    CONVERT8(FMT, XSTEP, len, bottom_y, (uv) + 32, bottom_dst, cur_x);  \</span>
+<a name="gbab-200"></a><span class="cp">  }                                                                     \</span>
+<a name="gbab-201"></a><span class="cp">}</span>
+<a name="gbab-202"></a>
+<a name="gbab-203"></a><span class="cp">#define CONVERT2RGB_1(FUNC, XSTEP, top_y, bottom_y, uv,                 \</span>
+<a name="gbab-204"></a><span class="cp">                      top_dst, bottom_dst, cur_x, len) {                \</span>
+<a name="gbab-205"></a><span class="cp">  CONVERT1(FUNC, XSTEP, len, top_y, uv, top_dst, cur_x);                \</span>
+<a name="gbab-206"></a><span class="cp">  if (bottom_y != NULL) {                                               \</span>
+<a name="gbab-207"></a><span class="cp">    CONVERT1(FUNC, XSTEP, len, bottom_y, (uv) + 32, bottom_dst, cur_x); \</span>
+<a name="gbab-208"></a><span class="cp">  }                                                                     \</span>
+<a name="gbab-209"></a><span class="cp">}</span>
+<a name="gbab-210"></a>
+<a name="gbab-211"></a><span class="cp">#define NEON_UPSAMPLE_FUNC(FUNC_NAME, FMT, XSTEP)                       \</span>
+<a name="gbab-212"></a><span class="cp">static void FUNC_NAME(const uint8_t *top_y, const uint8_t *bottom_y,    \</span>
+<a name="gbab-213"></a><span class="cp">                      const uint8_t *top_u, const uint8_t *top_v,       \</span>
+<a name="gbab-214"></a><span class="cp">                      const uint8_t *cur_u, const uint8_t *cur_v,       \</span>
+<a name="gbab-215"></a><span class="cp">                      uint8_t *top_dst, uint8_t *bottom_dst, int len) { \</span>
+<a name="gbab-216"></a><span class="cp">  int block;                                                            \</span>
+<a name="gbab-217"></a><span class="cp">  </span><span class="cm">/* 16 byte aligned array to cache reconstructed u and v */</span><span class="cp">            \</span>
+<a name="gbab-218"></a><span class="cp">  uint8_t uv_buf[2 * 32 + 15];                                          \</span>
+<a name="gbab-219"></a><span class="cp">  uint8_t *const r_uv = (uint8_t*)((uintptr_t)(uv_buf + 15) &amp; ~15);     \</span>
+<a name="gbab-220"></a><span class="cp">  const int uv_len = (len + 1) &gt;&gt; 1;                                    \</span>
+<a name="gbab-221"></a><span class="cp">  </span><span class="cm">/* 9 pixels must be read-able for each block */</span><span class="cp">                       \</span>
+<a name="gbab-222"></a><span class="cp">  const int num_blocks = (uv_len - 1) &gt;&gt; 3;                             \</span>
+<a name="gbab-223"></a><span class="cp">  const int leftover = uv_len - num_blocks * 8;                         \</span>
+<a name="gbab-224"></a><span class="cp">  const int last_pos = 1 + 16 * num_blocks;                             \</span>
+<a name="gbab-225"></a><span class="cp">                                                                        \</span>
+<a name="gbab-226"></a><span class="cp">  const int u_diag = ((top_u[0] + cur_u[0]) &gt;&gt; 1) + 1;                  \</span>
+<a name="gbab-227"></a><span class="cp">  const int v_diag = ((top_v[0] + cur_v[0]) &gt;&gt; 1) + 1;                  \</span>
+<a name="gbab-228"></a><span class="cp">                                                                        \</span>
+<a name="gbab-229"></a><span class="cp">  const int16x4_t coeff1 = vld1_s16(kCoeffs1);                          \</span>
+<a name="gbab-230"></a><span class="cp">  const int16x8_t R_Rounder = vdupq_n_s16(-14234);                      \</span>
+<a name="gbab-231"></a><span class="cp">  const int16x8_t G_Rounder = vdupq_n_s16(8708);                        \</span>
+<a name="gbab-232"></a><span class="cp">  const int16x8_t B_Rounder = vdupq_n_s16(-17685);                      \</span>
+<a name="gbab-233"></a><span class="cp">                                                                        \</span>
+<a name="gbab-234"></a><span class="cp">  </span><span class="cm">/* Treat the first pixel in regular way */</span><span class="cp">                            \</span>
+<a name="gbab-235"></a><span class="cp">  assert(top_y != NULL);                                                \</span>
+<a name="gbab-236"></a><span class="cp">  {                                                                     \</span>
+<a name="gbab-237"></a><span class="cp">    const int u0 = (top_u[0] + u_diag) &gt;&gt; 1;                            \</span>
+<a name="gbab-238"></a><span class="cp">    const int v0 = (top_v[0] + v_diag) &gt;&gt; 1;                            \</span>
+<a name="gbab-239"></a><span class="cp">    VP8YuvTo ## FMT(top_y[0], u0, v0, top_dst);                         \</span>
+<a name="gbab-240"></a><span class="cp">  }                                                                     \</span>
+<a name="gbab-241"></a><span class="cp">  if (bottom_y != NULL) {                                               \</span>
+<a name="gbab-242"></a><span class="cp">    const int u0 = (cur_u[0] + u_diag) &gt;&gt; 1;                            \</span>
+<a name="gbab-243"></a><span class="cp">    const int v0 = (cur_v[0] + v_diag) &gt;&gt; 1;                            \</span>
+<a name="gbab-244"></a><span class="cp">    VP8YuvTo ## FMT(bottom_y[0], u0, v0, bottom_dst);                   \</span>
+<a name="gbab-245"></a><span class="cp">  }                                                                     \</span>
+<a name="gbab-246"></a><span class="cp">                                                                        \</span>
+<a name="gbab-247"></a><span class="cp">  for (block = 0; block &lt; num_blocks; ++block) {                        \</span>
+<a name="gbab-248"></a><span class="cp">    UPSAMPLE_16PIXELS(top_u, cur_u, r_uv);                              \</span>
+<a name="gbab-249"></a><span class="cp">    UPSAMPLE_16PIXELS(top_v, cur_v, r_uv + 16);                         \</span>
+<a name="gbab-250"></a><span class="cp">    CONVERT2RGB_8(FMT, XSTEP, top_y, bottom_y, r_uv,                    \</span>
+<a name="gbab-251"></a><span class="cp">                  top_dst, bottom_dst, 16 * block + 1, 16);             \</span>
+<a name="gbab-252"></a><span class="cp">    top_u += 8;                                                         \</span>
+<a name="gbab-253"></a><span class="cp">    cur_u += 8;                                                         \</span>
+<a name="gbab-254"></a><span class="cp">    top_v += 8;                                                         \</span>
+<a name="gbab-255"></a><span class="cp">    cur_v += 8;                                                         \</span>
+<a name="gbab-256"></a><span class="cp">  }                                                                     \</span>
+<a name="gbab-257"></a><span class="cp">                                                                        \</span>
+<a name="gbab-258"></a><span class="cp">  UPSAMPLE_LAST_BLOCK(top_u, cur_u, leftover, r_uv);                    \</span>
+<a name="gbab-259"></a><span class="cp">  UPSAMPLE_LAST_BLOCK(top_v, cur_v, leftover, r_uv + 16);               \</span>
+<a name="gbab-260"></a><span class="cp">  CONVERT2RGB_1(VP8YuvTo ## FMT, XSTEP, top_y, bottom_y, r_uv,          \</span>
+<a name="gbab-261"></a><span class="cp">                top_dst, bottom_dst, last_pos, len - last_pos);         \</span>
+<a name="gbab-262"></a><span class="cp">}</span>
+<a name="gbab-263"></a>
+<a name="gbab-264"></a><span class="c1">// NEON variants of the fancy upsampler.</span>
+<a name="gbab-265"></a><span class="n">NEON_UPSAMPLE_FUNC</span><span class="p">(</span><span class="n">UpsampleRgbLinePair</span><span class="p">,</span>  <span class="n">Rgb</span><span class="p">,</span>  <span class="mi">3</span><span class="p">)</span>
+<a name="gbab-266"></a><span class="n">NEON_UPSAMPLE_FUNC</span><span class="p">(</span><span class="n">UpsampleBgrLinePair</span><span class="p">,</span>  <span class="n">Bgr</span><span class="p">,</span>  <span class="mi">3</span><span class="p">)</span>
+<a name="gbab-267"></a><span class="n">NEON_UPSAMPLE_FUNC</span><span class="p">(</span><span class="n">UpsampleRgbaLinePair</span><span class="p">,</span> <span class="n">Rgba</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<a name="gbab-268"></a><span class="n">NEON_UPSAMPLE_FUNC</span><span class="p">(</span><span class="n">UpsampleBgraLinePair</span><span class="p">,</span> <span class="n">Bgra</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<a name="gbab-269"></a><span class="n">NEON_UPSAMPLE_FUNC</span><span class="p">(</span><span class="n">UpsampleArgbLinePair</span><span class="p">,</span> <span class="n">Argb</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<a name="gbab-270"></a><span class="n">NEON_UPSAMPLE_FUNC</span><span class="p">(</span><span class="n">UpsampleRgba4444LinePair</span><span class="p">,</span> <span class="n">Rgba4444</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<a name="gbab-271"></a><span class="n">NEON_UPSAMPLE_FUNC</span><span class="p">(</span><span class="n">UpsampleRgb565LinePair</span><span class="p">,</span> <span class="n">Rgb565</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<a name="gbab-272"></a>
+<a name="gbab-273"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-274"></a><span class="c1">// Entry point</span>
+<a name="gbab-275"></a>
+<a name="gbab-276"></a><span class="k">extern</span> <span class="n">WebPUpsampleLinePairFunc</span> <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="cm">/* MODE_LAST */</span><span class="p">];</span>
+<a name="gbab-277"></a>
+<a name="gbab-278"></a><span class="k">extern</span> <span class="kt">void</span> <span class="nf">WebPInitUpsamplersNEON</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-279"></a>
+<a name="gbab-280"></a><span class="n">WEBP_TSAN_IGNORE_FUNCTION</span> <span class="kt">void</span> <span class="nf">WebPInitUpsamplersNEON</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-281"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_RGB</span><span class="p">]</span>  <span class="o">=</span> <span class="n">UpsampleRgbLinePair</span><span class="p">;</span>
+<a name="gbab-282"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_RGBA</span><span class="p">]</span> <span class="o">=</span> <span class="n">UpsampleRgbaLinePair</span><span class="p">;</span>
+<a name="gbab-283"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_BGR</span><span class="p">]</span>  <span class="o">=</span> <span class="n">UpsampleBgrLinePair</span><span class="p">;</span>
+<a name="gbab-284"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_BGRA</span><span class="p">]</span> <span class="o">=</span> <span class="n">UpsampleBgraLinePair</span><span class="p">;</span>
+<a name="gbab-285"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_ARGB</span><span class="p">]</span> <span class="o">=</span> <span class="n">UpsampleArgbLinePair</span><span class="p">;</span>
+<a name="gbab-286"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_rgbA</span><span class="p">]</span> <span class="o">=</span> <span class="n">UpsampleRgbaLinePair</span><span class="p">;</span>
+<a name="gbab-287"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_bgrA</span><span class="p">]</span> <span class="o">=</span> <span class="n">UpsampleBgraLinePair</span><span class="p">;</span>
+<a name="gbab-288"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_Argb</span><span class="p">]</span> <span class="o">=</span> <span class="n">UpsampleArgbLinePair</span><span class="p">;</span>
+<a name="gbab-289"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_RGB_565</span><span class="p">]</span> <span class="o">=</span> <span class="n">UpsampleRgb565LinePair</span><span class="p">;</span>
+<a name="gbab-290"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_RGBA_4444</span><span class="p">]</span> <span class="o">=</span> <span class="n">UpsampleRgba4444LinePair</span><span class="p">;</span>
+<a name="gbab-291"></a>  <span class="n">WebPUpsamplers</span><span class="p">[</span><span class="n">MODE_rgbA_4444</span><span class="p">]</span> <span class="o">=</span> <span class="n">UpsampleRgba4444LinePair</span><span class="p">;</span>
+<a name="gbab-292"></a><span class="p">}</span>
+<a name="gbab-293"></a>
+<a name="gbab-294"></a><span class="cp">#endif  </span><span class="c1">// FANCY_UPSAMPLING</span>
+<a name="gbab-295"></a>
+<a name="gbab-296"></a><span class="cp">#endif  </span><span class="c1">// WEBP_USE_NEON</span>
+<a name="gbab-297"></a>
+<a name="gbab-298"></a><span class="cp">#if !(defined(FANCY_UPSAMPLING) &amp;&amp; defined(WEBP_USE_NEON))</span>
+<a name="gbab-299"></a><span class="n">WEBP_DSP_INIT_STUB</span><span class="p">(</span><span class="n">WebPInitUpsamplersNEON</span><span class="p">)</span>
+<a name="gbab-300"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

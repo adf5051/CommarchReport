@@ -1,0 +1,1675 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* ssl/ssl_err.c */</span>
+<a name="gbab-2"></a><span class="cm">/* ====================================================================</span>
+<a name="gbab-3"></a><span class="cm"> * Copyright (c) 1999-2015 The OpenSSL Project.  All rights reserved.</span>
+<a name="gbab-4"></a><span class="cm"> *</span>
+<a name="gbab-5"></a><span class="cm"> * Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-6"></a><span class="cm"> * modification, are permitted provided that the following conditions</span>
+<a name="gbab-7"></a><span class="cm"> * are met:</span>
+<a name="gbab-8"></a><span class="cm"> *</span>
+<a name="gbab-9"></a><span class="cm"> * 1. Redistributions of source code must retain the above copyright</span>
+<a name="gbab-10"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer. </span>
+<a name="gbab-11"></a><span class="cm"> *</span>
+<a name="gbab-12"></a><span class="cm"> * 2. Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-13"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer in</span>
+<a name="gbab-14"></a><span class="cm"> *    the documentation and/or other materials provided with the</span>
+<a name="gbab-15"></a><span class="cm"> *    distribution.</span>
+<a name="gbab-16"></a><span class="cm"> *</span>
+<a name="gbab-17"></a><span class="cm"> * 3. All advertising materials mentioning features or use of this</span>
+<a name="gbab-18"></a><span class="cm"> *    software must display the following acknowledgment:</span>
+<a name="gbab-19"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-20"></a><span class="cm"> *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)&quot;</span>
+<a name="gbab-21"></a><span class="cm"> *</span>
+<a name="gbab-22"></a><span class="cm"> * 4. The names &quot;OpenSSL Toolkit&quot; and &quot;OpenSSL Project&quot; must not be used to</span>
+<a name="gbab-23"></a><span class="cm"> *    endorse or promote products derived from this software without</span>
+<a name="gbab-24"></a><span class="cm"> *    prior written permission. For written permission, please contact</span>
+<a name="gbab-25"></a><span class="cm"> *    openssl-core@OpenSSL.org.</span>
+<a name="gbab-26"></a><span class="cm"> *</span>
+<a name="gbab-27"></a><span class="cm"> * 5. Products derived from this software may not be called &quot;OpenSSL&quot;</span>
+<a name="gbab-28"></a><span class="cm"> *    nor may &quot;OpenSSL&quot; appear in their names without prior written</span>
+<a name="gbab-29"></a><span class="cm"> *    permission of the OpenSSL Project.</span>
+<a name="gbab-30"></a><span class="cm"> *</span>
+<a name="gbab-31"></a><span class="cm"> * 6. Redistributions of any form whatsoever must retain the following</span>
+<a name="gbab-32"></a><span class="cm"> *    acknowledgment:</span>
+<a name="gbab-33"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-34"></a><span class="cm"> *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)&quot;</span>
+<a name="gbab-35"></a><span class="cm"> *</span>
+<a name="gbab-36"></a><span class="cm"> * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS&#39;&#39; AND ANY</span>
+<a name="gbab-37"></a><span class="cm"> * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<a name="gbab-38"></a><span class="cm"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR</span>
+<a name="gbab-39"></a><span class="cm"> * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR</span>
+<a name="gbab-40"></a><span class="cm"> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<a name="gbab-41"></a><span class="cm"> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT</span>
+<a name="gbab-42"></a><span class="cm"> * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<a name="gbab-43"></a><span class="cm"> * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)</span>
+<a name="gbab-44"></a><span class="cm"> * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,</span>
+<a name="gbab-45"></a><span class="cm"> * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<a name="gbab-46"></a><span class="cm"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED</span>
+<a name="gbab-47"></a><span class="cm"> * OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-48"></a><span class="cm"> * ====================================================================</span>
+<a name="gbab-49"></a><span class="cm"> *</span>
+<a name="gbab-50"></a><span class="cm"> * This product includes cryptographic software written by Eric Young</span>
+<a name="gbab-51"></a><span class="cm"> * (eay@cryptsoft.com).  This product includes software written by Tim</span>
+<a name="gbab-52"></a><span class="cm"> * Hudson (tjh@cryptsoft.com).</span>
+<a name="gbab-53"></a><span class="cm"> *</span>
+<a name="gbab-54"></a><span class="cm"> */</span>
+<a name="gbab-55"></a>
+<a name="gbab-56"></a><span class="cm">/*</span>
+<a name="gbab-57"></a><span class="cm"> * NOTE: this file was auto generated by the mkerr.pl script: any changes</span>
+<a name="gbab-58"></a><span class="cm"> * made to it will be overwritten when the script next updates this file,</span>
+<a name="gbab-59"></a><span class="cm"> * only reason strings will be preserved.</span>
+<a name="gbab-60"></a><span class="cm"> */</span>
+<a name="gbab-61"></a>
+<a name="gbab-62"></a><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<a name="gbab-63"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/err.h&gt;</span><span class="cp"></span>
+<a name="gbab-64"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/ssl.h&gt;</span><span class="cp"></span>
+<a name="gbab-65"></a>
+<a name="gbab-66"></a><span class="cm">/* BEGIN ERROR CODES */</span>
+<a name="gbab-67"></a><span class="cp">#ifndef OPENSSL_NO_ERR</span>
+<a name="gbab-68"></a>
+<a name="gbab-69"></a><span class="cp">#define ERR_FUNC(func) ERR_PACK(ERR_LIB_SSL,func,0)</span>
+<a name="gbab-70"></a><span class="cp">#define ERR_REASON(reason) ERR_PACK(ERR_LIB_SSL,0,reason)</span>
+<a name="gbab-71"></a>
+<a name="gbab-72"></a><span class="k">static</span> <span class="n">ERR_STRING_DATA</span> <span class="n">SSL_str_functs</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-73"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_CHECK_SUITEB_CIPHER_LIST</span><span class="p">),</span> <span class="s">&quot;CHECK_SUITEB_CIPHER_LIST&quot;</span><span class="p">},</span>
+<a name="gbab-74"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_CLIENT_CERTIFICATE</span><span class="p">),</span>	<span class="s">&quot;CLIENT_CERTIFICATE&quot;</span><span class="p">},</span>
+<a name="gbab-75"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_CLIENT_FINISHED</span><span class="p">),</span>	<span class="s">&quot;CLIENT_FINISHED&quot;</span><span class="p">},</span>
+<a name="gbab-76"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_CLIENT_HELLO</span><span class="p">),</span>	<span class="s">&quot;CLIENT_HELLO&quot;</span><span class="p">},</span>
+<a name="gbab-77"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_CLIENT_MASTER_KEY</span><span class="p">),</span>	<span class="s">&quot;CLIENT_MASTER_KEY&quot;</span><span class="p">},</span>
+<a name="gbab-78"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_D2I_SSL_SESSION</span><span class="p">),</span>	<span class="s">&quot;d2i_SSL_SESSION&quot;</span><span class="p">},</span>
+<a name="gbab-79"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DO_DTLS1_WRITE</span><span class="p">),</span> <span class="s">&quot;do_dtls1_write&quot;</span><span class="p">},</span>
+<a name="gbab-80"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DO_SSL3_WRITE</span><span class="p">),</span>	<span class="s">&quot;DO_SSL3_WRITE&quot;</span><span class="p">},</span>
+<a name="gbab-81"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_ACCEPT</span><span class="p">),</span> <span class="s">&quot;dtls1_accept&quot;</span><span class="p">},</span>
+<a name="gbab-82"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_ADD_CERT_TO_BUF</span><span class="p">),</span>	<span class="s">&quot;DTLS1_ADD_CERT_TO_BUF&quot;</span><span class="p">},</span>
+<a name="gbab-83"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_BUFFER_RECORD</span><span class="p">),</span>	<span class="s">&quot;DTLS1_BUFFER_RECORD&quot;</span><span class="p">},</span>
+<a name="gbab-84"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_CHECK_TIMEOUT_NUM</span><span class="p">),</span> <span class="s">&quot;dtls1_check_timeout_num&quot;</span><span class="p">},</span>
+<a name="gbab-85"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_CLIENT_HELLO</span><span class="p">),</span> <span class="s">&quot;dtls1_client_hello&quot;</span><span class="p">},</span>
+<a name="gbab-86"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_CONNECT</span><span class="p">),</span> <span class="s">&quot;dtls1_connect&quot;</span><span class="p">},</span>
+<a name="gbab-87"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_GET_HELLO_VERIFY</span><span class="p">),</span>	<span class="s">&quot;DTLS1_GET_HELLO_VERIFY&quot;</span><span class="p">},</span>
+<a name="gbab-88"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_GET_MESSAGE</span><span class="p">),</span> <span class="s">&quot;dtls1_get_message&quot;</span><span class="p">},</span>
+<a name="gbab-89"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_GET_MESSAGE_FRAGMENT</span><span class="p">),</span>
+<a name="gbab-90"></a>     <span class="s">&quot;DTLS1_GET_MESSAGE_FRAGMENT&quot;</span><span class="p">},</span>
+<a name="gbab-91"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_GET_RECORD</span><span class="p">),</span> <span class="s">&quot;dtls1_get_record&quot;</span><span class="p">},</span>
+<a name="gbab-92"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_HANDLE_TIMEOUT</span><span class="p">),</span> <span class="s">&quot;dtls1_handle_timeout&quot;</span><span class="p">},</span>
+<a name="gbab-93"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_HEARTBEAT</span><span class="p">),</span> <span class="s">&quot;dtls1_heartbeat&quot;</span><span class="p">},</span>
+<a name="gbab-94"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_OUTPUT_CERT_CHAIN</span><span class="p">),</span> <span class="s">&quot;dtls1_output_cert_chain&quot;</span><span class="p">},</span>
+<a name="gbab-95"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_PREPROCESS_FRAGMENT</span><span class="p">),</span>	<span class="s">&quot;DTLS1_PREPROCESS_FRAGMENT&quot;</span><span class="p">},</span>
+<a name="gbab-96"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_PROCESS_OUT_OF_SEQ_MESSAGE</span><span class="p">),</span>
+<a name="gbab-97"></a>     <span class="s">&quot;DTLS1_PROCESS_OUT_OF_SEQ_MESSAGE&quot;</span><span class="p">},</span>
+<a name="gbab-98"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_PROCESS_RECORD</span><span class="p">),</span>	<span class="s">&quot;DTLS1_PROCESS_RECORD&quot;</span><span class="p">},</span>
+<a name="gbab-99"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_READ_BYTES</span><span class="p">),</span> <span class="s">&quot;dtls1_read_bytes&quot;</span><span class="p">},</span>
+<a name="gbab-100"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_READ_FAILED</span><span class="p">),</span> <span class="s">&quot;dtls1_read_failed&quot;</span><span class="p">},</span>
+<a name="gbab-101"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_SEND_CERTIFICATE_REQUEST</span><span class="p">),</span>
+<a name="gbab-102"></a>     <span class="s">&quot;dtls1_send_certificate_request&quot;</span><span class="p">},</span>
+<a name="gbab-103"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_SEND_CLIENT_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-104"></a>     <span class="s">&quot;dtls1_send_client_certificate&quot;</span><span class="p">},</span>
+<a name="gbab-105"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_SEND_CLIENT_KEY_EXCHANGE</span><span class="p">),</span>
+<a name="gbab-106"></a>     <span class="s">&quot;dtls1_send_client_key_exchange&quot;</span><span class="p">},</span>
+<a name="gbab-107"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_SEND_CLIENT_VERIFY</span><span class="p">),</span> <span class="s">&quot;dtls1_send_client_verify&quot;</span><span class="p">},</span>
+<a name="gbab-108"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_SEND_HELLO_VERIFY_REQUEST</span><span class="p">),</span>
+<a name="gbab-109"></a>     <span class="s">&quot;DTLS1_SEND_HELLO_VERIFY_REQUEST&quot;</span><span class="p">},</span>
+<a name="gbab-110"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_SEND_SERVER_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-111"></a>     <span class="s">&quot;dtls1_send_server_certificate&quot;</span><span class="p">},</span>
+<a name="gbab-112"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_SEND_SERVER_HELLO</span><span class="p">),</span> <span class="s">&quot;dtls1_send_server_hello&quot;</span><span class="p">},</span>
+<a name="gbab-113"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_SEND_SERVER_KEY_EXCHANGE</span><span class="p">),</span>
+<a name="gbab-114"></a>     <span class="s">&quot;dtls1_send_server_key_exchange&quot;</span><span class="p">},</span>
+<a name="gbab-115"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_DTLS1_WRITE_APP_DATA_BYTES</span><span class="p">),</span>
+<a name="gbab-116"></a>     <span class="s">&quot;dtls1_write_app_data_bytes&quot;</span><span class="p">},</span>
+<a name="gbab-117"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_GET_CLIENT_FINISHED</span><span class="p">),</span>	<span class="s">&quot;GET_CLIENT_FINISHED&quot;</span><span class="p">},</span>
+<a name="gbab-118"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_GET_CLIENT_HELLO</span><span class="p">),</span>	<span class="s">&quot;GET_CLIENT_HELLO&quot;</span><span class="p">},</span>
+<a name="gbab-119"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_GET_CLIENT_MASTER_KEY</span><span class="p">),</span>	<span class="s">&quot;GET_CLIENT_MASTER_KEY&quot;</span><span class="p">},</span>
+<a name="gbab-120"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_GET_SERVER_FINISHED</span><span class="p">),</span>	<span class="s">&quot;GET_SERVER_FINISHED&quot;</span><span class="p">},</span>
+<a name="gbab-121"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_GET_SERVER_HELLO</span><span class="p">),</span>	<span class="s">&quot;GET_SERVER_HELLO&quot;</span><span class="p">},</span>
+<a name="gbab-122"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_GET_SERVER_STATIC_DH_KEY</span><span class="p">),</span> <span class="s">&quot;GET_SERVER_STATIC_DH_KEY&quot;</span><span class="p">},</span>
+<a name="gbab-123"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_GET_SERVER_VERIFY</span><span class="p">),</span>	<span class="s">&quot;GET_SERVER_VERIFY&quot;</span><span class="p">},</span>
+<a name="gbab-124"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_I2D_SSL_SESSION</span><span class="p">),</span>	<span class="s">&quot;i2d_SSL_SESSION&quot;</span><span class="p">},</span>
+<a name="gbab-125"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_READ_N</span><span class="p">),</span>	<span class="s">&quot;READ_N&quot;</span><span class="p">},</span>
+<a name="gbab-126"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_REQUEST_CERTIFICATE</span><span class="p">),</span>	<span class="s">&quot;REQUEST_CERTIFICATE&quot;</span><span class="p">},</span>
+<a name="gbab-127"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SERVER_FINISH</span><span class="p">),</span>	<span class="s">&quot;SERVER_FINISH&quot;</span><span class="p">},</span>
+<a name="gbab-128"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SERVER_HELLO</span><span class="p">),</span>	<span class="s">&quot;SERVER_HELLO&quot;</span><span class="p">},</span>
+<a name="gbab-129"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SERVER_VERIFY</span><span class="p">),</span>	<span class="s">&quot;SERVER_VERIFY&quot;</span><span class="p">},</span>
+<a name="gbab-130"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL23_ACCEPT</span><span class="p">),</span> <span class="s">&quot;ssl23_accept&quot;</span><span class="p">},</span>
+<a name="gbab-131"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL23_CLIENT_HELLO</span><span class="p">),</span>	<span class="s">&quot;SSL23_CLIENT_HELLO&quot;</span><span class="p">},</span>
+<a name="gbab-132"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL23_CONNECT</span><span class="p">),</span> <span class="s">&quot;ssl23_connect&quot;</span><span class="p">},</span>
+<a name="gbab-133"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL23_GET_CLIENT_HELLO</span><span class="p">),</span>	<span class="s">&quot;SSL23_GET_CLIENT_HELLO&quot;</span><span class="p">},</span>
+<a name="gbab-134"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL23_GET_SERVER_HELLO</span><span class="p">),</span>	<span class="s">&quot;SSL23_GET_SERVER_HELLO&quot;</span><span class="p">},</span>
+<a name="gbab-135"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL23_PEEK</span><span class="p">),</span> <span class="s">&quot;ssl23_peek&quot;</span><span class="p">},</span>
+<a name="gbab-136"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL23_READ</span><span class="p">),</span> <span class="s">&quot;ssl23_read&quot;</span><span class="p">},</span>
+<a name="gbab-137"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL23_WRITE</span><span class="p">),</span> <span class="s">&quot;ssl23_write&quot;</span><span class="p">},</span>
+<a name="gbab-138"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL2_ACCEPT</span><span class="p">),</span> <span class="s">&quot;ssl2_accept&quot;</span><span class="p">},</span>
+<a name="gbab-139"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL2_CONNECT</span><span class="p">),</span> <span class="s">&quot;ssl2_connect&quot;</span><span class="p">},</span>
+<a name="gbab-140"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL2_ENC_INIT</span><span class="p">),</span> <span class="s">&quot;ssl2_enc_init&quot;</span><span class="p">},</span>
+<a name="gbab-141"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL2_GENERATE_KEY_MATERIAL</span><span class="p">),</span>
+<a name="gbab-142"></a>     <span class="s">&quot;ssl2_generate_key_material&quot;</span><span class="p">},</span>
+<a name="gbab-143"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL2_PEEK</span><span class="p">),</span> <span class="s">&quot;ssl2_peek&quot;</span><span class="p">},</span>
+<a name="gbab-144"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL2_READ</span><span class="p">),</span> <span class="s">&quot;ssl2_read&quot;</span><span class="p">},</span>
+<a name="gbab-145"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL2_READ_INTERNAL</span><span class="p">),</span>	<span class="s">&quot;SSL2_READ_INTERNAL&quot;</span><span class="p">},</span>
+<a name="gbab-146"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL2_SET_CERTIFICATE</span><span class="p">),</span> <span class="s">&quot;ssl2_set_certificate&quot;</span><span class="p">},</span>
+<a name="gbab-147"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL2_WRITE</span><span class="p">),</span> <span class="s">&quot;ssl2_write&quot;</span><span class="p">},</span>
+<a name="gbab-148"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_ACCEPT</span><span class="p">),</span> <span class="s">&quot;ssl3_accept&quot;</span><span class="p">},</span>
+<a name="gbab-149"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_ADD_CERT_TO_BUF</span><span class="p">),</span>	<span class="s">&quot;SSL3_ADD_CERT_TO_BUF&quot;</span><span class="p">},</span>
+<a name="gbab-150"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_CALLBACK_CTRL</span><span class="p">),</span> <span class="s">&quot;ssl3_callback_ctrl&quot;</span><span class="p">},</span>
+<a name="gbab-151"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_CHANGE_CIPHER_STATE</span><span class="p">),</span> <span class="s">&quot;ssl3_change_cipher_state&quot;</span><span class="p">},</span>
+<a name="gbab-152"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_CHECK_CERT_AND_ALGORITHM</span><span class="p">),</span>
+<a name="gbab-153"></a>     <span class="s">&quot;ssl3_check_cert_and_algorithm&quot;</span><span class="p">},</span>
+<a name="gbab-154"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_CHECK_CLIENT_HELLO</span><span class="p">),</span> <span class="s">&quot;ssl3_check_client_hello&quot;</span><span class="p">},</span>
+<a name="gbab-155"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_CHECK_FINISHED</span><span class="p">),</span> <span class="s">&quot;SSL3_CHECK_FINISHED&quot;</span><span class="p">},</span>
+<a name="gbab-156"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_CLIENT_HELLO</span><span class="p">),</span> <span class="s">&quot;ssl3_client_hello&quot;</span><span class="p">},</span>
+<a name="gbab-157"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_CONNECT</span><span class="p">),</span> <span class="s">&quot;ssl3_connect&quot;</span><span class="p">},</span>
+<a name="gbab-158"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_CTRL</span><span class="p">),</span> <span class="s">&quot;ssl3_ctrl&quot;</span><span class="p">},</span>
+<a name="gbab-159"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_CTX_CTRL</span><span class="p">),</span> <span class="s">&quot;ssl3_ctx_ctrl&quot;</span><span class="p">},</span>
+<a name="gbab-160"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_DIGEST_CACHED_RECORDS</span><span class="p">),</span>
+<a name="gbab-161"></a>     <span class="s">&quot;ssl3_digest_cached_records&quot;</span><span class="p">},</span>
+<a name="gbab-162"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_DO_CHANGE_CIPHER_SPEC</span><span class="p">),</span>
+<a name="gbab-163"></a>     <span class="s">&quot;ssl3_do_change_cipher_spec&quot;</span><span class="p">},</span>
+<a name="gbab-164"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_ENC</span><span class="p">),</span> <span class="s">&quot;ssl3_enc&quot;</span><span class="p">},</span>
+<a name="gbab-165"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GENERATE_KEY_BLOCK</span><span class="p">),</span>	<span class="s">&quot;SSL3_GENERATE_KEY_BLOCK&quot;</span><span class="p">},</span>
+<a name="gbab-166"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GENERATE_MASTER_SECRET</span><span class="p">),</span>
+<a name="gbab-167"></a>     <span class="s">&quot;ssl3_generate_master_secret&quot;</span><span class="p">},</span>
+<a name="gbab-168"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_CERTIFICATE_REQUEST</span><span class="p">),</span>
+<a name="gbab-169"></a>     <span class="s">&quot;ssl3_get_certificate_request&quot;</span><span class="p">},</span>
+<a name="gbab-170"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_CERT_STATUS</span><span class="p">),</span> <span class="s">&quot;ssl3_get_cert_status&quot;</span><span class="p">},</span>
+<a name="gbab-171"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_CERT_VERIFY</span><span class="p">),</span> <span class="s">&quot;ssl3_get_cert_verify&quot;</span><span class="p">},</span>
+<a name="gbab-172"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_CLIENT_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-173"></a>     <span class="s">&quot;ssl3_get_client_certificate&quot;</span><span class="p">},</span>
+<a name="gbab-174"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_CLIENT_HELLO</span><span class="p">),</span> <span class="s">&quot;ssl3_get_client_hello&quot;</span><span class="p">},</span>
+<a name="gbab-175"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE</span><span class="p">),</span>
+<a name="gbab-176"></a>     <span class="s">&quot;ssl3_get_client_key_exchange&quot;</span><span class="p">},</span>
+<a name="gbab-177"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_FINISHED</span><span class="p">),</span> <span class="s">&quot;ssl3_get_finished&quot;</span><span class="p">},</span>
+<a name="gbab-178"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_KEY_EXCHANGE</span><span class="p">),</span> <span class="s">&quot;ssl3_get_key_exchange&quot;</span><span class="p">},</span>
+<a name="gbab-179"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_MESSAGE</span><span class="p">),</span> <span class="s">&quot;ssl3_get_message&quot;</span><span class="p">},</span>
+<a name="gbab-180"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_NEW_SESSION_TICKET</span><span class="p">),</span>
+<a name="gbab-181"></a>     <span class="s">&quot;ssl3_get_new_session_ticket&quot;</span><span class="p">},</span>
+<a name="gbab-182"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_NEXT_PROTO</span><span class="p">),</span> <span class="s">&quot;ssl3_get_next_proto&quot;</span><span class="p">},</span>
+<a name="gbab-183"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_RECORD</span><span class="p">),</span>	<span class="s">&quot;SSL3_GET_RECORD&quot;</span><span class="p">},</span>
+<a name="gbab-184"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_SERVER_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-185"></a>     <span class="s">&quot;ssl3_get_server_certificate&quot;</span><span class="p">},</span>
+<a name="gbab-186"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_SERVER_DONE</span><span class="p">),</span> <span class="s">&quot;ssl3_get_server_done&quot;</span><span class="p">},</span>
+<a name="gbab-187"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_GET_SERVER_HELLO</span><span class="p">),</span> <span class="s">&quot;ssl3_get_server_hello&quot;</span><span class="p">},</span>
+<a name="gbab-188"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_HANDSHAKE_MAC</span><span class="p">),</span>	<span class="s">&quot;ssl3_handshake_mac&quot;</span><span class="p">},</span>
+<a name="gbab-189"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_NEW_SESSION_TICKET</span><span class="p">),</span>	<span class="s">&quot;SSL3_NEW_SESSION_TICKET&quot;</span><span class="p">},</span>
+<a name="gbab-190"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_OUTPUT_CERT_CHAIN</span><span class="p">),</span> <span class="s">&quot;ssl3_output_cert_chain&quot;</span><span class="p">},</span>
+<a name="gbab-191"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_PEEK</span><span class="p">),</span> <span class="s">&quot;ssl3_peek&quot;</span><span class="p">},</span>
+<a name="gbab-192"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_READ_BYTES</span><span class="p">),</span> <span class="s">&quot;ssl3_read_bytes&quot;</span><span class="p">},</span>
+<a name="gbab-193"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_READ_N</span><span class="p">),</span> <span class="s">&quot;ssl3_read_n&quot;</span><span class="p">},</span>
+<a name="gbab-194"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SEND_CERTIFICATE_REQUEST</span><span class="p">),</span>
+<a name="gbab-195"></a>     <span class="s">&quot;ssl3_send_certificate_request&quot;</span><span class="p">},</span>
+<a name="gbab-196"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SEND_CLIENT_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-197"></a>     <span class="s">&quot;ssl3_send_client_certificate&quot;</span><span class="p">},</span>
+<a name="gbab-198"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SEND_CLIENT_KEY_EXCHANGE</span><span class="p">),</span>
+<a name="gbab-199"></a>     <span class="s">&quot;ssl3_send_client_key_exchange&quot;</span><span class="p">},</span>
+<a name="gbab-200"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SEND_CLIENT_VERIFY</span><span class="p">),</span> <span class="s">&quot;ssl3_send_client_verify&quot;</span><span class="p">},</span>
+<a name="gbab-201"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SEND_SERVER_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-202"></a>     <span class="s">&quot;ssl3_send_server_certificate&quot;</span><span class="p">},</span>
+<a name="gbab-203"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SEND_SERVER_HELLO</span><span class="p">),</span> <span class="s">&quot;ssl3_send_server_hello&quot;</span><span class="p">},</span>
+<a name="gbab-204"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SEND_SERVER_KEY_EXCHANGE</span><span class="p">),</span>
+<a name="gbab-205"></a>     <span class="s">&quot;ssl3_send_server_key_exchange&quot;</span><span class="p">},</span>
+<a name="gbab-206"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SETUP_KEY_BLOCK</span><span class="p">),</span> <span class="s">&quot;ssl3_setup_key_block&quot;</span><span class="p">},</span>
+<a name="gbab-207"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SETUP_READ_BUFFER</span><span class="p">),</span> <span class="s">&quot;ssl3_setup_read_buffer&quot;</span><span class="p">},</span>
+<a name="gbab-208"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_SETUP_WRITE_BUFFER</span><span class="p">),</span> <span class="s">&quot;ssl3_setup_write_buffer&quot;</span><span class="p">},</span>
+<a name="gbab-209"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_WRITE_BYTES</span><span class="p">),</span> <span class="s">&quot;ssl3_write_bytes&quot;</span><span class="p">},</span>
+<a name="gbab-210"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL3_WRITE_PENDING</span><span class="p">),</span> <span class="s">&quot;ssl3_write_pending&quot;</span><span class="p">},</span>
+<a name="gbab-211"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_CERT_CHAIN</span><span class="p">),</span> <span class="s">&quot;ssl_add_cert_chain&quot;</span><span class="p">},</span>
+<a name="gbab-212"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_CERT_TO_BUF</span><span class="p">),</span> <span class="s">&quot;SSL_ADD_CERT_TO_BUF&quot;</span><span class="p">},</span>
+<a name="gbab-213"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_CLIENTHELLO_RENEGOTIATE_EXT</span><span class="p">),</span>
+<a name="gbab-214"></a>     <span class="s">&quot;ssl_add_clienthello_renegotiate_ext&quot;</span><span class="p">},</span>
+<a name="gbab-215"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_CLIENTHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-216"></a>     <span class="s">&quot;ssl_add_clienthello_tlsext&quot;</span><span class="p">},</span>
+<a name="gbab-217"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_CLIENTHELLO_USE_SRTP_EXT</span><span class="p">),</span>
+<a name="gbab-218"></a>     <span class="s">&quot;ssl_add_clienthello_use_srtp_ext&quot;</span><span class="p">},</span>
+<a name="gbab-219"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_DIR_CERT_SUBJECTS_TO_STACK</span><span class="p">),</span>
+<a name="gbab-220"></a>     <span class="s">&quot;SSL_add_dir_cert_subjects_to_stack&quot;</span><span class="p">},</span>
+<a name="gbab-221"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_FILE_CERT_SUBJECTS_TO_STACK</span><span class="p">),</span>
+<a name="gbab-222"></a>     <span class="s">&quot;SSL_add_file_cert_subjects_to_stack&quot;</span><span class="p">},</span>
+<a name="gbab-223"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_SERVERHELLO_RENEGOTIATE_EXT</span><span class="p">),</span>
+<a name="gbab-224"></a>     <span class="s">&quot;ssl_add_serverhello_renegotiate_ext&quot;</span><span class="p">},</span>
+<a name="gbab-225"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_SERVERHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-226"></a>     <span class="s">&quot;ssl_add_serverhello_tlsext&quot;</span><span class="p">},</span>
+<a name="gbab-227"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_ADD_SERVERHELLO_USE_SRTP_EXT</span><span class="p">),</span>
+<a name="gbab-228"></a>     <span class="s">&quot;ssl_add_serverhello_use_srtp_ext&quot;</span><span class="p">},</span>
+<a name="gbab-229"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_BAD_METHOD</span><span class="p">),</span> <span class="s">&quot;ssl_bad_method&quot;</span><span class="p">},</span>
+<a name="gbab-230"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_BUILD_CERT_CHAIN</span><span class="p">),</span> <span class="s">&quot;ssl_build_cert_chain&quot;</span><span class="p">},</span>
+<a name="gbab-231"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_BYTES_TO_CIPHER_LIST</span><span class="p">),</span> <span class="s">&quot;ssl_bytes_to_cipher_list&quot;</span><span class="p">},</span>
+<a name="gbab-232"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CERT_DUP</span><span class="p">),</span> <span class="s">&quot;ssl_cert_dup&quot;</span><span class="p">},</span>
+<a name="gbab-233"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CERT_INST</span><span class="p">),</span> <span class="s">&quot;ssl_cert_inst&quot;</span><span class="p">},</span>
+<a name="gbab-234"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CERT_INSTANTIATE</span><span class="p">),</span>	<span class="s">&quot;SSL_CERT_INSTANTIATE&quot;</span><span class="p">},</span>
+<a name="gbab-235"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CERT_NEW</span><span class="p">),</span> <span class="s">&quot;ssl_cert_new&quot;</span><span class="p">},</span>
+<a name="gbab-236"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CHECK_PRIVATE_KEY</span><span class="p">),</span>	<span class="s">&quot;SSL_check_private_key&quot;</span><span class="p">},</span>
+<a name="gbab-237"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CHECK_SERVERHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-238"></a>     <span class="s">&quot;SSL_CHECK_SERVERHELLO_TLSEXT&quot;</span><span class="p">},</span>
+<a name="gbab-239"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CHECK_SRVR_ECC_CERT_AND_ALG</span><span class="p">),</span>
+<a name="gbab-240"></a>     <span class="s">&quot;ssl_check_srvr_ecc_cert_and_alg&quot;</span><span class="p">},</span>
+<a name="gbab-241"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CIPHER_PROCESS_RULESTR</span><span class="p">),</span>
+<a name="gbab-242"></a>     <span class="s">&quot;SSL_CIPHER_PROCESS_RULESTR&quot;</span><span class="p">},</span>
+<a name="gbab-243"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CIPHER_STRENGTH_SORT</span><span class="p">),</span>	<span class="s">&quot;SSL_CIPHER_STRENGTH_SORT&quot;</span><span class="p">},</span>
+<a name="gbab-244"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CLEAR</span><span class="p">),</span>	<span class="s">&quot;SSL_clear&quot;</span><span class="p">},</span>
+<a name="gbab-245"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_COMP_ADD_COMPRESSION_METHOD</span><span class="p">),</span>
+<a name="gbab-246"></a>     <span class="s">&quot;SSL_COMP_add_compression_method&quot;</span><span class="p">},</span>
+<a name="gbab-247"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CONF_CMD</span><span class="p">),</span> <span class="s">&quot;SSL_CONF_cmd&quot;</span><span class="p">},</span>
+<a name="gbab-248"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CREATE_CIPHER_LIST</span><span class="p">),</span> <span class="s">&quot;ssl_create_cipher_list&quot;</span><span class="p">},</span>
+<a name="gbab-249"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTRL</span><span class="p">),</span>	<span class="s">&quot;SSL_ctrl&quot;</span><span class="p">},</span>
+<a name="gbab-250"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_CHECK_PRIVATE_KEY</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_check_private_key&quot;</span><span class="p">},</span>
+<a name="gbab-251"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_MAKE_PROFILES</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_MAKE_PROFILES&quot;</span><span class="p">},</span>
+<a name="gbab-252"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_NEW</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_new&quot;</span><span class="p">},</span>
+<a name="gbab-253"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_SET_CIPHER_LIST</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_set_cipher_list&quot;</span><span class="p">},</span>
+<a name="gbab-254"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_SET_CLIENT_CERT_ENGINE</span><span class="p">),</span>
+<a name="gbab-255"></a>     <span class="s">&quot;SSL_CTX_set_client_cert_engine&quot;</span><span class="p">},</span>
+<a name="gbab-256"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_SET_PURPOSE</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_set_purpose&quot;</span><span class="p">},</span>
+<a name="gbab-257"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_SET_SESSION_ID_CONTEXT</span><span class="p">),</span>
+<a name="gbab-258"></a>     <span class="s">&quot;SSL_CTX_set_session_id_context&quot;</span><span class="p">},</span>
+<a name="gbab-259"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_SET_SSL_VERSION</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_set_ssl_version&quot;</span><span class="p">},</span>
+<a name="gbab-260"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_SET_TRUST</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_set_trust&quot;</span><span class="p">},</span>
+<a name="gbab-261"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_CERTIFICATE</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_use_certificate&quot;</span><span class="p">},</span>
+<a name="gbab-262"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_CERTIFICATE_ASN1</span><span class="p">),</span>
+<a name="gbab-263"></a>     <span class="s">&quot;SSL_CTX_use_certificate_ASN1&quot;</span><span class="p">},</span>
+<a name="gbab-264"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_CERTIFICATE_CHAIN_FILE</span><span class="p">),</span>
+<a name="gbab-265"></a>     <span class="s">&quot;SSL_CTX_use_certificate_chain_file&quot;</span><span class="p">},</span>
+<a name="gbab-266"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_CERTIFICATE_FILE</span><span class="p">),</span>
+<a name="gbab-267"></a>     <span class="s">&quot;SSL_CTX_use_certificate_file&quot;</span><span class="p">},</span>
+<a name="gbab-268"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_PRIVATEKEY</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_use_PrivateKey&quot;</span><span class="p">},</span>
+<a name="gbab-269"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_PRIVATEKEY_ASN1</span><span class="p">),</span>
+<a name="gbab-270"></a>     <span class="s">&quot;SSL_CTX_use_PrivateKey_ASN1&quot;</span><span class="p">},</span>
+<a name="gbab-271"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_PRIVATEKEY_FILE</span><span class="p">),</span>
+<a name="gbab-272"></a>     <span class="s">&quot;SSL_CTX_use_PrivateKey_file&quot;</span><span class="p">},</span>
+<a name="gbab-273"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_PSK_IDENTITY_HINT</span><span class="p">),</span>
+<a name="gbab-274"></a>     <span class="s">&quot;SSL_CTX_use_psk_identity_hint&quot;</span><span class="p">},</span>
+<a name="gbab-275"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_RSAPRIVATEKEY</span><span class="p">),</span>	<span class="s">&quot;SSL_CTX_use_RSAPrivateKey&quot;</span><span class="p">},</span>
+<a name="gbab-276"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_RSAPRIVATEKEY_ASN1</span><span class="p">),</span>
+<a name="gbab-277"></a>     <span class="s">&quot;SSL_CTX_use_RSAPrivateKey_ASN1&quot;</span><span class="p">},</span>
+<a name="gbab-278"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_RSAPRIVATEKEY_FILE</span><span class="p">),</span>
+<a name="gbab-279"></a>     <span class="s">&quot;SSL_CTX_use_RSAPrivateKey_file&quot;</span><span class="p">},</span>
+<a name="gbab-280"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_SERVERINFO</span><span class="p">),</span> <span class="s">&quot;SSL_CTX_use_serverinfo&quot;</span><span class="p">},</span>
+<a name="gbab-281"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_CTX_USE_SERVERINFO_FILE</span><span class="p">),</span>
+<a name="gbab-282"></a>     <span class="s">&quot;SSL_CTX_use_serverinfo_file&quot;</span><span class="p">},</span>
+<a name="gbab-283"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_DO_HANDSHAKE</span><span class="p">),</span>	<span class="s">&quot;SSL_do_handshake&quot;</span><span class="p">},</span>
+<a name="gbab-284"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_GET_NEW_SESSION</span><span class="p">),</span> <span class="s">&quot;ssl_get_new_session&quot;</span><span class="p">},</span>
+<a name="gbab-285"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_GET_PREV_SESSION</span><span class="p">),</span> <span class="s">&quot;ssl_get_prev_session&quot;</span><span class="p">},</span>
+<a name="gbab-286"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_GET_SERVER_CERT_INDEX</span><span class="p">),</span> <span class="s">&quot;SSL_GET_SERVER_CERT_INDEX&quot;</span><span class="p">},</span>
+<a name="gbab-287"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_GET_SERVER_SEND_CERT</span><span class="p">),</span>	<span class="s">&quot;SSL_GET_SERVER_SEND_CERT&quot;</span><span class="p">},</span>
+<a name="gbab-288"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_GET_SERVER_SEND_PKEY</span><span class="p">),</span> <span class="s">&quot;ssl_get_server_send_pkey&quot;</span><span class="p">},</span>
+<a name="gbab-289"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_GET_SIGN_PKEY</span><span class="p">),</span> <span class="s">&quot;ssl_get_sign_pkey&quot;</span><span class="p">},</span>
+<a name="gbab-290"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_INIT_WBIO_BUFFER</span><span class="p">),</span> <span class="s">&quot;ssl_init_wbio_buffer&quot;</span><span class="p">},</span>
+<a name="gbab-291"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_LOAD_CLIENT_CA_FILE</span><span class="p">),</span>	<span class="s">&quot;SSL_load_client_CA_file&quot;</span><span class="p">},</span>
+<a name="gbab-292"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_NEW</span><span class="p">),</span>	<span class="s">&quot;SSL_new&quot;</span><span class="p">},</span>
+<a name="gbab-293"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_PARSE_CLIENTHELLO_RENEGOTIATE_EXT</span><span class="p">),</span>
+<a name="gbab-294"></a>     <span class="s">&quot;ssl_parse_clienthello_renegotiate_ext&quot;</span><span class="p">},</span>
+<a name="gbab-295"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_PARSE_CLIENTHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-296"></a>     <span class="s">&quot;ssl_parse_clienthello_tlsext&quot;</span><span class="p">},</span>
+<a name="gbab-297"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_PARSE_CLIENTHELLO_USE_SRTP_EXT</span><span class="p">),</span>
+<a name="gbab-298"></a>     <span class="s">&quot;ssl_parse_clienthello_use_srtp_ext&quot;</span><span class="p">},</span>
+<a name="gbab-299"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_PARSE_SERVERHELLO_RENEGOTIATE_EXT</span><span class="p">),</span>
+<a name="gbab-300"></a>     <span class="s">&quot;ssl_parse_serverhello_renegotiate_ext&quot;</span><span class="p">},</span>
+<a name="gbab-301"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_PARSE_SERVERHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-302"></a>     <span class="s">&quot;ssl_parse_serverhello_tlsext&quot;</span><span class="p">},</span>
+<a name="gbab-303"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_PARSE_SERVERHELLO_USE_SRTP_EXT</span><span class="p">),</span>
+<a name="gbab-304"></a>     <span class="s">&quot;ssl_parse_serverhello_use_srtp_ext&quot;</span><span class="p">},</span>
+<a name="gbab-305"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_PEEK</span><span class="p">),</span>	<span class="s">&quot;SSL_peek&quot;</span><span class="p">},</span>
+<a name="gbab-306"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_PREPARE_CLIENTHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-307"></a>     <span class="s">&quot;ssl_prepare_clienthello_tlsext&quot;</span><span class="p">},</span>
+<a name="gbab-308"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_PREPARE_SERVERHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-309"></a>     <span class="s">&quot;ssl_prepare_serverhello_tlsext&quot;</span><span class="p">},</span>
+<a name="gbab-310"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_READ</span><span class="p">),</span>	<span class="s">&quot;SSL_read&quot;</span><span class="p">},</span>
+<a name="gbab-311"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_RSA_PRIVATE_DECRYPT</span><span class="p">),</span>	<span class="s">&quot;SSL_RSA_PRIVATE_DECRYPT&quot;</span><span class="p">},</span>
+<a name="gbab-312"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_RSA_PUBLIC_ENCRYPT</span><span class="p">),</span>	<span class="s">&quot;SSL_RSA_PUBLIC_ENCRYPT&quot;</span><span class="p">},</span>
+<a name="gbab-313"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SCAN_CLIENTHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-314"></a>     <span class="s">&quot;SSL_SCAN_CLIENTHELLO_TLSEXT&quot;</span><span class="p">},</span>
+<a name="gbab-315"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SCAN_SERVERHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-316"></a>     <span class="s">&quot;SSL_SCAN_SERVERHELLO_TLSEXT&quot;</span><span class="p">},</span>
+<a name="gbab-317"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SESSION_DUP</span><span class="p">),</span> <span class="s">&quot;ssl_session_dup&quot;</span><span class="p">},</span>
+<a name="gbab-318"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SESSION_NEW</span><span class="p">),</span>	<span class="s">&quot;SSL_SESSION_new&quot;</span><span class="p">},</span>
+<a name="gbab-319"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SESSION_PRINT_FP</span><span class="p">),</span>	<span class="s">&quot;SSL_SESSION_print_fp&quot;</span><span class="p">},</span>
+<a name="gbab-320"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SESSION_SET1_ID_CONTEXT</span><span class="p">),</span>
+<a name="gbab-321"></a>     <span class="s">&quot;SSL_SESSION_set1_id_context&quot;</span><span class="p">},</span>
+<a name="gbab-322"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SESS_CERT_NEW</span><span class="p">),</span> <span class="s">&quot;ssl_sess_cert_new&quot;</span><span class="p">},</span>
+<a name="gbab-323"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_CERT</span><span class="p">),</span>	<span class="s">&quot;SSL_SET_CERT&quot;</span><span class="p">},</span>
+<a name="gbab-324"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_CIPHER_LIST</span><span class="p">),</span>	<span class="s">&quot;SSL_set_cipher_list&quot;</span><span class="p">},</span>
+<a name="gbab-325"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_FD</span><span class="p">),</span>	<span class="s">&quot;SSL_set_fd&quot;</span><span class="p">},</span>
+<a name="gbab-326"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_PKEY</span><span class="p">),</span>	<span class="s">&quot;SSL_SET_PKEY&quot;</span><span class="p">},</span>
+<a name="gbab-327"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_PURPOSE</span><span class="p">),</span>	<span class="s">&quot;SSL_set_purpose&quot;</span><span class="p">},</span>
+<a name="gbab-328"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_RFD</span><span class="p">),</span>	<span class="s">&quot;SSL_set_rfd&quot;</span><span class="p">},</span>
+<a name="gbab-329"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_SESSION</span><span class="p">),</span>	<span class="s">&quot;SSL_set_session&quot;</span><span class="p">},</span>
+<a name="gbab-330"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_SESSION_ID_CONTEXT</span><span class="p">),</span>
+<a name="gbab-331"></a>     <span class="s">&quot;SSL_set_session_id_context&quot;</span><span class="p">},</span>
+<a name="gbab-332"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_SESSION_TICKET_EXT</span><span class="p">),</span>
+<a name="gbab-333"></a>     <span class="s">&quot;SSL_set_session_ticket_ext&quot;</span><span class="p">},</span>
+<a name="gbab-334"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_TRUST</span><span class="p">),</span>	<span class="s">&quot;SSL_set_trust&quot;</span><span class="p">},</span>
+<a name="gbab-335"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SET_WFD</span><span class="p">),</span>	<span class="s">&quot;SSL_set_wfd&quot;</span><span class="p">},</span>
+<a name="gbab-336"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SHUTDOWN</span><span class="p">),</span>	<span class="s">&quot;SSL_shutdown&quot;</span><span class="p">},</span>
+<a name="gbab-337"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_SRP_CTX_INIT</span><span class="p">),</span>	<span class="s">&quot;SSL_SRP_CTX_init&quot;</span><span class="p">},</span>
+<a name="gbab-338"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_UNDEFINED_CONST_FUNCTION</span><span class="p">),</span>
+<a name="gbab-339"></a>     <span class="s">&quot;ssl_undefined_const_function&quot;</span><span class="p">},</span>
+<a name="gbab-340"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_UNDEFINED_FUNCTION</span><span class="p">),</span> <span class="s">&quot;ssl_undefined_function&quot;</span><span class="p">},</span>
+<a name="gbab-341"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_UNDEFINED_VOID_FUNCTION</span><span class="p">),</span>
+<a name="gbab-342"></a>     <span class="s">&quot;ssl_undefined_void_function&quot;</span><span class="p">},</span>
+<a name="gbab-343"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_CERTIFICATE</span><span class="p">),</span>	<span class="s">&quot;SSL_use_certificate&quot;</span><span class="p">},</span>
+<a name="gbab-344"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_CERTIFICATE_ASN1</span><span class="p">),</span>	<span class="s">&quot;SSL_use_certificate_ASN1&quot;</span><span class="p">},</span>
+<a name="gbab-345"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_CERTIFICATE_FILE</span><span class="p">),</span>	<span class="s">&quot;SSL_use_certificate_file&quot;</span><span class="p">},</span>
+<a name="gbab-346"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_PRIVATEKEY</span><span class="p">),</span>	<span class="s">&quot;SSL_use_PrivateKey&quot;</span><span class="p">},</span>
+<a name="gbab-347"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_PRIVATEKEY_ASN1</span><span class="p">),</span>	<span class="s">&quot;SSL_use_PrivateKey_ASN1&quot;</span><span class="p">},</span>
+<a name="gbab-348"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_PRIVATEKEY_FILE</span><span class="p">),</span>	<span class="s">&quot;SSL_use_PrivateKey_file&quot;</span><span class="p">},</span>
+<a name="gbab-349"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_PSK_IDENTITY_HINT</span><span class="p">),</span>	<span class="s">&quot;SSL_use_psk_identity_hint&quot;</span><span class="p">},</span>
+<a name="gbab-350"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_RSAPRIVATEKEY</span><span class="p">),</span>	<span class="s">&quot;SSL_use_RSAPrivateKey&quot;</span><span class="p">},</span>
+<a name="gbab-351"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_RSAPRIVATEKEY_ASN1</span><span class="p">),</span>
+<a name="gbab-352"></a>     <span class="s">&quot;SSL_use_RSAPrivateKey_ASN1&quot;</span><span class="p">},</span>
+<a name="gbab-353"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_USE_RSAPRIVATEKEY_FILE</span><span class="p">),</span>
+<a name="gbab-354"></a>     <span class="s">&quot;SSL_use_RSAPrivateKey_file&quot;</span><span class="p">},</span>
+<a name="gbab-355"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_VERIFY_CERT_CHAIN</span><span class="p">),</span> <span class="s">&quot;ssl_verify_cert_chain&quot;</span><span class="p">},</span>
+<a name="gbab-356"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_SSL_WRITE</span><span class="p">),</span>	<span class="s">&quot;SSL_write&quot;</span><span class="p">},</span>
+<a name="gbab-357"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS12_CHECK_PEER_SIGALG</span><span class="p">),</span> <span class="s">&quot;tls12_check_peer_sigalg&quot;</span><span class="p">},</span>
+<a name="gbab-358"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_CERT_VERIFY_MAC</span><span class="p">),</span>	<span class="s">&quot;tls1_cert_verify_mac&quot;</span><span class="p">},</span>
+<a name="gbab-359"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_CHANGE_CIPHER_STATE</span><span class="p">),</span> <span class="s">&quot;tls1_change_cipher_state&quot;</span><span class="p">},</span>
+<a name="gbab-360"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_CHECK_SERVERHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-361"></a>     <span class="s">&quot;TLS1_CHECK_SERVERHELLO_TLSEXT&quot;</span><span class="p">},</span>
+<a name="gbab-362"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_ENC</span><span class="p">),</span> <span class="s">&quot;tls1_enc&quot;</span><span class="p">},</span>
+<a name="gbab-363"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_EXPORT_KEYING_MATERIAL</span><span class="p">),</span>
+<a name="gbab-364"></a>     <span class="s">&quot;tls1_export_keying_material&quot;</span><span class="p">},</span>
+<a name="gbab-365"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_GET_CURVELIST</span><span class="p">),</span> <span class="s">&quot;TLS1_GET_CURVELIST&quot;</span><span class="p">},</span>
+<a name="gbab-366"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_HEARTBEAT</span><span class="p">),</span> <span class="s">&quot;tls1_heartbeat&quot;</span><span class="p">},</span>
+<a name="gbab-367"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_PREPARE_CLIENTHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-368"></a>     <span class="s">&quot;TLS1_PREPARE_CLIENTHELLO_TLSEXT&quot;</span><span class="p">},</span>
+<a name="gbab-369"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_PREPARE_SERVERHELLO_TLSEXT</span><span class="p">),</span>
+<a name="gbab-370"></a>     <span class="s">&quot;TLS1_PREPARE_SERVERHELLO_TLSEXT&quot;</span><span class="p">},</span>
+<a name="gbab-371"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_PRF</span><span class="p">),</span>	<span class="s">&quot;tls1_prf&quot;</span><span class="p">},</span>
+<a name="gbab-372"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_SETUP_KEY_BLOCK</span><span class="p">),</span> <span class="s">&quot;tls1_setup_key_block&quot;</span><span class="p">},</span>
+<a name="gbab-373"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_TLS1_SET_SERVER_SIGALGS</span><span class="p">),</span> <span class="s">&quot;tls1_set_server_sigalgs&quot;</span><span class="p">},</span>
+<a name="gbab-374"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">SSL_F_WRITE_PENDING</span><span class="p">),</span>	<span class="s">&quot;WRITE_PENDING&quot;</span><span class="p">},</span>
+<a name="gbab-375"></a><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">}</span>
+<a name="gbab-376"></a>	<span class="p">};</span>
+<a name="gbab-377"></a>
+<a name="gbab-378"></a><span class="k">static</span> <span class="n">ERR_STRING_DATA</span> <span class="n">SSL_str_reasons</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-379"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_APP_DATA_IN_HANDSHAKE</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;app data in handshake&quot;</span><span class="p">},</span>
+<a name="gbab-380"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ATTEMPT_TO_REUSE_SESSION_IN_DIFFERENT_CONTEXT</span><span class="p">),</span>
+<a name="gbab-381"></a>     <span class="s">&quot;attempt to reuse session in different context&quot;</span><span class="p">},</span>
+<a name="gbab-382"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_ALERT_RECORD</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;bad alert record&quot;</span><span class="p">},</span>
+<a name="gbab-383"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_AUTHENTICATION_TYPE</span><span class="p">),</span><span class="s">&quot;bad authentication type&quot;</span><span class="p">},</span>
+<a name="gbab-384"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_CHANGE_CIPHER_SPEC</span><span class="p">),</span><span class="s">&quot;bad change cipher spec&quot;</span><span class="p">},</span>
+<a name="gbab-385"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_CHECKSUM</span><span class="p">)</span>          <span class="p">,</span><span class="s">&quot;bad checksum&quot;</span><span class="p">},</span>
+<a name="gbab-386"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DATA</span><span class="p">),</span> <span class="s">&quot;bad data&quot;</span><span class="p">},</span>
+<a name="gbab-387"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DATA_RETURNED_BY_CALLBACK</span><span class="p">),</span>
+<a name="gbab-388"></a>     <span class="s">&quot;bad data returned by callback&quot;</span><span class="p">},</span>
+<a name="gbab-389"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DECOMPRESSION</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;bad decompression&quot;</span><span class="p">},</span>
+<a name="gbab-390"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DH_G_LENGTH</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;bad dh g length&quot;</span><span class="p">},</span>
+<a name="gbab-391"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DH_G_VALUE</span><span class="p">),</span> <span class="s">&quot;bad dh g value&quot;</span><span class="p">},</span>
+<a name="gbab-392"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DH_PUB_KEY_LENGTH</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;bad dh pub key length&quot;</span><span class="p">},</span>
+<a name="gbab-393"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DH_PUB_KEY_VALUE</span><span class="p">),</span> <span class="s">&quot;bad dh pub key value&quot;</span><span class="p">},</span>
+<a name="gbab-394"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DH_P_LENGTH</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;bad dh p length&quot;</span><span class="p">},</span>
+<a name="gbab-395"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DH_P_VALUE</span><span class="p">),</span> <span class="s">&quot;bad dh p value&quot;</span><span class="p">},</span>
+<a name="gbab-396"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DIGEST_LENGTH</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;bad digest length&quot;</span><span class="p">},</span>
+<a name="gbab-397"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_DSA_SIGNATURE</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;bad dsa signature&quot;</span><span class="p">},</span>
+<a name="gbab-398"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_ECC_CERT</span><span class="p">)</span>          <span class="p">,</span><span class="s">&quot;bad ecc cert&quot;</span><span class="p">},</span>
+<a name="gbab-399"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_ECDSA_SIGNATURE</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;bad ecdsa signature&quot;</span><span class="p">},</span>
+<a name="gbab-400"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_ECPOINT</span><span class="p">)</span>           <span class="p">,</span><span class="s">&quot;bad ecpoint&quot;</span><span class="p">},</span>
+<a name="gbab-401"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_HANDSHAKE_LENGTH</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;bad handshake length&quot;</span><span class="p">},</span>
+<a name="gbab-402"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_HELLO_REQUEST</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;bad hello request&quot;</span><span class="p">},</span>
+<a name="gbab-403"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_LENGTH</span><span class="p">)</span>            <span class="p">,</span><span class="s">&quot;bad length&quot;</span><span class="p">},</span>
+<a name="gbab-404"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_MAC_DECODE</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;bad mac decode&quot;</span><span class="p">},</span>
+<a name="gbab-405"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_MAC_LENGTH</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;bad mac length&quot;</span><span class="p">},</span>
+<a name="gbab-406"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_MESSAGE_TYPE</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;bad message type&quot;</span><span class="p">},</span>
+<a name="gbab-407"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_PACKET_LENGTH</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;bad packet length&quot;</span><span class="p">},</span>
+<a name="gbab-408"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_PROTOCOL_VERSION_NUMBER</span><span class="p">),</span>
+<a name="gbab-409"></a>     <span class="s">&quot;bad protocol version number&quot;</span><span class="p">},</span>
+<a name="gbab-410"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_PSK_IDENTITY_HINT_LENGTH</span><span class="p">),</span>
+<a name="gbab-411"></a>     <span class="s">&quot;bad psk identity hint length&quot;</span><span class="p">},</span>
+<a name="gbab-412"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_RESPONSE_ARGUMENT</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;bad response argument&quot;</span><span class="p">},</span>
+<a name="gbab-413"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_RSA_DECRYPT</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;bad rsa decrypt&quot;</span><span class="p">},</span>
+<a name="gbab-414"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_RSA_ENCRYPT</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;bad rsa encrypt&quot;</span><span class="p">},</span>
+<a name="gbab-415"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_RSA_E_LENGTH</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;bad rsa e length&quot;</span><span class="p">},</span>
+<a name="gbab-416"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_RSA_MODULUS_LENGTH</span><span class="p">),</span><span class="s">&quot;bad rsa modulus length&quot;</span><span class="p">},</span>
+<a name="gbab-417"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_RSA_SIGNATURE</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;bad rsa signature&quot;</span><span class="p">},</span>
+<a name="gbab-418"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SIGNATURE</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;bad signature&quot;</span><span class="p">},</span>
+<a name="gbab-419"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SRP_A_LENGTH</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;bad srp a length&quot;</span><span class="p">},</span>
+<a name="gbab-420"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SRP_B_LENGTH</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;bad srp b length&quot;</span><span class="p">},</span>
+<a name="gbab-421"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SRP_G_LENGTH</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;bad srp g length&quot;</span><span class="p">},</span>
+<a name="gbab-422"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SRP_N_LENGTH</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;bad srp n length&quot;</span><span class="p">},</span>
+<a name="gbab-423"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SRP_PARAMETERS</span><span class="p">),</span> <span class="s">&quot;bad srp parameters&quot;</span><span class="p">},</span>
+<a name="gbab-424"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SRP_S_LENGTH</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;bad srp s length&quot;</span><span class="p">},</span>
+<a name="gbab-425"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SRTP_MKI_VALUE</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;bad srtp mki value&quot;</span><span class="p">},</span>
+<a name="gbab-426"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SRTP_PROTECTION_PROFILE_LIST</span><span class="p">),</span>
+<a name="gbab-427"></a>     <span class="s">&quot;bad srtp protection profile list&quot;</span><span class="p">},</span>
+<a name="gbab-428"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SSL_FILETYPE</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;bad ssl filetype&quot;</span><span class="p">},</span>
+<a name="gbab-429"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_SSL_SESSION_ID_LENGTH</span><span class="p">),</span>
+<a name="gbab-430"></a>     <span class="s">&quot;bad ssl session id length&quot;</span><span class="p">},</span>
+<a name="gbab-431"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_STATE</span><span class="p">)</span>             <span class="p">,</span><span class="s">&quot;bad state&quot;</span><span class="p">},</span>
+<a name="gbab-432"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_VALUE</span><span class="p">),</span> <span class="s">&quot;bad value&quot;</span><span class="p">},</span>
+<a name="gbab-433"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BAD_WRITE_RETRY</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;bad write retry&quot;</span><span class="p">},</span>
+<a name="gbab-434"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BIO_NOT_SET</span><span class="p">)</span>           <span class="p">,</span><span class="s">&quot;bio not set&quot;</span><span class="p">},</span>
+<a name="gbab-435"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BLOCK_CIPHER_PAD_IS_WRONG</span><span class="p">),</span>
+<a name="gbab-436"></a>     <span class="s">&quot;block cipher pad is wrong&quot;</span><span class="p">},</span>
+<a name="gbab-437"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_BN_LIB</span><span class="p">)</span>                <span class="p">,</span><span class="s">&quot;bn lib&quot;</span><span class="p">},</span>
+<a name="gbab-438"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CA_DN_LENGTH_MISMATCH</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;ca dn length mismatch&quot;</span><span class="p">},</span>
+<a name="gbab-439"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CA_DN_TOO_LONG</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;ca dn too long&quot;</span><span class="p">},</span>
+<a name="gbab-440"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CCS_RECEIVED_EARLY</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;ccs received early&quot;</span><span class="p">},</span>
+<a name="gbab-441"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CERTIFICATE_VERIFY_FAILED</span><span class="p">),</span>
+<a name="gbab-442"></a>     <span class="s">&quot;certificate verify failed&quot;</span><span class="p">},</span>
+<a name="gbab-443"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CERT_CB_ERROR</span><span class="p">),</span> <span class="s">&quot;cert cb error&quot;</span><span class="p">},</span>
+<a name="gbab-444"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CERT_LENGTH_MISMATCH</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;cert length mismatch&quot;</span><span class="p">},</span>
+<a name="gbab-445"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CHALLENGE_IS_DIFFERENT</span><span class="p">),</span><span class="s">&quot;challenge is different&quot;</span><span class="p">},</span>
+<a name="gbab-446"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CIPHER_CODE_WRONG_LENGTH</span><span class="p">),</span><span class="s">&quot;cipher code wrong length&quot;</span><span class="p">},</span>
+<a name="gbab-447"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CIPHER_OR_HASH_UNAVAILABLE</span><span class="p">),</span>
+<a name="gbab-448"></a>     <span class="s">&quot;cipher or hash unavailable&quot;</span><span class="p">},</span>
+<a name="gbab-449"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CIPHER_TABLE_SRC_ERROR</span><span class="p">),</span><span class="s">&quot;cipher table src error&quot;</span><span class="p">},</span>
+<a name="gbab-450"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CLIENTHELLO_TLSEXT</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;clienthello tlsext&quot;</span><span class="p">},</span>
+<a name="gbab-451"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_COMPRESSED_LENGTH_TOO_LONG</span><span class="p">),</span>
+<a name="gbab-452"></a>     <span class="s">&quot;compressed length too long&quot;</span><span class="p">},</span>
+<a name="gbab-453"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_COMPRESSION_DISABLED</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;compression disabled&quot;</span><span class="p">},</span>
+<a name="gbab-454"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_COMPRESSION_FAILURE</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;compression failure&quot;</span><span class="p">},</span>
+<a name="gbab-455"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_COMPRESSION_ID_NOT_WITHIN_PRIVATE_RANGE</span><span class="p">),</span>
+<a name="gbab-456"></a>     <span class="s">&quot;compression id not within private range&quot;</span><span class="p">},</span>
+<a name="gbab-457"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_COMPRESSION_LIBRARY_ERROR</span><span class="p">),</span>
+<a name="gbab-458"></a>     <span class="s">&quot;compression library error&quot;</span><span class="p">},</span>
+<a name="gbab-459"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CONNECTION_ID_IS_DIFFERENT</span><span class="p">),</span>
+<a name="gbab-460"></a>     <span class="s">&quot;connection id is different&quot;</span><span class="p">},</span>
+<a name="gbab-461"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_CONNECTION_TYPE_NOT_SET</span><span class="p">),</span><span class="s">&quot;connection type not set&quot;</span><span class="p">},</span>
+<a name="gbab-462"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_COOKIE_MISMATCH</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;cookie mismatch&quot;</span><span class="p">},</span>
+<a name="gbab-463"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_DATA_BETWEEN_CCS_AND_FINISHED</span><span class="p">),</span>
+<a name="gbab-464"></a>     <span class="s">&quot;data between ccs and finished&quot;</span><span class="p">},</span>
+<a name="gbab-465"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_DATA_LENGTH_TOO_LONG</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;data length too long&quot;</span><span class="p">},</span>
+<a name="gbab-466"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_DECRYPTION_FAILED</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;decryption failed&quot;</span><span class="p">},</span>
+<a name="gbab-467"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_DECRYPTION_FAILED_OR_BAD_RECORD_MAC</span><span class="p">),</span>
+<a name="gbab-468"></a>     <span class="s">&quot;decryption failed or bad record mac&quot;</span><span class="p">},</span>
+<a name="gbab-469"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_DH_KEY_TOO_SMALL</span><span class="p">),</span> <span class="s">&quot;dh key too small&quot;</span><span class="p">},</span>
+<a name="gbab-470"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_DH_PUBLIC_VALUE_LENGTH_IS_WRONG</span><span class="p">),</span>
+<a name="gbab-471"></a>     <span class="s">&quot;dh public value length is wrong&quot;</span><span class="p">},</span>
+<a name="gbab-472"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_DIGEST_CHECK_FAILED</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;digest check failed&quot;</span><span class="p">},</span>
+<a name="gbab-473"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_DTLS_MESSAGE_TOO_BIG</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;dtls message too big&quot;</span><span class="p">},</span>
+<a name="gbab-474"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_DUPLICATE_COMPRESSION_ID</span><span class="p">),</span><span class="s">&quot;duplicate compression id&quot;</span><span class="p">},</span>
+<a name="gbab-475"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ECC_CERT_NOT_FOR_KEY_AGREEMENT</span><span class="p">),</span>
+<a name="gbab-476"></a>     <span class="s">&quot;ecc cert not for key agreement&quot;</span><span class="p">},</span>
+<a name="gbab-477"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ECC_CERT_NOT_FOR_SIGNING</span><span class="p">),</span><span class="s">&quot;ecc cert not for signing&quot;</span><span class="p">},</span>
+<a name="gbab-478"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ECC_CERT_SHOULD_HAVE_RSA_SIGNATURE</span><span class="p">),</span>
+<a name="gbab-479"></a>     <span class="s">&quot;ecc cert should have rsa signature&quot;</span><span class="p">},</span>
+<a name="gbab-480"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ECC_CERT_SHOULD_HAVE_SHA1_SIGNATURE</span><span class="p">),</span>
+<a name="gbab-481"></a>     <span class="s">&quot;ecc cert should have sha1 signature&quot;</span><span class="p">},</span>
+<a name="gbab-482"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ECDH_REQUIRED_FOR_SUITEB_MODE</span><span class="p">),</span>
+<a name="gbab-483"></a>     <span class="s">&quot;ecdh required for suiteb mode&quot;</span><span class="p">},</span>
+<a name="gbab-484"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ECGROUP_TOO_LARGE_FOR_CIPHER</span><span class="p">),</span>
+<a name="gbab-485"></a>     <span class="s">&quot;ecgroup too large for cipher&quot;</span><span class="p">},</span>
+<a name="gbab-486"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_EMPTY_SRTP_PROTECTION_PROFILE_LIST</span><span class="p">),</span>
+<a name="gbab-487"></a>     <span class="s">&quot;empty srtp protection profile list&quot;</span><span class="p">},</span>
+<a name="gbab-488"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ENCRYPTED_LENGTH_TOO_LONG</span><span class="p">),</span>
+<a name="gbab-489"></a>     <span class="s">&quot;encrypted length too long&quot;</span><span class="p">},</span>
+<a name="gbab-490"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ERROR_GENERATING_TMP_RSA_KEY</span><span class="p">),</span>
+<a name="gbab-491"></a>     <span class="s">&quot;error generating tmp rsa key&quot;</span><span class="p">},</span>
+<a name="gbab-492"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ERROR_IN_RECEIVED_CIPHER_LIST</span><span class="p">),</span>
+<a name="gbab-493"></a>     <span class="s">&quot;error in received cipher list&quot;</span><span class="p">},</span>
+<a name="gbab-494"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_EXCESSIVE_MESSAGE_SIZE</span><span class="p">),</span><span class="s">&quot;excessive message size&quot;</span><span class="p">},</span>
+<a name="gbab-495"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_EXTRA_DATA_IN_MESSAGE</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;extra data in message&quot;</span><span class="p">},</span>
+<a name="gbab-496"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_GOT_A_FIN_BEFORE_A_CCS</span><span class="p">),</span><span class="s">&quot;got a fin before a ccs&quot;</span><span class="p">},</span>
+<a name="gbab-497"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_GOT_NEXT_PROTO_BEFORE_A_CCS</span><span class="p">),</span>
+<a name="gbab-498"></a>     <span class="s">&quot;got next proto before a ccs&quot;</span><span class="p">},</span>
+<a name="gbab-499"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_GOT_NEXT_PROTO_WITHOUT_EXTENSION</span><span class="p">),</span>
+<a name="gbab-500"></a>     <span class="s">&quot;got next proto without seeing extension&quot;</span><span class="p">},</span>
+<a name="gbab-501"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_HTTPS_PROXY_REQUEST</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;https proxy request&quot;</span><span class="p">},</span>
+<a name="gbab-502"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_HTTP_REQUEST</span><span class="p">)</span>          <span class="p">,</span><span class="s">&quot;http request&quot;</span><span class="p">},</span>
+<a name="gbab-503"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ILLEGAL_PADDING</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;illegal padding&quot;</span><span class="p">},</span>
+<a name="gbab-504"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ILLEGAL_SUITEB_DIGEST</span><span class="p">),</span> <span class="s">&quot;illegal Suite B digest&quot;</span><span class="p">},</span>
+<a name="gbab-505"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INAPPROPRIATE_FALLBACK</span><span class="p">),</span> <span class="s">&quot;inappropriate fallback&quot;</span><span class="p">},</span>
+<a name="gbab-506"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INCONSISTENT_COMPRESSION</span><span class="p">),</span><span class="s">&quot;inconsistent compression&quot;</span><span class="p">},</span>
+<a name="gbab-507"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_CHALLENGE_LENGTH</span><span class="p">),</span><span class="s">&quot;invalid challenge length&quot;</span><span class="p">},</span>
+<a name="gbab-508"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_COMMAND</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;invalid command&quot;</span><span class="p">},</span>
+<a name="gbab-509"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_COMPRESSION_ALGORITHM</span><span class="p">),</span>
+<a name="gbab-510"></a>     <span class="s">&quot;invalid compression algorithm&quot;</span><span class="p">},</span>
+<a name="gbab-511"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_NULL_CMD_NAME</span><span class="p">),</span> <span class="s">&quot;invalid null cmd name&quot;</span><span class="p">},</span>
+<a name="gbab-512"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_PURPOSE</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;invalid purpose&quot;</span><span class="p">},</span>
+<a name="gbab-513"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_SERVERINFO_DATA</span><span class="p">),</span> <span class="s">&quot;invalid serverinfo data&quot;</span><span class="p">},</span>
+<a name="gbab-514"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_SRP_USERNAME</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;invalid srp username&quot;</span><span class="p">},</span>
+<a name="gbab-515"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_STATUS_RESPONSE</span><span class="p">),</span><span class="s">&quot;invalid status response&quot;</span><span class="p">},</span>
+<a name="gbab-516"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_TICKET_KEYS_LENGTH</span><span class="p">),</span>
+<a name="gbab-517"></a>     <span class="s">&quot;invalid ticket keys length&quot;</span><span class="p">},</span>
+<a name="gbab-518"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_INVALID_TRUST</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;invalid trust&quot;</span><span class="p">},</span>
+<a name="gbab-519"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KEY_ARG_TOO_LONG</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;key arg too long&quot;</span><span class="p">},</span>
+<a name="gbab-520"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5</span><span class="p">)</span>                  <span class="p">,</span><span class="s">&quot;krb5&quot;</span><span class="p">},</span>
+<a name="gbab-521"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_C_CC_PRINC</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;krb5 client cc principal (no tkt?)&quot;</span><span class="p">},</span>
+<a name="gbab-522"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_C_GET_CRED</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;krb5 client get cred&quot;</span><span class="p">},</span>
+<a name="gbab-523"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_C_INIT</span><span class="p">)</span>           <span class="p">,</span><span class="s">&quot;krb5 client init&quot;</span><span class="p">},</span>
+<a name="gbab-524"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_C_MK_REQ</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;krb5 client mk_req (expired tkt?)&quot;</span><span class="p">},</span>
+<a name="gbab-525"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_S_BAD_TICKET</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;krb5 server bad ticket&quot;</span><span class="p">},</span>
+<a name="gbab-526"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_S_INIT</span><span class="p">)</span>           <span class="p">,</span><span class="s">&quot;krb5 server init&quot;</span><span class="p">},</span>
+<a name="gbab-527"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_S_RD_REQ</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;krb5 server rd_req (keytab perms?)&quot;</span><span class="p">},</span>
+<a name="gbab-528"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_S_TKT_EXPIRED</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;krb5 server tkt expired&quot;</span><span class="p">},</span>
+<a name="gbab-529"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_S_TKT_NYV</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;krb5 server tkt not yet valid&quot;</span><span class="p">},</span>
+<a name="gbab-530"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_KRB5_S_TKT_SKEW</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;krb5 server tkt skew&quot;</span><span class="p">},</span>
+<a name="gbab-531"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_LENGTH_MISMATCH</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;length mismatch&quot;</span><span class="p">},</span>
+<a name="gbab-532"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_LENGTH_TOO_SHORT</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;length too short&quot;</span><span class="p">},</span>
+<a name="gbab-533"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_LIBRARY_BUG</span><span class="p">)</span>           <span class="p">,</span><span class="s">&quot;library bug&quot;</span><span class="p">},</span>
+<a name="gbab-534"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_LIBRARY_HAS_NO_CIPHERS</span><span class="p">),</span><span class="s">&quot;library has no ciphers&quot;</span><span class="p">},</span>
+<a name="gbab-535"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MESSAGE_TOO_LONG</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;message too long&quot;</span><span class="p">},</span>
+<a name="gbab-536"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_DH_DSA_CERT</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;missing dh dsa cert&quot;</span><span class="p">},</span>
+<a name="gbab-537"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_DH_KEY</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;missing dh key&quot;</span><span class="p">},</span>
+<a name="gbab-538"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_DH_RSA_CERT</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;missing dh rsa cert&quot;</span><span class="p">},</span>
+<a name="gbab-539"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_DSA_SIGNING_CERT</span><span class="p">),</span><span class="s">&quot;missing dsa signing cert&quot;</span><span class="p">},</span>
+<a name="gbab-540"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_ECDH_CERT</span><span class="p">),</span> <span class="s">&quot;missing ecdh cert&quot;</span><span class="p">},</span>
+<a name="gbab-541"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_ECDSA_SIGNING_CERT</span><span class="p">),</span>
+<a name="gbab-542"></a>     <span class="s">&quot;missing ecdsa signing cert&quot;</span><span class="p">},</span>
+<a name="gbab-543"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_EXPORT_TMP_DH_KEY</span><span class="p">),</span>
+<a name="gbab-544"></a>     <span class="s">&quot;missing export tmp dh key&quot;</span><span class="p">},</span>
+<a name="gbab-545"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_EXPORT_TMP_RSA_KEY</span><span class="p">),</span>
+<a name="gbab-546"></a>     <span class="s">&quot;missing export tmp rsa key&quot;</span><span class="p">},</span>
+<a name="gbab-547"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_RSA_CERTIFICATE</span><span class="p">),</span><span class="s">&quot;missing rsa certificate&quot;</span><span class="p">},</span>
+<a name="gbab-548"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_RSA_ENCRYPTING_CERT</span><span class="p">),</span>
+<a name="gbab-549"></a>     <span class="s">&quot;missing rsa encrypting cert&quot;</span><span class="p">},</span>
+<a name="gbab-550"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_RSA_SIGNING_CERT</span><span class="p">),</span><span class="s">&quot;missing rsa signing cert&quot;</span><span class="p">},</span>
+<a name="gbab-551"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_SRP_PARAM</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;can&#39;t find SRP server param&quot;</span><span class="p">},</span>
+<a name="gbab-552"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_TMP_DH_KEY</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;missing tmp dh key&quot;</span><span class="p">},</span>
+<a name="gbab-553"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_TMP_ECDH_KEY</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;missing tmp ecdh key&quot;</span><span class="p">},</span>
+<a name="gbab-554"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_TMP_RSA_KEY</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;missing tmp rsa key&quot;</span><span class="p">},</span>
+<a name="gbab-555"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_TMP_RSA_PKEY</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;missing tmp rsa pkey&quot;</span><span class="p">},</span>
+<a name="gbab-556"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MISSING_VERIFY_MESSAGE</span><span class="p">),</span><span class="s">&quot;missing verify message&quot;</span><span class="p">},</span>
+<a name="gbab-557"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_MULTIPLE_SGC_RESTARTS</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;multiple sgc restarts&quot;</span><span class="p">},</span>
+<a name="gbab-558"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NON_SSLV2_INITIAL_PACKET</span><span class="p">),</span><span class="s">&quot;non sslv2 initial packet&quot;</span><span class="p">},</span>
+<a name="gbab-559"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CERTIFICATES_RETURNED</span><span class="p">),</span><span class="s">&quot;no certificates returned&quot;</span><span class="p">},</span>
+<a name="gbab-560"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CERTIFICATE_ASSIGNED</span><span class="p">),</span><span class="s">&quot;no certificate assigned&quot;</span><span class="p">},</span>
+<a name="gbab-561"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CERTIFICATE_RETURNED</span><span class="p">),</span><span class="s">&quot;no certificate returned&quot;</span><span class="p">},</span>
+<a name="gbab-562"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CERTIFICATE_SET</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;no certificate set&quot;</span><span class="p">},</span>
+<a name="gbab-563"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CERTIFICATE_SPECIFIED</span><span class="p">),</span><span class="s">&quot;no certificate specified&quot;</span><span class="p">},</span>
+<a name="gbab-564"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CIPHERS_AVAILABLE</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;no ciphers available&quot;</span><span class="p">},</span>
+<a name="gbab-565"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CIPHERS_PASSED</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;no ciphers passed&quot;</span><span class="p">},</span>
+<a name="gbab-566"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CIPHERS_SPECIFIED</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;no ciphers specified&quot;</span><span class="p">},</span>
+<a name="gbab-567"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CIPHER_LIST</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;no cipher list&quot;</span><span class="p">},</span>
+<a name="gbab-568"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CIPHER_MATCH</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;no cipher match&quot;</span><span class="p">},</span>
+<a name="gbab-569"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CLIENT_CERT_METHOD</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;no client cert method&quot;</span><span class="p">},</span>
+<a name="gbab-570"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_CLIENT_CERT_RECEIVED</span><span class="p">),</span><span class="s">&quot;no client cert received&quot;</span><span class="p">},</span>
+<a name="gbab-571"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_COMPRESSION_SPECIFIED</span><span class="p">),</span><span class="s">&quot;no compression specified&quot;</span><span class="p">},</span>
+<a name="gbab-572"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_GOST_CERTIFICATE_SENT_BY_PEER</span><span class="p">),</span>
+<a name="gbab-573"></a>     <span class="s">&quot;Peer haven&#39;t sent GOST certificate, required for selected ciphersuite&quot;</span><span class="p">},</span>
+<a name="gbab-574"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_METHOD_SPECIFIED</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;no method specified&quot;</span><span class="p">},</span>
+<a name="gbab-575"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_PEM_EXTENSIONS</span><span class="p">),</span> <span class="s">&quot;no pem extensions&quot;</span><span class="p">},</span>
+<a name="gbab-576"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_PRIVATEKEY</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;no privatekey&quot;</span><span class="p">},</span>
+<a name="gbab-577"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_PRIVATE_KEY_ASSIGNED</span><span class="p">),</span><span class="s">&quot;no private key assigned&quot;</span><span class="p">},</span>
+<a name="gbab-578"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_PROTOCOLS_AVAILABLE</span><span class="p">),</span><span class="s">&quot;no protocols available&quot;</span><span class="p">},</span>
+<a name="gbab-579"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_PUBLICKEY</span><span class="p">)</span>          <span class="p">,</span><span class="s">&quot;no publickey&quot;</span><span class="p">},</span>
+<a name="gbab-580"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_RENEGOTIATION</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;no renegotiation&quot;</span><span class="p">},</span>
+<a name="gbab-581"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_REQUIRED_DIGEST</span><span class="p">),</span>
+<a name="gbab-582"></a>     <span class="s">&quot;digest requred for handshake isn&#39;t computed&quot;</span><span class="p">},</span>
+<a name="gbab-583"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_SHARED_CIPHER</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;no shared cipher&quot;</span><span class="p">},</span>
+<a name="gbab-584"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_SHARED_SIGATURE_ALGORITHMS</span><span class="p">),</span>
+<a name="gbab-585"></a>     <span class="s">&quot;no shared sigature algorithms&quot;</span><span class="p">},</span>
+<a name="gbab-586"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_SRTP_PROFILES</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;no srtp profiles&quot;</span><span class="p">},</span>
+<a name="gbab-587"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NO_VERIFY_CALLBACK</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;no verify callback&quot;</span><span class="p">},</span>
+<a name="gbab-588"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NULL_SSL_CTX</span><span class="p">)</span>          <span class="p">,</span><span class="s">&quot;null ssl ctx&quot;</span><span class="p">},</span>
+<a name="gbab-589"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_NULL_SSL_METHOD_PASSED</span><span class="p">),</span><span class="s">&quot;null ssl method passed&quot;</span><span class="p">},</span>
+<a name="gbab-590"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_OLD_SESSION_CIPHER_NOT_RETURNED</span><span class="p">),</span>
+<a name="gbab-591"></a>     <span class="s">&quot;old session cipher not returned&quot;</span><span class="p">},</span>
+<a name="gbab-592"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_OLD_SESSION_COMPRESSION_ALGORITHM_NOT_RETURNED</span><span class="p">),</span>
+<a name="gbab-593"></a>     <span class="s">&quot;old session compression algorithm not returned&quot;</span><span class="p">},</span>
+<a name="gbab-594"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ONLY_DTLS_1_2_ALLOWED_IN_SUITEB_MODE</span><span class="p">),</span>
+<a name="gbab-595"></a>     <span class="s">&quot;only DTLS 1.2 allowed in Suite B mode&quot;</span><span class="p">},</span>
+<a name="gbab-596"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ONLY_TLS_1_2_ALLOWED_IN_SUITEB_MODE</span><span class="p">),</span>
+<a name="gbab-597"></a>     <span class="s">&quot;only TLS 1.2 allowed in Suite B mode&quot;</span><span class="p">},</span>
+<a name="gbab-598"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_ONLY_TLS_ALLOWED_IN_FIPS_MODE</span><span class="p">),</span>
+<a name="gbab-599"></a>     <span class="s">&quot;only tls allowed in fips mode&quot;</span><span class="p">},</span>
+<a name="gbab-600"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_OPAQUE_PRF_INPUT_TOO_LONG</span><span class="p">),</span>
+<a name="gbab-601"></a>     <span class="s">&quot;opaque PRF input too long&quot;</span><span class="p">},</span>
+<a name="gbab-602"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PACKET_LENGTH_TOO_LONG</span><span class="p">),</span><span class="s">&quot;packet length too long&quot;</span><span class="p">},</span>
+<a name="gbab-603"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PARSE_TLSEXT</span><span class="p">)</span>          <span class="p">,</span><span class="s">&quot;parse tlsext&quot;</span><span class="p">},</span>
+<a name="gbab-604"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PATH_TOO_LONG</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;path too long&quot;</span><span class="p">},</span>
+<a name="gbab-605"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PEER_DID_NOT_RETURN_A_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-606"></a>     <span class="s">&quot;peer did not return a certificate&quot;</span><span class="p">},</span>
+<a name="gbab-607"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PEER_ERROR</span><span class="p">)</span>            <span class="p">,</span><span class="s">&quot;peer error&quot;</span><span class="p">},</span>
+<a name="gbab-608"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PEER_ERROR_CERTIFICATE</span><span class="p">),</span><span class="s">&quot;peer error certificate&quot;</span><span class="p">},</span>
+<a name="gbab-609"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PEER_ERROR_NO_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-610"></a>     <span class="s">&quot;peer error no certificate&quot;</span><span class="p">},</span>
+<a name="gbab-611"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PEER_ERROR_NO_CIPHER</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;peer error no cipher&quot;</span><span class="p">},</span>
+<a name="gbab-612"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PEER_ERROR_UNSUPPORTED_CERTIFICATE_TYPE</span><span class="p">),</span>
+<a name="gbab-613"></a>     <span class="s">&quot;peer error unsupported certificate type&quot;</span><span class="p">},</span>
+<a name="gbab-614"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PEM_NAME_BAD_PREFIX</span><span class="p">),</span> <span class="s">&quot;pem name bad prefix&quot;</span><span class="p">},</span>
+<a name="gbab-615"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PEM_NAME_TOO_SHORT</span><span class="p">),</span> <span class="s">&quot;pem name too short&quot;</span><span class="p">},</span>
+<a name="gbab-616"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PRE_MAC_LENGTH_TOO_LONG</span><span class="p">),</span><span class="s">&quot;pre mac length too long&quot;</span><span class="p">},</span>
+<a name="gbab-617"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PROBLEMS_MAPPING_CIPHER_FUNCTIONS</span><span class="p">),</span>
+<a name="gbab-618"></a>     <span class="s">&quot;problems mapping cipher functions&quot;</span><span class="p">},</span>
+<a name="gbab-619"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PROTOCOL_IS_SHUTDOWN</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;protocol is shutdown&quot;</span><span class="p">},</span>
+<a name="gbab-620"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PSK_IDENTITY_NOT_FOUND</span><span class="p">),</span><span class="s">&quot;psk identity not found&quot;</span><span class="p">},</span>
+<a name="gbab-621"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PSK_NO_CLIENT_CB</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;psk no client cb&quot;</span><span class="p">},</span>
+<a name="gbab-622"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PSK_NO_SERVER_CB</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;psk no server cb&quot;</span><span class="p">},</span>
+<a name="gbab-623"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PUBLIC_KEY_ENCRYPT_ERROR</span><span class="p">),</span><span class="s">&quot;public key encrypt error&quot;</span><span class="p">},</span>
+<a name="gbab-624"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PUBLIC_KEY_IS_NOT_RSA</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;public key is not rsa&quot;</span><span class="p">},</span>
+<a name="gbab-625"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_PUBLIC_KEY_NOT_RSA</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;public key not rsa&quot;</span><span class="p">},</span>
+<a name="gbab-626"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_READ_BIO_NOT_SET</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;read bio not set&quot;</span><span class="p">},</span>
+<a name="gbab-627"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_READ_TIMEOUT_EXPIRED</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;read timeout expired&quot;</span><span class="p">},</span>
+<a name="gbab-628"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_READ_WRONG_PACKET_TYPE</span><span class="p">),</span><span class="s">&quot;read wrong packet type&quot;</span><span class="p">},</span>
+<a name="gbab-629"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_RECORD_LENGTH_MISMATCH</span><span class="p">),</span><span class="s">&quot;record length mismatch&quot;</span><span class="p">},</span>
+<a name="gbab-630"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_RECORD_TOO_LARGE</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;record too large&quot;</span><span class="p">},</span>
+<a name="gbab-631"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_RECORD_TOO_SMALL</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;record too small&quot;</span><span class="p">},</span>
+<a name="gbab-632"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_RENEGOTIATE_EXT_TOO_LONG</span><span class="p">),</span><span class="s">&quot;renegotiate ext too long&quot;</span><span class="p">},</span>
+<a name="gbab-633"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_RENEGOTIATION_ENCODING_ERR</span><span class="p">),</span>
+<a name="gbab-634"></a>     <span class="s">&quot;renegotiation encoding err&quot;</span><span class="p">},</span>
+<a name="gbab-635"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_RENEGOTIATION_MISMATCH</span><span class="p">),</span><span class="s">&quot;renegotiation mismatch&quot;</span><span class="p">},</span>
+<a name="gbab-636"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_REQUIRED_CIPHER_MISSING</span><span class="p">),</span><span class="s">&quot;required cipher missing&quot;</span><span class="p">},</span>
+<a name="gbab-637"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_REQUIRED_COMPRESSSION_ALGORITHM_MISSING</span><span class="p">),</span>
+<a name="gbab-638"></a>     <span class="s">&quot;required compresssion algorithm missing&quot;</span><span class="p">},</span>
+<a name="gbab-639"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_REUSE_CERT_LENGTH_NOT_ZERO</span><span class="p">),</span>
+<a name="gbab-640"></a>     <span class="s">&quot;reuse cert length not zero&quot;</span><span class="p">},</span>
+<a name="gbab-641"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_REUSE_CERT_TYPE_NOT_ZERO</span><span class="p">),</span><span class="s">&quot;reuse cert type not zero&quot;</span><span class="p">},</span>
+<a name="gbab-642"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_REUSE_CIPHER_LIST_NOT_ZERO</span><span class="p">),</span>
+<a name="gbab-643"></a>     <span class="s">&quot;reuse cipher list not zero&quot;</span><span class="p">},</span>
+<a name="gbab-644"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SCSV_RECEIVED_WHEN_RENEGOTIATING</span><span class="p">),</span>
+<a name="gbab-645"></a>     <span class="s">&quot;scsv received when renegotiating&quot;</span><span class="p">},</span>
+<a name="gbab-646"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SERVERHELLO_TLSEXT</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;serverhello tlsext&quot;</span><span class="p">},</span>
+<a name="gbab-647"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SESSION_ID_CONTEXT_UNINITIALIZED</span><span class="p">),</span>
+<a name="gbab-648"></a>     <span class="s">&quot;session id context uninitialized&quot;</span><span class="p">},</span>
+<a name="gbab-649"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SHORT_READ</span><span class="p">)</span>            <span class="p">,</span><span class="s">&quot;short read&quot;</span><span class="p">},</span>
+<a name="gbab-650"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SHUTDOWN_WHILE_IN_INIT</span><span class="p">),</span> <span class="s">&quot;shutdown while in init&quot;</span><span class="p">},</span>
+<a name="gbab-651"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SIGNATURE_ALGORITHMS_ERROR</span><span class="p">),</span>
+<a name="gbab-652"></a>     <span class="s">&quot;signature algorithms error&quot;</span><span class="p">},</span>
+<a name="gbab-653"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SIGNATURE_FOR_NON_SIGNING_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-654"></a>     <span class="s">&quot;signature for non signing certificate&quot;</span><span class="p">},</span>
+<a name="gbab-655"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SRP_A_CALC</span><span class="p">)</span>            <span class="p">,</span><span class="s">&quot;error with the srp params&quot;</span><span class="p">},</span>
+<a name="gbab-656"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SRTP_COULD_NOT_ALLOCATE_PROFILES</span><span class="p">),</span>
+<a name="gbab-657"></a>     <span class="s">&quot;srtp could not allocate profiles&quot;</span><span class="p">},</span>
+<a name="gbab-658"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SRTP_PROTECTION_PROFILE_LIST_TOO_LONG</span><span class="p">),</span>
+<a name="gbab-659"></a>     <span class="s">&quot;srtp protection profile list too long&quot;</span><span class="p">},</span>
+<a name="gbab-660"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SRTP_UNKNOWN_PROTECTION_PROFILE</span><span class="p">),</span>
+<a name="gbab-661"></a>     <span class="s">&quot;srtp unknown protection profile&quot;</span><span class="p">},</span>
+<a name="gbab-662"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL23_DOING_SESSION_ID_REUSE</span><span class="p">),</span>
+<a name="gbab-663"></a>     <span class="s">&quot;ssl23 doing session id reuse&quot;</span><span class="p">},</span>
+<a name="gbab-664"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL2_CONNECTION_ID_TOO_LONG</span><span class="p">),</span>
+<a name="gbab-665"></a>     <span class="s">&quot;ssl2 connection id too long&quot;</span><span class="p">},</span>
+<a name="gbab-666"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL3_EXT_INVALID_ECPOINTFORMAT</span><span class="p">),</span>
+<a name="gbab-667"></a>     <span class="s">&quot;ssl3 ext invalid ecpointformat&quot;</span><span class="p">},</span>
+<a name="gbab-668"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL3_EXT_INVALID_SERVERNAME</span><span class="p">),</span>
+<a name="gbab-669"></a>     <span class="s">&quot;ssl3 ext invalid servername&quot;</span><span class="p">},</span>
+<a name="gbab-670"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL3_EXT_INVALID_SERVERNAME_TYPE</span><span class="p">),</span>
+<a name="gbab-671"></a>     <span class="s">&quot;ssl3 ext invalid servername type&quot;</span><span class="p">},</span>
+<a name="gbab-672"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL3_SESSION_ID_TOO_LONG</span><span class="p">),</span><span class="s">&quot;ssl3 session id too long&quot;</span><span class="p">},</span>
+<a name="gbab-673"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL3_SESSION_ID_TOO_SHORT</span><span class="p">),</span>
+<a name="gbab-674"></a>     <span class="s">&quot;ssl3 session id too short&quot;</span><span class="p">},</span>
+<a name="gbab-675"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_BAD_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-676"></a>     <span class="s">&quot;sslv3 alert bad certificate&quot;</span><span class="p">},</span>
+<a name="gbab-677"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_BAD_RECORD_MAC</span><span class="p">),</span>
+<a name="gbab-678"></a>     <span class="s">&quot;sslv3 alert bad record mac&quot;</span><span class="p">},</span>
+<a name="gbab-679"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_CERTIFICATE_EXPIRED</span><span class="p">),</span>
+<a name="gbab-680"></a>     <span class="s">&quot;sslv3 alert certificate expired&quot;</span><span class="p">},</span>
+<a name="gbab-681"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_CERTIFICATE_REVOKED</span><span class="p">),</span>
+<a name="gbab-682"></a>     <span class="s">&quot;sslv3 alert certificate revoked&quot;</span><span class="p">},</span>
+<a name="gbab-683"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_CERTIFICATE_UNKNOWN</span><span class="p">),</span>
+<a name="gbab-684"></a>     <span class="s">&quot;sslv3 alert certificate unknown&quot;</span><span class="p">},</span>
+<a name="gbab-685"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_DECOMPRESSION_FAILURE</span><span class="p">),</span>
+<a name="gbab-686"></a>     <span class="s">&quot;sslv3 alert decompression failure&quot;</span><span class="p">},</span>
+<a name="gbab-687"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_HANDSHAKE_FAILURE</span><span class="p">),</span>
+<a name="gbab-688"></a>     <span class="s">&quot;sslv3 alert handshake failure&quot;</span><span class="p">},</span>
+<a name="gbab-689"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_ILLEGAL_PARAMETER</span><span class="p">),</span>
+<a name="gbab-690"></a>     <span class="s">&quot;sslv3 alert illegal parameter&quot;</span><span class="p">},</span>
+<a name="gbab-691"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_NO_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-692"></a>     <span class="s">&quot;sslv3 alert no certificate&quot;</span><span class="p">},</span>
+<a name="gbab-693"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_UNEXPECTED_MESSAGE</span><span class="p">),</span>
+<a name="gbab-694"></a>     <span class="s">&quot;sslv3 alert unexpected message&quot;</span><span class="p">},</span>
+<a name="gbab-695"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSLV3_ALERT_UNSUPPORTED_CERTIFICATE</span><span class="p">),</span>
+<a name="gbab-696"></a>     <span class="s">&quot;sslv3 alert unsupported certificate&quot;</span><span class="p">},</span>
+<a name="gbab-697"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL_CTX_HAS_NO_DEFAULT_SSL_VERSION</span><span class="p">),</span>
+<a name="gbab-698"></a>     <span class="s">&quot;ssl ctx has no default ssl version&quot;</span><span class="p">},</span>
+<a name="gbab-699"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL_HANDSHAKE_FAILURE</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;ssl handshake failure&quot;</span><span class="p">},</span>
+<a name="gbab-700"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL_LIBRARY_HAS_NO_CIPHERS</span><span class="p">),</span>
+<a name="gbab-701"></a>     <span class="s">&quot;ssl library has no ciphers&quot;</span><span class="p">},</span>
+<a name="gbab-702"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL_SESSION_ID_CALLBACK_FAILED</span><span class="p">),</span>
+<a name="gbab-703"></a>     <span class="s">&quot;ssl session id callback failed&quot;</span><span class="p">},</span>
+<a name="gbab-704"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL_SESSION_ID_CONFLICT</span><span class="p">),</span><span class="s">&quot;ssl session id conflict&quot;</span><span class="p">},</span>
+<a name="gbab-705"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL_SESSION_ID_CONTEXT_TOO_LONG</span><span class="p">),</span>
+<a name="gbab-706"></a>     <span class="s">&quot;ssl session id context too long&quot;</span><span class="p">},</span>
+<a name="gbab-707"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL_SESSION_ID_HAS_BAD_LENGTH</span><span class="p">),</span>
+<a name="gbab-708"></a>     <span class="s">&quot;ssl session id has bad length&quot;</span><span class="p">},</span>
+<a name="gbab-709"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_SSL_SESSION_ID_IS_DIFFERENT</span><span class="p">),</span>
+<a name="gbab-710"></a>     <span class="s">&quot;ssl session id is different&quot;</span><span class="p">},</span>
+<a name="gbab-711"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_ACCESS_DENIED</span><span class="p">),</span>
+<a name="gbab-712"></a>     <span class="s">&quot;tlsv1 alert access denied&quot;</span><span class="p">},</span>
+<a name="gbab-713"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_DECODE_ERROR</span><span class="p">),</span><span class="s">&quot;tlsv1 alert decode error&quot;</span><span class="p">},</span>
+<a name="gbab-714"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_DECRYPTION_FAILED</span><span class="p">),</span>
+<a name="gbab-715"></a>     <span class="s">&quot;tlsv1 alert decryption failed&quot;</span><span class="p">},</span>
+<a name="gbab-716"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_DECRYPT_ERROR</span><span class="p">),</span>
+<a name="gbab-717"></a>     <span class="s">&quot;tlsv1 alert decrypt error&quot;</span><span class="p">},</span>
+<a name="gbab-718"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_EXPORT_RESTRICTION</span><span class="p">),</span>
+<a name="gbab-719"></a>     <span class="s">&quot;tlsv1 alert export restriction&quot;</span><span class="p">},</span>
+<a name="gbab-720"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_INAPPROPRIATE_FALLBACK</span><span class="p">),</span>
+<a name="gbab-721"></a>     <span class="s">&quot;tlsv1 alert inappropriate fallback&quot;</span><span class="p">},</span>
+<a name="gbab-722"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_INSUFFICIENT_SECURITY</span><span class="p">),</span>
+<a name="gbab-723"></a>     <span class="s">&quot;tlsv1 alert insufficient security&quot;</span><span class="p">},</span>
+<a name="gbab-724"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_INTERNAL_ERROR</span><span class="p">),</span>
+<a name="gbab-725"></a>     <span class="s">&quot;tlsv1 alert internal error&quot;</span><span class="p">},</span>
+<a name="gbab-726"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_NO_RENEGOTIATION</span><span class="p">),</span>
+<a name="gbab-727"></a>     <span class="s">&quot;tlsv1 alert no renegotiation&quot;</span><span class="p">},</span>
+<a name="gbab-728"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_PROTOCOL_VERSION</span><span class="p">),</span>
+<a name="gbab-729"></a>     <span class="s">&quot;tlsv1 alert protocol version&quot;</span><span class="p">},</span>
+<a name="gbab-730"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_RECORD_OVERFLOW</span><span class="p">),</span>
+<a name="gbab-731"></a>     <span class="s">&quot;tlsv1 alert record overflow&quot;</span><span class="p">},</span>
+<a name="gbab-732"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_UNKNOWN_CA</span><span class="p">),</span><span class="s">&quot;tlsv1 alert unknown ca&quot;</span><span class="p">},</span>
+<a name="gbab-733"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_ALERT_USER_CANCELLED</span><span class="p">),</span>
+<a name="gbab-734"></a>     <span class="s">&quot;tlsv1 alert user cancelled&quot;</span><span class="p">},</span>
+<a name="gbab-735"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_BAD_CERTIFICATE_HASH_VALUE</span><span class="p">),</span>
+<a name="gbab-736"></a>     <span class="s">&quot;tlsv1 bad certificate hash value&quot;</span><span class="p">},</span>
+<a name="gbab-737"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_BAD_CERTIFICATE_STATUS_RESPONSE</span><span class="p">),</span>
+<a name="gbab-738"></a>     <span class="s">&quot;tlsv1 bad certificate status response&quot;</span><span class="p">},</span>
+<a name="gbab-739"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_CERTIFICATE_UNOBTAINABLE</span><span class="p">),</span>
+<a name="gbab-740"></a>     <span class="s">&quot;tlsv1 certificate unobtainable&quot;</span><span class="p">},</span>
+<a name="gbab-741"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_UNRECOGNIZED_NAME</span><span class="p">),</span><span class="s">&quot;tlsv1 unrecognized name&quot;</span><span class="p">},</span>
+<a name="gbab-742"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLSV1_UNSUPPORTED_EXTENSION</span><span class="p">),</span>
+<a name="gbab-743"></a>     <span class="s">&quot;tlsv1 unsupported extension&quot;</span><span class="p">},</span>
+<a name="gbab-744"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLS_CLIENT_CERT_REQ_WITH_ANON_CIPHER</span><span class="p">),</span>
+<a name="gbab-745"></a>     <span class="s">&quot;tls client cert req with anon cipher&quot;</span><span class="p">},</span>
+<a name="gbab-746"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLS_HEARTBEAT_PEER_DOESNT_ACCEPT</span><span class="p">),</span>
+<a name="gbab-747"></a>     <span class="s">&quot;peer does not accept heartbeats&quot;</span><span class="p">},</span>
+<a name="gbab-748"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLS_HEARTBEAT_PENDING</span><span class="p">),</span>
+<a name="gbab-749"></a>     <span class="s">&quot;heartbeat request already pending&quot;</span><span class="p">},</span>
+<a name="gbab-750"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLS_ILLEGAL_EXPORTER_LABEL</span><span class="p">),</span>
+<a name="gbab-751"></a>     <span class="s">&quot;tls illegal exporter label&quot;</span><span class="p">},</span>
+<a name="gbab-752"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLS_INVALID_ECPOINTFORMAT_LIST</span><span class="p">),</span>
+<a name="gbab-753"></a>     <span class="s">&quot;tls invalid ecpointformat list&quot;</span><span class="p">},</span>
+<a name="gbab-754"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLS_PEER_DID_NOT_RESPOND_WITH_CERTIFICATE_LIST</span><span class="p">),</span>
+<a name="gbab-755"></a>     <span class="s">&quot;tls peer did not respond with certificate list&quot;</span><span class="p">},</span>
+<a name="gbab-756"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TLS_RSA_ENCRYPTED_VALUE_LENGTH_IS_WRONG</span><span class="p">),</span>
+<a name="gbab-757"></a>     <span class="s">&quot;tls rsa encrypted value length is wrong&quot;</span><span class="p">},</span>
+<a name="gbab-758"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_TRIED_TO_USE_UNSUPPORTED_CIPHER</span><span class="p">),</span>
+<a name="gbab-759"></a>     <span class="s">&quot;tried to use unsupported cipher&quot;</span><span class="p">},</span>
+<a name="gbab-760"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_DECODE_DH_CERTS</span><span class="p">),</span>
+<a name="gbab-761"></a>     <span class="s">&quot;unable to decode dh certs&quot;</span><span class="p">},</span>
+<a name="gbab-762"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_DECODE_ECDH_CERTS</span><span class="p">),</span>
+<a name="gbab-763"></a>     <span class="s">&quot;unable to decode ecdh certs&quot;</span><span class="p">},</span>
+<a name="gbab-764"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_EXTRACT_PUBLIC_KEY</span><span class="p">),</span>
+<a name="gbab-765"></a>     <span class="s">&quot;unable to extract public key&quot;</span><span class="p">},</span>
+<a name="gbab-766"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_FIND_DH_PARAMETERS</span><span class="p">),</span>
+<a name="gbab-767"></a>     <span class="s">&quot;unable to find dh parameters&quot;</span><span class="p">},</span>
+<a name="gbab-768"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_FIND_ECDH_PARAMETERS</span><span class="p">),</span>
+<a name="gbab-769"></a>     <span class="s">&quot;unable to find ecdh parameters&quot;</span><span class="p">},</span>
+<a name="gbab-770"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_FIND_PUBLIC_KEY_PARAMETERS</span><span class="p">),</span>
+<a name="gbab-771"></a>     <span class="s">&quot;unable to find public key parameters&quot;</span><span class="p">},</span>
+<a name="gbab-772"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_FIND_SSL_METHOD</span><span class="p">),</span>
+<a name="gbab-773"></a>     <span class="s">&quot;unable to find ssl method&quot;</span><span class="p">},</span>
+<a name="gbab-774"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_LOAD_SSL2_MD5_ROUTINES</span><span class="p">),</span>
+<a name="gbab-775"></a>     <span class="s">&quot;unable to load ssl2 md5 routines&quot;</span><span class="p">},</span>
+<a name="gbab-776"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_LOAD_SSL3_MD5_ROUTINES</span><span class="p">),</span>
+<a name="gbab-777"></a>     <span class="s">&quot;unable to load ssl3 md5 routines&quot;</span><span class="p">},</span>
+<a name="gbab-778"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNABLE_TO_LOAD_SSL3_SHA1_ROUTINES</span><span class="p">),</span>
+<a name="gbab-779"></a>     <span class="s">&quot;unable to load ssl3 sha1 routines&quot;</span><span class="p">},</span>
+<a name="gbab-780"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNEXPECTED_MESSAGE</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;unexpected message&quot;</span><span class="p">},</span>
+<a name="gbab-781"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNEXPECTED_RECORD</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;unexpected record&quot;</span><span class="p">},</span>
+<a name="gbab-782"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNINITIALIZED</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;uninitialized&quot;</span><span class="p">},</span>
+<a name="gbab-783"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_ALERT_TYPE</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;unknown alert type&quot;</span><span class="p">},</span>
+<a name="gbab-784"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_CERTIFICATE_TYPE</span><span class="p">),</span><span class="s">&quot;unknown certificate type&quot;</span><span class="p">},</span>
+<a name="gbab-785"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_CIPHER_RETURNED</span><span class="p">),</span><span class="s">&quot;unknown cipher returned&quot;</span><span class="p">},</span>
+<a name="gbab-786"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_CIPHER_TYPE</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;unknown cipher type&quot;</span><span class="p">},</span>
+<a name="gbab-787"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_CMD_NAME</span><span class="p">),</span> <span class="s">&quot;unknown cmd name&quot;</span><span class="p">},</span>
+<a name="gbab-788"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_DIGEST</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;unknown digest&quot;</span><span class="p">},</span>
+<a name="gbab-789"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_KEY_EXCHANGE_TYPE</span><span class="p">),</span>
+<a name="gbab-790"></a>     <span class="s">&quot;unknown key exchange type&quot;</span><span class="p">},</span>
+<a name="gbab-791"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_PKEY_TYPE</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;unknown pkey type&quot;</span><span class="p">},</span>
+<a name="gbab-792"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_PROTOCOL</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;unknown protocol&quot;</span><span class="p">},</span>
+<a name="gbab-793"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_REMOTE_ERROR_TYPE</span><span class="p">),</span>
+<a name="gbab-794"></a>     <span class="s">&quot;unknown remote error type&quot;</span><span class="p">},</span>
+<a name="gbab-795"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_SSL_VERSION</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;unknown ssl version&quot;</span><span class="p">},</span>
+<a name="gbab-796"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNKNOWN_STATE</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;unknown state&quot;</span><span class="p">},</span>
+<a name="gbab-797"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNSAFE_LEGACY_RENEGOTIATION_DISABLED</span><span class="p">),</span>
+<a name="gbab-798"></a>     <span class="s">&quot;unsafe legacy renegotiation disabled&quot;</span><span class="p">},</span>
+<a name="gbab-799"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNSUPPORTED_CIPHER</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;unsupported cipher&quot;</span><span class="p">},</span>
+<a name="gbab-800"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNSUPPORTED_COMPRESSION_ALGORITHM</span><span class="p">),</span>
+<a name="gbab-801"></a>     <span class="s">&quot;unsupported compression algorithm&quot;</span><span class="p">},</span>
+<a name="gbab-802"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNSUPPORTED_DIGEST_TYPE</span><span class="p">),</span><span class="s">&quot;unsupported digest type&quot;</span><span class="p">},</span>
+<a name="gbab-803"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNSUPPORTED_ELLIPTIC_CURVE</span><span class="p">),</span>
+<a name="gbab-804"></a>     <span class="s">&quot;unsupported elliptic curve&quot;</span><span class="p">},</span>
+<a name="gbab-805"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNSUPPORTED_PROTOCOL</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;unsupported protocol&quot;</span><span class="p">},</span>
+<a name="gbab-806"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNSUPPORTED_SSL_VERSION</span><span class="p">),</span><span class="s">&quot;unsupported ssl version&quot;</span><span class="p">},</span>
+<a name="gbab-807"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_UNSUPPORTED_STATUS_TYPE</span><span class="p">),</span><span class="s">&quot;unsupported status type&quot;</span><span class="p">},</span>
+<a name="gbab-808"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_USE_SRTP_NOT_NEGOTIATED</span><span class="p">),</span><span class="s">&quot;use srtp not negotiated&quot;</span><span class="p">},</span>
+<a name="gbab-809"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRITE_BIO_NOT_SET</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;write bio not set&quot;</span><span class="p">},</span>
+<a name="gbab-810"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_CERTIFICATE_TYPE</span><span class="p">),</span> <span class="s">&quot;wrong certificate type&quot;</span><span class="p">},</span>
+<a name="gbab-811"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_CIPHER_RETURNED</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;wrong cipher returned&quot;</span><span class="p">},</span>
+<a name="gbab-812"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_CURVE</span><span class="p">),</span> <span class="s">&quot;wrong curve&quot;</span><span class="p">},</span>
+<a name="gbab-813"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_MESSAGE_TYPE</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;wrong message type&quot;</span><span class="p">},</span>
+<a name="gbab-814"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_NUMBER_OF_KEY_BITS</span><span class="p">),</span><span class="s">&quot;wrong number of key bits&quot;</span><span class="p">},</span>
+<a name="gbab-815"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_SIGNATURE_LENGTH</span><span class="p">),</span><span class="s">&quot;wrong signature length&quot;</span><span class="p">},</span>
+<a name="gbab-816"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_SIGNATURE_SIZE</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;wrong signature size&quot;</span><span class="p">},</span>
+<a name="gbab-817"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_SIGNATURE_TYPE</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;wrong signature type&quot;</span><span class="p">},</span>
+<a name="gbab-818"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_SSL_VERSION</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;wrong ssl version&quot;</span><span class="p">},</span>
+<a name="gbab-819"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_WRONG_VERSION_NUMBER</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;wrong version number&quot;</span><span class="p">},</span>
+<a name="gbab-820"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_X509_LIB</span><span class="p">)</span>              <span class="p">,</span><span class="s">&quot;x509 lib&quot;</span><span class="p">},</span>
+<a name="gbab-821"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">SSL_R_X509_VERIFICATION_SETUP_PROBLEMS</span><span class="p">),</span>
+<a name="gbab-822"></a>     <span class="s">&quot;x509 verification setup problems&quot;</span><span class="p">},</span>
+<a name="gbab-823"></a><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">}</span>
+<a name="gbab-824"></a>	<span class="p">};</span>
+<a name="gbab-825"></a>
+<a name="gbab-826"></a><span class="cp">#endif</span>
+<a name="gbab-827"></a>
+<a name="gbab-828"></a><span class="kt">void</span> <span class="nf">ERR_load_SSL_strings</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<a name="gbab-829"></a>	<span class="p">{</span>
+<a name="gbab-830"></a><span class="cp">#ifndef OPENSSL_NO_ERR</span>
+<a name="gbab-831"></a>
+<a name="gbab-832"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">ERR_func_error_string</span><span class="p">(</span><span class="n">SSL_str_functs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">error</span><span class="p">)</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-833"></a>		<span class="n">ERR_load_strings</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">SSL_str_functs</span><span class="p">);</span>
+<a name="gbab-834"></a>		<span class="n">ERR_load_strings</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">SSL_str_reasons</span><span class="p">);</span>
+<a name="gbab-835"></a>		<span class="p">}</span>
+<a name="gbab-836"></a><span class="cp">#endif</span>
+<a name="gbab-837"></a>	<span class="p">}</span>
+</pre></div>
+</td></tr></table>

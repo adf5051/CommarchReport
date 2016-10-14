@@ -1,0 +1,1549 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* ssl/ssl3.h */</span>
+<a name="gbab-2"></a><span class="cm">/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)</span>
+<a name="gbab-3"></a><span class="cm"> * All rights reserved.</span>
+<a name="gbab-4"></a><span class="cm"> *</span>
+<a name="gbab-5"></a><span class="cm"> * This package is an SSL implementation written</span>
+<a name="gbab-6"></a><span class="cm"> * by Eric Young (eay@cryptsoft.com).</span>
+<a name="gbab-7"></a><span class="cm"> * The implementation was written so as to conform with Netscapes SSL.</span>
+<a name="gbab-8"></a><span class="cm"> * </span>
+<a name="gbab-9"></a><span class="cm"> * This library is free for commercial and non-commercial use as long as</span>
+<a name="gbab-10"></a><span class="cm"> * the following conditions are aheared to.  The following conditions</span>
+<a name="gbab-11"></a><span class="cm"> * apply to all code found in this distribution, be it the RC4, RSA,</span>
+<a name="gbab-12"></a><span class="cm"> * lhash, DES, etc., code; not just the SSL code.  The SSL documentation</span>
+<a name="gbab-13"></a><span class="cm"> * included with this distribution is covered by the same copyright terms</span>
+<a name="gbab-14"></a><span class="cm"> * except that the holder is Tim Hudson (tjh@cryptsoft.com).</span>
+<a name="gbab-15"></a><span class="cm"> * </span>
+<a name="gbab-16"></a><span class="cm"> * Copyright remains Eric Young&#39;s, and as such any Copyright notices in</span>
+<a name="gbab-17"></a><span class="cm"> * the code are not to be removed.</span>
+<a name="gbab-18"></a><span class="cm"> * If this package is used in a product, Eric Young should be given attribution</span>
+<a name="gbab-19"></a><span class="cm"> * as the author of the parts of the library used.</span>
+<a name="gbab-20"></a><span class="cm"> * This can be in the form of a textual message at program startup or</span>
+<a name="gbab-21"></a><span class="cm"> * in documentation (online or textual) provided with the package.</span>
+<a name="gbab-22"></a><span class="cm"> * </span>
+<a name="gbab-23"></a><span class="cm"> * Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-24"></a><span class="cm"> * modification, are permitted provided that the following conditions</span>
+<a name="gbab-25"></a><span class="cm"> * are met:</span>
+<a name="gbab-26"></a><span class="cm"> * 1. Redistributions of source code must retain the copyright</span>
+<a name="gbab-27"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer.</span>
+<a name="gbab-28"></a><span class="cm"> * 2. Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-29"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer in the</span>
+<a name="gbab-30"></a><span class="cm"> *    documentation and/or other materials provided with the distribution.</span>
+<a name="gbab-31"></a><span class="cm"> * 3. All advertising materials mentioning features or use of this software</span>
+<a name="gbab-32"></a><span class="cm"> *    must display the following acknowledgement:</span>
+<a name="gbab-33"></a><span class="cm"> *    &quot;This product includes cryptographic software written by</span>
+<a name="gbab-34"></a><span class="cm"> *     Eric Young (eay@cryptsoft.com)&quot;</span>
+<a name="gbab-35"></a><span class="cm"> *    The word &#39;cryptographic&#39; can be left out if the rouines from the library</span>
+<a name="gbab-36"></a><span class="cm"> *    being used are not cryptographic related :-).</span>
+<a name="gbab-37"></a><span class="cm"> * 4. If you include any Windows specific code (or a derivative thereof) from </span>
+<a name="gbab-38"></a><span class="cm"> *    the apps directory (application code) you must include an acknowledgement:</span>
+<a name="gbab-39"></a><span class="cm"> *    &quot;This product includes software written by Tim Hudson (tjh@cryptsoft.com)&quot;</span>
+<a name="gbab-40"></a><span class="cm"> * </span>
+<a name="gbab-41"></a><span class="cm"> * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS&#39;&#39; AND</span>
+<a name="gbab-42"></a><span class="cm"> * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<a name="gbab-43"></a><span class="cm"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<a name="gbab-44"></a><span class="cm"> * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE</span>
+<a name="gbab-45"></a><span class="cm"> * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL</span>
+<a name="gbab-46"></a><span class="cm"> * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS</span>
+<a name="gbab-47"></a><span class="cm"> * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)</span>
+<a name="gbab-48"></a><span class="cm"> * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT</span>
+<a name="gbab-49"></a><span class="cm"> * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY</span>
+<a name="gbab-50"></a><span class="cm"> * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF</span>
+<a name="gbab-51"></a><span class="cm"> * SUCH DAMAGE.</span>
+<a name="gbab-52"></a><span class="cm"> * </span>
+<a name="gbab-53"></a><span class="cm"> * The licence and distribution terms for any publically available version or</span>
+<a name="gbab-54"></a><span class="cm"> * derivative of this code cannot be changed.  i.e. this code cannot simply be</span>
+<a name="gbab-55"></a><span class="cm"> * copied and put under another distribution licence</span>
+<a name="gbab-56"></a><span class="cm"> * [including the GNU Public Licence.]</span>
+<a name="gbab-57"></a><span class="cm"> */</span>
+<a name="gbab-58"></a><span class="cm">/* ====================================================================</span>
+<a name="gbab-59"></a><span class="cm"> * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.</span>
+<a name="gbab-60"></a><span class="cm"> *</span>
+<a name="gbab-61"></a><span class="cm"> * Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-62"></a><span class="cm"> * modification, are permitted provided that the following conditions</span>
+<a name="gbab-63"></a><span class="cm"> * are met:</span>
+<a name="gbab-64"></a><span class="cm"> *</span>
+<a name="gbab-65"></a><span class="cm"> * 1. Redistributions of source code must retain the above copyright</span>
+<a name="gbab-66"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer. </span>
+<a name="gbab-67"></a><span class="cm"> *</span>
+<a name="gbab-68"></a><span class="cm"> * 2. Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-69"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer in</span>
+<a name="gbab-70"></a><span class="cm"> *    the documentation and/or other materials provided with the</span>
+<a name="gbab-71"></a><span class="cm"> *    distribution.</span>
+<a name="gbab-72"></a><span class="cm"> *</span>
+<a name="gbab-73"></a><span class="cm"> * 3. All advertising materials mentioning features or use of this</span>
+<a name="gbab-74"></a><span class="cm"> *    software must display the following acknowledgment:</span>
+<a name="gbab-75"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-76"></a><span class="cm"> *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)&quot;</span>
+<a name="gbab-77"></a><span class="cm"> *</span>
+<a name="gbab-78"></a><span class="cm"> * 4. The names &quot;OpenSSL Toolkit&quot; and &quot;OpenSSL Project&quot; must not be used to</span>
+<a name="gbab-79"></a><span class="cm"> *    endorse or promote products derived from this software without</span>
+<a name="gbab-80"></a><span class="cm"> *    prior written permission. For written permission, please contact</span>
+<a name="gbab-81"></a><span class="cm"> *    openssl-core@openssl.org.</span>
+<a name="gbab-82"></a><span class="cm"> *</span>
+<a name="gbab-83"></a><span class="cm"> * 5. Products derived from this software may not be called &quot;OpenSSL&quot;</span>
+<a name="gbab-84"></a><span class="cm"> *    nor may &quot;OpenSSL&quot; appear in their names without prior written</span>
+<a name="gbab-85"></a><span class="cm"> *    permission of the OpenSSL Project.</span>
+<a name="gbab-86"></a><span class="cm"> *</span>
+<a name="gbab-87"></a><span class="cm"> * 6. Redistributions of any form whatsoever must retain the following</span>
+<a name="gbab-88"></a><span class="cm"> *    acknowledgment:</span>
+<a name="gbab-89"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-90"></a><span class="cm"> *    for use in the OpenSSL Toolkit (http://www.openssl.org/)&quot;</span>
+<a name="gbab-91"></a><span class="cm"> *</span>
+<a name="gbab-92"></a><span class="cm"> * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS&#39;&#39; AND ANY</span>
+<a name="gbab-93"></a><span class="cm"> * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<a name="gbab-94"></a><span class="cm"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR</span>
+<a name="gbab-95"></a><span class="cm"> * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR</span>
+<a name="gbab-96"></a><span class="cm"> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<a name="gbab-97"></a><span class="cm"> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT</span>
+<a name="gbab-98"></a><span class="cm"> * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<a name="gbab-99"></a><span class="cm"> * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)</span>
+<a name="gbab-100"></a><span class="cm"> * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,</span>
+<a name="gbab-101"></a><span class="cm"> * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<a name="gbab-102"></a><span class="cm"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED</span>
+<a name="gbab-103"></a><span class="cm"> * OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-104"></a><span class="cm"> * ====================================================================</span>
+<a name="gbab-105"></a><span class="cm"> *</span>
+<a name="gbab-106"></a><span class="cm"> * This product includes cryptographic software written by Eric Young</span>
+<a name="gbab-107"></a><span class="cm"> * (eay@cryptsoft.com).  This product includes software written by Tim</span>
+<a name="gbab-108"></a><span class="cm"> * Hudson (tjh@cryptsoft.com).</span>
+<a name="gbab-109"></a><span class="cm"> *</span>
+<a name="gbab-110"></a><span class="cm"> */</span>
+<a name="gbab-111"></a><span class="cm">/* ====================================================================</span>
+<a name="gbab-112"></a><span class="cm"> * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.</span>
+<a name="gbab-113"></a><span class="cm"> * ECC cipher suite support in OpenSSL originally developed by </span>
+<a name="gbab-114"></a><span class="cm"> * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.</span>
+<a name="gbab-115"></a><span class="cm"> */</span>
+<a name="gbab-116"></a>
+<a name="gbab-117"></a><span class="cp">#ifndef HEADER_SSL3_H </span>
+<a name="gbab-118"></a><span class="cp">#define HEADER_SSL3_H </span>
+<a name="gbab-119"></a>
+<a name="gbab-120"></a><span class="cp">#ifndef OPENSSL_NO_COMP</span>
+<a name="gbab-121"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/comp.h&gt;</span><span class="cp"></span>
+<a name="gbab-122"></a><span class="cp">#endif</span>
+<a name="gbab-123"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/buffer.h&gt;</span><span class="cp"></span>
+<a name="gbab-124"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/evp.h&gt;</span><span class="cp"></span>
+<a name="gbab-125"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/ssl.h&gt;</span><span class="cp"></span>
+<a name="gbab-126"></a>
+<a name="gbab-127"></a><span class="cp">#ifdef  __cplusplus</span>
+<a name="gbab-128"></a><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<a name="gbab-129"></a><span class="cp">#endif</span>
+<a name="gbab-130"></a>
+<a name="gbab-131"></a><span class="cm">/*</span>
+<a name="gbab-132"></a><span class="cm"> * Signalling cipher suite value from RFC 5746</span>
+<a name="gbab-133"></a><span class="cm"> * (TLS_EMPTY_RENEGOTIATION_INFO_SCSV)</span>
+<a name="gbab-134"></a><span class="cm"> */</span>
+<a name="gbab-135"></a><span class="cp">#define SSL3_CK_SCSV				0x030000FF</span>
+<a name="gbab-136"></a>
+<a name="gbab-137"></a><span class="cm">/*</span>
+<a name="gbab-138"></a><span class="cm"> * Signalling cipher suite value from draft-ietf-tls-downgrade-scsv-00</span>
+<a name="gbab-139"></a><span class="cm"> * (TLS_FALLBACK_SCSV)</span>
+<a name="gbab-140"></a><span class="cm"> */</span>
+<a name="gbab-141"></a><span class="cp"># define SSL3_CK_FALLBACK_SCSV                   0x03005600</span>
+<a name="gbab-142"></a>
+<a name="gbab-143"></a><span class="cp">#define SSL3_CK_RSA_NULL_MD5			0x03000001</span>
+<a name="gbab-144"></a><span class="cp">#define SSL3_CK_RSA_NULL_SHA			0x03000002</span>
+<a name="gbab-145"></a><span class="cp">#define SSL3_CK_RSA_RC4_40_MD5 			0x03000003</span>
+<a name="gbab-146"></a><span class="cp">#define SSL3_CK_RSA_RC4_128_MD5			0x03000004</span>
+<a name="gbab-147"></a><span class="cp">#define SSL3_CK_RSA_RC4_128_SHA			0x03000005</span>
+<a name="gbab-148"></a><span class="cp">#define SSL3_CK_RSA_RC2_40_MD5			0x03000006</span>
+<a name="gbab-149"></a><span class="cp">#define SSL3_CK_RSA_IDEA_128_SHA		0x03000007</span>
+<a name="gbab-150"></a><span class="cp">#define SSL3_CK_RSA_DES_40_CBC_SHA		0x03000008</span>
+<a name="gbab-151"></a><span class="cp">#define SSL3_CK_RSA_DES_64_CBC_SHA		0x03000009</span>
+<a name="gbab-152"></a><span class="cp">#define SSL3_CK_RSA_DES_192_CBC3_SHA		0x0300000A</span>
+<a name="gbab-153"></a>
+<a name="gbab-154"></a><span class="cp">#define SSL3_CK_DH_DSS_DES_40_CBC_SHA		0x0300000B</span>
+<a name="gbab-155"></a><span class="cp">#define SSL3_CK_DH_DSS_DES_64_CBC_SHA		0x0300000C</span>
+<a name="gbab-156"></a><span class="cp">#define SSL3_CK_DH_DSS_DES_192_CBC3_SHA 	0x0300000D</span>
+<a name="gbab-157"></a><span class="cp">#define SSL3_CK_DH_RSA_DES_40_CBC_SHA		0x0300000E</span>
+<a name="gbab-158"></a><span class="cp">#define SSL3_CK_DH_RSA_DES_64_CBC_SHA		0x0300000F</span>
+<a name="gbab-159"></a><span class="cp">#define SSL3_CK_DH_RSA_DES_192_CBC3_SHA 	0x03000010</span>
+<a name="gbab-160"></a>
+<a name="gbab-161"></a><span class="cp">#define SSL3_CK_EDH_DSS_DES_40_CBC_SHA		0x03000011</span>
+<a name="gbab-162"></a><span class="cp"># define SSL3_CK_DHE_DSS_DES_40_CBC_SHA          SSL3_CK_EDH_DSS_DES_40_CBC_SHA</span>
+<a name="gbab-163"></a><span class="cp">#define SSL3_CK_EDH_DSS_DES_64_CBC_SHA		0x03000012</span>
+<a name="gbab-164"></a><span class="cp"># define SSL3_CK_DHE_DSS_DES_64_CBC_SHA          SSL3_CK_EDH_DSS_DES_64_CBC_SHA</span>
+<a name="gbab-165"></a><span class="cp">#define SSL3_CK_EDH_DSS_DES_192_CBC3_SHA	0x03000013</span>
+<a name="gbab-166"></a><span class="cp"># define SSL3_CK_DHE_DSS_DES_192_CBC3_SHA        SSL3_CK_EDH_DSS_DES_192_CBC3_SHA</span>
+<a name="gbab-167"></a><span class="cp">#define SSL3_CK_EDH_RSA_DES_40_CBC_SHA		0x03000014</span>
+<a name="gbab-168"></a><span class="cp"># define SSL3_CK_DHE_RSA_DES_40_CBC_SHA          SSL3_CK_EDH_RSA_DES_40_CBC_SHA</span>
+<a name="gbab-169"></a><span class="cp">#define SSL3_CK_EDH_RSA_DES_64_CBC_SHA		0x03000015</span>
+<a name="gbab-170"></a><span class="cp"># define SSL3_CK_DHE_RSA_DES_64_CBC_SHA          SSL3_CK_EDH_RSA_DES_64_CBC_SHA</span>
+<a name="gbab-171"></a><span class="cp">#define SSL3_CK_EDH_RSA_DES_192_CBC3_SHA	0x03000016</span>
+<a name="gbab-172"></a><span class="cp"># define SSL3_CK_DHE_RSA_DES_192_CBC3_SHA        SSL3_CK_EDH_RSA_DES_192_CBC3_SHA</span>
+<a name="gbab-173"></a>
+<a name="gbab-174"></a><span class="cp">#define SSL3_CK_ADH_RC4_40_MD5			0x03000017</span>
+<a name="gbab-175"></a><span class="cp">#define SSL3_CK_ADH_RC4_128_MD5			0x03000018</span>
+<a name="gbab-176"></a><span class="cp">#define SSL3_CK_ADH_DES_40_CBC_SHA		0x03000019</span>
+<a name="gbab-177"></a><span class="cp">#define SSL3_CK_ADH_DES_64_CBC_SHA		0x0300001A</span>
+<a name="gbab-178"></a><span class="cp">#define SSL3_CK_ADH_DES_192_CBC_SHA		0x0300001B</span>
+<a name="gbab-179"></a>
+<a name="gbab-180"></a><span class="cp">#if 0</span><span class="c"></span>
+<a name="gbab-181"></a><span class="c">	#define SSL3_CK_FZA_DMS_NULL_SHA		0x0300001C</span>
+<a name="gbab-182"></a><span class="c">	#define SSL3_CK_FZA_DMS_FZA_SHA			0x0300001D</span>
+<a name="gbab-183"></a><span class="c">#  if 0                         /* Because it clashes with KRB5, is never</span>
+<a name="gbab-184"></a><span class="c">                                 * used any more, and is safe to remove</span>
+<a name="gbab-185"></a><span class="c">                                 * according to David Hopwood</span>
+<a name="gbab-186"></a><span class="c">                                 * &lt;david.hopwood@zetnet.co.uk&gt; of the</span>
+<a name="gbab-187"></a><span class="c">                                 * ietf-tls list */</span>
+<a name="gbab-188"></a><span class="c">	#define SSL3_CK_FZA_DMS_RC4_SHA			0x0300001E</span>
+<a name="gbab-189"></a><span class="cp">	#endif</span>
+<a name="gbab-190"></a><span class="cp">#endif</span>
+<a name="gbab-191"></a>
+<a name="gbab-192"></a><span class="cm">/*</span>
+<a name="gbab-193"></a><span class="cm"> * VRS Additional Kerberos5 entries</span>
+<a name="gbab-194"></a><span class="cm"> */</span>
+<a name="gbab-195"></a><span class="cp">#define SSL3_CK_KRB5_DES_64_CBC_SHA		0x0300001E</span>
+<a name="gbab-196"></a><span class="cp">#define SSL3_CK_KRB5_DES_192_CBC3_SHA		0x0300001F</span>
+<a name="gbab-197"></a><span class="cp">#define SSL3_CK_KRB5_RC4_128_SHA		0x03000020</span>
+<a name="gbab-198"></a><span class="cp">#define SSL3_CK_KRB5_IDEA_128_CBC_SHA	       	0x03000021</span>
+<a name="gbab-199"></a><span class="cp">#define SSL3_CK_KRB5_DES_64_CBC_MD5       	0x03000022</span>
+<a name="gbab-200"></a><span class="cp">#define SSL3_CK_KRB5_DES_192_CBC3_MD5       	0x03000023</span>
+<a name="gbab-201"></a><span class="cp">#define SSL3_CK_KRB5_RC4_128_MD5	       	0x03000024</span>
+<a name="gbab-202"></a><span class="cp">#define SSL3_CK_KRB5_IDEA_128_CBC_MD5 		0x03000025</span>
+<a name="gbab-203"></a>
+<a name="gbab-204"></a><span class="cp">#define SSL3_CK_KRB5_DES_40_CBC_SHA 		0x03000026</span>
+<a name="gbab-205"></a><span class="cp">#define SSL3_CK_KRB5_RC2_40_CBC_SHA 		0x03000027</span>
+<a name="gbab-206"></a><span class="cp">#define SSL3_CK_KRB5_RC4_40_SHA	 		0x03000028</span>
+<a name="gbab-207"></a><span class="cp">#define SSL3_CK_KRB5_DES_40_CBC_MD5 		0x03000029</span>
+<a name="gbab-208"></a><span class="cp">#define SSL3_CK_KRB5_RC2_40_CBC_MD5 		0x0300002A</span>
+<a name="gbab-209"></a><span class="cp">#define SSL3_CK_KRB5_RC4_40_MD5	 		0x0300002B</span>
+<a name="gbab-210"></a>
+<a name="gbab-211"></a><span class="cp">#define SSL3_TXT_RSA_NULL_MD5			&quot;NULL-MD5&quot;</span>
+<a name="gbab-212"></a><span class="cp">#define SSL3_TXT_RSA_NULL_SHA			&quot;NULL-SHA&quot;</span>
+<a name="gbab-213"></a><span class="cp">#define SSL3_TXT_RSA_RC4_40_MD5 		&quot;EXP-RC4-MD5&quot;</span>
+<a name="gbab-214"></a><span class="cp">#define SSL3_TXT_RSA_RC4_128_MD5		&quot;RC4-MD5&quot;</span>
+<a name="gbab-215"></a><span class="cp">#define SSL3_TXT_RSA_RC4_128_SHA		&quot;RC4-SHA&quot;</span>
+<a name="gbab-216"></a><span class="cp">#define SSL3_TXT_RSA_RC2_40_MD5			&quot;EXP-RC2-CBC-MD5&quot;</span>
+<a name="gbab-217"></a><span class="cp">#define SSL3_TXT_RSA_IDEA_128_SHA		&quot;IDEA-CBC-SHA&quot;</span>
+<a name="gbab-218"></a><span class="cp">#define SSL3_TXT_RSA_DES_40_CBC_SHA		&quot;EXP-DES-CBC-SHA&quot;</span>
+<a name="gbab-219"></a><span class="cp">#define SSL3_TXT_RSA_DES_64_CBC_SHA		&quot;DES-CBC-SHA&quot;</span>
+<a name="gbab-220"></a><span class="cp">#define SSL3_TXT_RSA_DES_192_CBC3_SHA		&quot;DES-CBC3-SHA&quot;</span>
+<a name="gbab-221"></a>
+<a name="gbab-222"></a><span class="cp">#define SSL3_TXT_DH_DSS_DES_40_CBC_SHA		&quot;EXP-DH-DSS-DES-CBC-SHA&quot;</span>
+<a name="gbab-223"></a><span class="cp">#define SSL3_TXT_DH_DSS_DES_64_CBC_SHA		&quot;DH-DSS-DES-CBC-SHA&quot;</span>
+<a name="gbab-224"></a><span class="cp">#define SSL3_TXT_DH_DSS_DES_192_CBC3_SHA 	&quot;DH-DSS-DES-CBC3-SHA&quot;</span>
+<a name="gbab-225"></a><span class="cp">#define SSL3_TXT_DH_RSA_DES_40_CBC_SHA		&quot;EXP-DH-RSA-DES-CBC-SHA&quot;</span>
+<a name="gbab-226"></a><span class="cp">#define SSL3_TXT_DH_RSA_DES_64_CBC_SHA		&quot;DH-RSA-DES-CBC-SHA&quot;</span>
+<a name="gbab-227"></a><span class="cp">#define SSL3_TXT_DH_RSA_DES_192_CBC3_SHA 	&quot;DH-RSA-DES-CBC3-SHA&quot;</span>
+<a name="gbab-228"></a>
+<a name="gbab-229"></a><span class="cp"># define SSL3_TXT_DHE_DSS_DES_40_CBC_SHA         &quot;EXP-DHE-DSS-DES-CBC-SHA&quot;</span>
+<a name="gbab-230"></a><span class="cp"># define SSL3_TXT_DHE_DSS_DES_64_CBC_SHA         &quot;DHE-DSS-DES-CBC-SHA&quot;</span>
+<a name="gbab-231"></a><span class="cp"># define SSL3_TXT_DHE_DSS_DES_192_CBC3_SHA       &quot;DHE-DSS-DES-CBC3-SHA&quot;</span>
+<a name="gbab-232"></a><span class="cp"># define SSL3_TXT_DHE_RSA_DES_40_CBC_SHA         &quot;EXP-DHE-RSA-DES-CBC-SHA&quot;</span>
+<a name="gbab-233"></a><span class="cp"># define SSL3_TXT_DHE_RSA_DES_64_CBC_SHA         &quot;DHE-RSA-DES-CBC-SHA&quot;</span>
+<a name="gbab-234"></a><span class="cp"># define SSL3_TXT_DHE_RSA_DES_192_CBC3_SHA       &quot;DHE-RSA-DES-CBC3-SHA&quot;</span>
+<a name="gbab-235"></a>
+<a name="gbab-236"></a><span class="cm">/*</span>
+<a name="gbab-237"></a><span class="cm"> * This next block of six &quot;EDH&quot; labels is for backward compatibility with</span>
+<a name="gbab-238"></a><span class="cm"> * older versions of OpenSSL.  New code should use the six &quot;DHE&quot; labels above</span>
+<a name="gbab-239"></a><span class="cm"> * instead:</span>
+<a name="gbab-240"></a><span class="cm"> */</span>
+<a name="gbab-241"></a><span class="cp">#define SSL3_TXT_EDH_DSS_DES_40_CBC_SHA		&quot;EXP-EDH-DSS-DES-CBC-SHA&quot;</span>
+<a name="gbab-242"></a><span class="cp">#define SSL3_TXT_EDH_DSS_DES_64_CBC_SHA		&quot;EDH-DSS-DES-CBC-SHA&quot;</span>
+<a name="gbab-243"></a><span class="cp">#define SSL3_TXT_EDH_DSS_DES_192_CBC3_SHA	&quot;EDH-DSS-DES-CBC3-SHA&quot;</span>
+<a name="gbab-244"></a><span class="cp">#define SSL3_TXT_EDH_RSA_DES_40_CBC_SHA		&quot;EXP-EDH-RSA-DES-CBC-SHA&quot;</span>
+<a name="gbab-245"></a><span class="cp">#define SSL3_TXT_EDH_RSA_DES_64_CBC_SHA		&quot;EDH-RSA-DES-CBC-SHA&quot;</span>
+<a name="gbab-246"></a><span class="cp">#define SSL3_TXT_EDH_RSA_DES_192_CBC3_SHA	&quot;EDH-RSA-DES-CBC3-SHA&quot;</span>
+<a name="gbab-247"></a>
+<a name="gbab-248"></a><span class="cp">#define SSL3_TXT_ADH_RC4_40_MD5			&quot;EXP-ADH-RC4-MD5&quot;</span>
+<a name="gbab-249"></a><span class="cp">#define SSL3_TXT_ADH_RC4_128_MD5		&quot;ADH-RC4-MD5&quot;</span>
+<a name="gbab-250"></a><span class="cp">#define SSL3_TXT_ADH_DES_40_CBC_SHA		&quot;EXP-ADH-DES-CBC-SHA&quot;</span>
+<a name="gbab-251"></a><span class="cp">#define SSL3_TXT_ADH_DES_64_CBC_SHA		&quot;ADH-DES-CBC-SHA&quot;</span>
+<a name="gbab-252"></a><span class="cp">#define SSL3_TXT_ADH_DES_192_CBC_SHA		&quot;ADH-DES-CBC3-SHA&quot;</span>
+<a name="gbab-253"></a>
+<a name="gbab-254"></a><span class="cp">#if 0</span><span class="c"></span>
+<a name="gbab-255"></a><span class="c">	#define SSL3_TXT_FZA_DMS_NULL_SHA		&quot;FZA-NULL-SHA&quot;</span>
+<a name="gbab-256"></a><span class="c">	#define SSL3_TXT_FZA_DMS_FZA_SHA		&quot;FZA-FZA-CBC-SHA&quot;</span>
+<a name="gbab-257"></a><span class="c">	#define SSL3_TXT_FZA_DMS_RC4_SHA		&quot;FZA-RC4-SHA&quot;</span>
+<a name="gbab-258"></a><span class="cp">#endif</span>
+<a name="gbab-259"></a>
+<a name="gbab-260"></a><span class="cp">#define SSL3_TXT_KRB5_DES_64_CBC_SHA		&quot;KRB5-DES-CBC-SHA&quot;</span>
+<a name="gbab-261"></a><span class="cp">#define SSL3_TXT_KRB5_DES_192_CBC3_SHA		&quot;KRB5-DES-CBC3-SHA&quot;</span>
+<a name="gbab-262"></a><span class="cp">#define SSL3_TXT_KRB5_RC4_128_SHA		&quot;KRB5-RC4-SHA&quot;</span>
+<a name="gbab-263"></a><span class="cp">#define SSL3_TXT_KRB5_IDEA_128_CBC_SHA	       	&quot;KRB5-IDEA-CBC-SHA&quot;</span>
+<a name="gbab-264"></a><span class="cp">#define SSL3_TXT_KRB5_DES_64_CBC_MD5       	&quot;KRB5-DES-CBC-MD5&quot;</span>
+<a name="gbab-265"></a><span class="cp">#define SSL3_TXT_KRB5_DES_192_CBC3_MD5       	&quot;KRB5-DES-CBC3-MD5&quot;</span>
+<a name="gbab-266"></a><span class="cp">#define SSL3_TXT_KRB5_RC4_128_MD5		&quot;KRB5-RC4-MD5&quot;</span>
+<a name="gbab-267"></a><span class="cp">#define SSL3_TXT_KRB5_IDEA_128_CBC_MD5 		&quot;KRB5-IDEA-CBC-MD5&quot;</span>
+<a name="gbab-268"></a>
+<a name="gbab-269"></a><span class="cp">#define SSL3_TXT_KRB5_DES_40_CBC_SHA 		&quot;EXP-KRB5-DES-CBC-SHA&quot;</span>
+<a name="gbab-270"></a><span class="cp">#define SSL3_TXT_KRB5_RC2_40_CBC_SHA 		&quot;EXP-KRB5-RC2-CBC-SHA&quot;</span>
+<a name="gbab-271"></a><span class="cp">#define SSL3_TXT_KRB5_RC4_40_SHA	 	&quot;EXP-KRB5-RC4-SHA&quot;</span>
+<a name="gbab-272"></a><span class="cp">#define SSL3_TXT_KRB5_DES_40_CBC_MD5 		&quot;EXP-KRB5-DES-CBC-MD5&quot;</span>
+<a name="gbab-273"></a><span class="cp">#define SSL3_TXT_KRB5_RC2_40_CBC_MD5 		&quot;EXP-KRB5-RC2-CBC-MD5&quot;</span>
+<a name="gbab-274"></a><span class="cp">#define SSL3_TXT_KRB5_RC4_40_MD5	 	&quot;EXP-KRB5-RC4-MD5&quot;</span>
+<a name="gbab-275"></a>
+<a name="gbab-276"></a><span class="cp">#define SSL3_SSL_SESSION_ID_LENGTH		32</span>
+<a name="gbab-277"></a><span class="cp">#define SSL3_MAX_SSL_SESSION_ID_LENGTH		32</span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a><span class="cp">#define SSL3_MASTER_SECRET_SIZE			48</span>
+<a name="gbab-280"></a><span class="cp">#define SSL3_RANDOM_SIZE			32</span>
+<a name="gbab-281"></a><span class="cp">#define SSL3_SESSION_ID_SIZE			32</span>
+<a name="gbab-282"></a><span class="cp">#define SSL3_RT_HEADER_LENGTH			5</span>
+<a name="gbab-283"></a>
+<a name="gbab-284"></a><span class="cp"># define SSL3_HM_HEADER_LENGTH                   4</span>
+<a name="gbab-285"></a>
+<a name="gbab-286"></a><span class="cp">#ifndef SSL3_ALIGN_PAYLOAD</span>
+<a name="gbab-287"></a> <span class="cm">/*</span>
+<a name="gbab-288"></a><span class="cm">  * Some will argue that this increases memory footprint, but it&#39;s not</span>
+<a name="gbab-289"></a><span class="cm">  * actually true. Point is that malloc has to return at least 64-bit aligned</span>
+<a name="gbab-290"></a><span class="cm">  * pointers, meaning that allocating 5 bytes wastes 3 bytes in either case.</span>
+<a name="gbab-291"></a><span class="cm">  * Suggested pre-gaping simply moves these wasted bytes from the end of</span>
+<a name="gbab-292"></a><span class="cm">  * allocated region to its front, but makes data payload aligned, which</span>
+<a name="gbab-293"></a><span class="cm">  * improves performance:-)</span>
+<a name="gbab-294"></a><span class="cm">  */</span>
+<a name="gbab-295"></a><span class="cp"># define SSL3_ALIGN_PAYLOAD			8</span>
+<a name="gbab-296"></a><span class="cp">#else</span>
+<a name="gbab-297"></a><span class="cp"># if (SSL3_ALIGN_PAYLOAD&amp;(SSL3_ALIGN_PAYLOAD-1))!=0</span>
+<a name="gbab-298"></a><span class="cp">#  error &quot;insane SSL3_ALIGN_PAYLOAD&quot;</span>
+<a name="gbab-299"></a><span class="cp">#  undef SSL3_ALIGN_PAYLOAD</span>
+<a name="gbab-300"></a><span class="cp"># endif</span>
+<a name="gbab-301"></a><span class="cp">#endif</span>
+<a name="gbab-302"></a>
+<a name="gbab-303"></a><span class="cm">/*</span>
+<a name="gbab-304"></a><span class="cm"> * This is the maximum MAC (digest) size used by the SSL library. Currently</span>
+<a name="gbab-305"></a><span class="cm"> * maximum of 20 is used by SHA1, but we reserve for future extension for</span>
+<a name="gbab-306"></a><span class="cm"> * 512-bit hashes.</span>
+<a name="gbab-307"></a><span class="cm"> */</span>
+<a name="gbab-308"></a>
+<a name="gbab-309"></a><span class="cp">#define SSL3_RT_MAX_MD_SIZE			64</span>
+<a name="gbab-310"></a>
+<a name="gbab-311"></a><span class="cm">/*</span>
+<a name="gbab-312"></a><span class="cm"> * Maximum block size used in all ciphersuites. Currently 16 for AES.</span>
+<a name="gbab-313"></a><span class="cm"> */</span>
+<a name="gbab-314"></a>
+<a name="gbab-315"></a><span class="cp">#define	SSL_RT_MAX_CIPHER_BLOCK_SIZE		16</span>
+<a name="gbab-316"></a>
+<a name="gbab-317"></a><span class="cp">#define SSL3_RT_MAX_EXTRA			(16384)</span>
+<a name="gbab-318"></a>
+<a name="gbab-319"></a><span class="cm">/* Maximum plaintext length: defined by SSL/TLS standards */</span>
+<a name="gbab-320"></a><span class="cp">#define SSL3_RT_MAX_PLAIN_LENGTH		16384</span>
+<a name="gbab-321"></a><span class="cm">/* Maximum compression overhead: defined by SSL/TLS standards */</span>
+<a name="gbab-322"></a><span class="cp">#define SSL3_RT_MAX_COMPRESSED_OVERHEAD		1024</span>
+<a name="gbab-323"></a>
+<a name="gbab-324"></a><span class="cm">/*</span>
+<a name="gbab-325"></a><span class="cm"> * The standards give a maximum encryption overhead of 1024 bytes. In</span>
+<a name="gbab-326"></a><span class="cm"> * practice the value is lower than this. The overhead is the maximum number</span>
+<a name="gbab-327"></a><span class="cm"> * of padding bytes (256) plus the mac size.</span>
+<a name="gbab-328"></a><span class="cm"> */</span>
+<a name="gbab-329"></a><span class="cp">#define SSL3_RT_MAX_ENCRYPTED_OVERHEAD	(256 + SSL3_RT_MAX_MD_SIZE)</span>
+<a name="gbab-330"></a>
+<a name="gbab-331"></a><span class="cm">/*</span>
+<a name="gbab-332"></a><span class="cm"> * OpenSSL currently only uses a padding length of at most one block so the</span>
+<a name="gbab-333"></a><span class="cm"> * send overhead is smaller.</span>
+<a name="gbab-334"></a><span class="cm"> */</span>
+<a name="gbab-335"></a>
+<a name="gbab-336"></a><span class="cp">#define SSL3_RT_SEND_MAX_ENCRYPTED_OVERHEAD \</span>
+<a name="gbab-337"></a><span class="cp">			(SSL_RT_MAX_CIPHER_BLOCK_SIZE + SSL3_RT_MAX_MD_SIZE)</span>
+<a name="gbab-338"></a>
+<a name="gbab-339"></a><span class="cm">/* If compression isn&#39;t used don&#39;t include the compression overhead */</span>
+<a name="gbab-340"></a>
+<a name="gbab-341"></a><span class="cp">#ifdef OPENSSL_NO_COMP</span>
+<a name="gbab-342"></a><span class="cp">#define SSL3_RT_MAX_COMPRESSED_LENGTH		SSL3_RT_MAX_PLAIN_LENGTH</span>
+<a name="gbab-343"></a><span class="cp">#else</span>
+<a name="gbab-344"></a><span class="cp">#define SSL3_RT_MAX_COMPRESSED_LENGTH	\</span>
+<a name="gbab-345"></a><span class="cp">		(SSL3_RT_MAX_PLAIN_LENGTH+SSL3_RT_MAX_COMPRESSED_OVERHEAD)</span>
+<a name="gbab-346"></a><span class="cp">#endif</span>
+<a name="gbab-347"></a><span class="cp">#define SSL3_RT_MAX_ENCRYPTED_LENGTH	\</span>
+<a name="gbab-348"></a><span class="cp">		(SSL3_RT_MAX_ENCRYPTED_OVERHEAD+SSL3_RT_MAX_COMPRESSED_LENGTH)</span>
+<a name="gbab-349"></a><span class="cp">#define SSL3_RT_MAX_PACKET_SIZE		\</span>
+<a name="gbab-350"></a><span class="cp">		(SSL3_RT_MAX_ENCRYPTED_LENGTH+SSL3_RT_HEADER_LENGTH)</span>
+<a name="gbab-351"></a>
+<a name="gbab-352"></a><span class="cp">#define SSL3_MD_CLIENT_FINISHED_CONST	&quot;\x43\x4C\x4E\x54&quot;</span>
+<a name="gbab-353"></a><span class="cp">#define SSL3_MD_SERVER_FINISHED_CONST	&quot;\x53\x52\x56\x52&quot;</span>
+<a name="gbab-354"></a>
+<a name="gbab-355"></a><span class="cp">#define SSL3_VERSION			0x0300</span>
+<a name="gbab-356"></a><span class="cp">#define SSL3_VERSION_MAJOR		0x03</span>
+<a name="gbab-357"></a><span class="cp">#define SSL3_VERSION_MINOR		0x00</span>
+<a name="gbab-358"></a>
+<a name="gbab-359"></a><span class="cp">#define SSL3_RT_CHANGE_CIPHER_SPEC	20</span>
+<a name="gbab-360"></a><span class="cp">#define SSL3_RT_ALERT			21</span>
+<a name="gbab-361"></a><span class="cp">#define SSL3_RT_HANDSHAKE		22</span>
+<a name="gbab-362"></a><span class="cp">#define SSL3_RT_APPLICATION_DATA	23</span>
+<a name="gbab-363"></a><span class="cp">#define TLS1_RT_HEARTBEAT		24</span>
+<a name="gbab-364"></a>
+<a name="gbab-365"></a><span class="cm">/* Pseudo content types to indicate additional parameters */</span>
+<a name="gbab-366"></a><span class="cp"># define TLS1_RT_CRYPTO                  0x1000</span>
+<a name="gbab-367"></a><span class="cp"># define TLS1_RT_CRYPTO_PREMASTER        (TLS1_RT_CRYPTO | 0x1)</span>
+<a name="gbab-368"></a><span class="cp"># define TLS1_RT_CRYPTO_CLIENT_RANDOM    (TLS1_RT_CRYPTO | 0x2)</span>
+<a name="gbab-369"></a><span class="cp"># define TLS1_RT_CRYPTO_SERVER_RANDOM    (TLS1_RT_CRYPTO | 0x3)</span>
+<a name="gbab-370"></a><span class="cp"># define TLS1_RT_CRYPTO_MASTER           (TLS1_RT_CRYPTO | 0x4)</span>
+<a name="gbab-371"></a>
+<a name="gbab-372"></a><span class="cp"># define TLS1_RT_CRYPTO_READ             0x0000</span>
+<a name="gbab-373"></a><span class="cp"># define TLS1_RT_CRYPTO_WRITE            0x0100</span>
+<a name="gbab-374"></a><span class="cp"># define TLS1_RT_CRYPTO_MAC              (TLS1_RT_CRYPTO | 0x5)</span>
+<a name="gbab-375"></a><span class="cp"># define TLS1_RT_CRYPTO_KEY              (TLS1_RT_CRYPTO | 0x6)</span>
+<a name="gbab-376"></a><span class="cp"># define TLS1_RT_CRYPTO_IV               (TLS1_RT_CRYPTO | 0x7)</span>
+<a name="gbab-377"></a><span class="cp"># define TLS1_RT_CRYPTO_FIXED_IV         (TLS1_RT_CRYPTO | 0x8)</span>
+<a name="gbab-378"></a>
+<a name="gbab-379"></a><span class="cm">/* Pseudo content type for SSL/TLS header info */</span>
+<a name="gbab-380"></a><span class="cp"># define SSL3_RT_HEADER                  0x100</span>
+<a name="gbab-381"></a>
+<a name="gbab-382"></a><span class="cp">#define SSL3_AL_WARNING			1</span>
+<a name="gbab-383"></a><span class="cp">#define SSL3_AL_FATAL			2</span>
+<a name="gbab-384"></a>
+<a name="gbab-385"></a><span class="cp">#define SSL3_AD_CLOSE_NOTIFY		 0</span>
+<a name="gbab-386"></a><span class="cp">#define SSL3_AD_UNEXPECTED_MESSAGE	10	</span><span class="cm">/* fatal */</span><span class="cp"></span>
+<a name="gbab-387"></a><span class="cp">#define SSL3_AD_BAD_RECORD_MAC		20	</span><span class="cm">/* fatal */</span><span class="cp"></span>
+<a name="gbab-388"></a><span class="cp">#define SSL3_AD_DECOMPRESSION_FAILURE	30	</span><span class="cm">/* fatal */</span><span class="cp"></span>
+<a name="gbab-389"></a><span class="cp">#define SSL3_AD_HANDSHAKE_FAILURE	40	</span><span class="cm">/* fatal */</span><span class="cp"></span>
+<a name="gbab-390"></a><span class="cp">#define SSL3_AD_NO_CERTIFICATE		41</span>
+<a name="gbab-391"></a><span class="cp">#define SSL3_AD_BAD_CERTIFICATE		42</span>
+<a name="gbab-392"></a><span class="cp">#define SSL3_AD_UNSUPPORTED_CERTIFICATE	43</span>
+<a name="gbab-393"></a><span class="cp">#define SSL3_AD_CERTIFICATE_REVOKED	44</span>
+<a name="gbab-394"></a><span class="cp">#define SSL3_AD_CERTIFICATE_EXPIRED	45</span>
+<a name="gbab-395"></a><span class="cp">#define SSL3_AD_CERTIFICATE_UNKNOWN	46</span>
+<a name="gbab-396"></a><span class="cp">#define SSL3_AD_ILLEGAL_PARAMETER	47	</span><span class="cm">/* fatal */</span><span class="cp"></span>
+<a name="gbab-397"></a>
+<a name="gbab-398"></a><span class="cp">#define TLS1_HB_REQUEST		1</span>
+<a name="gbab-399"></a><span class="cp">#define TLS1_HB_RESPONSE	2</span>
+<a name="gbab-400"></a>	
+<a name="gbab-401"></a><span class="cp">#ifndef OPENSSL_NO_SSL_INTERN</span>
+<a name="gbab-402"></a>
+<a name="gbab-403"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">ssl3_record_st</span> <span class="p">{</span>
+<a name="gbab-404"></a>    <span class="cm">/* type of record */</span>
+<a name="gbab-405"></a>    <span class="cm">/*</span>
+<a name="gbab-406"></a><span class="cm">     * r</span>
+<a name="gbab-407"></a><span class="cm">     */</span> <span class="kt">int</span> <span class="n">type</span><span class="p">;</span>
+<a name="gbab-408"></a>    <span class="cm">/* How many bytes available */</span>
+<a name="gbab-409"></a>    <span class="cm">/*</span>
+<a name="gbab-410"></a><span class="cm">     * rw</span>
+<a name="gbab-411"></a><span class="cm">     */</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+<a name="gbab-412"></a>    <span class="cm">/* read/write offset into &#39;buf&#39; */</span>
+<a name="gbab-413"></a>    <span class="cm">/*</span>
+<a name="gbab-414"></a><span class="cm">     * r</span>
+<a name="gbab-415"></a><span class="cm">     */</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">off</span><span class="p">;</span>
+<a name="gbab-416"></a>    <span class="cm">/* pointer to the record data */</span>
+<a name="gbab-417"></a>    <span class="cm">/*</span>
+<a name="gbab-418"></a><span class="cm">     * rw</span>
+<a name="gbab-419"></a><span class="cm">     */</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span>
+<a name="gbab-420"></a>    <span class="cm">/* where the decode bytes are */</span>
+<a name="gbab-421"></a>    <span class="cm">/*</span>
+<a name="gbab-422"></a><span class="cm">     * rw</span>
+<a name="gbab-423"></a><span class="cm">     */</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">input</span><span class="p">;</span>
+<a name="gbab-424"></a>    <span class="cm">/* only used with decompression - malloc()ed */</span>
+<a name="gbab-425"></a>    <span class="cm">/*</span>
+<a name="gbab-426"></a><span class="cm">     * r</span>
+<a name="gbab-427"></a><span class="cm">     */</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">comp</span><span class="p">;</span>
+<a name="gbab-428"></a>    <span class="cm">/* epoch number, needed by DTLS1 */</span>
+<a name="gbab-429"></a>    <span class="cm">/*</span>
+<a name="gbab-430"></a><span class="cm">     * r</span>
+<a name="gbab-431"></a><span class="cm">     */</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">epoch</span><span class="p">;</span>
+<a name="gbab-432"></a>    <span class="cm">/* sequence number, needed by DTLS1 */</span>
+<a name="gbab-433"></a>    <span class="cm">/*</span>
+<a name="gbab-434"></a><span class="cm">     * r</span>
+<a name="gbab-435"></a><span class="cm">     */</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">seq_num</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+<a name="gbab-436"></a>	<span class="p">}</span> <span class="n">SSL3_RECORD</span><span class="p">;</span>
+<a name="gbab-437"></a>
+<a name="gbab-438"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">ssl3_buffer_st</span> <span class="p">{</span>
+<a name="gbab-439"></a>    <span class="cm">/* at least SSL3_RT_MAX_PACKET_SIZE bytes, see ssl3_setup_buffers() */</span>
+<a name="gbab-440"></a>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">buf</span><span class="p">;</span>
+<a name="gbab-441"></a>    <span class="cm">/* buffer size */</span>
+<a name="gbab-442"></a>    <span class="kt">size_t</span> <span class="n">len</span><span class="p">;</span>
+<a name="gbab-443"></a>    <span class="cm">/* where to &#39;copy from&#39; */</span>
+<a name="gbab-444"></a>    <span class="kt">int</span> <span class="n">offset</span><span class="p">;</span>
+<a name="gbab-445"></a>    <span class="cm">/* how many bytes left */</span>
+<a name="gbab-446"></a>    <span class="kt">int</span> <span class="n">left</span><span class="p">;</span>
+<a name="gbab-447"></a>	<span class="p">}</span> <span class="n">SSL3_BUFFER</span><span class="p">;</span>
+<a name="gbab-448"></a>
+<a name="gbab-449"></a><span class="cp">#endif</span>
+<a name="gbab-450"></a>
+<a name="gbab-451"></a><span class="cp">#define SSL3_CT_RSA_SIGN			1</span>
+<a name="gbab-452"></a><span class="cp">#define SSL3_CT_DSS_SIGN			2</span>
+<a name="gbab-453"></a><span class="cp">#define SSL3_CT_RSA_FIXED_DH			3</span>
+<a name="gbab-454"></a><span class="cp">#define SSL3_CT_DSS_FIXED_DH			4</span>
+<a name="gbab-455"></a><span class="cp">#define SSL3_CT_RSA_EPHEMERAL_DH		5</span>
+<a name="gbab-456"></a><span class="cp">#define SSL3_CT_DSS_EPHEMERAL_DH		6</span>
+<a name="gbab-457"></a><span class="cp">#define SSL3_CT_FORTEZZA_DMS			20</span>
+<a name="gbab-458"></a><span class="cm">/*</span>
+<a name="gbab-459"></a><span class="cm"> * SSL3_CT_NUMBER is used to size arrays and it must be large enough to</span>
+<a name="gbab-460"></a><span class="cm"> * contain all of the cert types defined either for SSLv3 and TLSv1.</span>
+<a name="gbab-461"></a><span class="cm"> */</span>
+<a name="gbab-462"></a><span class="cp">#define SSL3_CT_NUMBER			9</span>
+<a name="gbab-463"></a>
+<a name="gbab-464"></a><span class="cp">#define SSL3_FLAGS_NO_RENEGOTIATE_CIPHERS	0x0001</span>
+<a name="gbab-465"></a><span class="cp">#define SSL3_FLAGS_DELAY_CLIENT_FINISHED	0x0002</span>
+<a name="gbab-466"></a><span class="cp">#define SSL3_FLAGS_POP_BUFFER			0x0004</span>
+<a name="gbab-467"></a><span class="cp">#define TLS1_FLAGS_TLS_PADDING_BUG		0x0008</span>
+<a name="gbab-468"></a><span class="cp">#define TLS1_FLAGS_SKIP_CERT_VERIFY		0x0010</span>
+<a name="gbab-469"></a><span class="cp">#define TLS1_FLAGS_KEEP_HANDSHAKE		0x0020</span>
+<a name="gbab-470"></a><span class="cm">/*</span>
+<a name="gbab-471"></a><span class="cm"> * Set when the handshake is ready to process peer&#39;s ChangeCipherSpec message.</span>
+<a name="gbab-472"></a><span class="cm"> * Cleared after the message has been processed.</span>
+<a name="gbab-473"></a><span class="cm"> */</span>
+<a name="gbab-474"></a><span class="cp">#define SSL3_FLAGS_CCS_OK			0x0080</span>
+<a name="gbab-475"></a> 
+<a name="gbab-476"></a><span class="cm">/* SSL3_FLAGS_SGC_RESTART_DONE is no longer used */</span>
+<a name="gbab-477"></a><span class="cp">#define SSL3_FLAGS_SGC_RESTART_DONE		0x0040</span>
+<a name="gbab-478"></a>
+<a name="gbab-479"></a><span class="cp">#ifndef OPENSSL_NO_SSL_INTERN</span>
+<a name="gbab-480"></a>
+<a name="gbab-481"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">ssl3_state_st</span> <span class="p">{</span>
+<a name="gbab-482"></a>	<span class="kt">long</span> <span class="n">flags</span><span class="p">;</span>
+<a name="gbab-483"></a>	<span class="kt">int</span> <span class="n">delay_buf_pop_ret</span><span class="p">;</span>
+<a name="gbab-484"></a>	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">read_sequence</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+<a name="gbab-485"></a>	<span class="kt">int</span> <span class="n">read_mac_secret_size</span><span class="p">;</span>
+<a name="gbab-486"></a>	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">read_mac_secret</span><span class="p">[</span><span class="n">EVP_MAX_MD_SIZE</span><span class="p">];</span>
+<a name="gbab-487"></a>	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">write_sequence</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+<a name="gbab-488"></a>	<span class="kt">int</span> <span class="n">write_mac_secret_size</span><span class="p">;</span>
+<a name="gbab-489"></a>	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">write_mac_secret</span><span class="p">[</span><span class="n">EVP_MAX_MD_SIZE</span><span class="p">];</span>
+<a name="gbab-490"></a>	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">server_random</span><span class="p">[</span><span class="n">SSL3_RANDOM_SIZE</span><span class="p">];</span>
+<a name="gbab-491"></a>	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">client_random</span><span class="p">[</span><span class="n">SSL3_RANDOM_SIZE</span><span class="p">];</span>
+<a name="gbab-492"></a>	<span class="cm">/* flags for countermeasure against known-IV weakness */</span>
+<a name="gbab-493"></a>	<span class="kt">int</span> <span class="n">need_empty_fragments</span><span class="p">;</span>
+<a name="gbab-494"></a>	<span class="kt">int</span> <span class="n">empty_fragment_done</span><span class="p">;</span>
+<a name="gbab-495"></a>	<span class="cm">/* The value of &#39;extra&#39; when the buffers were initialized */</span>
+<a name="gbab-496"></a>	<span class="kt">int</span> <span class="n">init_extra</span><span class="p">;</span>
+<a name="gbab-497"></a>	<span class="n">SSL3_BUFFER</span> <span class="n">rbuf</span><span class="p">;</span>	<span class="cm">/* read IO goes into here */</span>
+<a name="gbab-498"></a>	<span class="n">SSL3_BUFFER</span> <span class="n">wbuf</span><span class="p">;</span>	<span class="cm">/* write IO goes into here */</span>
+<a name="gbab-499"></a>	<span class="n">SSL3_RECORD</span> <span class="n">rrec</span><span class="p">;</span>	<span class="cm">/* each decoded record goes in here */</span>
+<a name="gbab-500"></a>	<span class="n">SSL3_RECORD</span> <span class="n">wrec</span><span class="p">;</span>	<span class="cm">/* goes out from here */</span>
+<a name="gbab-501"></a>    <span class="cm">/*</span>
+<a name="gbab-502"></a><span class="cm">     * storage for Alert/Handshake protocol data received but not yet</span>
+<a name="gbab-503"></a><span class="cm">     * processed by ssl3_read_bytes:</span>
+<a name="gbab-504"></a><span class="cm">     */</span>
+<a name="gbab-505"></a>	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">alert_fragment</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<a name="gbab-506"></a>	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">alert_fragment_len</span><span class="p">;</span>
+<a name="gbab-507"></a>	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">handshake_fragment</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+<a name="gbab-508"></a>	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">handshake_fragment_len</span><span class="p">;</span>
+<a name="gbab-509"></a>	<span class="cm">/* partial write - check the numbers match */</span>
+<a name="gbab-510"></a>	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">wnum</span><span class="p">;</span>	<span class="cm">/* number of bytes sent so far */</span>
+<a name="gbab-511"></a>	<span class="kt">int</span> <span class="n">wpend_tot</span><span class="p">;</span>		<span class="cm">/* number bytes written */</span>
+<a name="gbab-512"></a>	<span class="kt">int</span> <span class="n">wpend_type</span><span class="p">;</span>
+<a name="gbab-513"></a>	<span class="kt">int</span> <span class="n">wpend_ret</span><span class="p">;</span>		<span class="cm">/* number of bytes submitted */</span>
+<a name="gbab-514"></a>	<span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">wpend_buf</span><span class="p">;</span>
+<a name="gbab-515"></a>	<span class="cm">/* used during startup, digest all incoming/outgoing packets */</span>
+<a name="gbab-516"></a>	<span class="n">BIO</span> <span class="o">*</span><span class="n">handshake_buffer</span><span class="p">;</span>
+<a name="gbab-517"></a>    <span class="cm">/*</span>
+<a name="gbab-518"></a><span class="cm">     * When set of handshake digests is determined, buffer is hashed and</span>
+<a name="gbab-519"></a><span class="cm">     * freed and MD_CTX-es for all required digests are stored in this array</span>
+<a name="gbab-520"></a><span class="cm">     */</span>
+<a name="gbab-521"></a>	<span class="n">EVP_MD_CTX</span> <span class="o">**</span><span class="n">handshake_dgst</span><span class="p">;</span>
+<a name="gbab-522"></a>    <span class="cm">/*</span>
+<a name="gbab-523"></a><span class="cm">     * Set whenever an expected ChangeCipherSpec message is processed.</span>
+<a name="gbab-524"></a><span class="cm">     * Unset when the peer&#39;s Finished message is received.</span>
+<a name="gbab-525"></a><span class="cm">     * Unexpected ChangeCipherSpec messages trigger a fatal alert.</span>
+<a name="gbab-526"></a><span class="cm">     */</span>
+<a name="gbab-527"></a>	<span class="kt">int</span> <span class="n">change_cipher_spec</span><span class="p">;</span>
+<a name="gbab-528"></a>	<span class="kt">int</span> <span class="n">warn_alert</span><span class="p">;</span>
+<a name="gbab-529"></a>	<span class="kt">int</span> <span class="n">fatal_alert</span><span class="p">;</span>
+<a name="gbab-530"></a>    <span class="cm">/*</span>
+<a name="gbab-531"></a><span class="cm">     * we allow one fatal and one warning alert to be outstanding, send close</span>
+<a name="gbab-532"></a><span class="cm">     * alert via the warning alert</span>
+<a name="gbab-533"></a><span class="cm">     */</span>
+<a name="gbab-534"></a>	<span class="kt">int</span> <span class="n">alert_dispatch</span><span class="p">;</span>
+<a name="gbab-535"></a>	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">send_alert</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<a name="gbab-536"></a>    <span class="cm">/*</span>
+<a name="gbab-537"></a><span class="cm">     * This flag is set when we should renegotiate ASAP, basically when there</span>
+<a name="gbab-538"></a><span class="cm">     * is no more data in the read or write buffers</span>
+<a name="gbab-539"></a><span class="cm">     */</span>
+<a name="gbab-540"></a>	<span class="kt">int</span> <span class="n">renegotiate</span><span class="p">;</span>
+<a name="gbab-541"></a>	<span class="kt">int</span> <span class="n">total_renegotiations</span><span class="p">;</span>
+<a name="gbab-542"></a>	<span class="kt">int</span> <span class="n">num_renegotiations</span><span class="p">;</span>
+<a name="gbab-543"></a>	<span class="kt">int</span> <span class="n">in_read_app_data</span><span class="p">;</span>
+<a name="gbab-544"></a>    <span class="cm">/*</span>
+<a name="gbab-545"></a><span class="cm">     * Opaque PRF input as used for the current handshake. These fields are</span>
+<a name="gbab-546"></a><span class="cm">     * used only if TLSEXT_TYPE_opaque_prf_input is defined (otherwise, they</span>
+<a name="gbab-547"></a><span class="cm">     * are merely present to improve binary compatibility)</span>
+<a name="gbab-548"></a><span class="cm">     */</span>
+<a name="gbab-549"></a>	<span class="kt">void</span> <span class="o">*</span><span class="n">client_opaque_prf_input</span><span class="p">;</span>
+<a name="gbab-550"></a>	<span class="kt">size_t</span> <span class="n">client_opaque_prf_input_len</span><span class="p">;</span>
+<a name="gbab-551"></a>	<span class="kt">void</span> <span class="o">*</span><span class="n">server_opaque_prf_input</span><span class="p">;</span>
+<a name="gbab-552"></a>	<span class="kt">size_t</span> <span class="n">server_opaque_prf_input_len</span><span class="p">;</span>
+<a name="gbab-553"></a>	<span class="k">struct</span>	<span class="p">{</span>
+<a name="gbab-554"></a>		<span class="cm">/* actually only needs to be 16+20 */</span>
+<a name="gbab-555"></a>		<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">cert_verify_md</span><span class="p">[</span><span class="n">EVP_MAX_MD_SIZE</span><span class="o">*</span><span class="mi">2</span><span class="p">];</span>
+<a name="gbab-556"></a>		<span class="cm">/* actually only need to be 16+20 for SSLv3 and 12 for TLS */</span>
+<a name="gbab-557"></a>		<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">finish_md</span><span class="p">[</span><span class="n">EVP_MAX_MD_SIZE</span><span class="o">*</span><span class="mi">2</span><span class="p">];</span>
+<a name="gbab-558"></a>		<span class="kt">int</span> <span class="n">finish_md_len</span><span class="p">;</span>
+<a name="gbab-559"></a>		<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">peer_finish_md</span><span class="p">[</span><span class="n">EVP_MAX_MD_SIZE</span><span class="o">*</span><span class="mi">2</span><span class="p">];</span>
+<a name="gbab-560"></a>		<span class="kt">int</span> <span class="n">peer_finish_md_len</span><span class="p">;</span>
+<a name="gbab-561"></a>		<span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">message_size</span><span class="p">;</span>
+<a name="gbab-562"></a>		<span class="kt">int</span> <span class="n">message_type</span><span class="p">;</span>
+<a name="gbab-563"></a>		<span class="cm">/* used to hold the new cipher we are going to use */</span>
+<a name="gbab-564"></a>		<span class="k">const</span> <span class="n">SSL_CIPHER</span> <span class="o">*</span><span class="n">new_cipher</span><span class="p">;</span>
+<a name="gbab-565"></a><span class="cp">#ifndef OPENSSL_NO_DH</span>
+<a name="gbab-566"></a>		<span class="n">DH</span> <span class="o">*</span><span class="n">dh</span><span class="p">;</span>
+<a name="gbab-567"></a><span class="cp">#endif</span>
+<a name="gbab-568"></a><span class="cp">#ifndef OPENSSL_NO_ECDH</span>
+<a name="gbab-569"></a>		<span class="n">EC_KEY</span> <span class="o">*</span><span class="n">ecdh</span><span class="p">;</span> <span class="cm">/* holds short lived ECDH key */</span>
+<a name="gbab-570"></a><span class="cp">#endif</span>
+<a name="gbab-571"></a>		<span class="cm">/* used when SSL_ST_FLUSH_DATA is entered */</span>
+<a name="gbab-572"></a>		<span class="kt">int</span> <span class="n">next_state</span><span class="p">;</span>			
+<a name="gbab-573"></a>		<span class="kt">int</span> <span class="n">reuse_message</span><span class="p">;</span>
+<a name="gbab-574"></a>		<span class="cm">/* used for certificate requests */</span>
+<a name="gbab-575"></a>		<span class="kt">int</span> <span class="n">cert_req</span><span class="p">;</span>
+<a name="gbab-576"></a>		<span class="kt">int</span> <span class="n">ctype_num</span><span class="p">;</span>
+<a name="gbab-577"></a>		<span class="kt">char</span> <span class="n">ctype</span><span class="p">[</span><span class="n">SSL3_CT_NUMBER</span><span class="p">];</span>
+<a name="gbab-578"></a>		<span class="n">STACK_OF</span><span class="p">(</span><span class="n">X509_NAME</span><span class="p">)</span> <span class="o">*</span><span class="n">ca_names</span><span class="p">;</span>
+<a name="gbab-579"></a>		<span class="kt">int</span> <span class="n">use_rsa_tmp</span><span class="p">;</span>
+<a name="gbab-580"></a>		<span class="kt">int</span> <span class="n">key_block_length</span><span class="p">;</span>
+<a name="gbab-581"></a>		<span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key_block</span><span class="p">;</span>
+<a name="gbab-582"></a>		<span class="k">const</span> <span class="n">EVP_CIPHER</span> <span class="o">*</span><span class="n">new_sym_enc</span><span class="p">;</span>
+<a name="gbab-583"></a>		<span class="k">const</span> <span class="n">EVP_MD</span> <span class="o">*</span><span class="n">new_hash</span><span class="p">;</span>
+<a name="gbab-584"></a>		<span class="kt">int</span> <span class="n">new_mac_pkey_type</span><span class="p">;</span>
+<a name="gbab-585"></a>		<span class="kt">int</span> <span class="n">new_mac_secret_size</span><span class="p">;</span>
+<a name="gbab-586"></a><span class="cp">#ifndef OPENSSL_NO_COMP</span>
+<a name="gbab-587"></a>		<span class="k">const</span> <span class="n">SSL_COMP</span> <span class="o">*</span><span class="n">new_compression</span><span class="p">;</span>
+<a name="gbab-588"></a><span class="cp">#else</span>
+<a name="gbab-589"></a>		<span class="kt">char</span> <span class="o">*</span><span class="n">new_compression</span><span class="p">;</span>
+<a name="gbab-590"></a><span class="cp">#endif</span>
+<a name="gbab-591"></a>		<span class="kt">int</span> <span class="n">cert_request</span><span class="p">;</span>
+<a name="gbab-592"></a>		<span class="p">}</span> <span class="n">tmp</span><span class="p">;</span>
+<a name="gbab-593"></a>
+<a name="gbab-594"></a>        <span class="cm">/* Connection binding to prevent renegotiation attacks */</span>
+<a name="gbab-595"></a>        <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">previous_client_finished</span><span class="p">[</span><span class="n">EVP_MAX_MD_SIZE</span><span class="p">];</span>
+<a name="gbab-596"></a>        <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">previous_client_finished_len</span><span class="p">;</span>
+<a name="gbab-597"></a>        <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">previous_server_finished</span><span class="p">[</span><span class="n">EVP_MAX_MD_SIZE</span><span class="p">];</span>
+<a name="gbab-598"></a>        <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">previous_server_finished_len</span><span class="p">;</span>
+<a name="gbab-599"></a>        <span class="kt">int</span> <span class="n">send_connection_binding</span><span class="p">;</span> <span class="cm">/* TODOEKR */</span>
+<a name="gbab-600"></a>
+<a name="gbab-601"></a><span class="cp">#ifndef OPENSSL_NO_NEXTPROTONEG</span>
+<a name="gbab-602"></a>    <span class="cm">/*</span>
+<a name="gbab-603"></a><span class="cm">     * Set if we saw the Next Protocol Negotiation extension from our peer.</span>
+<a name="gbab-604"></a><span class="cm">     */</span>
+<a name="gbab-605"></a>	<span class="kt">int</span> <span class="n">next_proto_neg_seen</span><span class="p">;</span>
+<a name="gbab-606"></a><span class="cp">#endif</span>
+<a name="gbab-607"></a>
+<a name="gbab-608"></a><span class="cp">#ifndef OPENSSL_NO_TLSEXT</span>
+<a name="gbab-609"></a><span class="cp">#ifndef OPENSSL_NO_EC</span>
+<a name="gbab-610"></a>    <span class="cm">/*</span>
+<a name="gbab-611"></a><span class="cm">     * This is set to true if we believe that this is a version of Safari</span>
+<a name="gbab-612"></a><span class="cm">     * running on OS X 10.6 or newer. We wish to know this because Safari on</span>
+<a name="gbab-613"></a><span class="cm">     * 10.8 .. 10.8.3 has broken ECDHE-ECDSA support.</span>
+<a name="gbab-614"></a><span class="cm">     */</span>
+<a name="gbab-615"></a>	<span class="kt">char</span> <span class="n">is_probably_safari</span><span class="p">;</span>
+<a name="gbab-616"></a><span class="cp">#endif </span><span class="cm">/* !OPENSSL_NO_EC */</span><span class="cp"></span>
+<a name="gbab-617"></a>
+<a name="gbab-618"></a>    <span class="cm">/*</span>
+<a name="gbab-619"></a><span class="cm">     * ALPN information (we are in the process of transitioning from NPN to</span>
+<a name="gbab-620"></a><span class="cm">     * ALPN.)</span>
+<a name="gbab-621"></a><span class="cm">     */</span>
+<a name="gbab-622"></a>
+<a name="gbab-623"></a>    <span class="cm">/*</span>
+<a name="gbab-624"></a><span class="cm">     * In a server these point to the selected ALPN protocol after the</span>
+<a name="gbab-625"></a><span class="cm">     * ClientHello has been processed. In a client these contain the protocol</span>
+<a name="gbab-626"></a><span class="cm">     * that the server selected once the ServerHello has been processed.</span>
+<a name="gbab-627"></a><span class="cm">     */</span>
+<a name="gbab-628"></a>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">alpn_selected</span><span class="p">;</span>
+<a name="gbab-629"></a>    <span class="kt">unsigned</span> <span class="n">alpn_selected_len</span><span class="p">;</span>
+<a name="gbab-630"></a><span class="cp">#  endif                        </span><span class="cm">/* OPENSSL_NO_TLSEXT */</span><span class="cp"></span>
+<a name="gbab-631"></a>	<span class="p">}</span> <span class="n">SSL3_STATE</span><span class="p">;</span>
+<a name="gbab-632"></a>
+<a name="gbab-633"></a><span class="cp">#endif</span>
+<a name="gbab-634"></a>
+<a name="gbab-635"></a><span class="cm">/* SSLv3 */</span>
+<a name="gbab-636"></a><span class="cm">/*</span>
+<a name="gbab-637"></a><span class="cm"> * client</span>
+<a name="gbab-638"></a><span class="cm"> */</span>
+<a name="gbab-639"></a><span class="cm">/* extra state */</span>
+<a name="gbab-640"></a><span class="cp">#define SSL3_ST_CW_FLUSH		(0x100|SSL_ST_CONNECT)</span>
+<a name="gbab-641"></a><span class="cp">#ifndef OPENSSL_NO_SCTP</span>
+<a name="gbab-642"></a><span class="cp">#define DTLS1_SCTP_ST_CW_WRITE_SOCK			(0x310|SSL_ST_CONNECT)</span>
+<a name="gbab-643"></a><span class="cp">#define DTLS1_SCTP_ST_CR_READ_SOCK			(0x320|SSL_ST_CONNECT)</span>
+<a name="gbab-644"></a><span class="cp">#endif	</span>
+<a name="gbab-645"></a><span class="cm">/* write to server */</span>
+<a name="gbab-646"></a><span class="cp">#define SSL3_ST_CW_CLNT_HELLO_A		(0x110|SSL_ST_CONNECT)</span>
+<a name="gbab-647"></a><span class="cp">#define SSL3_ST_CW_CLNT_HELLO_B		(0x111|SSL_ST_CONNECT)</span>
+<a name="gbab-648"></a><span class="cm">/* read from server */</span>
+<a name="gbab-649"></a><span class="cp">#define SSL3_ST_CR_SRVR_HELLO_A		(0x120|SSL_ST_CONNECT)</span>
+<a name="gbab-650"></a><span class="cp">#define SSL3_ST_CR_SRVR_HELLO_B		(0x121|SSL_ST_CONNECT)</span>
+<a name="gbab-651"></a><span class="cp">#define DTLS1_ST_CR_HELLO_VERIFY_REQUEST_A (0x126|SSL_ST_CONNECT)</span>
+<a name="gbab-652"></a><span class="cp">#define DTLS1_ST_CR_HELLO_VERIFY_REQUEST_B (0x127|SSL_ST_CONNECT)</span>
+<a name="gbab-653"></a><span class="cp">#define SSL3_ST_CR_CERT_A		(0x130|SSL_ST_CONNECT)</span>
+<a name="gbab-654"></a><span class="cp">#define SSL3_ST_CR_CERT_B		(0x131|SSL_ST_CONNECT)</span>
+<a name="gbab-655"></a><span class="cp">#define SSL3_ST_CR_KEY_EXCH_A		(0x140|SSL_ST_CONNECT)</span>
+<a name="gbab-656"></a><span class="cp">#define SSL3_ST_CR_KEY_EXCH_B		(0x141|SSL_ST_CONNECT)</span>
+<a name="gbab-657"></a><span class="cp">#define SSL3_ST_CR_CERT_REQ_A		(0x150|SSL_ST_CONNECT)</span>
+<a name="gbab-658"></a><span class="cp">#define SSL3_ST_CR_CERT_REQ_B		(0x151|SSL_ST_CONNECT)</span>
+<a name="gbab-659"></a><span class="cp">#define SSL3_ST_CR_SRVR_DONE_A		(0x160|SSL_ST_CONNECT)</span>
+<a name="gbab-660"></a><span class="cp">#define SSL3_ST_CR_SRVR_DONE_B		(0x161|SSL_ST_CONNECT)</span>
+<a name="gbab-661"></a><span class="cm">/* write to server */</span>
+<a name="gbab-662"></a><span class="cp">#define SSL3_ST_CW_CERT_A		(0x170|SSL_ST_CONNECT)</span>
+<a name="gbab-663"></a><span class="cp">#define SSL3_ST_CW_CERT_B		(0x171|SSL_ST_CONNECT)</span>
+<a name="gbab-664"></a><span class="cp">#define SSL3_ST_CW_CERT_C		(0x172|SSL_ST_CONNECT)</span>
+<a name="gbab-665"></a><span class="cp">#define SSL3_ST_CW_CERT_D		(0x173|SSL_ST_CONNECT)</span>
+<a name="gbab-666"></a><span class="cp">#define SSL3_ST_CW_KEY_EXCH_A		(0x180|SSL_ST_CONNECT)</span>
+<a name="gbab-667"></a><span class="cp">#define SSL3_ST_CW_KEY_EXCH_B		(0x181|SSL_ST_CONNECT)</span>
+<a name="gbab-668"></a><span class="cp">#define SSL3_ST_CW_CERT_VRFY_A		(0x190|SSL_ST_CONNECT)</span>
+<a name="gbab-669"></a><span class="cp">#define SSL3_ST_CW_CERT_VRFY_B		(0x191|SSL_ST_CONNECT)</span>
+<a name="gbab-670"></a><span class="cp">#define SSL3_ST_CW_CHANGE_A		(0x1A0|SSL_ST_CONNECT)</span>
+<a name="gbab-671"></a><span class="cp">#define SSL3_ST_CW_CHANGE_B		(0x1A1|SSL_ST_CONNECT)</span>
+<a name="gbab-672"></a><span class="cp">#ifndef OPENSSL_NO_NEXTPROTONEG</span>
+<a name="gbab-673"></a><span class="cp">#define SSL3_ST_CW_NEXT_PROTO_A		(0x200|SSL_ST_CONNECT)</span>
+<a name="gbab-674"></a><span class="cp">#define SSL3_ST_CW_NEXT_PROTO_B		(0x201|SSL_ST_CONNECT)</span>
+<a name="gbab-675"></a><span class="cp">#endif</span>
+<a name="gbab-676"></a><span class="cp">#define SSL3_ST_CW_FINISHED_A		(0x1B0|SSL_ST_CONNECT)</span>
+<a name="gbab-677"></a><span class="cp">#define SSL3_ST_CW_FINISHED_B		(0x1B1|SSL_ST_CONNECT)</span>
+<a name="gbab-678"></a><span class="cm">/* read from server */</span>
+<a name="gbab-679"></a><span class="cp">#define SSL3_ST_CR_CHANGE_A		(0x1C0|SSL_ST_CONNECT)</span>
+<a name="gbab-680"></a><span class="cp">#define SSL3_ST_CR_CHANGE_B		(0x1C1|SSL_ST_CONNECT)</span>
+<a name="gbab-681"></a><span class="cp">#define SSL3_ST_CR_FINISHED_A		(0x1D0|SSL_ST_CONNECT)</span>
+<a name="gbab-682"></a><span class="cp">#define SSL3_ST_CR_FINISHED_B		(0x1D1|SSL_ST_CONNECT)</span>
+<a name="gbab-683"></a><span class="cp">#define SSL3_ST_CR_SESSION_TICKET_A	(0x1E0|SSL_ST_CONNECT)</span>
+<a name="gbab-684"></a><span class="cp">#define SSL3_ST_CR_SESSION_TICKET_B	(0x1E1|SSL_ST_CONNECT)</span>
+<a name="gbab-685"></a><span class="cp">#define SSL3_ST_CR_CERT_STATUS_A	(0x1F0|SSL_ST_CONNECT)</span>
+<a name="gbab-686"></a><span class="cp">#define SSL3_ST_CR_CERT_STATUS_B	(0x1F1|SSL_ST_CONNECT)</span>
+<a name="gbab-687"></a>
+<a name="gbab-688"></a><span class="cm">/* server */</span>
+<a name="gbab-689"></a><span class="cm">/* extra state */</span>
+<a name="gbab-690"></a><span class="cp">#define SSL3_ST_SW_FLUSH		(0x100|SSL_ST_ACCEPT)</span>
+<a name="gbab-691"></a><span class="cp">#ifndef OPENSSL_NO_SCTP</span>
+<a name="gbab-692"></a><span class="cp">#define DTLS1_SCTP_ST_SW_WRITE_SOCK			(0x310|SSL_ST_ACCEPT)</span>
+<a name="gbab-693"></a><span class="cp">#define DTLS1_SCTP_ST_SR_READ_SOCK			(0x320|SSL_ST_ACCEPT)</span>
+<a name="gbab-694"></a><span class="cp">#endif	</span>
+<a name="gbab-695"></a><span class="cm">/* read from client */</span>
+<a name="gbab-696"></a><span class="cm">/* Do not change the number values, they do matter */</span>
+<a name="gbab-697"></a><span class="cp">#define SSL3_ST_SR_CLNT_HELLO_A		(0x110|SSL_ST_ACCEPT)</span>
+<a name="gbab-698"></a><span class="cp">#define SSL3_ST_SR_CLNT_HELLO_B		(0x111|SSL_ST_ACCEPT)</span>
+<a name="gbab-699"></a><span class="cp">#define SSL3_ST_SR_CLNT_HELLO_C		(0x112|SSL_ST_ACCEPT)</span>
+<a name="gbab-700"></a><span class="cp"># define SSL3_ST_SR_CLNT_HELLO_D         (0x115|SSL_ST_ACCEPT)</span>
+<a name="gbab-701"></a><span class="cm">/* write to client */</span>
+<a name="gbab-702"></a><span class="cp">#define DTLS1_ST_SW_HELLO_VERIFY_REQUEST_A (0x113|SSL_ST_ACCEPT)</span>
+<a name="gbab-703"></a><span class="cp">#define DTLS1_ST_SW_HELLO_VERIFY_REQUEST_B (0x114|SSL_ST_ACCEPT)</span>
+<a name="gbab-704"></a><span class="cp">#define SSL3_ST_SW_HELLO_REQ_A		(0x120|SSL_ST_ACCEPT)</span>
+<a name="gbab-705"></a><span class="cp">#define SSL3_ST_SW_HELLO_REQ_B		(0x121|SSL_ST_ACCEPT)</span>
+<a name="gbab-706"></a><span class="cp">#define SSL3_ST_SW_HELLO_REQ_C		(0x122|SSL_ST_ACCEPT)</span>
+<a name="gbab-707"></a><span class="cp">#define SSL3_ST_SW_SRVR_HELLO_A		(0x130|SSL_ST_ACCEPT)</span>
+<a name="gbab-708"></a><span class="cp">#define SSL3_ST_SW_SRVR_HELLO_B		(0x131|SSL_ST_ACCEPT)</span>
+<a name="gbab-709"></a><span class="cp">#define SSL3_ST_SW_CERT_A		(0x140|SSL_ST_ACCEPT)</span>
+<a name="gbab-710"></a><span class="cp">#define SSL3_ST_SW_CERT_B		(0x141|SSL_ST_ACCEPT)</span>
+<a name="gbab-711"></a><span class="cp">#define SSL3_ST_SW_KEY_EXCH_A		(0x150|SSL_ST_ACCEPT)</span>
+<a name="gbab-712"></a><span class="cp">#define SSL3_ST_SW_KEY_EXCH_B		(0x151|SSL_ST_ACCEPT)</span>
+<a name="gbab-713"></a><span class="cp">#define SSL3_ST_SW_CERT_REQ_A		(0x160|SSL_ST_ACCEPT)</span>
+<a name="gbab-714"></a><span class="cp">#define SSL3_ST_SW_CERT_REQ_B		(0x161|SSL_ST_ACCEPT)</span>
+<a name="gbab-715"></a><span class="cp">#define SSL3_ST_SW_SRVR_DONE_A		(0x170|SSL_ST_ACCEPT)</span>
+<a name="gbab-716"></a><span class="cp">#define SSL3_ST_SW_SRVR_DONE_B		(0x171|SSL_ST_ACCEPT)</span>
+<a name="gbab-717"></a><span class="cm">/* read from client */</span>
+<a name="gbab-718"></a><span class="cp">#define SSL3_ST_SR_CERT_A		(0x180|SSL_ST_ACCEPT)</span>
+<a name="gbab-719"></a><span class="cp">#define SSL3_ST_SR_CERT_B		(0x181|SSL_ST_ACCEPT)</span>
+<a name="gbab-720"></a><span class="cp">#define SSL3_ST_SR_KEY_EXCH_A		(0x190|SSL_ST_ACCEPT)</span>
+<a name="gbab-721"></a><span class="cp">#define SSL3_ST_SR_KEY_EXCH_B		(0x191|SSL_ST_ACCEPT)</span>
+<a name="gbab-722"></a><span class="cp">#define SSL3_ST_SR_CERT_VRFY_A		(0x1A0|SSL_ST_ACCEPT)</span>
+<a name="gbab-723"></a><span class="cp">#define SSL3_ST_SR_CERT_VRFY_B		(0x1A1|SSL_ST_ACCEPT)</span>
+<a name="gbab-724"></a><span class="cp">#define SSL3_ST_SR_CHANGE_A		(0x1B0|SSL_ST_ACCEPT)</span>
+<a name="gbab-725"></a><span class="cp">#define SSL3_ST_SR_CHANGE_B		(0x1B1|SSL_ST_ACCEPT)</span>
+<a name="gbab-726"></a><span class="cp">#ifndef OPENSSL_NO_NEXTPROTONEG</span>
+<a name="gbab-727"></a><span class="cp">#define SSL3_ST_SR_NEXT_PROTO_A		(0x210|SSL_ST_ACCEPT)</span>
+<a name="gbab-728"></a><span class="cp">#define SSL3_ST_SR_NEXT_PROTO_B		(0x211|SSL_ST_ACCEPT)</span>
+<a name="gbab-729"></a><span class="cp">#endif</span>
+<a name="gbab-730"></a><span class="cp">#define SSL3_ST_SR_FINISHED_A		(0x1C0|SSL_ST_ACCEPT)</span>
+<a name="gbab-731"></a><span class="cp">#define SSL3_ST_SR_FINISHED_B		(0x1C1|SSL_ST_ACCEPT)</span>
+<a name="gbab-732"></a><span class="cm">/* write to client */</span>
+<a name="gbab-733"></a><span class="cp">#define SSL3_ST_SW_CHANGE_A		(0x1D0|SSL_ST_ACCEPT)</span>
+<a name="gbab-734"></a><span class="cp">#define SSL3_ST_SW_CHANGE_B		(0x1D1|SSL_ST_ACCEPT)</span>
+<a name="gbab-735"></a><span class="cp">#define SSL3_ST_SW_FINISHED_A		(0x1E0|SSL_ST_ACCEPT)</span>
+<a name="gbab-736"></a><span class="cp">#define SSL3_ST_SW_FINISHED_B		(0x1E1|SSL_ST_ACCEPT)</span>
+<a name="gbab-737"></a><span class="cp">#define SSL3_ST_SW_SESSION_TICKET_A	(0x1F0|SSL_ST_ACCEPT)</span>
+<a name="gbab-738"></a><span class="cp">#define SSL3_ST_SW_SESSION_TICKET_B	(0x1F1|SSL_ST_ACCEPT)</span>
+<a name="gbab-739"></a><span class="cp">#define SSL3_ST_SW_CERT_STATUS_A	(0x200|SSL_ST_ACCEPT)</span>
+<a name="gbab-740"></a><span class="cp">#define SSL3_ST_SW_CERT_STATUS_B	(0x201|SSL_ST_ACCEPT)</span>
+<a name="gbab-741"></a>
+<a name="gbab-742"></a><span class="cp">#define SSL3_MT_HELLO_REQUEST			0</span>
+<a name="gbab-743"></a><span class="cp">#define SSL3_MT_CLIENT_HELLO			1</span>
+<a name="gbab-744"></a><span class="cp">#define SSL3_MT_SERVER_HELLO			2</span>
+<a name="gbab-745"></a><span class="cp">#define	SSL3_MT_NEWSESSION_TICKET		4</span>
+<a name="gbab-746"></a><span class="cp">#define SSL3_MT_CERTIFICATE			11</span>
+<a name="gbab-747"></a><span class="cp">#define SSL3_MT_SERVER_KEY_EXCHANGE		12</span>
+<a name="gbab-748"></a><span class="cp">#define SSL3_MT_CERTIFICATE_REQUEST		13</span>
+<a name="gbab-749"></a><span class="cp">#define SSL3_MT_SERVER_DONE			14</span>
+<a name="gbab-750"></a><span class="cp">#define SSL3_MT_CERTIFICATE_VERIFY		15</span>
+<a name="gbab-751"></a><span class="cp">#define SSL3_MT_CLIENT_KEY_EXCHANGE		16</span>
+<a name="gbab-752"></a><span class="cp">#define SSL3_MT_FINISHED			20</span>
+<a name="gbab-753"></a><span class="cp">#define SSL3_MT_CERTIFICATE_STATUS		22</span>
+<a name="gbab-754"></a><span class="cp">#ifndef OPENSSL_NO_NEXTPROTONEG</span>
+<a name="gbab-755"></a><span class="cp">#define SSL3_MT_NEXT_PROTO			67</span>
+<a name="gbab-756"></a><span class="cp">#endif</span>
+<a name="gbab-757"></a><span class="cp">#define DTLS1_MT_HELLO_VERIFY_REQUEST    3</span>
+<a name="gbab-758"></a>
+<a name="gbab-759"></a><span class="cp">#define SSL3_MT_CCS				1</span>
+<a name="gbab-760"></a>
+<a name="gbab-761"></a><span class="cm">/* These are used when changing over to a new cipher */</span>
+<a name="gbab-762"></a><span class="cp">#define SSL3_CC_READ		0x01</span>
+<a name="gbab-763"></a><span class="cp">#define SSL3_CC_WRITE		0x02</span>
+<a name="gbab-764"></a><span class="cp">#define SSL3_CC_CLIENT		0x10</span>
+<a name="gbab-765"></a><span class="cp">#define SSL3_CC_SERVER		0x20</span>
+<a name="gbab-766"></a><span class="cp">#define SSL3_CHANGE_CIPHER_CLIENT_WRITE	(SSL3_CC_CLIENT|SSL3_CC_WRITE)	</span>
+<a name="gbab-767"></a><span class="cp">#define SSL3_CHANGE_CIPHER_SERVER_READ	(SSL3_CC_SERVER|SSL3_CC_READ)</span>
+<a name="gbab-768"></a><span class="cp">#define SSL3_CHANGE_CIPHER_CLIENT_READ	(SSL3_CC_CLIENT|SSL3_CC_READ)</span>
+<a name="gbab-769"></a><span class="cp">#define SSL3_CHANGE_CIPHER_SERVER_WRITE	(SSL3_CC_SERVER|SSL3_CC_WRITE)</span>
+<a name="gbab-770"></a>
+<a name="gbab-771"></a><span class="cp">#ifdef  __cplusplus</span>
+<a name="gbab-772"></a><span class="p">}</span>
+<a name="gbab-773"></a><span class="cp">#endif</span>
+<a name="gbab-774"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

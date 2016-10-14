@@ -1,0 +1,551 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-3"></a><span class="cm">/*  ftwinfnt.h                                                             */</span>
+<a name="gbab-4"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-5"></a><span class="cm">/*    FreeType API for accessing Windows fnt-specific data.                */</span>
+<a name="gbab-6"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-7"></a><span class="cm">/*  Copyright 2003-2016 by                                                 */</span>
+<a name="gbab-8"></a><span class="cm">/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-10"></a><span class="cm">/*  This file is part of the FreeType project, and may only be used,       */</span>
+<a name="gbab-11"></a><span class="cm">/*  modified, and distributed under the terms of the FreeType project      */</span>
+<a name="gbab-12"></a><span class="cm">/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */</span>
+<a name="gbab-13"></a><span class="cm">/*  this file you indicate that you have read the license and              */</span>
+<a name="gbab-14"></a><span class="cm">/*  understand and accept it fully.                                        */</span>
+<a name="gbab-15"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-16"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#ifndef FTWINFNT_H_</span>
+<a name="gbab-20"></a><span class="cp">#define FTWINFNT_H_</span>
+<a name="gbab-21"></a>
+<a name="gbab-22"></a><span class="cp">#include</span> <span class="cpf">&lt;ft2build.h&gt;</span><span class="cp"></span>
+<a name="gbab-23"></a><span class="cp">#include</span> <span class="cpf">FT_FREETYPE_H</span><span class="cp"></span>
+<a name="gbab-24"></a>
+<a name="gbab-25"></a><span class="cp">#ifdef FREETYPE_H</span>
+<a name="gbab-26"></a><span class="cp">#error &quot;freetype.h of FreeType 1 has been loaded!&quot;</span>
+<a name="gbab-27"></a><span class="cp">#error &quot;Please fix the directory search order for header files&quot;</span>
+<a name="gbab-28"></a><span class="cp">#error &quot;so that freetype.h of FreeType 2 is found first.&quot;</span>
+<a name="gbab-29"></a><span class="cp">#endif</span>
+<a name="gbab-30"></a>
+<a name="gbab-31"></a>
+<a name="gbab-32"></a><span class="n">FT_BEGIN_HEADER</span>
+<a name="gbab-33"></a>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-36"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-37"></a>  <span class="cm">/* &lt;Section&gt;                                                             */</span>
+<a name="gbab-38"></a>  <span class="cm">/*    winfnt_fonts                                                       */</span>
+<a name="gbab-39"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-40"></a>  <span class="cm">/* &lt;Title&gt;                                                               */</span>
+<a name="gbab-41"></a>  <span class="cm">/*    Window FNT Files                                                   */</span>
+<a name="gbab-42"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-43"></a>  <span class="cm">/* &lt;Abstract&gt;                                                            */</span>
+<a name="gbab-44"></a>  <span class="cm">/*    Windows FNT specific API.                                          */</span>
+<a name="gbab-45"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-46"></a>  <span class="cm">/* &lt;Description&gt;                                                         */</span>
+<a name="gbab-47"></a>  <span class="cm">/*    This section contains the declaration of Windows FNT specific      */</span>
+<a name="gbab-48"></a>  <span class="cm">/*    functions.                                                         */</span>
+<a name="gbab-49"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-50"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-51"></a>
+<a name="gbab-52"></a>
+<a name="gbab-53"></a>  <span class="cm">/*************************************************************************</span>
+<a name="gbab-54"></a><span class="cm">   *</span>
+<a name="gbab-55"></a><span class="cm">   * @enum:</span>
+<a name="gbab-56"></a><span class="cm">   *   FT_WinFNT_ID_XXX</span>
+<a name="gbab-57"></a><span class="cm">   *</span>
+<a name="gbab-58"></a><span class="cm">   * @description:</span>
+<a name="gbab-59"></a><span class="cm">   *   A list of valid values for the `charset&#39; byte in</span>
+<a name="gbab-60"></a><span class="cm">   *   @FT_WinFNT_HeaderRec.  Exact mapping tables for the various cpXXXX</span>
+<a name="gbab-61"></a><span class="cm">   *   encodings (except for cp1361) can be found at</span>
+<a name="gbab-62"></a><span class="cm">   *   ftp://ftp.unicode.org/Public in the MAPPINGS/VENDORS/MICSFT/WINDOWS</span>
+<a name="gbab-63"></a><span class="cm">   *   subdirectory.  cp1361 is roughly a superset of</span>
+<a name="gbab-64"></a><span class="cm">   *   MAPPINGS/OBSOLETE/EASTASIA/KSC/JOHAB.TXT.</span>
+<a name="gbab-65"></a><span class="cm">   *</span>
+<a name="gbab-66"></a><span class="cm">   * @values:</span>
+<a name="gbab-67"></a><span class="cm">   *   FT_WinFNT_ID_DEFAULT ::</span>
+<a name="gbab-68"></a><span class="cm">   *     This is used for font enumeration and font creation as a</span>
+<a name="gbab-69"></a><span class="cm">   *     `don&#39;t care&#39; value.  Valid font files don&#39;t contain this value.</span>
+<a name="gbab-70"></a><span class="cm">   *     When querying for information about the character set of the font</span>
+<a name="gbab-71"></a><span class="cm">   *     that is currently selected into a specified device context, this</span>
+<a name="gbab-72"></a><span class="cm">   *     return value (of the related Windows API) simply denotes failure.</span>
+<a name="gbab-73"></a><span class="cm">   *</span>
+<a name="gbab-74"></a><span class="cm">   *   FT_WinFNT_ID_SYMBOL ::</span>
+<a name="gbab-75"></a><span class="cm">   *     There is no known mapping table available.</span>
+<a name="gbab-76"></a><span class="cm">   *</span>
+<a name="gbab-77"></a><span class="cm">   *   FT_WinFNT_ID_MAC ::</span>
+<a name="gbab-78"></a><span class="cm">   *     Mac Roman encoding.</span>
+<a name="gbab-79"></a><span class="cm">   *</span>
+<a name="gbab-80"></a><span class="cm">   *   FT_WinFNT_ID_OEM ::</span>
+<a name="gbab-81"></a><span class="cm">   *     From Michael Pöttgen &lt;michael@poettgen.de&gt;:</span>
+<a name="gbab-82"></a><span class="cm">   *</span>
+<a name="gbab-83"></a><span class="cm">   *       The `Windows Font Mapping&#39; article says that FT_WinFNT_ID_OEM</span>
+<a name="gbab-84"></a><span class="cm">   *       is used for the charset of vector fonts, like `modern.fon&#39;,</span>
+<a name="gbab-85"></a><span class="cm">   *       `roman.fon&#39;, and `script.fon&#39; on Windows.</span>
+<a name="gbab-86"></a><span class="cm">   *</span>
+<a name="gbab-87"></a><span class="cm">   *       The `CreateFont&#39; documentation says: The FT_WinFNT_ID_OEM value</span>
+<a name="gbab-88"></a><span class="cm">   *       specifies a character set that is operating-system dependent.</span>
+<a name="gbab-89"></a><span class="cm">   *</span>
+<a name="gbab-90"></a><span class="cm">   *       The `IFIMETRICS&#39; documentation from the `Windows Driver</span>
+<a name="gbab-91"></a><span class="cm">   *       Development Kit&#39; says: This font supports an OEM-specific</span>
+<a name="gbab-92"></a><span class="cm">   *       character set.  The OEM character set is system dependent.</span>
+<a name="gbab-93"></a><span class="cm">   *</span>
+<a name="gbab-94"></a><span class="cm">   *       In general OEM, as opposed to ANSI (i.e., cp1252), denotes the</span>
+<a name="gbab-95"></a><span class="cm">   *       second default codepage that most international versions of</span>
+<a name="gbab-96"></a><span class="cm">   *       Windows have.  It is one of the OEM codepages from</span>
+<a name="gbab-97"></a><span class="cm">   *</span>
+<a name="gbab-98"></a><span class="cm">   *         https://msdn.microsoft.com/en-us/goglobal/bb964655,</span>
+<a name="gbab-99"></a><span class="cm">   *</span>
+<a name="gbab-100"></a><span class="cm">   *       and is used for the `DOS boxes&#39;, to support legacy applications.</span>
+<a name="gbab-101"></a><span class="cm">   *       A German Windows version for example usually uses ANSI codepage</span>
+<a name="gbab-102"></a><span class="cm">   *       1252 and OEM codepage 850.</span>
+<a name="gbab-103"></a><span class="cm">   *</span>
+<a name="gbab-104"></a><span class="cm">   *   FT_WinFNT_ID_CP874 ::</span>
+<a name="gbab-105"></a><span class="cm">   *     A superset of Thai TIS 620 and ISO 8859-11.</span>
+<a name="gbab-106"></a><span class="cm">   *</span>
+<a name="gbab-107"></a><span class="cm">   *   FT_WinFNT_ID_CP932 ::</span>
+<a name="gbab-108"></a><span class="cm">   *     A superset of Japanese Shift-JIS (with minor deviations).</span>
+<a name="gbab-109"></a><span class="cm">   *</span>
+<a name="gbab-110"></a><span class="cm">   *   FT_WinFNT_ID_CP936 ::</span>
+<a name="gbab-111"></a><span class="cm">   *     A superset of simplified Chinese GB 2312-1980 (with different</span>
+<a name="gbab-112"></a><span class="cm">   *     ordering and minor deviations).</span>
+<a name="gbab-113"></a><span class="cm">   *</span>
+<a name="gbab-114"></a><span class="cm">   *   FT_WinFNT_ID_CP949 ::</span>
+<a name="gbab-115"></a><span class="cm">   *     A superset of Korean Hangul KS~C 5601-1987 (with different</span>
+<a name="gbab-116"></a><span class="cm">   *     ordering and minor deviations).</span>
+<a name="gbab-117"></a><span class="cm">   *</span>
+<a name="gbab-118"></a><span class="cm">   *   FT_WinFNT_ID_CP950 ::</span>
+<a name="gbab-119"></a><span class="cm">   *     A superset of traditional Chinese Big~5 ETen (with different</span>
+<a name="gbab-120"></a><span class="cm">   *     ordering and minor deviations).</span>
+<a name="gbab-121"></a><span class="cm">   *</span>
+<a name="gbab-122"></a><span class="cm">   *   FT_WinFNT_ID_CP1250 ::</span>
+<a name="gbab-123"></a><span class="cm">   *     A superset of East European ISO 8859-2 (with slightly different</span>
+<a name="gbab-124"></a><span class="cm">   *     ordering).</span>
+<a name="gbab-125"></a><span class="cm">   *</span>
+<a name="gbab-126"></a><span class="cm">   *   FT_WinFNT_ID_CP1251 ::</span>
+<a name="gbab-127"></a><span class="cm">   *     A superset of Russian ISO 8859-5 (with different ordering).</span>
+<a name="gbab-128"></a><span class="cm">   *</span>
+<a name="gbab-129"></a><span class="cm">   *   FT_WinFNT_ID_CP1252 ::</span>
+<a name="gbab-130"></a><span class="cm">   *     ANSI encoding.  A superset of ISO 8859-1.</span>
+<a name="gbab-131"></a><span class="cm">   *</span>
+<a name="gbab-132"></a><span class="cm">   *   FT_WinFNT_ID_CP1253 ::</span>
+<a name="gbab-133"></a><span class="cm">   *     A superset of Greek ISO 8859-7 (with minor modifications).</span>
+<a name="gbab-134"></a><span class="cm">   *</span>
+<a name="gbab-135"></a><span class="cm">   *   FT_WinFNT_ID_CP1254 ::</span>
+<a name="gbab-136"></a><span class="cm">   *     A superset of Turkish ISO 8859-9.</span>
+<a name="gbab-137"></a><span class="cm">   *</span>
+<a name="gbab-138"></a><span class="cm">   *   FT_WinFNT_ID_CP1255 ::</span>
+<a name="gbab-139"></a><span class="cm">   *     A superset of Hebrew ISO 8859-8 (with some modifications).</span>
+<a name="gbab-140"></a><span class="cm">   *</span>
+<a name="gbab-141"></a><span class="cm">   *   FT_WinFNT_ID_CP1256 ::</span>
+<a name="gbab-142"></a><span class="cm">   *     A superset of Arabic ISO 8859-6 (with different ordering).</span>
+<a name="gbab-143"></a><span class="cm">   *</span>
+<a name="gbab-144"></a><span class="cm">   *   FT_WinFNT_ID_CP1257 ::</span>
+<a name="gbab-145"></a><span class="cm">   *     A superset of Baltic ISO 8859-13 (with some deviations).</span>
+<a name="gbab-146"></a><span class="cm">   *</span>
+<a name="gbab-147"></a><span class="cm">   *   FT_WinFNT_ID_CP1258 ::</span>
+<a name="gbab-148"></a><span class="cm">   *     For Vietnamese.  This encoding doesn&#39;t cover all necessary</span>
+<a name="gbab-149"></a><span class="cm">   *     characters.</span>
+<a name="gbab-150"></a><span class="cm">   *</span>
+<a name="gbab-151"></a><span class="cm">   *   FT_WinFNT_ID_CP1361 ::</span>
+<a name="gbab-152"></a><span class="cm">   *     Korean (Johab).</span>
+<a name="gbab-153"></a><span class="cm">   */</span>
+<a name="gbab-154"></a>
+<a name="gbab-155"></a><span class="cp">#define FT_WinFNT_ID_CP1252    0</span>
+<a name="gbab-156"></a><span class="cp">#define FT_WinFNT_ID_DEFAULT   1</span>
+<a name="gbab-157"></a><span class="cp">#define FT_WinFNT_ID_SYMBOL    2</span>
+<a name="gbab-158"></a><span class="cp">#define FT_WinFNT_ID_MAC      77</span>
+<a name="gbab-159"></a><span class="cp">#define FT_WinFNT_ID_CP932   128</span>
+<a name="gbab-160"></a><span class="cp">#define FT_WinFNT_ID_CP949   129</span>
+<a name="gbab-161"></a><span class="cp">#define FT_WinFNT_ID_CP1361  130</span>
+<a name="gbab-162"></a><span class="cp">#define FT_WinFNT_ID_CP936   134</span>
+<a name="gbab-163"></a><span class="cp">#define FT_WinFNT_ID_CP950   136</span>
+<a name="gbab-164"></a><span class="cp">#define FT_WinFNT_ID_CP1253  161</span>
+<a name="gbab-165"></a><span class="cp">#define FT_WinFNT_ID_CP1254  162</span>
+<a name="gbab-166"></a><span class="cp">#define FT_WinFNT_ID_CP1258  163</span>
+<a name="gbab-167"></a><span class="cp">#define FT_WinFNT_ID_CP1255  177</span>
+<a name="gbab-168"></a><span class="cp">#define FT_WinFNT_ID_CP1256  178</span>
+<a name="gbab-169"></a><span class="cp">#define FT_WinFNT_ID_CP1257  186</span>
+<a name="gbab-170"></a><span class="cp">#define FT_WinFNT_ID_CP1251  204</span>
+<a name="gbab-171"></a><span class="cp">#define FT_WinFNT_ID_CP874   222</span>
+<a name="gbab-172"></a><span class="cp">#define FT_WinFNT_ID_CP1250  238</span>
+<a name="gbab-173"></a><span class="cp">#define FT_WinFNT_ID_OEM     255</span>
+<a name="gbab-174"></a>
+<a name="gbab-175"></a>
+<a name="gbab-176"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-177"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-178"></a>  <span class="cm">/* &lt;Struct&gt;                                                              */</span>
+<a name="gbab-179"></a>  <span class="cm">/*    FT_WinFNT_HeaderRec                                                */</span>
+<a name="gbab-180"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-181"></a>  <span class="cm">/* &lt;Description&gt;                                                         */</span>
+<a name="gbab-182"></a>  <span class="cm">/*    Windows FNT Header info.                                           */</span>
+<a name="gbab-183"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-184"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">FT_WinFNT_HeaderRec_</span>
+<a name="gbab-185"></a>  <span class="p">{</span>
+<a name="gbab-186"></a>    <span class="n">FT_UShort</span>  <span class="n">version</span><span class="p">;</span>
+<a name="gbab-187"></a>    <span class="n">FT_ULong</span>   <span class="n">file_size</span><span class="p">;</span>
+<a name="gbab-188"></a>    <span class="n">FT_Byte</span>    <span class="n">copyright</span><span class="p">[</span><span class="mi">60</span><span class="p">];</span>
+<a name="gbab-189"></a>    <span class="n">FT_UShort</span>  <span class="n">file_type</span><span class="p">;</span>
+<a name="gbab-190"></a>    <span class="n">FT_UShort</span>  <span class="n">nominal_point_size</span><span class="p">;</span>
+<a name="gbab-191"></a>    <span class="n">FT_UShort</span>  <span class="n">vertical_resolution</span><span class="p">;</span>
+<a name="gbab-192"></a>    <span class="n">FT_UShort</span>  <span class="n">horizontal_resolution</span><span class="p">;</span>
+<a name="gbab-193"></a>    <span class="n">FT_UShort</span>  <span class="n">ascent</span><span class="p">;</span>
+<a name="gbab-194"></a>    <span class="n">FT_UShort</span>  <span class="n">internal_leading</span><span class="p">;</span>
+<a name="gbab-195"></a>    <span class="n">FT_UShort</span>  <span class="n">external_leading</span><span class="p">;</span>
+<a name="gbab-196"></a>    <span class="n">FT_Byte</span>    <span class="n">italic</span><span class="p">;</span>
+<a name="gbab-197"></a>    <span class="n">FT_Byte</span>    <span class="n">underline</span><span class="p">;</span>
+<a name="gbab-198"></a>    <span class="n">FT_Byte</span>    <span class="n">strike_out</span><span class="p">;</span>
+<a name="gbab-199"></a>    <span class="n">FT_UShort</span>  <span class="n">weight</span><span class="p">;</span>
+<a name="gbab-200"></a>    <span class="n">FT_Byte</span>    <span class="n">charset</span><span class="p">;</span>
+<a name="gbab-201"></a>    <span class="n">FT_UShort</span>  <span class="n">pixel_width</span><span class="p">;</span>
+<a name="gbab-202"></a>    <span class="n">FT_UShort</span>  <span class="n">pixel_height</span><span class="p">;</span>
+<a name="gbab-203"></a>    <span class="n">FT_Byte</span>    <span class="n">pitch_and_family</span><span class="p">;</span>
+<a name="gbab-204"></a>    <span class="n">FT_UShort</span>  <span class="n">avg_width</span><span class="p">;</span>
+<a name="gbab-205"></a>    <span class="n">FT_UShort</span>  <span class="n">max_width</span><span class="p">;</span>
+<a name="gbab-206"></a>    <span class="n">FT_Byte</span>    <span class="n">first_char</span><span class="p">;</span>
+<a name="gbab-207"></a>    <span class="n">FT_Byte</span>    <span class="n">last_char</span><span class="p">;</span>
+<a name="gbab-208"></a>    <span class="n">FT_Byte</span>    <span class="n">default_char</span><span class="p">;</span>
+<a name="gbab-209"></a>    <span class="n">FT_Byte</span>    <span class="n">break_char</span><span class="p">;</span>
+<a name="gbab-210"></a>    <span class="n">FT_UShort</span>  <span class="n">bytes_per_row</span><span class="p">;</span>
+<a name="gbab-211"></a>    <span class="n">FT_ULong</span>   <span class="n">device_offset</span><span class="p">;</span>
+<a name="gbab-212"></a>    <span class="n">FT_ULong</span>   <span class="n">face_name_offset</span><span class="p">;</span>
+<a name="gbab-213"></a>    <span class="n">FT_ULong</span>   <span class="n">bits_pointer</span><span class="p">;</span>
+<a name="gbab-214"></a>    <span class="n">FT_ULong</span>   <span class="n">bits_offset</span><span class="p">;</span>
+<a name="gbab-215"></a>    <span class="n">FT_Byte</span>    <span class="n">reserved</span><span class="p">;</span>
+<a name="gbab-216"></a>    <span class="n">FT_ULong</span>   <span class="n">flags</span><span class="p">;</span>
+<a name="gbab-217"></a>    <span class="n">FT_UShort</span>  <span class="n">A_space</span><span class="p">;</span>
+<a name="gbab-218"></a>    <span class="n">FT_UShort</span>  <span class="n">B_space</span><span class="p">;</span>
+<a name="gbab-219"></a>    <span class="n">FT_UShort</span>  <span class="n">C_space</span><span class="p">;</span>
+<a name="gbab-220"></a>    <span class="n">FT_UShort</span>  <span class="n">color_table_offset</span><span class="p">;</span>
+<a name="gbab-221"></a>    <span class="n">FT_ULong</span>   <span class="n">reserved1</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+<a name="gbab-222"></a>
+<a name="gbab-223"></a>  <span class="p">}</span> <span class="n">FT_WinFNT_HeaderRec</span><span class="p">;</span>
+<a name="gbab-224"></a>
+<a name="gbab-225"></a>
+<a name="gbab-226"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-227"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-228"></a>  <span class="cm">/* &lt;Struct&gt;                                                              */</span>
+<a name="gbab-229"></a>  <span class="cm">/*    FT_WinFNT_Header                                                   */</span>
+<a name="gbab-230"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-231"></a>  <span class="cm">/* &lt;Description&gt;                                                         */</span>
+<a name="gbab-232"></a>  <span class="cm">/*    A handle to an @FT_WinFNT_HeaderRec structure.                     */</span>
+<a name="gbab-233"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-234"></a>  <span class="k">typedef</span> <span class="k">struct</span> <span class="n">FT_WinFNT_HeaderRec_</span><span class="o">*</span>  <span class="n">FT_WinFNT_Header</span><span class="p">;</span>
+<a name="gbab-235"></a>
+<a name="gbab-236"></a>
+<a name="gbab-237"></a>  <span class="cm">/**********************************************************************</span>
+<a name="gbab-238"></a><span class="cm">   *</span>
+<a name="gbab-239"></a><span class="cm">   * @function:</span>
+<a name="gbab-240"></a><span class="cm">   *    FT_Get_WinFNT_Header</span>
+<a name="gbab-241"></a><span class="cm">   *</span>
+<a name="gbab-242"></a><span class="cm">   * @description:</span>
+<a name="gbab-243"></a><span class="cm">   *    Retrieve a Windows FNT font info header.</span>
+<a name="gbab-244"></a><span class="cm">   *</span>
+<a name="gbab-245"></a><span class="cm">   * @input:</span>
+<a name="gbab-246"></a><span class="cm">   *    face    :: A handle to the input face.</span>
+<a name="gbab-247"></a><span class="cm">   *</span>
+<a name="gbab-248"></a><span class="cm">   * @output:</span>
+<a name="gbab-249"></a><span class="cm">   *    aheader :: The WinFNT header.</span>
+<a name="gbab-250"></a><span class="cm">   *</span>
+<a name="gbab-251"></a><span class="cm">   * @return:</span>
+<a name="gbab-252"></a><span class="cm">   *   FreeType error code.  0~means success.</span>
+<a name="gbab-253"></a><span class="cm">   *</span>
+<a name="gbab-254"></a><span class="cm">   * @note:</span>
+<a name="gbab-255"></a><span class="cm">   *   This function only works with Windows FNT faces, returning an error</span>
+<a name="gbab-256"></a><span class="cm">   *   otherwise.</span>
+<a name="gbab-257"></a><span class="cm">   */</span>
+<a name="gbab-258"></a>  <span class="n">FT_EXPORT</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-259"></a>  <span class="n">FT_Get_WinFNT_Header</span><span class="p">(</span> <span class="n">FT_Face</span>               <span class="n">face</span><span class="p">,</span>
+<a name="gbab-260"></a>                        <span class="n">FT_WinFNT_HeaderRec</span>  <span class="o">*</span><span class="n">aheader</span> <span class="p">);</span>
+<a name="gbab-261"></a>
+<a name="gbab-262"></a>  <span class="cm">/* */</span>
+<a name="gbab-263"></a>
+<a name="gbab-264"></a>
+<a name="gbab-265"></a><span class="n">FT_END_HEADER</span>
+<a name="gbab-266"></a>
+<a name="gbab-267"></a><span class="cp">#endif </span><span class="cm">/* FTWINFNT_H_ */</span><span class="cp"></span>
+<a name="gbab-268"></a>
+<a name="gbab-269"></a>
+<a name="gbab-270"></a><span class="cm">/* END */</span>
+<a name="gbab-271"></a>
+<a name="gbab-272"></a>
+<a name="gbab-273"></a><span class="cm">/* Local Variables: */</span>
+<a name="gbab-274"></a><span class="cm">/* coding: utf-8    */</span>
+<a name="gbab-275"></a><span class="cm">/* End:             */</span>
+</pre></div>
+</td></tr></table>

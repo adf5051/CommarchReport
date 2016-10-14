@@ -1,0 +1,25 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="c1">// Godot-specific configuration</span>
+<a name="gbab-2"></a><span class="c1">// To use this, replace nrex_config.h</span>
+<a name="gbab-3"></a>
+<a name="gbab-4"></a><span class="cp">#include</span> <span class="cpf">&quot;core/os/memory.h&quot;</span><span class="cp"></span>
+<a name="gbab-5"></a>
+<a name="gbab-6"></a><span class="cp">#define NREX_UNICODE</span>
+<a name="gbab-7"></a><span class="c1">//#define NREX_THROW_ERROR</span>
+<a name="gbab-8"></a>
+<a name="gbab-9"></a><span class="cp">#define NREX_NEW(X) memnew(X)</span>
+<a name="gbab-10"></a><span class="cp">#define NREX_NEW_ARRAY(X, N) memnew_arr(X, N)</span>
+<a name="gbab-11"></a><span class="cp">#define NREX_DELETE(X) memdelete(X)</span>
+<a name="gbab-12"></a><span class="cp">#define NREX_DELETE_ARRAY(X) memdelete_arr(X)</span>
+</pre></div>
+</td></tr></table>

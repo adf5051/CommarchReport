@@ -1,0 +1,85 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-3"></a><span class="cm">/*  ftsmerrs.h                                                             */</span>
+<a name="gbab-4"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-5"></a><span class="cm">/*    smooth renderer error codes (specification only).                    */</span>
+<a name="gbab-6"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-7"></a><span class="cm">/*  Copyright 2001-2016 by                                                 */</span>
+<a name="gbab-8"></a><span class="cm">/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-10"></a><span class="cm">/*  This file is part of the FreeType project, and may only be used,       */</span>
+<a name="gbab-11"></a><span class="cm">/*  modified, and distributed under the terms of the FreeType project      */</span>
+<a name="gbab-12"></a><span class="cm">/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */</span>
+<a name="gbab-13"></a><span class="cm">/*  this file you indicate that you have read the license and              */</span>
+<a name="gbab-14"></a><span class="cm">/*  understand and accept it fully.                                        */</span>
+<a name="gbab-15"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-16"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-20"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-21"></a>  <span class="cm">/* This file is used to define the smooth renderer error enumeration     */</span>
+<a name="gbab-22"></a>  <span class="cm">/* constants.                                                            */</span>
+<a name="gbab-23"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-24"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="cp">#ifndef FTSMERRS_H_</span>
+<a name="gbab-27"></a><span class="cp">#define FTSMERRS_H_</span>
+<a name="gbab-28"></a>
+<a name="gbab-29"></a><span class="cp">#include</span> <span class="cpf">FT_MODULE_ERRORS_H</span><span class="cp"></span>
+<a name="gbab-30"></a>
+<a name="gbab-31"></a><span class="cp">#undef FTERRORS_H_</span>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a><span class="cp">#undef  FT_ERR_PREFIX</span>
+<a name="gbab-34"></a><span class="cp">#define FT_ERR_PREFIX  Smooth_Err_</span>
+<a name="gbab-35"></a><span class="cp">#define FT_ERR_BASE    FT_Mod_Err_Smooth</span>
+<a name="gbab-36"></a>
+<a name="gbab-37"></a><span class="cp">#include</span> <span class="cpf">FT_ERRORS_H</span><span class="cp"></span>
+<a name="gbab-38"></a>
+<a name="gbab-39"></a><span class="cp">#endif </span><span class="cm">/* FTSMERRS_H_ */</span><span class="cp"></span>
+<a name="gbab-40"></a>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a><span class="cm">/* END */</span>
+</pre></div>
+</td></tr></table>

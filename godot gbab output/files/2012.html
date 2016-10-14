@@ -1,0 +1,655 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/***********************************************************************</span>
+<a name="gbab-2"></a><span class="cm">Copyright (c) 2006-2011, Skype Limited. All rights reserved.</span>
+<a name="gbab-3"></a><span class="cm">Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-4"></a><span class="cm">modification, are permitted provided that the following conditions</span>
+<a name="gbab-5"></a><span class="cm">are met:</span>
+<a name="gbab-6"></a><span class="cm">- Redistributions of source code must retain the above copyright notice,</span>
+<a name="gbab-7"></a><span class="cm">this list of conditions and the following disclaimer.</span>
+<a name="gbab-8"></a><span class="cm">- Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-9"></a><span class="cm">notice, this list of conditions and the following disclaimer in the</span>
+<a name="gbab-10"></a><span class="cm">documentation and/or other materials provided with the distribution.</span>
+<a name="gbab-11"></a><span class="cm">- Neither the name of Internet Society, IETF or IETF Trust, nor the</span>
+<a name="gbab-12"></a><span class="cm">names of specific contributors, may be used to endorse or promote</span>
+<a name="gbab-13"></a><span class="cm">products derived from this software without specific prior written</span>
+<a name="gbab-14"></a><span class="cm">permission.</span>
+<a name="gbab-15"></a><span class="cm">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<a name="gbab-16"></a><span class="cm">AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<a name="gbab-17"></a><span class="cm">IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<a name="gbab-18"></a><span class="cm">ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE</span>
+<a name="gbab-19"></a><span class="cm">LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<a name="gbab-20"></a><span class="cm">CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<a name="gbab-21"></a><span class="cm">SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<a name="gbab-22"></a><span class="cm">INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<a name="gbab-23"></a><span class="cm">CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<a name="gbab-24"></a><span class="cm">ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<a name="gbab-25"></a><span class="cm">POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-26"></a><span class="cm">***********************************************************************/</span>
+<a name="gbab-27"></a>
+<a name="gbab-28"></a><span class="cp">#ifndef SILK_STRUCTS_H</span>
+<a name="gbab-29"></a><span class="cp">#define SILK_STRUCTS_H</span>
+<a name="gbab-30"></a>
+<a name="gbab-31"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/silk/typedef.h&quot;</span><span class="cp"></span>
+<a name="gbab-32"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/silk/SigProc_FIX.h&quot;</span><span class="cp"></span>
+<a name="gbab-33"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/silk/define.h&quot;</span><span class="cp"></span>
+<a name="gbab-34"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/celt/entenc.h&quot;</span><span class="cp"></span>
+<a name="gbab-35"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/celt/entdec.h&quot;</span><span class="cp"></span>
+<a name="gbab-36"></a>
+<a name="gbab-37"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-38"></a><span class="k">extern</span> <span class="s">&quot;C&quot;</span>
+<a name="gbab-39"></a><span class="p">{</span>
+<a name="gbab-40"></a><span class="cp">#endif</span>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a><span class="cm">/************************************/</span>
+<a name="gbab-43"></a><span class="cm">/* Noise shaping quantization state */</span>
+<a name="gbab-44"></a><span class="cm">/************************************/</span>
+<a name="gbab-45"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-46"></a>    <span class="n">opus_int16</span>                  <span class="n">xq</span><span class="p">[</span>           <span class="mi">2</span> <span class="o">*</span> <span class="n">MAX_FRAME_LENGTH</span> <span class="p">];</span> <span class="cm">/* Buffer for quantized output signal                             */</span>
+<a name="gbab-47"></a>    <span class="n">opus_int32</span>                  <span class="n">sLTP_shp_Q14</span><span class="p">[</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">MAX_FRAME_LENGTH</span> <span class="p">];</span>
+<a name="gbab-48"></a>    <span class="n">opus_int32</span>                  <span class="n">sLPC_Q14</span><span class="p">[</span> <span class="n">MAX_SUB_FRAME_LENGTH</span> <span class="o">+</span> <span class="n">NSQ_LPC_BUF_LENGTH</span> <span class="p">];</span>
+<a name="gbab-49"></a>    <span class="n">opus_int32</span>                  <span class="n">sAR2_Q14</span><span class="p">[</span> <span class="n">MAX_SHAPE_LPC_ORDER</span> <span class="p">];</span>
+<a name="gbab-50"></a>    <span class="n">opus_int32</span>                  <span class="n">sLF_AR_shp_Q14</span><span class="p">;</span>
+<a name="gbab-51"></a>    <span class="n">opus_int</span>                    <span class="n">lagPrev</span><span class="p">;</span>
+<a name="gbab-52"></a>    <span class="n">opus_int</span>                    <span class="n">sLTP_buf_idx</span><span class="p">;</span>
+<a name="gbab-53"></a>    <span class="n">opus_int</span>                    <span class="n">sLTP_shp_buf_idx</span><span class="p">;</span>
+<a name="gbab-54"></a>    <span class="n">opus_int32</span>                  <span class="n">rand_seed</span><span class="p">;</span>
+<a name="gbab-55"></a>    <span class="n">opus_int32</span>                  <span class="n">prev_gain_Q16</span><span class="p">;</span>
+<a name="gbab-56"></a>    <span class="n">opus_int</span>                    <span class="n">rewhite_flag</span><span class="p">;</span>
+<a name="gbab-57"></a><span class="p">}</span> <span class="n">silk_nsq_state</span><span class="p">;</span>
+<a name="gbab-58"></a>
+<a name="gbab-59"></a><span class="cm">/********************************/</span>
+<a name="gbab-60"></a><span class="cm">/* VAD state                    */</span>
+<a name="gbab-61"></a><span class="cm">/********************************/</span>
+<a name="gbab-62"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-63"></a>    <span class="n">opus_int32</span>                  <span class="n">AnaState</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>                  <span class="cm">/* Analysis filterbank state: 0-8 kHz                                   */</span>
+<a name="gbab-64"></a>    <span class="n">opus_int32</span>                  <span class="n">AnaState1</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>                 <span class="cm">/* Analysis filterbank state: 0-4 kHz                                   */</span>
+<a name="gbab-65"></a>    <span class="n">opus_int32</span>                  <span class="n">AnaState2</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>                 <span class="cm">/* Analysis filterbank state: 0-2 kHz                                   */</span>
+<a name="gbab-66"></a>    <span class="n">opus_int32</span>                  <span class="n">XnrgSubfr</span><span class="p">[</span> <span class="n">VAD_N_BANDS</span> <span class="p">];</span>       <span class="cm">/* Subframe energies                                                    */</span>
+<a name="gbab-67"></a>    <span class="n">opus_int32</span>                  <span class="n">NrgRatioSmth_Q8</span><span class="p">[</span> <span class="n">VAD_N_BANDS</span> <span class="p">];</span> <span class="cm">/* Smoothed energy level in each band                                   */</span>
+<a name="gbab-68"></a>    <span class="n">opus_int16</span>                  <span class="n">HPstate</span><span class="p">;</span>                        <span class="cm">/* State of differentiator in the lowest band                           */</span>
+<a name="gbab-69"></a>    <span class="n">opus_int32</span>                  <span class="n">NL</span><span class="p">[</span> <span class="n">VAD_N_BANDS</span> <span class="p">];</span>              <span class="cm">/* Noise energy level in each band                                      */</span>
+<a name="gbab-70"></a>    <span class="n">opus_int32</span>                  <span class="n">inv_NL</span><span class="p">[</span> <span class="n">VAD_N_BANDS</span> <span class="p">];</span>          <span class="cm">/* Inverse noise energy level in each band                              */</span>
+<a name="gbab-71"></a>    <span class="n">opus_int32</span>                  <span class="n">NoiseLevelBias</span><span class="p">[</span> <span class="n">VAD_N_BANDS</span> <span class="p">];</span>  <span class="cm">/* Noise level estimator bias/offset                                    */</span>
+<a name="gbab-72"></a>    <span class="n">opus_int32</span>                  <span class="n">counter</span><span class="p">;</span>                        <span class="cm">/* Frame counter used in the initial phase                              */</span>
+<a name="gbab-73"></a><span class="p">}</span> <span class="n">silk_VAD_state</span><span class="p">;</span>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a><span class="cm">/* Variable cut-off low-pass filter state */</span>
+<a name="gbab-76"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-77"></a>    <span class="n">opus_int32</span>                   <span class="n">In_LP_State</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>           <span class="cm">/* Low pass filter state */</span>
+<a name="gbab-78"></a>    <span class="n">opus_int32</span>                   <span class="n">transition_frame_no</span><span class="p">;</span>        <span class="cm">/* Counter which is mapped to a cut-off frequency */</span>
+<a name="gbab-79"></a>    <span class="n">opus_int</span>                     <span class="n">mode</span><span class="p">;</span>                       <span class="cm">/* Operating mode, &lt;0: switch down, &gt;0: switch up; 0: do nothing           */</span>
+<a name="gbab-80"></a><span class="p">}</span> <span class="n">silk_LP_state</span><span class="p">;</span>
+<a name="gbab-81"></a>
+<a name="gbab-82"></a><span class="cm">/* Structure containing NLSF codebook */</span>
+<a name="gbab-83"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-84"></a>    <span class="k">const</span> <span class="n">opus_int16</span>             <span class="n">nVectors</span><span class="p">;</span>
+<a name="gbab-85"></a>    <span class="k">const</span> <span class="n">opus_int16</span>             <span class="n">order</span><span class="p">;</span>
+<a name="gbab-86"></a>    <span class="k">const</span> <span class="n">opus_int16</span>             <span class="n">quantStepSize_Q16</span><span class="p">;</span>
+<a name="gbab-87"></a>    <span class="k">const</span> <span class="n">opus_int16</span>             <span class="n">invQuantStepSize_Q6</span><span class="p">;</span>
+<a name="gbab-88"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>             <span class="o">*</span><span class="n">CB1_NLSF_Q8</span><span class="p">;</span>
+<a name="gbab-89"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>             <span class="o">*</span><span class="n">CB1_iCDF</span><span class="p">;</span>
+<a name="gbab-90"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>             <span class="o">*</span><span class="n">pred_Q8</span><span class="p">;</span>
+<a name="gbab-91"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>             <span class="o">*</span><span class="n">ec_sel</span><span class="p">;</span>
+<a name="gbab-92"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>             <span class="o">*</span><span class="n">ec_iCDF</span><span class="p">;</span>
+<a name="gbab-93"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>             <span class="o">*</span><span class="n">ec_Rates_Q5</span><span class="p">;</span>
+<a name="gbab-94"></a>    <span class="k">const</span> <span class="n">opus_int16</span>             <span class="o">*</span><span class="n">deltaMin_Q15</span><span class="p">;</span>
+<a name="gbab-95"></a><span class="p">}</span> <span class="n">silk_NLSF_CB_struct</span><span class="p">;</span>
+<a name="gbab-96"></a>
+<a name="gbab-97"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-98"></a>    <span class="n">opus_int16</span>                   <span class="n">pred_prev_Q13</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>
+<a name="gbab-99"></a>    <span class="n">opus_int16</span>                   <span class="n">sMid</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>
+<a name="gbab-100"></a>    <span class="n">opus_int16</span>                   <span class="n">sSide</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>
+<a name="gbab-101"></a>    <span class="n">opus_int32</span>                   <span class="n">mid_side_amp_Q0</span><span class="p">[</span> <span class="mi">4</span> <span class="p">];</span>
+<a name="gbab-102"></a>    <span class="n">opus_int16</span>                   <span class="n">smth_width_Q14</span><span class="p">;</span>
+<a name="gbab-103"></a>    <span class="n">opus_int16</span>                   <span class="n">width_prev_Q14</span><span class="p">;</span>
+<a name="gbab-104"></a>    <span class="n">opus_int16</span>                   <span class="n">silent_side_len</span><span class="p">;</span>
+<a name="gbab-105"></a>    <span class="n">opus_int8</span>                    <span class="n">predIx</span><span class="p">[</span> <span class="n">MAX_FRAMES_PER_PACKET</span> <span class="p">][</span> <span class="mi">2</span> <span class="p">][</span> <span class="mi">3</span> <span class="p">];</span>
+<a name="gbab-106"></a>    <span class="n">opus_int8</span>                    <span class="n">mid_only_flags</span><span class="p">[</span> <span class="n">MAX_FRAMES_PER_PACKET</span> <span class="p">];</span>
+<a name="gbab-107"></a><span class="p">}</span> <span class="n">stereo_enc_state</span><span class="p">;</span>
+<a name="gbab-108"></a>
+<a name="gbab-109"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-110"></a>    <span class="n">opus_int16</span>                   <span class="n">pred_prev_Q13</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>
+<a name="gbab-111"></a>    <span class="n">opus_int16</span>                   <span class="n">sMid</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>
+<a name="gbab-112"></a>    <span class="n">opus_int16</span>                   <span class="n">sSide</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>
+<a name="gbab-113"></a><span class="p">}</span> <span class="n">stereo_dec_state</span><span class="p">;</span>
+<a name="gbab-114"></a>
+<a name="gbab-115"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-116"></a>    <span class="n">opus_int8</span>                    <span class="n">GainsIndices</span><span class="p">[</span> <span class="n">MAX_NB_SUBFR</span> <span class="p">];</span>
+<a name="gbab-117"></a>    <span class="n">opus_int8</span>                    <span class="n">LTPIndex</span><span class="p">[</span> <span class="n">MAX_NB_SUBFR</span> <span class="p">];</span>
+<a name="gbab-118"></a>    <span class="n">opus_int8</span>                    <span class="n">NLSFIndices</span><span class="p">[</span> <span class="n">MAX_LPC_ORDER</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">];</span>
+<a name="gbab-119"></a>    <span class="n">opus_int16</span>                   <span class="n">lagIndex</span><span class="p">;</span>
+<a name="gbab-120"></a>    <span class="n">opus_int8</span>                    <span class="n">contourIndex</span><span class="p">;</span>
+<a name="gbab-121"></a>    <span class="n">opus_int8</span>                    <span class="n">signalType</span><span class="p">;</span>
+<a name="gbab-122"></a>    <span class="n">opus_int8</span>                    <span class="n">quantOffsetType</span><span class="p">;</span>
+<a name="gbab-123"></a>    <span class="n">opus_int8</span>                    <span class="n">NLSFInterpCoef_Q2</span><span class="p">;</span>
+<a name="gbab-124"></a>    <span class="n">opus_int8</span>                    <span class="n">PERIndex</span><span class="p">;</span>
+<a name="gbab-125"></a>    <span class="n">opus_int8</span>                    <span class="n">LTP_scaleIndex</span><span class="p">;</span>
+<a name="gbab-126"></a>    <span class="n">opus_int8</span>                    <span class="n">Seed</span><span class="p">;</span>
+<a name="gbab-127"></a><span class="p">}</span> <span class="n">SideInfoIndices</span><span class="p">;</span>
+<a name="gbab-128"></a>
+<a name="gbab-129"></a><span class="cm">/********************************/</span>
+<a name="gbab-130"></a><span class="cm">/* Encoder state                */</span>
+<a name="gbab-131"></a><span class="cm">/********************************/</span>
+<a name="gbab-132"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-133"></a>    <span class="n">opus_int32</span>                   <span class="n">In_HP_State</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>                  <span class="cm">/* High pass filter state                                           */</span>
+<a name="gbab-134"></a>    <span class="n">opus_int32</span>                   <span class="n">variable_HP_smth1_Q15</span><span class="p">;</span>             <span class="cm">/* State of first smoother                                          */</span>
+<a name="gbab-135"></a>    <span class="n">opus_int32</span>                   <span class="n">variable_HP_smth2_Q15</span><span class="p">;</span>             <span class="cm">/* State of second smoother                                         */</span>
+<a name="gbab-136"></a>    <span class="n">silk_LP_state</span>                <span class="n">sLP</span><span class="p">;</span>                               <span class="cm">/* Low pass filter state                                            */</span>
+<a name="gbab-137"></a>    <span class="n">silk_VAD_state</span>               <span class="n">sVAD</span><span class="p">;</span>                              <span class="cm">/* Voice activity detector state                                    */</span>
+<a name="gbab-138"></a>    <span class="n">silk_nsq_state</span>               <span class="n">sNSQ</span><span class="p">;</span>                              <span class="cm">/* Noise Shape Quantizer State                                      */</span>
+<a name="gbab-139"></a>    <span class="n">opus_int16</span>                   <span class="n">prev_NLSFq_Q15</span><span class="p">[</span> <span class="n">MAX_LPC_ORDER</span> <span class="p">];</span>   <span class="cm">/* Previously quantized NLSF vector                                 */</span>
+<a name="gbab-140"></a>    <span class="n">opus_int</span>                     <span class="n">speech_activity_Q8</span><span class="p">;</span>                <span class="cm">/* Speech activity                                                  */</span>
+<a name="gbab-141"></a>    <span class="n">opus_int</span>                     <span class="n">allow_bandwidth_switch</span><span class="p">;</span>            <span class="cm">/* Flag indicating that switching of internal bandwidth is allowed  */</span>
+<a name="gbab-142"></a>    <span class="n">opus_int8</span>                    <span class="n">LBRRprevLastGainIndex</span><span class="p">;</span>
+<a name="gbab-143"></a>    <span class="n">opus_int8</span>                    <span class="n">prevSignalType</span><span class="p">;</span>
+<a name="gbab-144"></a>    <span class="n">opus_int</span>                     <span class="n">prevLag</span><span class="p">;</span>
+<a name="gbab-145"></a>    <span class="n">opus_int</span>                     <span class="n">pitch_LPC_win_length</span><span class="p">;</span>
+<a name="gbab-146"></a>    <span class="n">opus_int</span>                     <span class="n">max_pitch_lag</span><span class="p">;</span>                     <span class="cm">/* Highest possible pitch lag (samples)                             */</span>
+<a name="gbab-147"></a>    <span class="n">opus_int32</span>                   <span class="n">API_fs_Hz</span><span class="p">;</span>                         <span class="cm">/* API sampling frequency (Hz)                                      */</span>
+<a name="gbab-148"></a>    <span class="n">opus_int32</span>                   <span class="n">prev_API_fs_Hz</span><span class="p">;</span>                    <span class="cm">/* Previous API sampling frequency (Hz)                             */</span>
+<a name="gbab-149"></a>    <span class="n">opus_int</span>                     <span class="n">maxInternal_fs_Hz</span><span class="p">;</span>                 <span class="cm">/* Maximum internal sampling frequency (Hz)                         */</span>
+<a name="gbab-150"></a>    <span class="n">opus_int</span>                     <span class="n">minInternal_fs_Hz</span><span class="p">;</span>                 <span class="cm">/* Minimum internal sampling frequency (Hz)                         */</span>
+<a name="gbab-151"></a>    <span class="n">opus_int</span>                     <span class="n">desiredInternal_fs_Hz</span><span class="p">;</span>             <span class="cm">/* Soft request for internal sampling frequency (Hz)                */</span>
+<a name="gbab-152"></a>    <span class="n">opus_int</span>                     <span class="n">fs_kHz</span><span class="p">;</span>                            <span class="cm">/* Internal sampling frequency (kHz)                                */</span>
+<a name="gbab-153"></a>    <span class="n">opus_int</span>                     <span class="n">nb_subfr</span><span class="p">;</span>                          <span class="cm">/* Number of 5 ms subframes in a frame                              */</span>
+<a name="gbab-154"></a>    <span class="n">opus_int</span>                     <span class="n">frame_length</span><span class="p">;</span>                      <span class="cm">/* Frame length (samples)                                           */</span>
+<a name="gbab-155"></a>    <span class="n">opus_int</span>                     <span class="n">subfr_length</span><span class="p">;</span>                      <span class="cm">/* Subframe length (samples)                                        */</span>
+<a name="gbab-156"></a>    <span class="n">opus_int</span>                     <span class="n">ltp_mem_length</span><span class="p">;</span>                    <span class="cm">/* Length of LTP memory                                             */</span>
+<a name="gbab-157"></a>    <span class="n">opus_int</span>                     <span class="n">la_pitch</span><span class="p">;</span>                          <span class="cm">/* Look-ahead for pitch analysis (samples)                          */</span>
+<a name="gbab-158"></a>    <span class="n">opus_int</span>                     <span class="n">la_shape</span><span class="p">;</span>                          <span class="cm">/* Look-ahead for noise shape analysis (samples)                    */</span>
+<a name="gbab-159"></a>    <span class="n">opus_int</span>                     <span class="n">shapeWinLength</span><span class="p">;</span>                    <span class="cm">/* Window length for noise shape analysis (samples)                 */</span>
+<a name="gbab-160"></a>    <span class="n">opus_int32</span>                   <span class="n">TargetRate_bps</span><span class="p">;</span>                    <span class="cm">/* Target bitrate (bps)                                             */</span>
+<a name="gbab-161"></a>    <span class="n">opus_int</span>                     <span class="n">PacketSize_ms</span><span class="p">;</span>                     <span class="cm">/* Number of milliseconds to put in each packet                     */</span>
+<a name="gbab-162"></a>    <span class="n">opus_int</span>                     <span class="n">PacketLoss_perc</span><span class="p">;</span>                   <span class="cm">/* Packet loss rate measured by farend                              */</span>
+<a name="gbab-163"></a>    <span class="n">opus_int32</span>                   <span class="n">frameCounter</span><span class="p">;</span>
+<a name="gbab-164"></a>    <span class="n">opus_int</span>                     <span class="n">Complexity</span><span class="p">;</span>                        <span class="cm">/* Complexity setting                                               */</span>
+<a name="gbab-165"></a>    <span class="n">opus_int</span>                     <span class="n">nStatesDelayedDecision</span><span class="p">;</span>            <span class="cm">/* Number of states in delayed decision quantization                */</span>
+<a name="gbab-166"></a>    <span class="n">opus_int</span>                     <span class="n">useInterpolatedNLSFs</span><span class="p">;</span>              <span class="cm">/* Flag for using NLSF interpolation                                */</span>
+<a name="gbab-167"></a>    <span class="n">opus_int</span>                     <span class="n">shapingLPCOrder</span><span class="p">;</span>                   <span class="cm">/* Filter order for noise shaping filters                           */</span>
+<a name="gbab-168"></a>    <span class="n">opus_int</span>                     <span class="n">predictLPCOrder</span><span class="p">;</span>                   <span class="cm">/* Filter order for prediction filters                              */</span>
+<a name="gbab-169"></a>    <span class="n">opus_int</span>                     <span class="n">pitchEstimationComplexity</span><span class="p">;</span>         <span class="cm">/* Complexity level for pitch estimator                             */</span>
+<a name="gbab-170"></a>    <span class="n">opus_int</span>                     <span class="n">pitchEstimationLPCOrder</span><span class="p">;</span>           <span class="cm">/* Whitening filter order for pitch estimator                       */</span>
+<a name="gbab-171"></a>    <span class="n">opus_int32</span>                   <span class="n">pitchEstimationThreshold_Q16</span><span class="p">;</span>      <span class="cm">/* Threshold for pitch estimator                                    */</span>
+<a name="gbab-172"></a>    <span class="n">opus_int</span>                     <span class="n">LTPQuantLowComplexity</span><span class="p">;</span>             <span class="cm">/* Flag for low complexity LTP quantization                         */</span>
+<a name="gbab-173"></a>    <span class="n">opus_int</span>                     <span class="n">mu_LTP_Q9</span><span class="p">;</span>                         <span class="cm">/* Rate-distortion tradeoff in LTP quantization                     */</span>
+<a name="gbab-174"></a>    <span class="n">opus_int32</span>                   <span class="n">sum_log_gain_Q7</span><span class="p">;</span>					<span class="cm">/* Cumulative max prediction gain									*/</span>
+<a name="gbab-175"></a>    <span class="n">opus_int</span>                     <span class="n">NLSF_MSVQ_Survivors</span><span class="p">;</span>               <span class="cm">/* Number of survivors in NLSF MSVQ                                 */</span>
+<a name="gbab-176"></a>    <span class="n">opus_int</span>                     <span class="n">first_frame_after_reset</span><span class="p">;</span>           <span class="cm">/* Flag for deactivating NLSF interpolation, pitch prediction       */</span>
+<a name="gbab-177"></a>    <span class="n">opus_int</span>                     <span class="n">controlled_since_last_payload</span><span class="p">;</span>     <span class="cm">/* Flag for ensuring codec_control only runs once per packet        */</span>
+<a name="gbab-178"></a>    <span class="n">opus_int</span>                     <span class="n">warping_Q16</span><span class="p">;</span>                       <span class="cm">/* Warping parameter for warped noise shaping                       */</span>
+<a name="gbab-179"></a>    <span class="n">opus_int</span>                     <span class="n">useCBR</span><span class="p">;</span>                            <span class="cm">/* Flag to enable constant bitrate                                  */</span>
+<a name="gbab-180"></a>    <span class="n">opus_int</span>                     <span class="n">prefillFlag</span><span class="p">;</span>                       <span class="cm">/* Flag to indicate that only buffers are prefilled, no coding      */</span>
+<a name="gbab-181"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>             <span class="o">*</span><span class="n">pitch_lag_low_bits_iCDF</span><span class="p">;</span>          <span class="cm">/* Pointer to iCDF table for low bits of pitch lag index            */</span>
+<a name="gbab-182"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>             <span class="o">*</span><span class="n">pitch_contour_iCDF</span><span class="p">;</span>               <span class="cm">/* Pointer to iCDF table for pitch contour index                    */</span>
+<a name="gbab-183"></a>    <span class="k">const</span> <span class="n">silk_NLSF_CB_struct</span>    <span class="o">*</span><span class="n">psNLSF_CB</span><span class="p">;</span>                        <span class="cm">/* Pointer to NLSF codebook                                         */</span>
+<a name="gbab-184"></a>    <span class="n">opus_int</span>                     <span class="n">input_quality_bands_Q15</span><span class="p">[</span> <span class="n">VAD_N_BANDS</span> <span class="p">];</span>
+<a name="gbab-185"></a>    <span class="n">opus_int</span>                     <span class="n">input_tilt_Q15</span><span class="p">;</span>
+<a name="gbab-186"></a>    <span class="n">opus_int</span>                     <span class="n">SNR_dB_Q7</span><span class="p">;</span>                         <span class="cm">/* Quality setting                                                  */</span>
+<a name="gbab-187"></a>
+<a name="gbab-188"></a>    <span class="n">opus_int8</span>                    <span class="n">VAD_flags</span><span class="p">[</span> <span class="n">MAX_FRAMES_PER_PACKET</span> <span class="p">];</span>
+<a name="gbab-189"></a>    <span class="n">opus_int8</span>                    <span class="n">LBRR_flag</span><span class="p">;</span>
+<a name="gbab-190"></a>    <span class="n">opus_int</span>                     <span class="n">LBRR_flags</span><span class="p">[</span> <span class="n">MAX_FRAMES_PER_PACKET</span> <span class="p">];</span>
+<a name="gbab-191"></a>
+<a name="gbab-192"></a>    <span class="n">SideInfoIndices</span>              <span class="n">indices</span><span class="p">;</span>
+<a name="gbab-193"></a>    <span class="n">opus_int8</span>                    <span class="n">pulses</span><span class="p">[</span> <span class="n">MAX_FRAME_LENGTH</span> <span class="p">];</span>
+<a name="gbab-194"></a>
+<a name="gbab-195"></a>    <span class="kt">int</span>                          <span class="n">arch</span><span class="p">;</span>
+<a name="gbab-196"></a>
+<a name="gbab-197"></a>    <span class="cm">/* Input/output buffering */</span>
+<a name="gbab-198"></a>    <span class="n">opus_int16</span>                   <span class="n">inputBuf</span><span class="p">[</span> <span class="n">MAX_FRAME_LENGTH</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">];</span>  <span class="cm">/* Buffer containing input signal                                   */</span>
+<a name="gbab-199"></a>    <span class="n">opus_int</span>                     <span class="n">inputBufIx</span><span class="p">;</span>
+<a name="gbab-200"></a>    <span class="n">opus_int</span>                     <span class="n">nFramesPerPacket</span><span class="p">;</span>
+<a name="gbab-201"></a>    <span class="n">opus_int</span>                     <span class="n">nFramesEncoded</span><span class="p">;</span>                    <span class="cm">/* Number of frames analyzed in current packet                      */</span>
+<a name="gbab-202"></a>
+<a name="gbab-203"></a>    <span class="n">opus_int</span>                     <span class="n">nChannelsAPI</span><span class="p">;</span>
+<a name="gbab-204"></a>    <span class="n">opus_int</span>                     <span class="n">nChannelsInternal</span><span class="p">;</span>
+<a name="gbab-205"></a>    <span class="n">opus_int</span>                     <span class="n">channelNb</span><span class="p">;</span>
+<a name="gbab-206"></a>
+<a name="gbab-207"></a>    <span class="cm">/* Parameters For LTP scaling Control */</span>
+<a name="gbab-208"></a>    <span class="n">opus_int</span>                     <span class="n">frames_since_onset</span><span class="p">;</span>
+<a name="gbab-209"></a>
+<a name="gbab-210"></a>    <span class="cm">/* Specifically for entropy coding */</span>
+<a name="gbab-211"></a>    <span class="n">opus_int</span>                     <span class="n">ec_prevSignalType</span><span class="p">;</span>
+<a name="gbab-212"></a>    <span class="n">opus_int16</span>                   <span class="n">ec_prevLagIndex</span><span class="p">;</span>
+<a name="gbab-213"></a>
+<a name="gbab-214"></a>    <span class="n">silk_resampler_state_struct</span> <span class="n">resampler_state</span><span class="p">;</span>
+<a name="gbab-215"></a>
+<a name="gbab-216"></a>    <span class="cm">/* DTX */</span>
+<a name="gbab-217"></a>    <span class="n">opus_int</span>                     <span class="n">useDTX</span><span class="p">;</span>                            <span class="cm">/* Flag to enable DTX                                               */</span>
+<a name="gbab-218"></a>    <span class="n">opus_int</span>                     <span class="n">inDTX</span><span class="p">;</span>                             <span class="cm">/* Flag to signal DTX period                                        */</span>
+<a name="gbab-219"></a>    <span class="n">opus_int</span>                     <span class="n">noSpeechCounter</span><span class="p">;</span>                   <span class="cm">/* Counts concecutive nonactive frames, used by DTX                 */</span>
+<a name="gbab-220"></a>
+<a name="gbab-221"></a>    <span class="cm">/* Inband Low Bitrate Redundancy (LBRR) data */</span>
+<a name="gbab-222"></a>    <span class="n">opus_int</span>                     <span class="n">useInBandFEC</span><span class="p">;</span>                      <span class="cm">/* Saves the API setting for query                                  */</span>
+<a name="gbab-223"></a>    <span class="n">opus_int</span>                     <span class="n">LBRR_enabled</span><span class="p">;</span>                      <span class="cm">/* Depends on useInBandFRC, bitrate and packet loss rate            */</span>
+<a name="gbab-224"></a>    <span class="n">opus_int</span>                     <span class="n">LBRR_GainIncreases</span><span class="p">;</span>                <span class="cm">/* Gains increment for coding LBRR frames                           */</span>
+<a name="gbab-225"></a>    <span class="n">SideInfoIndices</span>              <span class="n">indices_LBRR</span><span class="p">[</span> <span class="n">MAX_FRAMES_PER_PACKET</span> <span class="p">];</span>
+<a name="gbab-226"></a>    <span class="n">opus_int8</span>                    <span class="n">pulses_LBRR</span><span class="p">[</span> <span class="n">MAX_FRAMES_PER_PACKET</span> <span class="p">][</span> <span class="n">MAX_FRAME_LENGTH</span> <span class="p">];</span>
+<a name="gbab-227"></a><span class="p">}</span> <span class="n">silk_encoder_state</span><span class="p">;</span>
+<a name="gbab-228"></a>
+<a name="gbab-229"></a>
+<a name="gbab-230"></a><span class="cm">/* Struct for Packet Loss Concealment */</span>
+<a name="gbab-231"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-232"></a>    <span class="n">opus_int32</span>                  <span class="n">pitchL_Q8</span><span class="p">;</span>                          <span class="cm">/* Pitch lag to use for voiced concealment                          */</span>
+<a name="gbab-233"></a>    <span class="n">opus_int16</span>                  <span class="n">LTPCoef_Q14</span><span class="p">[</span> <span class="n">LTP_ORDER</span> <span class="p">];</span>           <span class="cm">/* LTP coeficients to use for voiced concealment                    */</span>
+<a name="gbab-234"></a>    <span class="n">opus_int16</span>                  <span class="n">prevLPC_Q12</span><span class="p">[</span> <span class="n">MAX_LPC_ORDER</span> <span class="p">];</span>
+<a name="gbab-235"></a>    <span class="n">opus_int</span>                    <span class="n">last_frame_lost</span><span class="p">;</span>                    <span class="cm">/* Was previous frame lost                                          */</span>
+<a name="gbab-236"></a>    <span class="n">opus_int32</span>                  <span class="n">rand_seed</span><span class="p">;</span>                          <span class="cm">/* Seed for unvoiced signal generation                              */</span>
+<a name="gbab-237"></a>    <span class="n">opus_int16</span>                  <span class="n">randScale_Q14</span><span class="p">;</span>                      <span class="cm">/* Scaling of unvoiced random signal                                */</span>
+<a name="gbab-238"></a>    <span class="n">opus_int32</span>                  <span class="n">conc_energy</span><span class="p">;</span>
+<a name="gbab-239"></a>    <span class="n">opus_int</span>                    <span class="n">conc_energy_shift</span><span class="p">;</span>
+<a name="gbab-240"></a>    <span class="n">opus_int16</span>                  <span class="n">prevLTP_scale_Q14</span><span class="p">;</span>
+<a name="gbab-241"></a>    <span class="n">opus_int32</span>                  <span class="n">prevGain_Q16</span><span class="p">[</span> <span class="mi">2</span> <span class="p">];</span>
+<a name="gbab-242"></a>    <span class="n">opus_int</span>                    <span class="n">fs_kHz</span><span class="p">;</span>
+<a name="gbab-243"></a>    <span class="n">opus_int</span>                    <span class="n">nb_subfr</span><span class="p">;</span>
+<a name="gbab-244"></a>    <span class="n">opus_int</span>                    <span class="n">subfr_length</span><span class="p">;</span>
+<a name="gbab-245"></a><span class="p">}</span> <span class="n">silk_PLC_struct</span><span class="p">;</span>
+<a name="gbab-246"></a>
+<a name="gbab-247"></a><span class="cm">/* Struct for CNG */</span>
+<a name="gbab-248"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-249"></a>    <span class="n">opus_int32</span>                  <span class="n">CNG_exc_buf_Q14</span><span class="p">[</span> <span class="n">MAX_FRAME_LENGTH</span> <span class="p">];</span>
+<a name="gbab-250"></a>    <span class="n">opus_int16</span>                  <span class="n">CNG_smth_NLSF_Q15</span><span class="p">[</span> <span class="n">MAX_LPC_ORDER</span> <span class="p">];</span>
+<a name="gbab-251"></a>    <span class="n">opus_int32</span>                  <span class="n">CNG_synth_state</span><span class="p">[</span> <span class="n">MAX_LPC_ORDER</span> <span class="p">];</span>
+<a name="gbab-252"></a>    <span class="n">opus_int32</span>                  <span class="n">CNG_smth_Gain_Q16</span><span class="p">;</span>
+<a name="gbab-253"></a>    <span class="n">opus_int32</span>                  <span class="n">rand_seed</span><span class="p">;</span>
+<a name="gbab-254"></a>    <span class="n">opus_int</span>                    <span class="n">fs_kHz</span><span class="p">;</span>
+<a name="gbab-255"></a><span class="p">}</span> <span class="n">silk_CNG_struct</span><span class="p">;</span>
+<a name="gbab-256"></a>
+<a name="gbab-257"></a><span class="cm">/********************************/</span>
+<a name="gbab-258"></a><span class="cm">/* Decoder state                */</span>
+<a name="gbab-259"></a><span class="cm">/********************************/</span>
+<a name="gbab-260"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-261"></a>    <span class="n">opus_int32</span>                  <span class="n">prev_gain_Q16</span><span class="p">;</span>
+<a name="gbab-262"></a>    <span class="n">opus_int32</span>                  <span class="n">exc_Q14</span><span class="p">[</span> <span class="n">MAX_FRAME_LENGTH</span> <span class="p">];</span>
+<a name="gbab-263"></a>    <span class="n">opus_int32</span>                  <span class="n">sLPC_Q14_buf</span><span class="p">[</span> <span class="n">MAX_LPC_ORDER</span> <span class="p">];</span>
+<a name="gbab-264"></a>    <span class="n">opus_int16</span>                  <span class="n">outBuf</span><span class="p">[</span> <span class="n">MAX_FRAME_LENGTH</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">MAX_SUB_FRAME_LENGTH</span> <span class="p">];</span>  <span class="cm">/* Buffer for output signal                     */</span>
+<a name="gbab-265"></a>    <span class="n">opus_int</span>                    <span class="n">lagPrev</span><span class="p">;</span>                            <span class="cm">/* Previous Lag                                                     */</span>
+<a name="gbab-266"></a>    <span class="n">opus_int8</span>                   <span class="n">LastGainIndex</span><span class="p">;</span>                      <span class="cm">/* Previous gain index                                              */</span>
+<a name="gbab-267"></a>    <span class="n">opus_int</span>                    <span class="n">fs_kHz</span><span class="p">;</span>                             <span class="cm">/* Sampling frequency in kHz                                        */</span>
+<a name="gbab-268"></a>    <span class="n">opus_int32</span>                  <span class="n">fs_API_hz</span><span class="p">;</span>                          <span class="cm">/* API sample frequency (Hz)                                        */</span>
+<a name="gbab-269"></a>    <span class="n">opus_int</span>                    <span class="n">nb_subfr</span><span class="p">;</span>                           <span class="cm">/* Number of 5 ms subframes in a frame                              */</span>
+<a name="gbab-270"></a>    <span class="n">opus_int</span>                    <span class="n">frame_length</span><span class="p">;</span>                       <span class="cm">/* Frame length (samples)                                           */</span>
+<a name="gbab-271"></a>    <span class="n">opus_int</span>                    <span class="n">subfr_length</span><span class="p">;</span>                       <span class="cm">/* Subframe length (samples)                                        */</span>
+<a name="gbab-272"></a>    <span class="n">opus_int</span>                    <span class="n">ltp_mem_length</span><span class="p">;</span>                     <span class="cm">/* Length of LTP memory                                             */</span>
+<a name="gbab-273"></a>    <span class="n">opus_int</span>                    <span class="n">LPC_order</span><span class="p">;</span>                          <span class="cm">/* LPC order                                                        */</span>
+<a name="gbab-274"></a>    <span class="n">opus_int16</span>                  <span class="n">prevNLSF_Q15</span><span class="p">[</span> <span class="n">MAX_LPC_ORDER</span> <span class="p">];</span>      <span class="cm">/* Used to interpolate LSFs                                         */</span>
+<a name="gbab-275"></a>    <span class="n">opus_int</span>                    <span class="n">first_frame_after_reset</span><span class="p">;</span>            <span class="cm">/* Flag for deactivating NLSF interpolation                         */</span>
+<a name="gbab-276"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>            <span class="o">*</span><span class="n">pitch_lag_low_bits_iCDF</span><span class="p">;</span>           <span class="cm">/* Pointer to iCDF table for low bits of pitch lag index            */</span>
+<a name="gbab-277"></a>    <span class="k">const</span> <span class="n">opus_uint8</span>            <span class="o">*</span><span class="n">pitch_contour_iCDF</span><span class="p">;</span>                <span class="cm">/* Pointer to iCDF table for pitch contour index                    */</span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a>    <span class="cm">/* For buffering payload in case of more frames per packet */</span>
+<a name="gbab-280"></a>    <span class="n">opus_int</span>                    <span class="n">nFramesDecoded</span><span class="p">;</span>
+<a name="gbab-281"></a>    <span class="n">opus_int</span>                    <span class="n">nFramesPerPacket</span><span class="p">;</span>
+<a name="gbab-282"></a>
+<a name="gbab-283"></a>    <span class="cm">/* Specifically for entropy coding */</span>
+<a name="gbab-284"></a>    <span class="n">opus_int</span>                    <span class="n">ec_prevSignalType</span><span class="p">;</span>
+<a name="gbab-285"></a>    <span class="n">opus_int16</span>                  <span class="n">ec_prevLagIndex</span><span class="p">;</span>
+<a name="gbab-286"></a>
+<a name="gbab-287"></a>    <span class="n">opus_int</span>                    <span class="n">VAD_flags</span><span class="p">[</span> <span class="n">MAX_FRAMES_PER_PACKET</span> <span class="p">];</span>
+<a name="gbab-288"></a>    <span class="n">opus_int</span>                    <span class="n">LBRR_flag</span><span class="p">;</span>
+<a name="gbab-289"></a>    <span class="n">opus_int</span>                    <span class="n">LBRR_flags</span><span class="p">[</span> <span class="n">MAX_FRAMES_PER_PACKET</span> <span class="p">];</span>
+<a name="gbab-290"></a>
+<a name="gbab-291"></a>    <span class="n">silk_resampler_state_struct</span> <span class="n">resampler_state</span><span class="p">;</span>
+<a name="gbab-292"></a>
+<a name="gbab-293"></a>    <span class="k">const</span> <span class="n">silk_NLSF_CB_struct</span>   <span class="o">*</span><span class="n">psNLSF_CB</span><span class="p">;</span>                         <span class="cm">/* Pointer to NLSF codebook                                         */</span>
+<a name="gbab-294"></a>
+<a name="gbab-295"></a>    <span class="cm">/* Quantization indices */</span>
+<a name="gbab-296"></a>    <span class="n">SideInfoIndices</span>             <span class="n">indices</span><span class="p">;</span>
+<a name="gbab-297"></a>
+<a name="gbab-298"></a>    <span class="cm">/* CNG state */</span>
+<a name="gbab-299"></a>    <span class="n">silk_CNG_struct</span>             <span class="n">sCNG</span><span class="p">;</span>
+<a name="gbab-300"></a>
+<a name="gbab-301"></a>    <span class="cm">/* Stuff used for PLC */</span>
+<a name="gbab-302"></a>    <span class="n">opus_int</span>                    <span class="n">lossCnt</span><span class="p">;</span>
+<a name="gbab-303"></a>    <span class="n">opus_int</span>                    <span class="n">prevSignalType</span><span class="p">;</span>
+<a name="gbab-304"></a>
+<a name="gbab-305"></a>    <span class="n">silk_PLC_struct</span> <span class="n">sPLC</span><span class="p">;</span>
+<a name="gbab-306"></a>
+<a name="gbab-307"></a><span class="p">}</span> <span class="n">silk_decoder_state</span><span class="p">;</span>
+<a name="gbab-308"></a>
+<a name="gbab-309"></a><span class="cm">/************************/</span>
+<a name="gbab-310"></a><span class="cm">/* Decoder control      */</span>
+<a name="gbab-311"></a><span class="cm">/************************/</span>
+<a name="gbab-312"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-313"></a>    <span class="cm">/* Prediction and coding parameters */</span>
+<a name="gbab-314"></a>    <span class="n">opus_int</span>                    <span class="n">pitchL</span><span class="p">[</span> <span class="n">MAX_NB_SUBFR</span> <span class="p">];</span>
+<a name="gbab-315"></a>    <span class="n">opus_int32</span>                  <span class="n">Gains_Q16</span><span class="p">[</span> <span class="n">MAX_NB_SUBFR</span> <span class="p">];</span>
+<a name="gbab-316"></a>    <span class="cm">/* Holds interpolated and final coefficients, 4-byte aligned */</span>
+<a name="gbab-317"></a>    <span class="n">silk_DWORD_ALIGN</span> <span class="n">opus_int16</span> <span class="n">PredCoef_Q12</span><span class="p">[</span> <span class="mi">2</span> <span class="p">][</span> <span class="n">MAX_LPC_ORDER</span> <span class="p">];</span>
+<a name="gbab-318"></a>    <span class="n">opus_int16</span>                  <span class="n">LTPCoef_Q14</span><span class="p">[</span> <span class="n">LTP_ORDER</span> <span class="o">*</span> <span class="n">MAX_NB_SUBFR</span> <span class="p">];</span>
+<a name="gbab-319"></a>    <span class="n">opus_int</span>                    <span class="n">LTP_scale_Q14</span><span class="p">;</span>
+<a name="gbab-320"></a><span class="p">}</span> <span class="n">silk_decoder_control</span><span class="p">;</span>
+<a name="gbab-321"></a>
+<a name="gbab-322"></a>
+<a name="gbab-323"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-324"></a><span class="p">}</span>
+<a name="gbab-325"></a><span class="cp">#endif</span>
+<a name="gbab-326"></a>
+<a name="gbab-327"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

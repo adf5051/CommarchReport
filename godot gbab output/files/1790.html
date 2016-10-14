@@ -1,0 +1,411 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* Copyright (c) 2002-2008 Jean-Marc Valin</span>
+<a name="gbab-2"></a><span class="cm">   Copyright (c) 2007-2008 CSIRO</span>
+<a name="gbab-3"></a><span class="cm">   Copyright (c) 2007-2009 Xiph.Org Foundation</span>
+<a name="gbab-4"></a><span class="cm">   Written by Jean-Marc Valin */</span>
+<a name="gbab-5"></a><span class="cm">/**</span>
+<a name="gbab-6"></a><span class="cm">   @file mathops.h</span>
+<a name="gbab-7"></a><span class="cm">   @brief Various math functions</span>
+<a name="gbab-8"></a><span class="cm">*/</span>
+<a name="gbab-9"></a><span class="cm">/*</span>
+<a name="gbab-10"></a><span class="cm">   Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-11"></a><span class="cm">   modification, are permitted provided that the following conditions</span>
+<a name="gbab-12"></a><span class="cm">   are met:</span>
+<a name="gbab-13"></a>
+<a name="gbab-14"></a><span class="cm">   - Redistributions of source code must retain the above copyright</span>
+<a name="gbab-15"></a><span class="cm">   notice, this list of conditions and the following disclaimer.</span>
+<a name="gbab-16"></a>
+<a name="gbab-17"></a><span class="cm">   - Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-18"></a><span class="cm">   notice, this list of conditions and the following disclaimer in the</span>
+<a name="gbab-19"></a><span class="cm">   documentation and/or other materials provided with the distribution.</span>
+<a name="gbab-20"></a>
+<a name="gbab-21"></a><span class="cm">   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</span>
+<a name="gbab-22"></a><span class="cm">   ``AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT</span>
+<a name="gbab-23"></a><span class="cm">   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR</span>
+<a name="gbab-24"></a><span class="cm">   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER</span>
+<a name="gbab-25"></a><span class="cm">   OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,</span>
+<a name="gbab-26"></a><span class="cm">   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,</span>
+<a name="gbab-27"></a><span class="cm">   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR</span>
+<a name="gbab-28"></a><span class="cm">   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF</span>
+<a name="gbab-29"></a><span class="cm">   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING</span>
+<a name="gbab-30"></a><span class="cm">   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<a name="gbab-31"></a><span class="cm">   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-32"></a><span class="cm">*/</span>
+<a name="gbab-33"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/opus_config.h&quot;</span><span class="cp"></span>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/celt/mathops.h&quot;</span><span class="cp"></span>
+<a name="gbab-36"></a>
+<a name="gbab-37"></a><span class="cm">/*Compute floor(sqrt(_val)) with exact arithmetic.</span>
+<a name="gbab-38"></a><span class="cm">  This has been tested on all possible 32-bit inputs.*/</span>
+<a name="gbab-39"></a><span class="kt">unsigned</span> <span class="nf">isqrt32</span><span class="p">(</span><span class="n">opus_uint32</span> <span class="n">_val</span><span class="p">){</span>
+<a name="gbab-40"></a>  <span class="kt">unsigned</span> <span class="n">b</span><span class="p">;</span>
+<a name="gbab-41"></a>  <span class="kt">unsigned</span> <span class="n">g</span><span class="p">;</span>
+<a name="gbab-42"></a>  <span class="kt">int</span>      <span class="n">bshift</span><span class="p">;</span>
+<a name="gbab-43"></a>  <span class="cm">/*Uses the second method from</span>
+<a name="gbab-44"></a><span class="cm">     http://www.azillionmonkeys.com/qed/sqroot.html</span>
+<a name="gbab-45"></a><span class="cm">    The main idea is to search for the largest binary digit b such that</span>
+<a name="gbab-46"></a><span class="cm">     (g+b)*(g+b) &lt;= _val, and add it to the solution g.*/</span>
+<a name="gbab-47"></a>  <span class="n">g</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-48"></a>  <span class="n">bshift</span><span class="o">=</span><span class="p">(</span><span class="n">EC_ILOG</span><span class="p">(</span><span class="n">_val</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
+<a name="gbab-49"></a>  <span class="n">b</span><span class="o">=</span><span class="mi">1U</span><span class="o">&lt;&lt;</span><span class="n">bshift</span><span class="p">;</span>
+<a name="gbab-50"></a>  <span class="k">do</span><span class="p">{</span>
+<a name="gbab-51"></a>    <span class="n">opus_uint32</span> <span class="n">t</span><span class="p">;</span>
+<a name="gbab-52"></a>    <span class="n">t</span><span class="o">=</span><span class="p">(((</span><span class="n">opus_uint32</span><span class="p">)</span><span class="n">g</span><span class="o">&lt;&lt;</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">b</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">bshift</span><span class="p">;</span>
+<a name="gbab-53"></a>    <span class="k">if</span><span class="p">(</span><span class="n">t</span><span class="o">&lt;=</span><span class="n">_val</span><span class="p">){</span>
+<a name="gbab-54"></a>      <span class="n">g</span><span class="o">+=</span><span class="n">b</span><span class="p">;</span>
+<a name="gbab-55"></a>      <span class="n">_val</span><span class="o">-=</span><span class="n">t</span><span class="p">;</span>
+<a name="gbab-56"></a>    <span class="p">}</span>
+<a name="gbab-57"></a>    <span class="n">b</span><span class="o">&gt;&gt;=</span><span class="mi">1</span><span class="p">;</span>
+<a name="gbab-58"></a>    <span class="n">bshift</span><span class="o">--</span><span class="p">;</span>
+<a name="gbab-59"></a>  <span class="p">}</span>
+<a name="gbab-60"></a>  <span class="k">while</span><span class="p">(</span><span class="n">bshift</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-61"></a>  <span class="k">return</span> <span class="n">g</span><span class="p">;</span>
+<a name="gbab-62"></a><span class="p">}</span>
+<a name="gbab-63"></a>
+<a name="gbab-64"></a><span class="cp">#ifdef OPUS_FIXED_POINT</span>
+<a name="gbab-65"></a>
+<a name="gbab-66"></a><span class="n">opus_val32</span> <span class="nf">frac_div32</span><span class="p">(</span><span class="n">opus_val32</span> <span class="n">a</span><span class="p">,</span> <span class="n">opus_val32</span> <span class="n">b</span><span class="p">)</span>
+<a name="gbab-67"></a><span class="p">{</span>
+<a name="gbab-68"></a>   <span class="n">opus_val16</span> <span class="n">rcp</span><span class="p">;</span>
+<a name="gbab-69"></a>   <span class="n">opus_val32</span> <span class="n">result</span><span class="p">,</span> <span class="n">rem</span><span class="p">;</span>
+<a name="gbab-70"></a>   <span class="kt">int</span> <span class="n">shift</span> <span class="o">=</span> <span class="n">celt_ilog2</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">-</span><span class="mi">29</span><span class="p">;</span>
+<a name="gbab-71"></a>   <span class="n">a</span> <span class="o">=</span> <span class="n">VSHR32</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">shift</span><span class="p">);</span>
+<a name="gbab-72"></a>   <span class="n">b</span> <span class="o">=</span> <span class="n">VSHR32</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">shift</span><span class="p">);</span>
+<a name="gbab-73"></a>   <span class="cm">/* 16-bit reciprocal */</span>
+<a name="gbab-74"></a>   <span class="n">rcp</span> <span class="o">=</span> <span class="n">ROUND16</span><span class="p">(</span><span class="n">celt_rcp</span><span class="p">(</span><span class="n">ROUND16</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span><span class="mi">3</span><span class="p">);</span>
+<a name="gbab-75"></a>   <span class="n">result</span> <span class="o">=</span> <span class="n">MULT16_32_Q15</span><span class="p">(</span><span class="n">rcp</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+<a name="gbab-76"></a>   <span class="n">rem</span> <span class="o">=</span> <span class="n">PSHR32</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="n">MULT32_32_Q31</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+<a name="gbab-77"></a>   <span class="n">result</span> <span class="o">=</span> <span class="n">ADD32</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">SHL32</span><span class="p">(</span><span class="n">MULT16_32_Q15</span><span class="p">(</span><span class="n">rcp</span><span class="p">,</span> <span class="n">rem</span><span class="p">),</span><span class="mi">2</span><span class="p">));</span>
+<a name="gbab-78"></a>   <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">&gt;=</span> <span class="mi">536870912</span><span class="p">)</span>       <span class="cm">/*  2^29 */</span>
+<a name="gbab-79"></a>      <span class="k">return</span> <span class="mi">2147483647</span><span class="p">;</span>          <span class="cm">/*  2^31 - 1 */</span>
+<a name="gbab-80"></a>   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">536870912</span><span class="p">)</span> <span class="cm">/* -2^29 */</span>
+<a name="gbab-81"></a>      <span class="k">return</span> <span class="o">-</span><span class="mi">2147483647</span><span class="p">;</span>         <span class="cm">/* -2^31 */</span>
+<a name="gbab-82"></a>   <span class="k">else</span>
+<a name="gbab-83"></a>      <span class="k">return</span> <span class="n">SHL32</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<a name="gbab-84"></a><span class="p">}</span>
+<a name="gbab-85"></a>
+<a name="gbab-86"></a><span class="cm">/** Reciprocal sqrt approximation in the range [0.25,1) (Q16 in, Q14 out) */</span>
+<a name="gbab-87"></a><span class="n">opus_val16</span> <span class="nf">celt_rsqrt_norm</span><span class="p">(</span><span class="n">opus_val32</span> <span class="n">x</span><span class="p">)</span>
+<a name="gbab-88"></a><span class="p">{</span>
+<a name="gbab-89"></a>   <span class="n">opus_val16</span> <span class="n">n</span><span class="p">;</span>
+<a name="gbab-90"></a>   <span class="n">opus_val16</span> <span class="n">r</span><span class="p">;</span>
+<a name="gbab-91"></a>   <span class="n">opus_val16</span> <span class="n">r2</span><span class="p">;</span>
+<a name="gbab-92"></a>   <span class="n">opus_val16</span> <span class="n">y</span><span class="p">;</span>
+<a name="gbab-93"></a>   <span class="cm">/* Range of n is [-16384,32767] ([-0.5,1) in Q15). */</span>
+<a name="gbab-94"></a>   <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">-</span><span class="mi">32768</span><span class="p">;</span>
+<a name="gbab-95"></a>   <span class="cm">/* Get a rough initial guess for the root.</span>
+<a name="gbab-96"></a><span class="cm">      The optimal minimax quadratic approximation (using relative error) is</span>
+<a name="gbab-97"></a><span class="cm">       r = 1.437799046117536+n*(-0.823394375837328+n*0.4096419668459485).</span>
+<a name="gbab-98"></a><span class="cm">      Coefficients here, and the final result r, are Q14.*/</span>
+<a name="gbab-99"></a>   <span class="n">r</span> <span class="o">=</span> <span class="n">ADD16</span><span class="p">(</span><span class="mi">23557</span><span class="p">,</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">ADD16</span><span class="p">(</span><span class="o">-</span><span class="mi">13490</span><span class="p">,</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">6713</span><span class="p">))));</span>
+<a name="gbab-100"></a>   <span class="cm">/* We want y = x*r*r-1 in Q15, but x is 32-bit Q16 and r is Q14.</span>
+<a name="gbab-101"></a><span class="cm">      We can compute the result from n and r using Q15 multiplies with some</span>
+<a name="gbab-102"></a><span class="cm">       adjustment, carefully done to avoid overflow.</span>
+<a name="gbab-103"></a><span class="cm">      Range of y is [-1564,1594]. */</span>
+<a name="gbab-104"></a>   <span class="n">r2</span> <span class="o">=</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+<a name="gbab-105"></a>   <span class="n">y</span> <span class="o">=</span> <span class="n">SHL16</span><span class="p">(</span><span class="n">SUB16</span><span class="p">(</span><span class="n">ADD16</span><span class="p">(</span><span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">r2</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">r2</span><span class="p">),</span> <span class="mi">16384</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-106"></a>   <span class="cm">/* Apply a 2nd-order Householder iteration: r += r*y*(y*0.375-0.5).</span>
+<a name="gbab-107"></a><span class="cm">      This yields the Q14 reciprocal square root of the Q16 x, with a maximum</span>
+<a name="gbab-108"></a><span class="cm">       relative error of 1.04956E-4, a (relative) RMSE of 2.80979E-5, and a</span>
+<a name="gbab-109"></a><span class="cm">       peak absolute error of 2.26591/16384. */</span>
+<a name="gbab-110"></a>   <span class="k">return</span> <span class="n">ADD16</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">y</span><span class="p">,</span>
+<a name="gbab-111"></a>              <span class="n">SUB16</span><span class="p">(</span><span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">12288</span><span class="p">),</span> <span class="mi">16384</span><span class="p">))));</span>
+<a name="gbab-112"></a><span class="p">}</span>
+<a name="gbab-113"></a>
+<a name="gbab-114"></a><span class="cm">/** Sqrt approximation (QX input, QX/2 output) */</span>
+<a name="gbab-115"></a><span class="n">opus_val32</span> <span class="nf">celt_sqrt</span><span class="p">(</span><span class="n">opus_val32</span> <span class="n">x</span><span class="p">)</span>
+<a name="gbab-116"></a><span class="p">{</span>
+<a name="gbab-117"></a>   <span class="kt">int</span> <span class="n">k</span><span class="p">;</span>
+<a name="gbab-118"></a>   <span class="n">opus_val16</span> <span class="n">n</span><span class="p">;</span>
+<a name="gbab-119"></a>   <span class="n">opus_val32</span> <span class="n">rt</span><span class="p">;</span>
+<a name="gbab-120"></a>   <span class="k">static</span> <span class="k">const</span> <span class="n">opus_val16</span> <span class="n">C</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">23175</span><span class="p">,</span> <span class="mi">11561</span><span class="p">,</span> <span class="o">-</span><span class="mi">3011</span><span class="p">,</span> <span class="mi">1699</span><span class="p">,</span> <span class="o">-</span><span class="mi">664</span><span class="p">};</span>
+<a name="gbab-121"></a>   <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+<a name="gbab-122"></a>      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-123"></a>   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">&gt;=</span><span class="mi">1073741824</span><span class="p">)</span>
+<a name="gbab-124"></a>      <span class="k">return</span> <span class="mi">32767</span><span class="p">;</span>
+<a name="gbab-125"></a>   <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">celt_ilog2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="mi">7</span><span class="p">;</span>
+<a name="gbab-126"></a>   <span class="n">x</span> <span class="o">=</span> <span class="n">VSHR32</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">);</span>
+<a name="gbab-127"></a>   <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">-</span><span class="mi">32768</span><span class="p">;</span>
+<a name="gbab-128"></a>   <span class="n">rt</span> <span class="o">=</span> <span class="n">ADD16</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">ADD16</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">ADD16</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+<a name="gbab-129"></a>              <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">ADD16</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">4</span><span class="p">])))))))));</span>
+<a name="gbab-130"></a>   <span class="n">rt</span> <span class="o">=</span> <span class="n">VSHR32</span><span class="p">(</span><span class="n">rt</span><span class="p">,</span><span class="mi">7</span><span class="o">-</span><span class="n">k</span><span class="p">);</span>
+<a name="gbab-131"></a>   <span class="k">return</span> <span class="n">rt</span><span class="p">;</span>
+<a name="gbab-132"></a><span class="p">}</span>
+<a name="gbab-133"></a>
+<a name="gbab-134"></a><span class="cp">#define L1 32767</span>
+<a name="gbab-135"></a><span class="cp">#define L2 -7651</span>
+<a name="gbab-136"></a><span class="cp">#define L3 8277</span>
+<a name="gbab-137"></a><span class="cp">#define L4 -626</span>
+<a name="gbab-138"></a>
+<a name="gbab-139"></a><span class="k">static</span> <span class="n">OPUS_INLINE</span> <span class="n">opus_val16</span> <span class="nf">_celt_cos_pi_2</span><span class="p">(</span><span class="n">opus_val16</span> <span class="n">x</span><span class="p">)</span>
+<a name="gbab-140"></a><span class="p">{</span>
+<a name="gbab-141"></a>   <span class="n">opus_val16</span> <span class="n">x2</span><span class="p">;</span>
+<a name="gbab-142"></a>
+<a name="gbab-143"></a>   <span class="n">x2</span> <span class="o">=</span> <span class="n">MULT16_16_P15</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">);</span>
+<a name="gbab-144"></a>   <span class="k">return</span> <span class="n">ADD16</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">MIN16</span><span class="p">(</span><span class="mi">32766</span><span class="p">,</span><span class="n">ADD32</span><span class="p">(</span><span class="n">SUB16</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span><span class="n">x2</span><span class="p">),</span> <span class="n">MULT16_16_P15</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">ADD32</span><span class="p">(</span><span class="n">L2</span><span class="p">,</span> <span class="n">MULT16_16_P15</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">ADD32</span><span class="p">(</span><span class="n">L3</span><span class="p">,</span> <span class="n">MULT16_16_P15</span><span class="p">(</span><span class="n">L4</span><span class="p">,</span> <span class="n">x2</span>
+<a name="gbab-145"></a>                                                                                <span class="p">))))))));</span>
+<a name="gbab-146"></a><span class="p">}</span>
+<a name="gbab-147"></a>
+<a name="gbab-148"></a><span class="cp">#undef L1</span>
+<a name="gbab-149"></a><span class="cp">#undef L2</span>
+<a name="gbab-150"></a><span class="cp">#undef L3</span>
+<a name="gbab-151"></a><span class="cp">#undef L4</span>
+<a name="gbab-152"></a>
+<a name="gbab-153"></a><span class="n">opus_val16</span> <span class="nf">celt_cos_norm</span><span class="p">(</span><span class="n">opus_val32</span> <span class="n">x</span><span class="p">)</span>
+<a name="gbab-154"></a><span class="p">{</span>
+<a name="gbab-155"></a>   <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">&amp;</span><span class="mh">0x0001ffff</span><span class="p">;</span>
+<a name="gbab-156"></a>   <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">&gt;</span><span class="n">SHL32</span><span class="p">(</span><span class="n">EXTEND32</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">16</span><span class="p">))</span>
+<a name="gbab-157"></a>      <span class="n">x</span> <span class="o">=</span> <span class="n">SUB32</span><span class="p">(</span><span class="n">SHL32</span><span class="p">(</span><span class="n">EXTEND32</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">17</span><span class="p">),</span><span class="n">x</span><span class="p">);</span>
+<a name="gbab-158"></a>   <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">&amp;</span><span class="mh">0x00007fff</span><span class="p">)</span>
+<a name="gbab-159"></a>   <span class="p">{</span>
+<a name="gbab-160"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="n">SHL32</span><span class="p">(</span><span class="n">EXTEND32</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">15</span><span class="p">))</span>
+<a name="gbab-161"></a>      <span class="p">{</span>
+<a name="gbab-162"></a>         <span class="k">return</span> <span class="n">_celt_cos_pi_2</span><span class="p">(</span><span class="n">EXTRACT16</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+<a name="gbab-163"></a>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-164"></a>         <span class="k">return</span> <span class="n">NEG32</span><span class="p">(</span><span class="n">_celt_cos_pi_2</span><span class="p">(</span><span class="n">EXTRACT16</span><span class="p">(</span><span class="mi">65536</span><span class="o">-</span><span class="n">x</span><span class="p">)));</span>
+<a name="gbab-165"></a>      <span class="p">}</span>
+<a name="gbab-166"></a>   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-167"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">&amp;</span><span class="mh">0x0000ffff</span><span class="p">)</span>
+<a name="gbab-168"></a>         <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-169"></a>      <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">&amp;</span><span class="mh">0x0001ffff</span><span class="p">)</span>
+<a name="gbab-170"></a>         <span class="k">return</span> <span class="o">-</span><span class="mi">32767</span><span class="p">;</span>
+<a name="gbab-171"></a>      <span class="k">else</span>
+<a name="gbab-172"></a>         <span class="k">return</span> <span class="mi">32767</span><span class="p">;</span>
+<a name="gbab-173"></a>   <span class="p">}</span>
+<a name="gbab-174"></a><span class="p">}</span>
+<a name="gbab-175"></a>
+<a name="gbab-176"></a><span class="cm">/** Reciprocal approximation (Q15 input, Q16 output) */</span>
+<a name="gbab-177"></a><span class="n">opus_val32</span> <span class="nf">celt_rcp</span><span class="p">(</span><span class="n">opus_val32</span> <span class="n">x</span><span class="p">)</span>
+<a name="gbab-178"></a><span class="p">{</span>
+<a name="gbab-179"></a>   <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<a name="gbab-180"></a>   <span class="n">opus_val16</span> <span class="n">n</span><span class="p">;</span>
+<a name="gbab-181"></a>   <span class="n">opus_val16</span> <span class="n">r</span><span class="p">;</span>
+<a name="gbab-182"></a>   <span class="n">celt_assert2</span><span class="p">(</span><span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;celt_rcp() only defined for positive values&quot;</span><span class="p">);</span>
+<a name="gbab-183"></a>   <span class="n">i</span> <span class="o">=</span> <span class="n">celt_ilog2</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<a name="gbab-184"></a>   <span class="cm">/* n is Q15 with range [0,1). */</span>
+<a name="gbab-185"></a>   <span class="n">n</span> <span class="o">=</span> <span class="n">VSHR32</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">i</span><span class="o">-</span><span class="mi">15</span><span class="p">)</span><span class="o">-</span><span class="mi">32768</span><span class="p">;</span>
+<a name="gbab-186"></a>   <span class="cm">/* Start with a linear approximation:</span>
+<a name="gbab-187"></a><span class="cm">      r = 1.8823529411764706-0.9411764705882353*n.</span>
+<a name="gbab-188"></a><span class="cm">      The coefficients and the result are Q14 in the range [15420,30840].*/</span>
+<a name="gbab-189"></a>   <span class="n">r</span> <span class="o">=</span> <span class="n">ADD16</span><span class="p">(</span><span class="mi">30840</span><span class="p">,</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="o">-</span><span class="mi">15420</span><span class="p">,</span> <span class="n">n</span><span class="p">));</span>
+<a name="gbab-190"></a>   <span class="cm">/* Perform two Newton iterations:</span>
+<a name="gbab-191"></a><span class="cm">      r -= r*((r*n)-1.Q15)</span>
+<a name="gbab-192"></a><span class="cm">         = r*((r*n)+(r-1.Q15)). */</span>
+<a name="gbab-193"></a>   <span class="n">r</span> <span class="o">=</span> <span class="n">SUB16</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">r</span><span class="p">,</span>
+<a name="gbab-194"></a>             <span class="n">ADD16</span><span class="p">(</span><span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">ADD16</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="mi">32768</span><span class="p">))));</span>
+<a name="gbab-195"></a>   <span class="cm">/* We subtract an extra 1 in the second iteration to avoid overflow; it also</span>
+<a name="gbab-196"></a><span class="cm">       neatly compensates for truncation error in the rest of the process. */</span>
+<a name="gbab-197"></a>   <span class="n">r</span> <span class="o">=</span> <span class="n">SUB16</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ADD16</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">r</span><span class="p">,</span>
+<a name="gbab-198"></a>             <span class="n">ADD16</span><span class="p">(</span><span class="n">MULT16_16_Q15</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">ADD16</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="mi">32768</span><span class="p">)))));</span>
+<a name="gbab-199"></a>   <span class="cm">/* r is now the Q15 solution to 2/(n+1), with a maximum relative error</span>
+<a name="gbab-200"></a><span class="cm">       of 7.05346E-5, a (relative) RMSE of 2.14418E-5, and a peak absolute</span>
+<a name="gbab-201"></a><span class="cm">       error of 1.24665/32768. */</span>
+<a name="gbab-202"></a>   <span class="k">return</span> <span class="n">VSHR32</span><span class="p">(</span><span class="n">EXTEND32</span><span class="p">(</span><span class="n">r</span><span class="p">),</span><span class="n">i</span><span class="o">-</span><span class="mi">16</span><span class="p">);</span>
+<a name="gbab-203"></a><span class="p">}</span>
+<a name="gbab-204"></a>
+<a name="gbab-205"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

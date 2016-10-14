@@ -1,0 +1,1841 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+905
+906
+907
+908
+909
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="c1">// Copyright 2012 Google Inc. All Rights Reserved.</span>
+<a name="gbab-2"></a><span class="c1">//</span>
+<a name="gbab-3"></a><span class="c1">// Use of this source code is governed by a BSD-style license</span>
+<a name="gbab-4"></a><span class="c1">// that can be found in the COPYING file in the root of the source</span>
+<a name="gbab-5"></a><span class="c1">// tree. An additional intellectual property rights grant can be found</span>
+<a name="gbab-6"></a><span class="c1">// in the file PATENTS. All contributing project authors may</span>
+<a name="gbab-7"></a><span class="c1">// be found in the AUTHORS file in the root of the source tree.</span>
+<a name="gbab-8"></a><span class="c1">// -----------------------------------------------------------------------------</span>
+<a name="gbab-9"></a><span class="c1">//</span>
+<a name="gbab-10"></a><span class="c1">// ARM NEON version of speed-critical encoding functions.</span>
+<a name="gbab-11"></a><span class="c1">//</span>
+<a name="gbab-12"></a><span class="c1">// adapted from libvpx (http://www.webmproject.org/code/)</span>
+<a name="gbab-13"></a>
+<a name="gbab-14"></a><span class="cp">#include</span> <span class="cpf">&quot;./dsp.h&quot;</span><span class="cp"></span>
+<a name="gbab-15"></a>
+<a name="gbab-16"></a><span class="cp">#if defined(WEBP_USE_NEON)</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a><span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
+<a name="gbab-19"></a>
+<a name="gbab-20"></a><span class="cp">#include</span> <span class="cpf">&quot;./neon.h&quot;</span><span class="cp"></span>
+<a name="gbab-21"></a><span class="cp">#include</span> <span class="cpf">&quot;../enc/vp8enci.h&quot;</span><span class="cp"></span>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-24"></a><span class="c1">// Transforms (Paragraph 14.4)</span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="c1">// Inverse transform.</span>
+<a name="gbab-27"></a><span class="c1">// This code is pretty much the same as TransformOne in the dec_neon.c, except</span>
+<a name="gbab-28"></a><span class="c1">// for subtraction to *ref. See the comments there for algorithmic explanations.</span>
+<a name="gbab-29"></a>
+<a name="gbab-30"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">int16_t</span> <span class="n">kC1</span> <span class="o">=</span> <span class="mi">20091</span><span class="p">;</span>
+<a name="gbab-31"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">int16_t</span> <span class="n">kC2</span> <span class="o">=</span> <span class="mi">17734</span><span class="p">;</span>  <span class="c1">// half of kC2, actually. See comment above.</span>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a><span class="c1">// This code works but is *slower* than the inlined-asm version below</span>
+<a name="gbab-34"></a><span class="c1">// (with gcc-4.6). So we disable it for now. Later, it&#39;ll be conditional to</span>
+<a name="gbab-35"></a><span class="c1">// WEBP_USE_INTRINSICS define.</span>
+<a name="gbab-36"></a><span class="c1">// With gcc-4.8, it&#39;s a little faster speed than inlined-assembly.</span>
+<a name="gbab-37"></a><span class="cp">#if defined(WEBP_USE_INTRINSICS)</span>
+<a name="gbab-38"></a>
+<a name="gbab-39"></a><span class="c1">// Treats &#39;v&#39; as an uint8x8_t and zero extends to an int16x8_t.</span>
+<a name="gbab-40"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">int16x8_t</span> <span class="nf">ConvertU8ToS16</span><span class="p">(</span><span class="n">uint32x2_t</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-41"></a>  <span class="k">return</span> <span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">vmovl_u8</span><span class="p">(</span><span class="n">vreinterpret_u8_u32</span><span class="p">(</span><span class="n">v</span><span class="p">)));</span>
+<a name="gbab-42"></a><span class="p">}</span>
+<a name="gbab-43"></a>
+<a name="gbab-44"></a><span class="c1">// Performs unsigned 8b saturation on &#39;dst01&#39; and &#39;dst23&#39; storing the result</span>
+<a name="gbab-45"></a><span class="c1">// to the corresponding rows of &#39;dst&#39;.</span>
+<a name="gbab-46"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">void</span> <span class="nf">SaturateAndStore4x4</span><span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">dst</span><span class="p">,</span>
+<a name="gbab-47"></a>                                            <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">dst01</span><span class="p">,</span>
+<a name="gbab-48"></a>                                            <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">dst23</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-49"></a>  <span class="c1">// Unsigned saturate to 8b.</span>
+<a name="gbab-50"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">dst01_u8</span> <span class="o">=</span> <span class="n">vqmovun_s16</span><span class="p">(</span><span class="n">dst01</span><span class="p">);</span>
+<a name="gbab-51"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">dst23_u8</span> <span class="o">=</span> <span class="n">vqmovun_s16</span><span class="p">(</span><span class="n">dst23</span><span class="p">);</span>
+<a name="gbab-52"></a>
+<a name="gbab-53"></a>  <span class="c1">// Store the results.</span>
+<a name="gbab-54"></a>  <span class="n">vst1_lane_u32</span><span class="p">((</span><span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">dst</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">vreinterpret_u32_u8</span><span class="p">(</span><span class="n">dst01_u8</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-55"></a>  <span class="n">vst1_lane_u32</span><span class="p">((</span><span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">dst</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">vreinterpret_u32_u8</span><span class="p">(</span><span class="n">dst01_u8</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-56"></a>  <span class="n">vst1_lane_u32</span><span class="p">((</span><span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">dst</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">vreinterpret_u32_u8</span><span class="p">(</span><span class="n">dst23_u8</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-57"></a>  <span class="n">vst1_lane_u32</span><span class="p">((</span><span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">dst</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">vreinterpret_u32_u8</span><span class="p">(</span><span class="n">dst23_u8</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-58"></a><span class="p">}</span>
+<a name="gbab-59"></a>
+<a name="gbab-60"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">void</span> <span class="nf">Add4x4</span><span class="p">(</span><span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">row01</span><span class="p">,</span> <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">row23</span><span class="p">,</span>
+<a name="gbab-61"></a>                               <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">ref</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">dst</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-62"></a>  <span class="n">uint32x2_t</span> <span class="n">dst01</span> <span class="o">=</span> <span class="n">vdup_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-63"></a>  <span class="n">uint32x2_t</span> <span class="n">dst23</span> <span class="o">=</span> <span class="n">vdup_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-64"></a>
+<a name="gbab-65"></a>  <span class="c1">// Load the source pixels.</span>
+<a name="gbab-66"></a>  <span class="n">dst01</span> <span class="o">=</span> <span class="n">vld1_lane_u32</span><span class="p">((</span><span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">ref</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">dst01</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-67"></a>  <span class="n">dst23</span> <span class="o">=</span> <span class="n">vld1_lane_u32</span><span class="p">((</span><span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">ref</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">dst23</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-68"></a>  <span class="n">dst01</span> <span class="o">=</span> <span class="n">vld1_lane_u32</span><span class="p">((</span><span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">ref</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">dst01</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-69"></a>  <span class="n">dst23</span> <span class="o">=</span> <span class="n">vld1_lane_u32</span><span class="p">((</span><span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">ref</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">dst23</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-70"></a>
+<a name="gbab-71"></a>  <span class="p">{</span>
+<a name="gbab-72"></a>    <span class="c1">// Convert to 16b.</span>
+<a name="gbab-73"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">dst01_s16</span> <span class="o">=</span> <span class="n">ConvertU8ToS16</span><span class="p">(</span><span class="n">dst01</span><span class="p">);</span>
+<a name="gbab-74"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">dst23_s16</span> <span class="o">=</span> <span class="n">ConvertU8ToS16</span><span class="p">(</span><span class="n">dst23</span><span class="p">);</span>
+<a name="gbab-75"></a>
+<a name="gbab-76"></a>    <span class="c1">// Descale with rounding.</span>
+<a name="gbab-77"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">out01</span> <span class="o">=</span> <span class="n">vrsraq_n_s16</span><span class="p">(</span><span class="n">dst01_s16</span><span class="p">,</span> <span class="n">row01</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-78"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">out23</span> <span class="o">=</span> <span class="n">vrsraq_n_s16</span><span class="p">(</span><span class="n">dst23_s16</span><span class="p">,</span> <span class="n">row23</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-79"></a>    <span class="c1">// Add the inverse transform.</span>
+<a name="gbab-80"></a>    <span class="n">SaturateAndStore4x4</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">out01</span><span class="p">,</span> <span class="n">out23</span><span class="p">);</span>
+<a name="gbab-81"></a>  <span class="p">}</span>
+<a name="gbab-82"></a><span class="p">}</span>
+<a name="gbab-83"></a>
+<a name="gbab-84"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">void</span> <span class="nf">Transpose8x2</span><span class="p">(</span><span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">in0</span><span class="p">,</span> <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">in1</span><span class="p">,</span>
+<a name="gbab-85"></a>                                     <span class="n">int16x8x2_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-86"></a>  <span class="c1">// a0 a1 a2 a3 | b0 b1 b2 b3   =&gt; a0 b0 c0 d0 | a1 b1 c1 d1</span>
+<a name="gbab-87"></a>  <span class="c1">// c0 c1 c2 c3 | d0 d1 d2 d3      a2 b2 c2 d2 | a3 b3 c3 d3</span>
+<a name="gbab-88"></a>  <span class="k">const</span> <span class="n">int16x8x2_t</span> <span class="n">tmp0</span> <span class="o">=</span> <span class="n">vzipq_s16</span><span class="p">(</span><span class="n">in0</span><span class="p">,</span> <span class="n">in1</span><span class="p">);</span>   <span class="c1">// a0 c0 a1 c1 a2 c2 ...</span>
+<a name="gbab-89"></a>                                                  <span class="c1">// b0 d0 b1 d1 b2 d2 ...</span>
+<a name="gbab-90"></a>  <span class="o">*</span><span class="n">out</span> <span class="o">=</span> <span class="n">vzipq_s16</span><span class="p">(</span><span class="n">tmp0</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp0</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<a name="gbab-91"></a><span class="p">}</span>
+<a name="gbab-92"></a>
+<a name="gbab-93"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">void</span> <span class="nf">TransformPass</span><span class="p">(</span><span class="n">int16x8x2_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">rows</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-94"></a>  <span class="c1">// {rows} = in0 | in4</span>
+<a name="gbab-95"></a>  <span class="c1">//          in8 | in12</span>
+<a name="gbab-96"></a>  <span class="c1">// B1 = in4 | in12</span>
+<a name="gbab-97"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">B1</span> <span class="o">=</span>
+<a name="gbab-98"></a>      <span class="n">vcombine_s16</span><span class="p">(</span><span class="n">vget_high_s16</span><span class="p">(</span><span class="n">rows</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">rows</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+<a name="gbab-99"></a>  <span class="c1">// C0 = kC1 * in4 | kC1 * in12</span>
+<a name="gbab-100"></a>  <span class="c1">// C1 = kC2 * in4 | kC2 * in12</span>
+<a name="gbab-101"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">C0</span> <span class="o">=</span> <span class="n">vsraq_n_s16</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">vqdmulhq_n_s16</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">kC1</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-102"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">C1</span> <span class="o">=</span> <span class="n">vqdmulhq_n_s16</span><span class="p">(</span><span class="n">B1</span><span class="p">,</span> <span class="n">kC2</span><span class="p">);</span>
+<a name="gbab-103"></a>  <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">a</span> <span class="o">=</span> <span class="n">vqadd_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">rows</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<a name="gbab-104"></a>                                <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">rows</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>   <span class="c1">// in0 + in8</span>
+<a name="gbab-105"></a>  <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">b</span> <span class="o">=</span> <span class="n">vqsub_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">rows</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<a name="gbab-106"></a>                                <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">rows</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>   <span class="c1">// in0 - in8</span>
+<a name="gbab-107"></a>  <span class="c1">// c = kC2 * in4 - kC1 * in12</span>
+<a name="gbab-108"></a>  <span class="c1">// d = kC1 * in4 + kC2 * in12</span>
+<a name="gbab-109"></a>  <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">c</span> <span class="o">=</span> <span class="n">vqsub_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">C1</span><span class="p">),</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">C0</span><span class="p">));</span>
+<a name="gbab-110"></a>  <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">d</span> <span class="o">=</span> <span class="n">vqadd_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">C0</span><span class="p">),</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">C1</span><span class="p">));</span>
+<a name="gbab-111"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">D0</span> <span class="o">=</span> <span class="n">vcombine_s16</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>      <span class="c1">// D0 = a | b</span>
+<a name="gbab-112"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">D1</span> <span class="o">=</span> <span class="n">vcombine_s16</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">c</span><span class="p">);</span>      <span class="c1">// D1 = d | c</span>
+<a name="gbab-113"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">E0</span> <span class="o">=</span> <span class="n">vqaddq_s16</span><span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">);</span>      <span class="c1">// a+d | b+c</span>
+<a name="gbab-114"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">E_tmp</span> <span class="o">=</span> <span class="n">vqsubq_s16</span><span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">);</span>   <span class="c1">// a-d | b-c</span>
+<a name="gbab-115"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">E1</span> <span class="o">=</span> <span class="n">vcombine_s16</span><span class="p">(</span><span class="n">vget_high_s16</span><span class="p">(</span><span class="n">E_tmp</span><span class="p">),</span> <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">E_tmp</span><span class="p">));</span>
+<a name="gbab-116"></a>  <span class="n">Transpose8x2</span><span class="p">(</span><span class="n">E0</span><span class="p">,</span> <span class="n">E1</span><span class="p">,</span> <span class="n">rows</span><span class="p">);</span>
+<a name="gbab-117"></a><span class="p">}</span>
+<a name="gbab-118"></a>
+<a name="gbab-119"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ITransformOne</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">ref</span><span class="p">,</span>
+<a name="gbab-120"></a>                          <span class="k">const</span> <span class="kt">int16_t</span><span class="o">*</span> <span class="n">in</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-121"></a>  <span class="n">int16x8x2_t</span> <span class="n">rows</span><span class="p">;</span>
+<a name="gbab-122"></a>  <span class="n">INIT_VECTOR2</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">vld1q_s16</span><span class="p">(</span><span class="n">in</span> <span class="o">+</span> <span class="mi">0</span><span class="p">),</span> <span class="n">vld1q_s16</span><span class="p">(</span><span class="n">in</span> <span class="o">+</span> <span class="mi">8</span><span class="p">));</span>
+<a name="gbab-123"></a>  <span class="n">TransformPass</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">);</span>
+<a name="gbab-124"></a>  <span class="n">TransformPass</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">);</span>
+<a name="gbab-125"></a>  <span class="n">Add4x4</span><span class="p">(</span><span class="n">rows</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rows</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ref</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
+<a name="gbab-126"></a><span class="p">}</span>
+<a name="gbab-127"></a>
+<a name="gbab-128"></a><span class="cp">#else</span>
+<a name="gbab-129"></a>
+<a name="gbab-130"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ITransformOne</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">ref</span><span class="p">,</span>
+<a name="gbab-131"></a>                          <span class="k">const</span> <span class="kt">int16_t</span><span class="o">*</span> <span class="n">in</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-132"></a>  <span class="k">const</span> <span class="kt">int</span> <span class="n">kBPS</span> <span class="o">=</span> <span class="n">BPS</span><span class="p">;</span>
+<a name="gbab-133"></a>  <span class="k">const</span> <span class="kt">int16_t</span> <span class="n">kC1C2</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">kC1</span><span class="p">,</span> <span class="n">kC2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">};</span>
+<a name="gbab-134"></a>
+<a name="gbab-135"></a>  <span class="n">__asm__</span> <span class="k">volatile</span> <span class="p">(</span>
+<a name="gbab-136"></a>    <span class="s">&quot;vld1.16         {q1, q2}, [%[in]]           </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-137"></a>    <span class="s">&quot;vld1.16         {d0}, [%[kC1C2]]            </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-138"></a>
+<a name="gbab-139"></a>    <span class="c1">// d2: in[0]</span>
+<a name="gbab-140"></a>    <span class="c1">// d3: in[8]</span>
+<a name="gbab-141"></a>    <span class="c1">// d4: in[4]</span>
+<a name="gbab-142"></a>    <span class="c1">// d5: in[12]</span>
+<a name="gbab-143"></a>    <span class="s">&quot;vswp            d3, d4                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-144"></a>
+<a name="gbab-145"></a>    <span class="c1">// q8 = {in[4], in[12]} * kC1 * 2 &gt;&gt; 16</span>
+<a name="gbab-146"></a>    <span class="c1">// q9 = {in[4], in[12]} * kC2 &gt;&gt; 16</span>
+<a name="gbab-147"></a>    <span class="s">&quot;vqdmulh.s16     q8, q2, d0[0]               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-148"></a>    <span class="s">&quot;vqdmulh.s16     q9, q2, d0[1]               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-149"></a>
+<a name="gbab-150"></a>    <span class="c1">// d22 = a = in[0] + in[8]</span>
+<a name="gbab-151"></a>    <span class="c1">// d23 = b = in[0] - in[8]</span>
+<a name="gbab-152"></a>    <span class="s">&quot;vqadd.s16       d22, d2, d3                 </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-153"></a>    <span class="s">&quot;vqsub.s16       d23, d2, d3                 </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-154"></a>
+<a name="gbab-155"></a>    <span class="c1">//  q8 = in[4]/[12] * kC1 &gt;&gt; 16</span>
+<a name="gbab-156"></a>    <span class="s">&quot;vshr.s16        q8, q8, #1                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-157"></a>
+<a name="gbab-158"></a>    <span class="c1">// Add {in[4], in[12]} back after the multiplication.</span>
+<a name="gbab-159"></a>    <span class="s">&quot;vqadd.s16       q8, q2, q8                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-160"></a>
+<a name="gbab-161"></a>    <span class="c1">// d20 = c = in[4]*kC2 - in[12]*kC1</span>
+<a name="gbab-162"></a>    <span class="c1">// d21 = d = in[4]*kC1 + in[12]*kC2</span>
+<a name="gbab-163"></a>    <span class="s">&quot;vqsub.s16       d20, d18, d17               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-164"></a>    <span class="s">&quot;vqadd.s16       d21, d19, d16               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-165"></a>
+<a name="gbab-166"></a>    <span class="c1">// d2 = tmp[0] = a + d</span>
+<a name="gbab-167"></a>    <span class="c1">// d3 = tmp[1] = b + c</span>
+<a name="gbab-168"></a>    <span class="c1">// d4 = tmp[2] = b - c</span>
+<a name="gbab-169"></a>    <span class="c1">// d5 = tmp[3] = a - d</span>
+<a name="gbab-170"></a>    <span class="s">&quot;vqadd.s16       d2, d22, d21                </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-171"></a>    <span class="s">&quot;vqadd.s16       d3, d23, d20                </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-172"></a>    <span class="s">&quot;vqsub.s16       d4, d23, d20                </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-173"></a>    <span class="s">&quot;vqsub.s16       d5, d22, d21                </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-174"></a>
+<a name="gbab-175"></a>    <span class="s">&quot;vzip.16         q1, q2                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-176"></a>    <span class="s">&quot;vzip.16         q1, q2                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-177"></a>
+<a name="gbab-178"></a>    <span class="s">&quot;vswp            d3, d4                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-179"></a>
+<a name="gbab-180"></a>    <span class="c1">// q8 = {tmp[4], tmp[12]} * kC1 * 2 &gt;&gt; 16</span>
+<a name="gbab-181"></a>    <span class="c1">// q9 = {tmp[4], tmp[12]} * kC2 &gt;&gt; 16</span>
+<a name="gbab-182"></a>    <span class="s">&quot;vqdmulh.s16     q8, q2, d0[0]               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-183"></a>    <span class="s">&quot;vqdmulh.s16     q9, q2, d0[1]               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-184"></a>
+<a name="gbab-185"></a>    <span class="c1">// d22 = a = tmp[0] + tmp[8]</span>
+<a name="gbab-186"></a>    <span class="c1">// d23 = b = tmp[0] - tmp[8]</span>
+<a name="gbab-187"></a>    <span class="s">&quot;vqadd.s16       d22, d2, d3                 </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-188"></a>    <span class="s">&quot;vqsub.s16       d23, d2, d3                 </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-189"></a>
+<a name="gbab-190"></a>    <span class="s">&quot;vshr.s16        q8, q8, #1                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-191"></a>    <span class="s">&quot;vqadd.s16       q8, q2, q8                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-192"></a>
+<a name="gbab-193"></a>    <span class="c1">// d20 = c = in[4]*kC2 - in[12]*kC1</span>
+<a name="gbab-194"></a>    <span class="c1">// d21 = d = in[4]*kC1 + in[12]*kC2</span>
+<a name="gbab-195"></a>    <span class="s">&quot;vqsub.s16       d20, d18, d17               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-196"></a>    <span class="s">&quot;vqadd.s16       d21, d19, d16               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-197"></a>
+<a name="gbab-198"></a>    <span class="c1">// d2 = tmp[0] = a + d</span>
+<a name="gbab-199"></a>    <span class="c1">// d3 = tmp[1] = b + c</span>
+<a name="gbab-200"></a>    <span class="c1">// d4 = tmp[2] = b - c</span>
+<a name="gbab-201"></a>    <span class="c1">// d5 = tmp[3] = a - d</span>
+<a name="gbab-202"></a>    <span class="s">&quot;vqadd.s16       d2, d22, d21                </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-203"></a>    <span class="s">&quot;vqadd.s16       d3, d23, d20                </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-204"></a>    <span class="s">&quot;vqsub.s16       d4, d23, d20                </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-205"></a>    <span class="s">&quot;vqsub.s16       d5, d22, d21                </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-206"></a>
+<a name="gbab-207"></a>    <span class="s">&quot;vld1.32         d6[0], [%[ref]], %[kBPS]    </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-208"></a>    <span class="s">&quot;vld1.32         d6[1], [%[ref]], %[kBPS]    </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-209"></a>    <span class="s">&quot;vld1.32         d7[0], [%[ref]], %[kBPS]    </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-210"></a>    <span class="s">&quot;vld1.32         d7[1], [%[ref]], %[kBPS]    </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-211"></a>
+<a name="gbab-212"></a>    <span class="s">&quot;sub         %[ref], %[ref], %[kBPS], lsl #2 </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-213"></a>
+<a name="gbab-214"></a>    <span class="c1">// (val) + 4 &gt;&gt; 3</span>
+<a name="gbab-215"></a>    <span class="s">&quot;vrshr.s16       d2, d2, #3                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-216"></a>    <span class="s">&quot;vrshr.s16       d3, d3, #3                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-217"></a>    <span class="s">&quot;vrshr.s16       d4, d4, #3                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-218"></a>    <span class="s">&quot;vrshr.s16       d5, d5, #3                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-219"></a>
+<a name="gbab-220"></a>    <span class="s">&quot;vzip.16         q1, q2                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-221"></a>    <span class="s">&quot;vzip.16         q1, q2                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-222"></a>
+<a name="gbab-223"></a>    <span class="c1">// Must accumulate before saturating</span>
+<a name="gbab-224"></a>    <span class="s">&quot;vmovl.u8        q8, d6                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-225"></a>    <span class="s">&quot;vmovl.u8        q9, d7                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-226"></a>
+<a name="gbab-227"></a>    <span class="s">&quot;vqadd.s16       q1, q1, q8                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-228"></a>    <span class="s">&quot;vqadd.s16       q2, q2, q9                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-229"></a>
+<a name="gbab-230"></a>    <span class="s">&quot;vqmovun.s16     d0, q1                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-231"></a>    <span class="s">&quot;vqmovun.s16     d1, q2                      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-232"></a>
+<a name="gbab-233"></a>    <span class="s">&quot;vst1.32         d0[0], [%[dst]], %[kBPS]    </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-234"></a>    <span class="s">&quot;vst1.32         d0[1], [%[dst]], %[kBPS]    </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-235"></a>    <span class="s">&quot;vst1.32         d1[0], [%[dst]], %[kBPS]    </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-236"></a>    <span class="s">&quot;vst1.32         d1[1], [%[dst]]             </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-237"></a>
+<a name="gbab-238"></a>    <span class="o">:</span> <span class="p">[</span><span class="n">in</span><span class="p">]</span> <span class="s">&quot;+r&quot;</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="p">[</span><span class="n">dst</span><span class="p">]</span> <span class="s">&quot;+r&quot;</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>               <span class="c1">// modified registers</span>
+<a name="gbab-239"></a>    <span class="o">:</span> <span class="p">[</span><span class="n">kBPS</span><span class="p">]</span> <span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">kBPS</span><span class="p">),</span> <span class="p">[</span><span class="n">kC1C2</span><span class="p">]</span> <span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">kC1C2</span><span class="p">),</span> <span class="p">[</span><span class="n">ref</span><span class="p">]</span> <span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>  <span class="c1">// constants</span>
+<a name="gbab-240"></a>    <span class="o">:</span> <span class="s">&quot;memory&quot;</span><span class="p">,</span> <span class="s">&quot;q0&quot;</span><span class="p">,</span> <span class="s">&quot;q1&quot;</span><span class="p">,</span> <span class="s">&quot;q2&quot;</span><span class="p">,</span> <span class="s">&quot;q8&quot;</span><span class="p">,</span> <span class="s">&quot;q9&quot;</span><span class="p">,</span> <span class="s">&quot;q10&quot;</span><span class="p">,</span> <span class="s">&quot;q11&quot;</span>  <span class="c1">// clobbered</span>
+<a name="gbab-241"></a>  <span class="p">);</span>
+<a name="gbab-242"></a><span class="p">}</span>
+<a name="gbab-243"></a>
+<a name="gbab-244"></a><span class="cp">#endif    </span><span class="c1">// WEBP_USE_INTRINSICS</span>
+<a name="gbab-245"></a>
+<a name="gbab-246"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ITransform</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">ref</span><span class="p">,</span>
+<a name="gbab-247"></a>                       <span class="k">const</span> <span class="kt">int16_t</span><span class="o">*</span> <span class="n">in</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">,</span> <span class="kt">int</span> <span class="n">do_two</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-248"></a>  <span class="n">ITransformOne</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">in</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
+<a name="gbab-249"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">do_two</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-250"></a>    <span class="n">ITransformOne</span><span class="p">(</span><span class="n">ref</span> <span class="o">+</span> <span class="mi">4</span><span class="p">,</span> <span class="n">in</span> <span class="o">+</span> <span class="mi">16</span><span class="p">,</span> <span class="n">dst</span> <span class="o">+</span> <span class="mi">4</span><span class="p">);</span>
+<a name="gbab-251"></a>  <span class="p">}</span>
+<a name="gbab-252"></a><span class="p">}</span>
+<a name="gbab-253"></a>
+<a name="gbab-254"></a><span class="c1">// Load all 4x4 pixels into a single uint8x16_t variable.</span>
+<a name="gbab-255"></a><span class="k">static</span> <span class="n">uint8x16_t</span> <span class="nf">Load4x4</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">src</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-256"></a>  <span class="n">uint32x4_t</span> <span class="n">out</span> <span class="o">=</span> <span class="n">vdupq_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-257"></a>  <span class="n">out</span> <span class="o">=</span> <span class="n">vld1q_lane_u32</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">out</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-258"></a>  <span class="n">out</span> <span class="o">=</span> <span class="n">vld1q_lane_u32</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">out</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-259"></a>  <span class="n">out</span> <span class="o">=</span> <span class="n">vld1q_lane_u32</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">out</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<a name="gbab-260"></a>  <span class="n">out</span> <span class="o">=</span> <span class="n">vld1q_lane_u32</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">),</span> <span class="n">out</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-261"></a>  <span class="k">return</span> <span class="n">vreinterpretq_u8_u32</span><span class="p">(</span><span class="n">out</span><span class="p">);</span>
+<a name="gbab-262"></a><span class="p">}</span>
+<a name="gbab-263"></a>
+<a name="gbab-264"></a><span class="c1">// Forward transform.</span>
+<a name="gbab-265"></a>
+<a name="gbab-266"></a><span class="cp">#if defined(WEBP_USE_INTRINSICS)</span>
+<a name="gbab-267"></a>
+<a name="gbab-268"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">void</span> <span class="nf">Transpose4x4_S16</span><span class="p">(</span><span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">B</span><span class="p">,</span>
+<a name="gbab-269"></a>                                         <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">C</span><span class="p">,</span> <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">D</span><span class="p">,</span>
+<a name="gbab-270"></a>                                         <span class="n">int16x8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">out01</span><span class="p">,</span>
+<a name="gbab-271"></a>                                         <span class="n">int16x8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">out32</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-272"></a>  <span class="k">const</span> <span class="n">int16x4x2_t</span> <span class="n">AB</span> <span class="o">=</span> <span class="n">vtrn_s16</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">);</span>
+<a name="gbab-273"></a>  <span class="k">const</span> <span class="n">int16x4x2_t</span> <span class="n">CD</span> <span class="o">=</span> <span class="n">vtrn_s16</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">);</span>
+<a name="gbab-274"></a>  <span class="k">const</span> <span class="n">int32x2x2_t</span> <span class="n">tmp02</span> <span class="o">=</span> <span class="n">vtrn_s32</span><span class="p">(</span><span class="n">vreinterpret_s32_s16</span><span class="p">(</span><span class="n">AB</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<a name="gbab-275"></a>                                     <span class="n">vreinterpret_s32_s16</span><span class="p">(</span><span class="n">CD</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+<a name="gbab-276"></a>  <span class="k">const</span> <span class="n">int32x2x2_t</span> <span class="n">tmp13</span> <span class="o">=</span> <span class="n">vtrn_s32</span><span class="p">(</span><span class="n">vreinterpret_s32_s16</span><span class="p">(</span><span class="n">AB</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+<a name="gbab-277"></a>                                     <span class="n">vreinterpret_s32_s16</span><span class="p">(</span><span class="n">CD</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+<a name="gbab-278"></a>  <span class="o">*</span><span class="n">out01</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_s64</span><span class="p">(</span>
+<a name="gbab-279"></a>      <span class="n">vcombine_s64</span><span class="p">(</span><span class="n">vreinterpret_s64_s32</span><span class="p">(</span><span class="n">tmp02</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<a name="gbab-280"></a>                   <span class="n">vreinterpret_s64_s32</span><span class="p">(</span><span class="n">tmp13</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">])));</span>
+<a name="gbab-281"></a>  <span class="o">*</span><span class="n">out32</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_s64</span><span class="p">(</span>
+<a name="gbab-282"></a>      <span class="n">vcombine_s64</span><span class="p">(</span><span class="n">vreinterpret_s64_s32</span><span class="p">(</span><span class="n">tmp13</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+<a name="gbab-283"></a>                   <span class="n">vreinterpret_s64_s32</span><span class="p">(</span><span class="n">tmp02</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">])));</span>
+<a name="gbab-284"></a><span class="p">}</span>
+<a name="gbab-285"></a>
+<a name="gbab-286"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">int16x8_t</span> <span class="nf">DiffU8ToS16</span><span class="p">(</span><span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">a</span><span class="p">,</span>
+<a name="gbab-287"></a>                                         <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-288"></a>  <span class="k">return</span> <span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">vsubl_u8</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">));</span>
+<a name="gbab-289"></a><span class="p">}</span>
+<a name="gbab-290"></a>
+<a name="gbab-291"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">FTransform</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">ref</span><span class="p">,</span>
+<a name="gbab-292"></a>                       <span class="kt">int16_t</span><span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-293"></a>  <span class="n">int16x8_t</span> <span class="n">d0d1</span><span class="p">,</span> <span class="n">d3d2</span><span class="p">;</span>   <span class="c1">// working 4x4 int16 variables</span>
+<a name="gbab-294"></a>  <span class="p">{</span>
+<a name="gbab-295"></a>    <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">S0</span> <span class="o">=</span> <span class="n">Load4x4</span><span class="p">(</span><span class="n">src</span><span class="p">);</span>
+<a name="gbab-296"></a>    <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">R0</span> <span class="o">=</span> <span class="n">Load4x4</span><span class="p">(</span><span class="n">ref</span><span class="p">);</span>
+<a name="gbab-297"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">D0D1</span> <span class="o">=</span> <span class="n">DiffU8ToS16</span><span class="p">(</span><span class="n">vget_low_u8</span><span class="p">(</span><span class="n">S0</span><span class="p">),</span> <span class="n">vget_low_u8</span><span class="p">(</span><span class="n">R0</span><span class="p">));</span>
+<a name="gbab-298"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">D2D3</span> <span class="o">=</span> <span class="n">DiffU8ToS16</span><span class="p">(</span><span class="n">vget_high_u8</span><span class="p">(</span><span class="n">S0</span><span class="p">),</span> <span class="n">vget_high_u8</span><span class="p">(</span><span class="n">R0</span><span class="p">));</span>
+<a name="gbab-299"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">D0</span> <span class="o">=</span> <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">D0D1</span><span class="p">);</span>
+<a name="gbab-300"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">D1</span> <span class="o">=</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">D0D1</span><span class="p">);</span>
+<a name="gbab-301"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">D2</span> <span class="o">=</span> <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">D2D3</span><span class="p">);</span>
+<a name="gbab-302"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">D3</span> <span class="o">=</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">D2D3</span><span class="p">);</span>
+<a name="gbab-303"></a>    <span class="n">Transpose4x4_S16</span><span class="p">(</span><span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">D2</span><span class="p">,</span> <span class="n">D3</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d0d1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d3d2</span><span class="p">);</span>
+<a name="gbab-304"></a>  <span class="p">}</span>
+<a name="gbab-305"></a>  <span class="p">{</span>    <span class="c1">// 1rst pass</span>
+<a name="gbab-306"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">kCst937</span> <span class="o">=</span> <span class="n">vdupq_n_s32</span><span class="p">(</span><span class="mi">937</span><span class="p">);</span>
+<a name="gbab-307"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">kCst1812</span> <span class="o">=</span> <span class="n">vdupq_n_s32</span><span class="p">(</span><span class="mi">1812</span><span class="p">);</span>
+<a name="gbab-308"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">a0a1</span> <span class="o">=</span> <span class="n">vaddq_s16</span><span class="p">(</span><span class="n">d0d1</span><span class="p">,</span> <span class="n">d3d2</span><span class="p">);</span>   <span class="c1">// d0+d3 | d1+d2   (=a0|a1)</span>
+<a name="gbab-309"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">a3a2</span> <span class="o">=</span> <span class="n">vsubq_s16</span><span class="p">(</span><span class="n">d0d1</span><span class="p">,</span> <span class="n">d3d2</span><span class="p">);</span>   <span class="c1">// d0-d3 | d1-d2   (=a3|a2)</span>
+<a name="gbab-310"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">a0a1_2</span> <span class="o">=</span> <span class="n">vshlq_n_s16</span><span class="p">(</span><span class="n">a0a1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-311"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">tmp0</span> <span class="o">=</span> <span class="n">vadd_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">a0a1_2</span><span class="p">),</span>
+<a name="gbab-312"></a>                                    <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">a0a1_2</span><span class="p">));</span>
+<a name="gbab-313"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">tmp2</span> <span class="o">=</span> <span class="n">vsub_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">a0a1_2</span><span class="p">),</span>
+<a name="gbab-314"></a>                                    <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">a0a1_2</span><span class="p">));</span>
+<a name="gbab-315"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a3_2217</span> <span class="o">=</span> <span class="n">vmull_n_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">a3a2</span><span class="p">),</span> <span class="mi">2217</span><span class="p">);</span>
+<a name="gbab-316"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a2_2217</span> <span class="o">=</span> <span class="n">vmull_n_s16</span><span class="p">(</span><span class="n">vget_high_s16</span><span class="p">(</span><span class="n">a3a2</span><span class="p">),</span> <span class="mi">2217</span><span class="p">);</span>
+<a name="gbab-317"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a2_p_a3</span> <span class="o">=</span> <span class="n">vmlal_n_s16</span><span class="p">(</span><span class="n">a2_2217</span><span class="p">,</span> <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">a3a2</span><span class="p">),</span> <span class="mi">5352</span><span class="p">);</span>
+<a name="gbab-318"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a3_m_a2</span> <span class="o">=</span> <span class="n">vmlsl_n_s16</span><span class="p">(</span><span class="n">a3_2217</span><span class="p">,</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">a3a2</span><span class="p">),</span> <span class="mi">5352</span><span class="p">);</span>
+<a name="gbab-319"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">tmp1</span> <span class="o">=</span> <span class="n">vshrn_n_s32</span><span class="p">(</span><span class="n">vaddq_s32</span><span class="p">(</span><span class="n">a2_p_a3</span><span class="p">,</span> <span class="n">kCst1812</span><span class="p">),</span> <span class="mi">9</span><span class="p">);</span>
+<a name="gbab-320"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">tmp3</span> <span class="o">=</span> <span class="n">vshrn_n_s32</span><span class="p">(</span><span class="n">vaddq_s32</span><span class="p">(</span><span class="n">a3_m_a2</span><span class="p">,</span> <span class="n">kCst937</span><span class="p">),</span> <span class="mi">9</span><span class="p">);</span>
+<a name="gbab-321"></a>    <span class="n">Transpose4x4_S16</span><span class="p">(</span><span class="n">tmp0</span><span class="p">,</span> <span class="n">tmp1</span><span class="p">,</span> <span class="n">tmp2</span><span class="p">,</span> <span class="n">tmp3</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d0d1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d3d2</span><span class="p">);</span>
+<a name="gbab-322"></a>  <span class="p">}</span>
+<a name="gbab-323"></a>  <span class="p">{</span>    <span class="c1">// 2nd pass</span>
+<a name="gbab-324"></a>    <span class="c1">// the (1&lt;&lt;16) addition is for the replacement: a3!=0  &lt;-&gt; 1-(a3==0)</span>
+<a name="gbab-325"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">kCst12000</span> <span class="o">=</span> <span class="n">vdupq_n_s32</span><span class="p">(</span><span class="mi">12000</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">));</span>
+<a name="gbab-326"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">kCst51000</span> <span class="o">=</span> <span class="n">vdupq_n_s32</span><span class="p">(</span><span class="mi">51000</span><span class="p">);</span>
+<a name="gbab-327"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">a0a1</span> <span class="o">=</span> <span class="n">vaddq_s16</span><span class="p">(</span><span class="n">d0d1</span><span class="p">,</span> <span class="n">d3d2</span><span class="p">);</span>   <span class="c1">// d0+d3 | d1+d2   (=a0|a1)</span>
+<a name="gbab-328"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">a3a2</span> <span class="o">=</span> <span class="n">vsubq_s16</span><span class="p">(</span><span class="n">d0d1</span><span class="p">,</span> <span class="n">d3d2</span><span class="p">);</span>   <span class="c1">// d0-d3 | d1-d2   (=a3|a2)</span>
+<a name="gbab-329"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">a0_k7</span> <span class="o">=</span> <span class="n">vadd_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">a0a1</span><span class="p">),</span> <span class="n">vdup_n_s16</span><span class="p">(</span><span class="mi">7</span><span class="p">));</span>
+<a name="gbab-330"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">out0</span> <span class="o">=</span> <span class="n">vshr_n_s16</span><span class="p">(</span><span class="n">vadd_s16</span><span class="p">(</span><span class="n">a0_k7</span><span class="p">,</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">a0a1</span><span class="p">)),</span> <span class="mi">4</span><span class="p">);</span>
+<a name="gbab-331"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">out2</span> <span class="o">=</span> <span class="n">vshr_n_s16</span><span class="p">(</span><span class="n">vsub_s16</span><span class="p">(</span><span class="n">a0_k7</span><span class="p">,</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">a0a1</span><span class="p">)),</span> <span class="mi">4</span><span class="p">);</span>
+<a name="gbab-332"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a3_2217</span> <span class="o">=</span> <span class="n">vmull_n_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">a3a2</span><span class="p">),</span> <span class="mi">2217</span><span class="p">);</span>
+<a name="gbab-333"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a2_2217</span> <span class="o">=</span> <span class="n">vmull_n_s16</span><span class="p">(</span><span class="n">vget_high_s16</span><span class="p">(</span><span class="n">a3a2</span><span class="p">),</span> <span class="mi">2217</span><span class="p">);</span>
+<a name="gbab-334"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a2_p_a3</span> <span class="o">=</span> <span class="n">vmlal_n_s16</span><span class="p">(</span><span class="n">a2_2217</span><span class="p">,</span> <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">a3a2</span><span class="p">),</span> <span class="mi">5352</span><span class="p">);</span>
+<a name="gbab-335"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a3_m_a2</span> <span class="o">=</span> <span class="n">vmlsl_n_s16</span><span class="p">(</span><span class="n">a3_2217</span><span class="p">,</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">a3a2</span><span class="p">),</span> <span class="mi">5352</span><span class="p">);</span>
+<a name="gbab-336"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">tmp1</span> <span class="o">=</span> <span class="n">vaddhn_s32</span><span class="p">(</span><span class="n">a2_p_a3</span><span class="p">,</span> <span class="n">kCst12000</span><span class="p">);</span>
+<a name="gbab-337"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">out3</span> <span class="o">=</span> <span class="n">vaddhn_s32</span><span class="p">(</span><span class="n">a3_m_a2</span><span class="p">,</span> <span class="n">kCst51000</span><span class="p">);</span>
+<a name="gbab-338"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">a3_eq_0</span> <span class="o">=</span>
+<a name="gbab-339"></a>        <span class="n">vreinterpret_s16_u16</span><span class="p">(</span><span class="n">vceq_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">a3a2</span><span class="p">),</span> <span class="n">vdup_n_s16</span><span class="p">(</span><span class="mi">0</span><span class="p">)));</span>
+<a name="gbab-340"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">out1</span> <span class="o">=</span> <span class="n">vadd_s16</span><span class="p">(</span><span class="n">tmp1</span><span class="p">,</span> <span class="n">a3_eq_0</span><span class="p">);</span>
+<a name="gbab-341"></a>    <span class="n">vst1_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">out0</span><span class="p">);</span>
+<a name="gbab-342"></a>    <span class="n">vst1_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">4</span><span class="p">,</span> <span class="n">out1</span><span class="p">);</span>
+<a name="gbab-343"></a>    <span class="n">vst1_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">8</span><span class="p">,</span> <span class="n">out2</span><span class="p">);</span>
+<a name="gbab-344"></a>    <span class="n">vst1_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">12</span><span class="p">,</span> <span class="n">out3</span><span class="p">);</span>
+<a name="gbab-345"></a>  <span class="p">}</span>
+<a name="gbab-346"></a><span class="p">}</span>
+<a name="gbab-347"></a>
+<a name="gbab-348"></a><span class="cp">#else</span>
+<a name="gbab-349"></a>
+<a name="gbab-350"></a><span class="c1">// adapted from vp8/encoder/arm/neon/shortfdct_neon.asm</span>
+<a name="gbab-351"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">int16_t</span> <span class="n">kCoeff16</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-352"></a>  <span class="mi">5352</span><span class="p">,</span>  <span class="mi">5352</span><span class="p">,</span>  <span class="mi">5352</span><span class="p">,</span> <span class="mi">5352</span><span class="p">,</span> <span class="mi">2217</span><span class="p">,</span>  <span class="mi">2217</span><span class="p">,</span>  <span class="mi">2217</span><span class="p">,</span> <span class="mi">2217</span>
+<a name="gbab-353"></a><span class="p">};</span>
+<a name="gbab-354"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">int32_t</span> <span class="n">kCoeff32</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-355"></a>   <span class="mi">1812</span><span class="p">,</span>  <span class="mi">1812</span><span class="p">,</span>  <span class="mi">1812</span><span class="p">,</span>  <span class="mi">1812</span><span class="p">,</span>
+<a name="gbab-356"></a>    <span class="mi">937</span><span class="p">,</span>   <span class="mi">937</span><span class="p">,</span>   <span class="mi">937</span><span class="p">,</span>   <span class="mi">937</span><span class="p">,</span>
+<a name="gbab-357"></a>  <span class="mi">12000</span><span class="p">,</span> <span class="mi">12000</span><span class="p">,</span> <span class="mi">12000</span><span class="p">,</span> <span class="mi">12000</span><span class="p">,</span>
+<a name="gbab-358"></a>  <span class="mi">51000</span><span class="p">,</span> <span class="mi">51000</span><span class="p">,</span> <span class="mi">51000</span><span class="p">,</span> <span class="mi">51000</span>
+<a name="gbab-359"></a><span class="p">};</span>
+<a name="gbab-360"></a>
+<a name="gbab-361"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">FTransform</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">ref</span><span class="p">,</span>
+<a name="gbab-362"></a>                       <span class="kt">int16_t</span><span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-363"></a>  <span class="k">const</span> <span class="kt">int</span> <span class="n">kBPS</span> <span class="o">=</span> <span class="n">BPS</span><span class="p">;</span>
+<a name="gbab-364"></a>  <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">src_ptr</span> <span class="o">=</span> <span class="n">src</span><span class="p">;</span>
+<a name="gbab-365"></a>  <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">ref_ptr</span> <span class="o">=</span> <span class="n">ref</span><span class="p">;</span>
+<a name="gbab-366"></a>  <span class="k">const</span> <span class="kt">int16_t</span><span class="o">*</span> <span class="n">coeff16</span> <span class="o">=</span> <span class="n">kCoeff16</span><span class="p">;</span>
+<a name="gbab-367"></a>  <span class="k">const</span> <span class="kt">int32_t</span><span class="o">*</span> <span class="n">coeff32</span> <span class="o">=</span> <span class="n">kCoeff32</span><span class="p">;</span>
+<a name="gbab-368"></a>
+<a name="gbab-369"></a>  <span class="n">__asm__</span> <span class="k">volatile</span> <span class="p">(</span>
+<a name="gbab-370"></a>    <span class="c1">// load src into q4, q5 in high half</span>
+<a name="gbab-371"></a>    <span class="s">&quot;vld1.8 {d8},  [%[src_ptr]], %[kBPS]      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-372"></a>    <span class="s">&quot;vld1.8 {d10}, [%[src_ptr]], %[kBPS]      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-373"></a>    <span class="s">&quot;vld1.8 {d9},  [%[src_ptr]], %[kBPS]      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-374"></a>    <span class="s">&quot;vld1.8 {d11}, [%[src_ptr]]               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-375"></a>
+<a name="gbab-376"></a>    <span class="c1">// load ref into q6, q7 in high half</span>
+<a name="gbab-377"></a>    <span class="s">&quot;vld1.8 {d12}, [%[ref_ptr]], %[kBPS]      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-378"></a>    <span class="s">&quot;vld1.8 {d14}, [%[ref_ptr]], %[kBPS]      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-379"></a>    <span class="s">&quot;vld1.8 {d13}, [%[ref_ptr]], %[kBPS]      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-380"></a>    <span class="s">&quot;vld1.8 {d15}, [%[ref_ptr]]               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-381"></a>
+<a name="gbab-382"></a>    <span class="c1">// Pack the high values in to q4 and q6</span>
+<a name="gbab-383"></a>    <span class="s">&quot;vtrn.32     q4, q5                       </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-384"></a>    <span class="s">&quot;vtrn.32     q6, q7                       </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-385"></a>
+<a name="gbab-386"></a>    <span class="c1">// d[0-3] = src - ref</span>
+<a name="gbab-387"></a>    <span class="s">&quot;vsubl.u8    q0, d8, d12                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-388"></a>    <span class="s">&quot;vsubl.u8    q1, d9, d13                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-389"></a>
+<a name="gbab-390"></a>    <span class="c1">// load coeff16 into q8(d16=5352, d17=2217)</span>
+<a name="gbab-391"></a>    <span class="s">&quot;vld1.16     {q8}, [%[coeff16]]           </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-392"></a>
+<a name="gbab-393"></a>    <span class="c1">// load coeff32 high half into q9 = 1812, q10 = 937</span>
+<a name="gbab-394"></a>    <span class="s">&quot;vld1.32     {q9, q10}, [%[coeff32]]!     </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-395"></a>
+<a name="gbab-396"></a>    <span class="c1">// load coeff32 low half into q11=12000, q12=51000</span>
+<a name="gbab-397"></a>    <span class="s">&quot;vld1.32     {q11,q12}, [%[coeff32]]      </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-398"></a>
+<a name="gbab-399"></a>    <span class="c1">// part 1</span>
+<a name="gbab-400"></a>    <span class="c1">// Transpose. Register dN is the same as dN in C</span>
+<a name="gbab-401"></a>    <span class="s">&quot;vtrn.32         d0, d2                   </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-402"></a>    <span class="s">&quot;vtrn.32         d1, d3                   </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-403"></a>    <span class="s">&quot;vtrn.16         d0, d1                   </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-404"></a>    <span class="s">&quot;vtrn.16         d2, d3                   </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-405"></a>
+<a name="gbab-406"></a>    <span class="s">&quot;vadd.s16        d4, d0, d3               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a0 = d0 + d3</span>
+<a name="gbab-407"></a>    <span class="s">&quot;vadd.s16        d5, d1, d2               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a1 = d1 + d2</span>
+<a name="gbab-408"></a>    <span class="s">&quot;vsub.s16        d6, d1, d2               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a2 = d1 - d2</span>
+<a name="gbab-409"></a>    <span class="s">&quot;vsub.s16        d7, d0, d3               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a3 = d0 - d3</span>
+<a name="gbab-410"></a>
+<a name="gbab-411"></a>    <span class="s">&quot;vadd.s16        d0, d4, d5               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a0 + a1</span>
+<a name="gbab-412"></a>    <span class="s">&quot;vshl.s16        d0, d0, #3               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// temp[0+i*4] = (a0+a1) &lt;&lt; 3</span>
+<a name="gbab-413"></a>    <span class="s">&quot;vsub.s16        d2, d4, d5               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a0 - a1</span>
+<a name="gbab-414"></a>    <span class="s">&quot;vshl.s16        d2, d2, #3               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// (temp[2+i*4] = (a0-a1) &lt;&lt; 3</span>
+<a name="gbab-415"></a>
+<a name="gbab-416"></a>    <span class="s">&quot;vmlal.s16       q9, d7, d16              </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a3*5352 + 1812</span>
+<a name="gbab-417"></a>    <span class="s">&quot;vmlal.s16       q10, d7, d17             </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a3*2217 + 937</span>
+<a name="gbab-418"></a>    <span class="s">&quot;vmlal.s16       q9, d6, d17              </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a2*2217 + a3*5352 + 1812</span>
+<a name="gbab-419"></a>    <span class="s">&quot;vmlsl.s16       q10, d6, d16             </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a3*2217 + 937 - a2*5352</span>
+<a name="gbab-420"></a>
+<a name="gbab-421"></a>    <span class="c1">// temp[1+i*4] = (d2*2217 + d3*5352 + 1812) &gt;&gt; 9</span>
+<a name="gbab-422"></a>    <span class="c1">// temp[3+i*4] = (d3*2217 + 937 - d2*5352) &gt;&gt; 9</span>
+<a name="gbab-423"></a>    <span class="s">&quot;vshrn.s32       d1, q9, #9               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-424"></a>    <span class="s">&quot;vshrn.s32       d3, q10, #9              </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-425"></a>
+<a name="gbab-426"></a>    <span class="c1">// part 2</span>
+<a name="gbab-427"></a>    <span class="c1">// transpose d0=ip[0], d1=ip[4], d2=ip[8], d3=ip[12]</span>
+<a name="gbab-428"></a>    <span class="s">&quot;vtrn.32         d0, d2                   </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-429"></a>    <span class="s">&quot;vtrn.32         d1, d3                   </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-430"></a>    <span class="s">&quot;vtrn.16         d0, d1                   </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-431"></a>    <span class="s">&quot;vtrn.16         d2, d3                   </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-432"></a>
+<a name="gbab-433"></a>    <span class="s">&quot;vmov.s16        d26, #7                  </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-434"></a>
+<a name="gbab-435"></a>    <span class="s">&quot;vadd.s16        d4, d0, d3               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a1 = ip[0] + ip[12]</span>
+<a name="gbab-436"></a>    <span class="s">&quot;vadd.s16        d5, d1, d2               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// b1 = ip[4] + ip[8]</span>
+<a name="gbab-437"></a>    <span class="s">&quot;vsub.s16        d6, d1, d2               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// c1 = ip[4] - ip[8]</span>
+<a name="gbab-438"></a>    <span class="s">&quot;vadd.s16        d4, d4, d26              </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// a1 + 7</span>
+<a name="gbab-439"></a>    <span class="s">&quot;vsub.s16        d7, d0, d3               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// d1 = ip[0] - ip[12]</span>
+<a name="gbab-440"></a>
+<a name="gbab-441"></a>    <span class="s">&quot;vadd.s16        d0, d4, d5               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// op[0] = a1 + b1 + 7</span>
+<a name="gbab-442"></a>    <span class="s">&quot;vsub.s16        d2, d4, d5               </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// op[8] = a1 - b1 + 7</span>
+<a name="gbab-443"></a>
+<a name="gbab-444"></a>    <span class="s">&quot;vmlal.s16       q11, d7, d16             </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// d1*5352 + 12000</span>
+<a name="gbab-445"></a>    <span class="s">&quot;vmlal.s16       q12, d7, d17             </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// d1*2217 + 51000</span>
+<a name="gbab-446"></a>
+<a name="gbab-447"></a>    <span class="s">&quot;vceq.s16        d4, d7, #0               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-448"></a>
+<a name="gbab-449"></a>    <span class="s">&quot;vshr.s16        d0, d0, #4               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-450"></a>    <span class="s">&quot;vshr.s16        d2, d2, #4               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-451"></a>
+<a name="gbab-452"></a>    <span class="s">&quot;vmlal.s16       q11, d6, d17             </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// c1*2217 + d1*5352 + 12000</span>
+<a name="gbab-453"></a>    <span class="s">&quot;vmlsl.s16       q12, d6, d16             </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// d1*2217 - c1*5352 + 51000</span>
+<a name="gbab-454"></a>
+<a name="gbab-455"></a>    <span class="s">&quot;vmvn            d4, d4                   </span><span class="se">\n</span><span class="s">&quot;</span> <span class="c1">// !(d1 == 0)</span>
+<a name="gbab-456"></a>    <span class="c1">// op[4] = (c1*2217 + d1*5352 + 12000)&gt;&gt;16</span>
+<a name="gbab-457"></a>    <span class="s">&quot;vshrn.s32       d1, q11, #16             </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-458"></a>    <span class="c1">// op[4] += (d1!=0)</span>
+<a name="gbab-459"></a>    <span class="s">&quot;vsub.s16        d1, d1, d4               </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-460"></a>    <span class="c1">// op[12]= (d1*2217 - c1*5352 + 51000)&gt;&gt;16</span>
+<a name="gbab-461"></a>    <span class="s">&quot;vshrn.s32       d3, q12, #16             </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-462"></a>
+<a name="gbab-463"></a>    <span class="c1">// set result to out array</span>
+<a name="gbab-464"></a>    <span class="s">&quot;vst1.16         {q0, q1}, [%[out]]   </span><span class="se">\n</span><span class="s">&quot;</span>
+<a name="gbab-465"></a>    <span class="o">:</span> <span class="p">[</span><span class="n">src_ptr</span><span class="p">]</span> <span class="s">&quot;+r&quot;</span><span class="p">(</span><span class="n">src_ptr</span><span class="p">),</span> <span class="p">[</span><span class="n">ref_ptr</span><span class="p">]</span> <span class="s">&quot;+r&quot;</span><span class="p">(</span><span class="n">ref_ptr</span><span class="p">),</span>
+<a name="gbab-466"></a>      <span class="p">[</span><span class="n">coeff32</span><span class="p">]</span> <span class="s">&quot;+r&quot;</span><span class="p">(</span><span class="n">coeff32</span><span class="p">)</span>          <span class="c1">// modified registers</span>
+<a name="gbab-467"></a>    <span class="o">:</span> <span class="p">[</span><span class="n">kBPS</span><span class="p">]</span> <span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">kBPS</span><span class="p">),</span> <span class="p">[</span><span class="n">coeff16</span><span class="p">]</span> <span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">coeff16</span><span class="p">),</span>
+<a name="gbab-468"></a>      <span class="p">[</span><span class="n">out</span><span class="p">]</span> <span class="s">&quot;r&quot;</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>                   <span class="c1">// constants</span>
+<a name="gbab-469"></a>    <span class="o">:</span> <span class="s">&quot;memory&quot;</span><span class="p">,</span> <span class="s">&quot;q0&quot;</span><span class="p">,</span> <span class="s">&quot;q1&quot;</span><span class="p">,</span> <span class="s">&quot;q2&quot;</span><span class="p">,</span> <span class="s">&quot;q3&quot;</span><span class="p">,</span> <span class="s">&quot;q4&quot;</span><span class="p">,</span> <span class="s">&quot;q5&quot;</span><span class="p">,</span> <span class="s">&quot;q6&quot;</span><span class="p">,</span> <span class="s">&quot;q7&quot;</span><span class="p">,</span> <span class="s">&quot;q8&quot;</span><span class="p">,</span> <span class="s">&quot;q9&quot;</span><span class="p">,</span>
+<a name="gbab-470"></a>      <span class="s">&quot;q10&quot;</span><span class="p">,</span> <span class="s">&quot;q11&quot;</span><span class="p">,</span> <span class="s">&quot;q12&quot;</span><span class="p">,</span> <span class="s">&quot;q13&quot;</span>       <span class="c1">// clobbered</span>
+<a name="gbab-471"></a>  <span class="p">);</span>
+<a name="gbab-472"></a><span class="p">}</span>
+<a name="gbab-473"></a>
+<a name="gbab-474"></a><span class="cp">#endif</span>
+<a name="gbab-475"></a>
+<a name="gbab-476"></a><span class="cp">#define LOAD_LANE_16b(VALUE, LANE) do {             \</span>
+<a name="gbab-477"></a><span class="cp">  (VALUE) = vld1_lane_s16(src, (VALUE), (LANE));    \</span>
+<a name="gbab-478"></a><span class="cp">  src += stride;                                    \</span>
+<a name="gbab-479"></a><span class="cp">} while (0)</span>
+<a name="gbab-480"></a>
+<a name="gbab-481"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">FTransformWHT</span><span class="p">(</span><span class="k">const</span> <span class="kt">int16_t</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span> <span class="kt">int16_t</span><span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-482"></a>  <span class="k">const</span> <span class="kt">int</span> <span class="n">stride</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+<a name="gbab-483"></a>  <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">zero</span> <span class="o">=</span> <span class="n">vdup_n_s16</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-484"></a>  <span class="n">int32x4x4_t</span> <span class="n">tmp0</span><span class="p">;</span>
+<a name="gbab-485"></a>  <span class="n">int16x4x4_t</span> <span class="n">in</span><span class="p">;</span>
+<a name="gbab-486"></a>  <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">zero</span><span class="p">);</span>
+<a name="gbab-487"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-488"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-489"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-490"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-491"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-492"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-493"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-494"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-495"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+<a name="gbab-496"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+<a name="gbab-497"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+<a name="gbab-498"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">2</span><span class="p">);</span>
+<a name="gbab-499"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-500"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-501"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-502"></a>  <span class="n">LOAD_LANE_16b</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-503"></a>
+<a name="gbab-504"></a>  <span class="p">{</span>
+<a name="gbab-505"></a>    <span class="c1">// a0 = in[0 * 16] + in[2 * 16]</span>
+<a name="gbab-506"></a>    <span class="c1">// a1 = in[1 * 16] + in[3 * 16]</span>
+<a name="gbab-507"></a>    <span class="c1">// a2 = in[1 * 16] - in[3 * 16]</span>
+<a name="gbab-508"></a>    <span class="c1">// a3 = in[0 * 16] - in[2 * 16]</span>
+<a name="gbab-509"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a0</span> <span class="o">=</span> <span class="n">vaddl_s16</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<a name="gbab-510"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a1</span> <span class="o">=</span> <span class="n">vaddl_s16</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<a name="gbab-511"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">vsubl_s16</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<a name="gbab-512"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a3</span> <span class="o">=</span> <span class="n">vsubl_s16</span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<a name="gbab-513"></a>    <span class="n">tmp0</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vaddq_s32</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">);</span>
+<a name="gbab-514"></a>    <span class="n">tmp0</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vaddq_s32</span><span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">);</span>
+<a name="gbab-515"></a>    <span class="n">tmp0</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">vsubq_s32</span><span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">);</span>
+<a name="gbab-516"></a>    <span class="n">tmp0</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">vsubq_s32</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">);</span>
+<a name="gbab-517"></a>  <span class="p">}</span>
+<a name="gbab-518"></a>  <span class="p">{</span>
+<a name="gbab-519"></a>    <span class="k">const</span> <span class="n">int32x4x4_t</span> <span class="n">tmp1</span> <span class="o">=</span> <span class="n">Transpose4x4</span><span class="p">(</span><span class="n">tmp0</span><span class="p">);</span>
+<a name="gbab-520"></a>    <span class="c1">// a0 = tmp[0 + i] + tmp[ 8 + i]</span>
+<a name="gbab-521"></a>    <span class="c1">// a1 = tmp[4 + i] + tmp[12 + i]</span>
+<a name="gbab-522"></a>    <span class="c1">// a2 = tmp[4 + i] - tmp[12 + i]</span>
+<a name="gbab-523"></a>    <span class="c1">// a3 = tmp[0 + i] - tmp[ 8 + i]</span>
+<a name="gbab-524"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a0</span> <span class="o">=</span> <span class="n">vaddq_s32</span><span class="p">(</span><span class="n">tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<a name="gbab-525"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a1</span> <span class="o">=</span> <span class="n">vaddq_s32</span><span class="p">(</span><span class="n">tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<a name="gbab-526"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">vsubq_s32</span><span class="p">(</span><span class="n">tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<a name="gbab-527"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">a3</span> <span class="o">=</span> <span class="n">vsubq_s32</span><span class="p">(</span><span class="n">tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<a name="gbab-528"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">b0</span> <span class="o">=</span> <span class="n">vhaddq_s32</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">);</span>  <span class="c1">// (a0 + a1) &gt;&gt; 1</span>
+<a name="gbab-529"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">vhaddq_s32</span><span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">);</span>  <span class="c1">// (a3 + a2) &gt;&gt; 1</span>
+<a name="gbab-530"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">vhsubq_s32</span><span class="p">(</span><span class="n">a3</span><span class="p">,</span> <span class="n">a2</span><span class="p">);</span>  <span class="c1">// (a3 - a2) &gt;&gt; 1</span>
+<a name="gbab-531"></a>    <span class="k">const</span> <span class="n">int32x4_t</span> <span class="n">b3</span> <span class="o">=</span> <span class="n">vhsubq_s32</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">);</span>  <span class="c1">// (a0 - a1) &gt;&gt; 1</span>
+<a name="gbab-532"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">out0</span> <span class="o">=</span> <span class="n">vmovn_s32</span><span class="p">(</span><span class="n">b0</span><span class="p">);</span>
+<a name="gbab-533"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">out1</span> <span class="o">=</span> <span class="n">vmovn_s32</span><span class="p">(</span><span class="n">b1</span><span class="p">);</span>
+<a name="gbab-534"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">out2</span> <span class="o">=</span> <span class="n">vmovn_s32</span><span class="p">(</span><span class="n">b2</span><span class="p">);</span>
+<a name="gbab-535"></a>    <span class="k">const</span> <span class="n">int16x4_t</span> <span class="n">out3</span> <span class="o">=</span> <span class="n">vmovn_s32</span><span class="p">(</span><span class="n">b3</span><span class="p">);</span>
+<a name="gbab-536"></a>
+<a name="gbab-537"></a>    <span class="n">vst1_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">out0</span><span class="p">);</span>
+<a name="gbab-538"></a>    <span class="n">vst1_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">4</span><span class="p">,</span> <span class="n">out1</span><span class="p">);</span>
+<a name="gbab-539"></a>    <span class="n">vst1_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">8</span><span class="p">,</span> <span class="n">out2</span><span class="p">);</span>
+<a name="gbab-540"></a>    <span class="n">vst1_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">12</span><span class="p">,</span> <span class="n">out3</span><span class="p">);</span>
+<a name="gbab-541"></a>  <span class="p">}</span>
+<a name="gbab-542"></a><span class="p">}</span>
+<a name="gbab-543"></a><span class="cp">#undef LOAD_LANE_16b</span>
+<a name="gbab-544"></a>
+<a name="gbab-545"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-546"></a><span class="c1">// Texture distortion</span>
+<a name="gbab-547"></a><span class="c1">//</span>
+<a name="gbab-548"></a><span class="c1">// We try to match the spectral content (weighted) between source and</span>
+<a name="gbab-549"></a><span class="c1">// reconstructed samples.</span>
+<a name="gbab-550"></a>
+<a name="gbab-551"></a><span class="c1">// a 0123, b 0123</span>
+<a name="gbab-552"></a><span class="c1">// a 4567, b 4567</span>
+<a name="gbab-553"></a><span class="c1">// a 89ab, b 89ab</span>
+<a name="gbab-554"></a><span class="c1">// a cdef, b cdef</span>
+<a name="gbab-555"></a><span class="c1">//</span>
+<a name="gbab-556"></a><span class="c1">// transpose</span>
+<a name="gbab-557"></a><span class="c1">//</span>
+<a name="gbab-558"></a><span class="c1">// a 048c, b 048c</span>
+<a name="gbab-559"></a><span class="c1">// a 159d, b 159d</span>
+<a name="gbab-560"></a><span class="c1">// a 26ae, b 26ae</span>
+<a name="gbab-561"></a><span class="c1">// a 37bf, b 37bf</span>
+<a name="gbab-562"></a><span class="c1">//</span>
+<a name="gbab-563"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">int16x8x4_t</span> <span class="nf">DistoTranspose4x4S16</span><span class="p">(</span><span class="n">int16x8x4_t</span> <span class="n">q4_in</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-564"></a>  <span class="k">const</span> <span class="n">int16x8x2_t</span> <span class="n">q2_tmp0</span> <span class="o">=</span> <span class="n">vtrnq_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<a name="gbab-565"></a>  <span class="k">const</span> <span class="n">int16x8x2_t</span> <span class="n">q2_tmp1</span> <span class="o">=</span> <span class="n">vtrnq_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<a name="gbab-566"></a>  <span class="k">const</span> <span class="n">int32x4x2_t</span> <span class="n">q2_tmp2</span> <span class="o">=</span> <span class="n">vtrnq_s32</span><span class="p">(</span><span class="n">vreinterpretq_s32_s16</span><span class="p">(</span><span class="n">q2_tmp0</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<a name="gbab-567"></a>                                        <span class="n">vreinterpretq_s32_s16</span><span class="p">(</span><span class="n">q2_tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+<a name="gbab-568"></a>  <span class="k">const</span> <span class="n">int32x4x2_t</span> <span class="n">q2_tmp3</span> <span class="o">=</span> <span class="n">vtrnq_s32</span><span class="p">(</span><span class="n">vreinterpretq_s32_s16</span><span class="p">(</span><span class="n">q2_tmp0</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+<a name="gbab-569"></a>                                        <span class="n">vreinterpretq_s32_s16</span><span class="p">(</span><span class="n">q2_tmp1</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+<a name="gbab-570"></a>  <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_s32</span><span class="p">(</span><span class="n">q2_tmp2</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<a name="gbab-571"></a>  <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_s32</span><span class="p">(</span><span class="n">q2_tmp2</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<a name="gbab-572"></a>  <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_s32</span><span class="p">(</span><span class="n">q2_tmp3</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<a name="gbab-573"></a>  <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_s32</span><span class="p">(</span><span class="n">q2_tmp3</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<a name="gbab-574"></a>  <span class="k">return</span> <span class="n">q4_in</span><span class="p">;</span>
+<a name="gbab-575"></a><span class="p">}</span>
+<a name="gbab-576"></a>
+<a name="gbab-577"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">int16x8x4_t</span> <span class="nf">DistoHorizontalPass</span><span class="p">(</span><span class="k">const</span> <span class="n">int16x8x4_t</span> <span class="n">q4_in</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-578"></a>  <span class="c1">// {a0, a1} = {in[0] + in[2], in[1] + in[3]}</span>
+<a name="gbab-579"></a>  <span class="c1">// {a3, a2} = {in[0] - in[2], in[1] - in[3]}</span>
+<a name="gbab-580"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">q_a0</span> <span class="o">=</span> <span class="n">vaddq_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<a name="gbab-581"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">q_a1</span> <span class="o">=</span> <span class="n">vaddq_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<a name="gbab-582"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">q_a3</span> <span class="o">=</span> <span class="n">vsubq_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<a name="gbab-583"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">q_a2</span> <span class="o">=</span> <span class="n">vsubq_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<a name="gbab-584"></a>  <span class="n">int16x8x4_t</span> <span class="n">q4_out</span><span class="p">;</span>
+<a name="gbab-585"></a>  <span class="c1">// tmp[0] = a0 + a1</span>
+<a name="gbab-586"></a>  <span class="c1">// tmp[1] = a3 + a2</span>
+<a name="gbab-587"></a>  <span class="c1">// tmp[2] = a3 - a2</span>
+<a name="gbab-588"></a>  <span class="c1">// tmp[3] = a0 - a1</span>
+<a name="gbab-589"></a>  <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">q4_out</span><span class="p">,</span>
+<a name="gbab-590"></a>               <span class="n">vabsq_s16</span><span class="p">(</span><span class="n">vaddq_s16</span><span class="p">(</span><span class="n">q_a0</span><span class="p">,</span> <span class="n">q_a1</span><span class="p">)),</span>
+<a name="gbab-591"></a>               <span class="n">vabsq_s16</span><span class="p">(</span><span class="n">vaddq_s16</span><span class="p">(</span><span class="n">q_a3</span><span class="p">,</span> <span class="n">q_a2</span><span class="p">)),</span>
+<a name="gbab-592"></a>               <span class="n">vabdq_s16</span><span class="p">(</span><span class="n">q_a3</span><span class="p">,</span> <span class="n">q_a2</span><span class="p">),</span> <span class="n">vabdq_s16</span><span class="p">(</span><span class="n">q_a0</span><span class="p">,</span> <span class="n">q_a1</span><span class="p">));</span>
+<a name="gbab-593"></a>  <span class="k">return</span> <span class="n">q4_out</span><span class="p">;</span>
+<a name="gbab-594"></a><span class="p">}</span>
+<a name="gbab-595"></a>
+<a name="gbab-596"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">int16x8x4_t</span> <span class="nf">DistoVerticalPass</span><span class="p">(</span><span class="k">const</span> <span class="n">uint8x8x4_t</span> <span class="n">q4_in</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-597"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">q_a0</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">vaddl_u8</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<a name="gbab-598"></a>                                                        <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span>
+<a name="gbab-599"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">q_a1</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">vaddl_u8</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<a name="gbab-600"></a>                                                        <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]));</span>
+<a name="gbab-601"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">q_a2</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">vsubl_u8</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<a name="gbab-602"></a>                                                        <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]));</span>
+<a name="gbab-603"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">q_a3</span> <span class="o">=</span> <span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">vsubl_u8</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<a name="gbab-604"></a>                                                        <span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span>
+<a name="gbab-605"></a>  <span class="n">int16x8x4_t</span> <span class="n">q4_out</span><span class="p">;</span>
+<a name="gbab-606"></a>
+<a name="gbab-607"></a>  <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">q4_out</span><span class="p">,</span>
+<a name="gbab-608"></a>               <span class="n">vaddq_s16</span><span class="p">(</span><span class="n">q_a0</span><span class="p">,</span> <span class="n">q_a1</span><span class="p">),</span> <span class="n">vaddq_s16</span><span class="p">(</span><span class="n">q_a3</span><span class="p">,</span> <span class="n">q_a2</span><span class="p">),</span>
+<a name="gbab-609"></a>               <span class="n">vsubq_s16</span><span class="p">(</span><span class="n">q_a3</span><span class="p">,</span> <span class="n">q_a2</span><span class="p">),</span> <span class="n">vsubq_s16</span><span class="p">(</span><span class="n">q_a0</span><span class="p">,</span> <span class="n">q_a1</span><span class="p">));</span>
+<a name="gbab-610"></a>  <span class="k">return</span> <span class="n">q4_out</span><span class="p">;</span>
+<a name="gbab-611"></a><span class="p">}</span>
+<a name="gbab-612"></a>
+<a name="gbab-613"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">int16x4x4_t</span> <span class="nf">DistoLoadW</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint16_t</span><span class="o">*</span> <span class="n">w</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-614"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">q_w07</span> <span class="o">=</span> <span class="n">vld1q_u16</span><span class="p">(</span><span class="o">&amp;</span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<a name="gbab-615"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">q_w8f</span> <span class="o">=</span> <span class="n">vld1q_u16</span><span class="p">(</span><span class="o">&amp;</span><span class="n">w</span><span class="p">[</span><span class="mi">8</span><span class="p">]);</span>
+<a name="gbab-616"></a>  <span class="n">int16x4x4_t</span> <span class="n">d4_w</span><span class="p">;</span>
+<a name="gbab-617"></a>  <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">d4_w</span><span class="p">,</span>
+<a name="gbab-618"></a>               <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">q_w07</span><span class="p">)),</span>
+<a name="gbab-619"></a>               <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">q_w07</span><span class="p">)),</span>
+<a name="gbab-620"></a>               <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">q_w8f</span><span class="p">)),</span>
+<a name="gbab-621"></a>               <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">q_w8f</span><span class="p">)));</span>
+<a name="gbab-622"></a>  <span class="k">return</span> <span class="n">d4_w</span><span class="p">;</span>
+<a name="gbab-623"></a><span class="p">}</span>
+<a name="gbab-624"></a>
+<a name="gbab-625"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">int32x2_t</span> <span class="nf">DistoSum</span><span class="p">(</span><span class="k">const</span> <span class="n">int16x8x4_t</span> <span class="n">q4_in</span><span class="p">,</span>
+<a name="gbab-626"></a>                                      <span class="k">const</span> <span class="n">int16x4x4_t</span> <span class="n">d4_w</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-627"></a>  <span class="n">int32x2_t</span> <span class="n">d_sum</span><span class="p">;</span>
+<a name="gbab-628"></a>  <span class="c1">// sum += w[ 0] * abs(b0);</span>
+<a name="gbab-629"></a>  <span class="c1">// sum += w[ 4] * abs(b1);</span>
+<a name="gbab-630"></a>  <span class="c1">// sum += w[ 8] * abs(b2);</span>
+<a name="gbab-631"></a>  <span class="c1">// sum += w[12] * abs(b3);</span>
+<a name="gbab-632"></a>  <span class="n">int32x4_t</span> <span class="n">q_sum0</span> <span class="o">=</span> <span class="n">vmull_s16</span><span class="p">(</span><span class="n">d4_w</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+<a name="gbab-633"></a>  <span class="n">int32x4_t</span> <span class="n">q_sum1</span> <span class="o">=</span> <span class="n">vmull_s16</span><span class="p">(</span><span class="n">d4_w</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+<a name="gbab-634"></a>  <span class="n">int32x4_t</span> <span class="n">q_sum2</span> <span class="o">=</span> <span class="n">vmull_s16</span><span class="p">(</span><span class="n">d4_w</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span>
+<a name="gbab-635"></a>  <span class="n">int32x4_t</span> <span class="n">q_sum3</span> <span class="o">=</span> <span class="n">vmull_s16</span><span class="p">(</span><span class="n">d4_w</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">vget_low_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]));</span>
+<a name="gbab-636"></a>  <span class="n">q_sum0</span> <span class="o">=</span> <span class="n">vmlsl_s16</span><span class="p">(</span><span class="n">q_sum0</span><span class="p">,</span> <span class="n">d4_w</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+<a name="gbab-637"></a>  <span class="n">q_sum1</span> <span class="o">=</span> <span class="n">vmlsl_s16</span><span class="p">(</span><span class="n">q_sum1</span><span class="p">,</span> <span class="n">d4_w</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
+<a name="gbab-638"></a>  <span class="n">q_sum2</span> <span class="o">=</span> <span class="n">vmlsl_s16</span><span class="p">(</span><span class="n">q_sum2</span><span class="p">,</span> <span class="n">d4_w</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]));</span>
+<a name="gbab-639"></a>  <span class="n">q_sum3</span> <span class="o">=</span> <span class="n">vmlsl_s16</span><span class="p">(</span><span class="n">q_sum3</span><span class="p">,</span> <span class="n">d4_w</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">vget_high_s16</span><span class="p">(</span><span class="n">q4_in</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]));</span>
+<a name="gbab-640"></a>
+<a name="gbab-641"></a>  <span class="n">q_sum0</span> <span class="o">=</span> <span class="n">vaddq_s32</span><span class="p">(</span><span class="n">q_sum0</span><span class="p">,</span> <span class="n">q_sum1</span><span class="p">);</span>
+<a name="gbab-642"></a>  <span class="n">q_sum2</span> <span class="o">=</span> <span class="n">vaddq_s32</span><span class="p">(</span><span class="n">q_sum2</span><span class="p">,</span> <span class="n">q_sum3</span><span class="p">);</span>
+<a name="gbab-643"></a>  <span class="n">q_sum2</span> <span class="o">=</span> <span class="n">vaddq_s32</span><span class="p">(</span><span class="n">q_sum0</span><span class="p">,</span> <span class="n">q_sum2</span><span class="p">);</span>
+<a name="gbab-644"></a>  <span class="n">d_sum</span> <span class="o">=</span> <span class="n">vpadd_s32</span><span class="p">(</span><span class="n">vget_low_s32</span><span class="p">(</span><span class="n">q_sum2</span><span class="p">),</span> <span class="n">vget_high_s32</span><span class="p">(</span><span class="n">q_sum2</span><span class="p">));</span>
+<a name="gbab-645"></a>  <span class="n">d_sum</span> <span class="o">=</span> <span class="n">vpadd_s32</span><span class="p">(</span><span class="n">d_sum</span><span class="p">,</span> <span class="n">d_sum</span><span class="p">);</span>
+<a name="gbab-646"></a>  <span class="k">return</span> <span class="n">d_sum</span><span class="p">;</span>
+<a name="gbab-647"></a><span class="p">}</span>
+<a name="gbab-648"></a>
+<a name="gbab-649"></a><span class="cp">#define LOAD_LANE_32b(src, VALUE, LANE) \</span>
+<a name="gbab-650"></a><span class="cp">    (VALUE) = vld1_lane_u32((const uint32_t*)(src), (VALUE), (LANE))</span>
+<a name="gbab-651"></a>
+<a name="gbab-652"></a><span class="c1">// Hadamard transform</span>
+<a name="gbab-653"></a><span class="c1">// Returns the weighted sum of the absolute value of transformed coefficients.</span>
+<a name="gbab-654"></a><span class="c1">// w[] contains a row-major 4 by 4 symmetric matrix.</span>
+<a name="gbab-655"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">Disto4x4</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">b</span><span class="p">,</span>
+<a name="gbab-656"></a>                    <span class="k">const</span> <span class="kt">uint16_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">w</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-657"></a>  <span class="n">uint32x2_t</span> <span class="n">d_in_ab_0123</span> <span class="o">=</span> <span class="n">vdup_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-658"></a>  <span class="n">uint32x2_t</span> <span class="n">d_in_ab_4567</span> <span class="o">=</span> <span class="n">vdup_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-659"></a>  <span class="n">uint32x2_t</span> <span class="n">d_in_ab_89ab</span> <span class="o">=</span> <span class="n">vdup_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-660"></a>  <span class="n">uint32x2_t</span> <span class="n">d_in_ab_cdef</span> <span class="o">=</span> <span class="n">vdup_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-661"></a>  <span class="n">uint8x8x4_t</span> <span class="n">d4_in</span><span class="p">;</span>
+<a name="gbab-662"></a>
+<a name="gbab-663"></a>  <span class="c1">// load data a, b</span>
+<a name="gbab-664"></a>  <span class="n">LOAD_LANE_32b</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">d_in_ab_0123</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-665"></a>  <span class="n">LOAD_LANE_32b</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">d_in_ab_4567</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-666"></a>  <span class="n">LOAD_LANE_32b</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">d_in_ab_89ab</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-667"></a>  <span class="n">LOAD_LANE_32b</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">d_in_ab_cdef</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-668"></a>  <span class="n">LOAD_LANE_32b</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">d_in_ab_0123</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-669"></a>  <span class="n">LOAD_LANE_32b</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">d_in_ab_4567</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-670"></a>  <span class="n">LOAD_LANE_32b</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">d_in_ab_89ab</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-671"></a>  <span class="n">LOAD_LANE_32b</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">d_in_ab_cdef</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-672"></a>  <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">d4_in</span><span class="p">,</span>
+<a name="gbab-673"></a>               <span class="n">vreinterpret_u8_u32</span><span class="p">(</span><span class="n">d_in_ab_0123</span><span class="p">),</span>
+<a name="gbab-674"></a>               <span class="n">vreinterpret_u8_u32</span><span class="p">(</span><span class="n">d_in_ab_4567</span><span class="p">),</span>
+<a name="gbab-675"></a>               <span class="n">vreinterpret_u8_u32</span><span class="p">(</span><span class="n">d_in_ab_89ab</span><span class="p">),</span>
+<a name="gbab-676"></a>               <span class="n">vreinterpret_u8_u32</span><span class="p">(</span><span class="n">d_in_ab_cdef</span><span class="p">));</span>
+<a name="gbab-677"></a>
+<a name="gbab-678"></a>  <span class="p">{</span>
+<a name="gbab-679"></a>    <span class="c1">// Vertical pass first to avoid a transpose (vertical and horizontal passes</span>
+<a name="gbab-680"></a>    <span class="c1">// are commutative because w/kWeightY is symmetric) and subsequent</span>
+<a name="gbab-681"></a>    <span class="c1">// transpose.</span>
+<a name="gbab-682"></a>    <span class="k">const</span> <span class="n">int16x8x4_t</span> <span class="n">q4_v</span> <span class="o">=</span> <span class="n">DistoVerticalPass</span><span class="p">(</span><span class="n">d4_in</span><span class="p">);</span>
+<a name="gbab-683"></a>    <span class="k">const</span> <span class="n">int16x4x4_t</span> <span class="n">d4_w</span> <span class="o">=</span> <span class="n">DistoLoadW</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<a name="gbab-684"></a>    <span class="c1">// horizontal pass</span>
+<a name="gbab-685"></a>    <span class="k">const</span> <span class="n">int16x8x4_t</span> <span class="n">q4_t</span> <span class="o">=</span> <span class="n">DistoTranspose4x4S16</span><span class="p">(</span><span class="n">q4_v</span><span class="p">);</span>
+<a name="gbab-686"></a>    <span class="k">const</span> <span class="n">int16x8x4_t</span> <span class="n">q4_h</span> <span class="o">=</span> <span class="n">DistoHorizontalPass</span><span class="p">(</span><span class="n">q4_t</span><span class="p">);</span>
+<a name="gbab-687"></a>    <span class="n">int32x2_t</span> <span class="n">d_sum</span> <span class="o">=</span> <span class="n">DistoSum</span><span class="p">(</span><span class="n">q4_h</span><span class="p">,</span> <span class="n">d4_w</span><span class="p">);</span>
+<a name="gbab-688"></a>
+<a name="gbab-689"></a>    <span class="c1">// abs(sum2 - sum1) &gt;&gt; 5</span>
+<a name="gbab-690"></a>    <span class="n">d_sum</span> <span class="o">=</span> <span class="n">vabs_s32</span><span class="p">(</span><span class="n">d_sum</span><span class="p">);</span>
+<a name="gbab-691"></a>    <span class="n">d_sum</span>  <span class="o">=</span> <span class="n">vshr_n_s32</span><span class="p">(</span><span class="n">d_sum</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+<a name="gbab-692"></a>    <span class="k">return</span> <span class="n">vget_lane_s32</span><span class="p">(</span><span class="n">d_sum</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-693"></a>  <span class="p">}</span>
+<a name="gbab-694"></a><span class="p">}</span>
+<a name="gbab-695"></a><span class="cp">#undef LOAD_LANE_32b</span>
+<a name="gbab-696"></a>
+<a name="gbab-697"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">Disto16x16</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">b</span><span class="p">,</span>
+<a name="gbab-698"></a>                      <span class="k">const</span> <span class="kt">uint16_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">w</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-699"></a>  <span class="kt">int</span> <span class="n">D</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-700"></a>  <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<a name="gbab-701"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">16</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">;</span> <span class="n">y</span> <span class="o">+=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-702"></a>    <span class="k">for</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">;</span> <span class="n">x</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-703"></a>      <span class="n">D</span> <span class="o">+=</span> <span class="n">Disto4x4</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">b</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">);</span>
+<a name="gbab-704"></a>    <span class="p">}</span>
+<a name="gbab-705"></a>  <span class="p">}</span>
+<a name="gbab-706"></a>  <span class="k">return</span> <span class="n">D</span><span class="p">;</span>
+<a name="gbab-707"></a><span class="p">}</span>
+<a name="gbab-708"></a>
+<a name="gbab-709"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-710"></a>
+<a name="gbab-711"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">CollectHistogram</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">ref</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">pred</span><span class="p">,</span>
+<a name="gbab-712"></a>                             <span class="kt">int</span> <span class="n">start_block</span><span class="p">,</span> <span class="kt">int</span> <span class="n">end_block</span><span class="p">,</span>
+<a name="gbab-713"></a>                             <span class="n">VP8Histogram</span><span class="o">*</span> <span class="k">const</span> <span class="n">histo</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-714"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">max_coeff_thresh</span> <span class="o">=</span> <span class="n">vdupq_n_u16</span><span class="p">(</span><span class="n">MAX_COEFF_THRESH</span><span class="p">);</span>
+<a name="gbab-715"></a>  <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
+<a name="gbab-716"></a>  <span class="kt">int</span> <span class="n">distribution</span><span class="p">[</span><span class="n">MAX_COEFF_THRESH</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+<a name="gbab-717"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="n">start_block</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">end_block</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-718"></a>    <span class="kt">int16_t</span> <span class="n">out</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+<a name="gbab-719"></a>    <span class="n">FTransform</span><span class="p">(</span><span class="n">ref</span> <span class="o">+</span> <span class="n">VP8DspScan</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">pred</span> <span class="o">+</span> <span class="n">VP8DspScan</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">out</span><span class="p">);</span>
+<a name="gbab-720"></a>    <span class="p">{</span>
+<a name="gbab-721"></a>      <span class="kt">int</span> <span class="n">k</span><span class="p">;</span>
+<a name="gbab-722"></a>      <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">a0</span> <span class="o">=</span> <span class="n">vld1q_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-723"></a>      <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">b0</span> <span class="o">=</span> <span class="n">vld1q_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">8</span><span class="p">);</span>
+<a name="gbab-724"></a>      <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">a1</span> <span class="o">=</span> <span class="n">vreinterpretq_u16_s16</span><span class="p">(</span><span class="n">vabsq_s16</span><span class="p">(</span><span class="n">a0</span><span class="p">));</span>
+<a name="gbab-725"></a>      <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">vreinterpretq_u16_s16</span><span class="p">(</span><span class="n">vabsq_s16</span><span class="p">(</span><span class="n">b0</span><span class="p">));</span>
+<a name="gbab-726"></a>      <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">vshrq_n_u16</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-727"></a>      <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">vshrq_n_u16</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-728"></a>      <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">a3</span> <span class="o">=</span> <span class="n">vminq_u16</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span> <span class="n">max_coeff_thresh</span><span class="p">);</span>
+<a name="gbab-729"></a>      <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">b3</span> <span class="o">=</span> <span class="n">vminq_u16</span><span class="p">(</span><span class="n">b2</span><span class="p">,</span> <span class="n">max_coeff_thresh</span><span class="p">);</span>
+<a name="gbab-730"></a>      <span class="n">vst1q_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">a3</span><span class="p">));</span>
+<a name="gbab-731"></a>      <span class="n">vst1q_s16</span><span class="p">(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">8</span><span class="p">,</span> <span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">b3</span><span class="p">));</span>
+<a name="gbab-732"></a>      <span class="c1">// Convert coefficients to bin.</span>
+<a name="gbab-733"></a>      <span class="k">for</span> <span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-734"></a>        <span class="o">++</span><span class="n">distribution</span><span class="p">[</span><span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]];</span>
+<a name="gbab-735"></a>      <span class="p">}</span>
+<a name="gbab-736"></a>    <span class="p">}</span>
+<a name="gbab-737"></a>  <span class="p">}</span>
+<a name="gbab-738"></a>  <span class="n">VP8SetHistogramData</span><span class="p">(</span><span class="n">distribution</span><span class="p">,</span> <span class="n">histo</span><span class="p">);</span>
+<a name="gbab-739"></a><span class="p">}</span>
+<a name="gbab-740"></a>
+<a name="gbab-741"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-742"></a>
+<a name="gbab-743"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">void</span> <span class="nf">AccumulateSSE16</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">a</span><span class="p">,</span>
+<a name="gbab-744"></a>                                        <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">b</span><span class="p">,</span>
+<a name="gbab-745"></a>                                        <span class="n">uint32x4_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">sum</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-746"></a>  <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">a0</span> <span class="o">=</span> <span class="n">vld1q_u8</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<a name="gbab-747"></a>  <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">b0</span> <span class="o">=</span> <span class="n">vld1q_u8</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+<a name="gbab-748"></a>  <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">abs_diff</span> <span class="o">=</span> <span class="n">vabdq_u8</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">b0</span><span class="p">);</span>
+<a name="gbab-749"></a>  <span class="n">uint16x8_t</span> <span class="n">prod</span> <span class="o">=</span> <span class="n">vmull_u8</span><span class="p">(</span><span class="n">vget_low_u8</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">),</span> <span class="n">vget_low_u8</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">));</span>
+<a name="gbab-750"></a>  <span class="n">prod</span> <span class="o">=</span> <span class="n">vmlal_u8</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="n">vget_high_u8</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">),</span> <span class="n">vget_high_u8</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">));</span>
+<a name="gbab-751"></a>  <span class="o">*</span><span class="n">sum</span> <span class="o">=</span> <span class="n">vpadalq_u16</span><span class="p">(</span><span class="o">*</span><span class="n">sum</span><span class="p">,</span> <span class="n">prod</span><span class="p">);</span>      <span class="c1">// pair-wise add and accumulate</span>
+<a name="gbab-752"></a><span class="p">}</span>
+<a name="gbab-753"></a>
+<a name="gbab-754"></a><span class="c1">// Horizontal sum of all four uint32_t values in &#39;sum&#39;.</span>
+<a name="gbab-755"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">SumToInt</span><span class="p">(</span><span class="n">uint32x4_t</span> <span class="n">sum</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-756"></a>  <span class="k">const</span> <span class="n">uint64x2_t</span> <span class="n">sum2</span> <span class="o">=</span> <span class="n">vpaddlq_u32</span><span class="p">(</span><span class="n">sum</span><span class="p">);</span>
+<a name="gbab-757"></a>  <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">sum3</span> <span class="o">=</span> <span class="n">vgetq_lane_u64</span><span class="p">(</span><span class="n">sum2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">vgetq_lane_u64</span><span class="p">(</span><span class="n">sum2</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-758"></a>  <span class="k">return</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">sum3</span><span class="p">;</span>
+<a name="gbab-759"></a><span class="p">}</span>
+<a name="gbab-760"></a>
+<a name="gbab-761"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">SSE16x16</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-762"></a>  <span class="n">uint32x4_t</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">vdupq_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-763"></a>  <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+<a name="gbab-764"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">;</span> <span class="o">++</span><span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-765"></a>    <span class="n">AccumulateSSE16</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">b</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sum</span><span class="p">);</span>
+<a name="gbab-766"></a>  <span class="p">}</span>
+<a name="gbab-767"></a>  <span class="k">return</span> <span class="n">SumToInt</span><span class="p">(</span><span class="n">sum</span><span class="p">);</span>
+<a name="gbab-768"></a><span class="p">}</span>
+<a name="gbab-769"></a>
+<a name="gbab-770"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">SSE16x8</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-771"></a>  <span class="n">uint32x4_t</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">vdupq_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-772"></a>  <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+<a name="gbab-773"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="o">++</span><span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-774"></a>    <span class="n">AccumulateSSE16</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="n">b</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sum</span><span class="p">);</span>
+<a name="gbab-775"></a>  <span class="p">}</span>
+<a name="gbab-776"></a>  <span class="k">return</span> <span class="n">SumToInt</span><span class="p">(</span><span class="n">sum</span><span class="p">);</span>
+<a name="gbab-777"></a><span class="p">}</span>
+<a name="gbab-778"></a>
+<a name="gbab-779"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">SSE8x8</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-780"></a>  <span class="n">uint32x4_t</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">vdupq_n_u32</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-781"></a>  <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+<a name="gbab-782"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="o">++</span><span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-783"></a>    <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">a0</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">);</span>
+<a name="gbab-784"></a>    <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">b0</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">BPS</span><span class="p">);</span>
+<a name="gbab-785"></a>    <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">abs_diff</span> <span class="o">=</span> <span class="n">vabd_u8</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">b0</span><span class="p">);</span>
+<a name="gbab-786"></a>    <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">prod</span> <span class="o">=</span> <span class="n">vmull_u8</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">,</span> <span class="n">abs_diff</span><span class="p">);</span>
+<a name="gbab-787"></a>    <span class="n">sum</span> <span class="o">=</span> <span class="n">vpadalq_u16</span><span class="p">(</span><span class="n">sum</span><span class="p">,</span> <span class="n">prod</span><span class="p">);</span>
+<a name="gbab-788"></a>  <span class="p">}</span>
+<a name="gbab-789"></a>  <span class="k">return</span> <span class="n">SumToInt</span><span class="p">(</span><span class="n">sum</span><span class="p">);</span>
+<a name="gbab-790"></a><span class="p">}</span>
+<a name="gbab-791"></a>
+<a name="gbab-792"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">SSE4x4</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-793"></a>  <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">a0</span> <span class="o">=</span> <span class="n">Load4x4</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<a name="gbab-794"></a>  <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">b0</span> <span class="o">=</span> <span class="n">Load4x4</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+<a name="gbab-795"></a>  <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">abs_diff</span> <span class="o">=</span> <span class="n">vabdq_u8</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">b0</span><span class="p">);</span>
+<a name="gbab-796"></a>  <span class="n">uint16x8_t</span> <span class="n">prod</span> <span class="o">=</span> <span class="n">vmull_u8</span><span class="p">(</span><span class="n">vget_low_u8</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">),</span> <span class="n">vget_low_u8</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">));</span>
+<a name="gbab-797"></a>  <span class="n">prod</span> <span class="o">=</span> <span class="n">vmlal_u8</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="n">vget_high_u8</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">),</span> <span class="n">vget_high_u8</span><span class="p">(</span><span class="n">abs_diff</span><span class="p">));</span>
+<a name="gbab-798"></a>  <span class="k">return</span> <span class="n">SumToInt</span><span class="p">(</span><span class="n">vpaddlq_u16</span><span class="p">(</span><span class="n">prod</span><span class="p">));</span>
+<a name="gbab-799"></a><span class="p">}</span>
+<a name="gbab-800"></a>
+<a name="gbab-801"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-802"></a>
+<a name="gbab-803"></a><span class="c1">// Compilation with gcc-4.6.x is problematic for now.</span>
+<a name="gbab-804"></a><span class="cp">#if !defined(WORK_AROUND_GCC)</span>
+<a name="gbab-805"></a>
+<a name="gbab-806"></a><span class="k">static</span> <span class="n">int16x8_t</span> <span class="nf">Quantize</span><span class="p">(</span><span class="kt">int16_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">in</span><span class="p">,</span>
+<a name="gbab-807"></a>                          <span class="k">const</span> <span class="n">VP8Matrix</span><span class="o">*</span> <span class="k">const</span> <span class="n">mtx</span><span class="p">,</span> <span class="kt">int</span> <span class="n">offset</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-808"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">sharp</span> <span class="o">=</span> <span class="n">vld1q_u16</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mtx</span><span class="o">-&gt;</span><span class="n">sharpen_</span><span class="p">[</span><span class="n">offset</span><span class="p">]);</span>
+<a name="gbab-809"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">q</span> <span class="o">=</span> <span class="n">vld1q_u16</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mtx</span><span class="o">-&gt;</span><span class="n">q_</span><span class="p">[</span><span class="n">offset</span><span class="p">]);</span>
+<a name="gbab-810"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">iq</span> <span class="o">=</span> <span class="n">vld1q_u16</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mtx</span><span class="o">-&gt;</span><span class="n">iq_</span><span class="p">[</span><span class="n">offset</span><span class="p">]);</span>
+<a name="gbab-811"></a>  <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">bias0</span> <span class="o">=</span> <span class="n">vld1q_u32</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mtx</span><span class="o">-&gt;</span><span class="n">bias_</span><span class="p">[</span><span class="n">offset</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]);</span>
+<a name="gbab-812"></a>  <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">bias1</span> <span class="o">=</span> <span class="n">vld1q_u32</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mtx</span><span class="o">-&gt;</span><span class="n">bias_</span><span class="p">[</span><span class="n">offset</span> <span class="o">+</span> <span class="mi">4</span><span class="p">]);</span>
+<a name="gbab-813"></a>
+<a name="gbab-814"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">a</span> <span class="o">=</span> <span class="n">vld1q_s16</span><span class="p">(</span><span class="n">in</span> <span class="o">+</span> <span class="n">offset</span><span class="p">);</span>                <span class="c1">// in</span>
+<a name="gbab-815"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">b</span> <span class="o">=</span> <span class="n">vreinterpretq_u16_s16</span><span class="p">(</span><span class="n">vabsq_s16</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>  <span class="c1">// coeff = abs(in)</span>
+<a name="gbab-816"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">sign</span> <span class="o">=</span> <span class="n">vshrq_n_s16</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">15</span><span class="p">);</span>                 <span class="c1">// sign</span>
+<a name="gbab-817"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">c</span> <span class="o">=</span> <span class="n">vaddq_u16</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">sharp</span><span class="p">);</span>                  <span class="c1">// + sharpen</span>
+<a name="gbab-818"></a>  <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">m0</span> <span class="o">=</span> <span class="n">vmull_u16</span><span class="p">(</span><span class="n">vget_low_u16</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">vget_low_u16</span><span class="p">(</span><span class="n">iq</span><span class="p">));</span>
+<a name="gbab-819"></a>  <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">m1</span> <span class="o">=</span> <span class="n">vmull_u16</span><span class="p">(</span><span class="n">vget_high_u16</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">vget_high_u16</span><span class="p">(</span><span class="n">iq</span><span class="p">));</span>
+<a name="gbab-820"></a>  <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">m2</span> <span class="o">=</span> <span class="n">vhaddq_u32</span><span class="p">(</span><span class="n">m0</span><span class="p">,</span> <span class="n">bias0</span><span class="p">);</span>
+<a name="gbab-821"></a>  <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">m3</span> <span class="o">=</span> <span class="n">vhaddq_u32</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">bias1</span><span class="p">);</span>     <span class="c1">// (coeff * iQ + bias) &gt;&gt; 1</span>
+<a name="gbab-822"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">c0</span> <span class="o">=</span> <span class="n">vcombine_u16</span><span class="p">(</span><span class="n">vshrn_n_u32</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+<a name="gbab-823"></a>                                     <span class="n">vshrn_n_u32</span><span class="p">(</span><span class="n">m3</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>   <span class="c1">// QFIX=17 = 16+1</span>
+<a name="gbab-824"></a>  <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">vminq_u16</span><span class="p">(</span><span class="n">c0</span><span class="p">,</span> <span class="n">vdupq_n_u16</span><span class="p">(</span><span class="n">MAX_LEVEL</span><span class="p">));</span>
+<a name="gbab-825"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">veorq_s16</span><span class="p">(</span><span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">c1</span><span class="p">),</span> <span class="n">sign</span><span class="p">);</span>
+<a name="gbab-826"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">c3</span> <span class="o">=</span> <span class="n">vsubq_s16</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">sign</span><span class="p">);</span>                  <span class="c1">// restore sign</span>
+<a name="gbab-827"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">c4</span> <span class="o">=</span> <span class="n">vmulq_s16</span><span class="p">(</span><span class="n">c3</span><span class="p">,</span> <span class="n">vreinterpretq_s16_u16</span><span class="p">(</span><span class="n">q</span><span class="p">));</span>
+<a name="gbab-828"></a>  <span class="n">vst1q_s16</span><span class="p">(</span><span class="n">in</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="n">c4</span><span class="p">);</span>
+<a name="gbab-829"></a>  <span class="n">assert</span><span class="p">(</span><span class="n">QFIX</span> <span class="o">==</span> <span class="mi">17</span><span class="p">);</span>  <span class="c1">// this function can&#39;t work as is if QFIX != 16+1</span>
+<a name="gbab-830"></a>  <span class="k">return</span> <span class="n">c3</span><span class="p">;</span>
+<a name="gbab-831"></a><span class="p">}</span>
+<a name="gbab-832"></a>
+<a name="gbab-833"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">kShuffles</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-834"></a>  <span class="p">{</span> <span class="mi">0</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>  <span class="mi">9</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span> <span class="p">},</span>
+<a name="gbab-835"></a>  <span class="p">{</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>  <span class="mi">7</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span> <span class="p">},</span>
+<a name="gbab-836"></a>  <span class="p">{</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span> <span class="p">},</span>
+<a name="gbab-837"></a>  <span class="p">{</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">31</span> <span class="p">}</span>
+<a name="gbab-838"></a><span class="p">};</span>
+<a name="gbab-839"></a>
+<a name="gbab-840"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">QuantizeBlock</span><span class="p">(</span><span class="kt">int16_t</span> <span class="n">in</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="kt">int16_t</span> <span class="n">out</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span>
+<a name="gbab-841"></a>                         <span class="k">const</span> <span class="n">VP8Matrix</span><span class="o">*</span> <span class="k">const</span> <span class="n">mtx</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-842"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">out0</span> <span class="o">=</span> <span class="n">Quantize</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">mtx</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-843"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">out1</span> <span class="o">=</span> <span class="n">Quantize</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">mtx</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+<a name="gbab-844"></a>  <span class="n">uint8x8x4_t</span> <span class="n">shuffles</span><span class="p">;</span>
+<a name="gbab-845"></a>  <span class="c1">// vtbl?_u8 are marked unavailable for iOS arm64 with Xcode &lt; 6.3, use</span>
+<a name="gbab-846"></a>  <span class="c1">// non-standard versions there.</span>
+<a name="gbab-847"></a><span class="cp">#if defined(__APPLE__) &amp;&amp; defined(__aarch64__) &amp;&amp; \</span>
+<a name="gbab-848"></a><span class="cp">    defined(__apple_build_version__) &amp;&amp; (__apple_build_version__&lt; 6020037)</span>
+<a name="gbab-849"></a>  <span class="n">uint8x16x2_t</span> <span class="n">all_out</span><span class="p">;</span>
+<a name="gbab-850"></a>  <span class="n">INIT_VECTOR2</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span> <span class="n">vreinterpretq_u8_s16</span><span class="p">(</span><span class="n">out0</span><span class="p">),</span> <span class="n">vreinterpretq_u8_s16</span><span class="p">(</span><span class="n">out1</span><span class="p">));</span>
+<a name="gbab-851"></a>  <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">shuffles</span><span class="p">,</span>
+<a name="gbab-852"></a>               <span class="n">vtbl2q_u8</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kShuffles</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+<a name="gbab-853"></a>               <span class="n">vtbl2q_u8</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kShuffles</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+<a name="gbab-854"></a>               <span class="n">vtbl2q_u8</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kShuffles</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
+<a name="gbab-855"></a>               <span class="n">vtbl2q_u8</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kShuffles</span><span class="p">[</span><span class="mi">3</span><span class="p">])));</span>
+<a name="gbab-856"></a><span class="cp">#else</span>
+<a name="gbab-857"></a>  <span class="n">uint8x8x4_t</span> <span class="n">all_out</span><span class="p">;</span>
+<a name="gbab-858"></a>  <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span>
+<a name="gbab-859"></a>               <span class="n">vreinterpret_u8_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">out0</span><span class="p">)),</span>
+<a name="gbab-860"></a>               <span class="n">vreinterpret_u8_s16</span><span class="p">(</span><span class="n">vget_high_s16</span><span class="p">(</span><span class="n">out0</span><span class="p">)),</span>
+<a name="gbab-861"></a>               <span class="n">vreinterpret_u8_s16</span><span class="p">(</span><span class="n">vget_low_s16</span><span class="p">(</span><span class="n">out1</span><span class="p">)),</span>
+<a name="gbab-862"></a>               <span class="n">vreinterpret_u8_s16</span><span class="p">(</span><span class="n">vget_high_s16</span><span class="p">(</span><span class="n">out1</span><span class="p">)));</span>
+<a name="gbab-863"></a>  <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">shuffles</span><span class="p">,</span>
+<a name="gbab-864"></a>               <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kShuffles</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+<a name="gbab-865"></a>               <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kShuffles</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+<a name="gbab-866"></a>               <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kShuffles</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
+<a name="gbab-867"></a>               <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">all_out</span><span class="p">,</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kShuffles</span><span class="p">[</span><span class="mi">3</span><span class="p">])));</span>
+<a name="gbab-868"></a><span class="cp">#endif</span>
+<a name="gbab-869"></a>  <span class="c1">// Zigzag reordering</span>
+<a name="gbab-870"></a>  <span class="n">vst1_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">0</span><span class="p">),</span> <span class="n">shuffles</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<a name="gbab-871"></a>  <span class="n">vst1_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">4</span><span class="p">),</span> <span class="n">shuffles</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<a name="gbab-872"></a>  <span class="n">vst1_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">8</span><span class="p">),</span> <span class="n">shuffles</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<a name="gbab-873"></a>  <span class="n">vst1_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">12</span><span class="p">),</span> <span class="n">shuffles</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<a name="gbab-874"></a>  <span class="c1">// test zeros</span>
+<a name="gbab-875"></a>  <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">uint64_t</span><span class="o">*</span><span class="p">)(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-876"></a>  <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">uint64_t</span><span class="o">*</span><span class="p">)(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-877"></a>  <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">uint64_t</span><span class="o">*</span><span class="p">)(</span><span class="n">out</span> <span class="o">+</span>  <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-878"></a>  <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">uint64_t</span><span class="o">*</span><span class="p">)(</span><span class="n">out</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-879"></a>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-880"></a><span class="p">}</span>
+<a name="gbab-881"></a>
+<a name="gbab-882"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">Quantize2Blocks</span><span class="p">(</span><span class="kt">int16_t</span> <span class="n">in</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span> <span class="kt">int16_t</span> <span class="n">out</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span>
+<a name="gbab-883"></a>                           <span class="k">const</span> <span class="n">VP8Matrix</span><span class="o">*</span> <span class="k">const</span> <span class="n">mtx</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-884"></a>  <span class="kt">int</span> <span class="n">nz</span><span class="p">;</span>
+<a name="gbab-885"></a>  <span class="n">nz</span>  <span class="o">=</span> <span class="n">QuantizeBlock</span><span class="p">(</span><span class="n">in</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">16</span><span class="p">,</span> <span class="n">out</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">16</span><span class="p">,</span> <span class="n">mtx</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-886"></a>  <span class="n">nz</span> <span class="o">|=</span> <span class="n">QuantizeBlock</span><span class="p">(</span><span class="n">in</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">16</span><span class="p">,</span> <span class="n">out</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">16</span><span class="p">,</span> <span class="n">mtx</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-887"></a>  <span class="k">return</span> <span class="n">nz</span><span class="p">;</span>
+<a name="gbab-888"></a><span class="p">}</span>
+<a name="gbab-889"></a>
+<a name="gbab-890"></a><span class="cp">#endif   </span><span class="c1">// !WORK_AROUND_GCC</span>
+<a name="gbab-891"></a>
+<a name="gbab-892"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-893"></a><span class="c1">// Entry point</span>
+<a name="gbab-894"></a>
+<a name="gbab-895"></a><span class="k">extern</span> <span class="kt">void</span> <span class="nf">VP8EncDspInitNEON</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-896"></a>
+<a name="gbab-897"></a><span class="n">WEBP_TSAN_IGNORE_FUNCTION</span> <span class="kt">void</span> <span class="nf">VP8EncDspInitNEON</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-898"></a>  <span class="n">VP8ITransform</span> <span class="o">=</span> <span class="n">ITransform</span><span class="p">;</span>
+<a name="gbab-899"></a>  <span class="n">VP8FTransform</span> <span class="o">=</span> <span class="n">FTransform</span><span class="p">;</span>
+<a name="gbab-900"></a>
+<a name="gbab-901"></a>  <span class="n">VP8FTransformWHT</span> <span class="o">=</span> <span class="n">FTransformWHT</span><span class="p">;</span>
+<a name="gbab-902"></a>
+<a name="gbab-903"></a>  <span class="n">VP8TDisto4x4</span> <span class="o">=</span> <span class="n">Disto4x4</span><span class="p">;</span>
+<a name="gbab-904"></a>  <span class="n">VP8TDisto16x16</span> <span class="o">=</span> <span class="n">Disto16x16</span><span class="p">;</span>
+<a name="gbab-905"></a>  <span class="n">VP8CollectHistogram</span> <span class="o">=</span> <span class="n">CollectHistogram</span><span class="p">;</span>
+<a name="gbab-906"></a>  <span class="n">VP8SSE16x16</span> <span class="o">=</span> <span class="n">SSE16x16</span><span class="p">;</span>
+<a name="gbab-907"></a>  <span class="n">VP8SSE16x8</span> <span class="o">=</span> <span class="n">SSE16x8</span><span class="p">;</span>
+<a name="gbab-908"></a>  <span class="n">VP8SSE8x8</span> <span class="o">=</span> <span class="n">SSE8x8</span><span class="p">;</span>
+<a name="gbab-909"></a>  <span class="n">VP8SSE4x4</span> <span class="o">=</span> <span class="n">SSE4x4</span><span class="p">;</span>
+<a name="gbab-910"></a><span class="cp">#if !defined(WORK_AROUND_GCC)</span>
+<a name="gbab-911"></a>  <span class="n">VP8EncQuantizeBlock</span> <span class="o">=</span> <span class="n">QuantizeBlock</span><span class="p">;</span>
+<a name="gbab-912"></a>  <span class="n">VP8EncQuantize2Blocks</span> <span class="o">=</span> <span class="n">Quantize2Blocks</span><span class="p">;</span>
+<a name="gbab-913"></a><span class="cp">#endif</span>
+<a name="gbab-914"></a><span class="p">}</span>
+<a name="gbab-915"></a>
+<a name="gbab-916"></a><span class="cp">#else  </span><span class="c1">// !WEBP_USE_NEON</span>
+<a name="gbab-917"></a>
+<a name="gbab-918"></a><span class="n">WEBP_DSP_INIT_STUB</span><span class="p">(</span><span class="n">VP8EncDspInitNEON</span><span class="p">)</span>
+<a name="gbab-919"></a>
+<a name="gbab-920"></a><span class="cp">#endif  </span><span class="c1">// WEBP_USE_NEON</span>
+</pre></div>
+</td></tr></table>

@@ -1,0 +1,1921 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+905
+906
+907
+908
+909
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920
+921
+922
+923
+924
+925
+926
+927
+928
+929
+930
+931
+932
+933
+934
+935
+936
+937
+938
+939
+940
+941
+942
+943
+944
+945
+946
+947
+948
+949
+950
+951
+952
+953
+954
+955
+956
+957
+958
+959
+960</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* openssl/engine.h */</span>
+<a name="gbab-2"></a><span class="cm">/*</span>
+<a name="gbab-3"></a><span class="cm"> * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project</span>
+<a name="gbab-4"></a><span class="cm"> * 2000.</span>
+<a name="gbab-5"></a><span class="cm"> */</span>
+<a name="gbab-6"></a><span class="cm">/* ====================================================================</span>
+<a name="gbab-7"></a><span class="cm"> * Copyright (c) 1999-2004 The OpenSSL Project.  All rights reserved.</span>
+<a name="gbab-8"></a><span class="cm"> *</span>
+<a name="gbab-9"></a><span class="cm"> * Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-10"></a><span class="cm"> * modification, are permitted provided that the following conditions</span>
+<a name="gbab-11"></a><span class="cm"> * are met:</span>
+<a name="gbab-12"></a><span class="cm"> *</span>
+<a name="gbab-13"></a><span class="cm"> * 1. Redistributions of source code must retain the above copyright</span>
+<a name="gbab-14"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer. </span>
+<a name="gbab-15"></a><span class="cm"> *</span>
+<a name="gbab-16"></a><span class="cm"> * 2. Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-17"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer in</span>
+<a name="gbab-18"></a><span class="cm"> *    the documentation and/or other materials provided with the</span>
+<a name="gbab-19"></a><span class="cm"> *    distribution.</span>
+<a name="gbab-20"></a><span class="cm"> *</span>
+<a name="gbab-21"></a><span class="cm"> * 3. All advertising materials mentioning features or use of this</span>
+<a name="gbab-22"></a><span class="cm"> *    software must display the following acknowledgment:</span>
+<a name="gbab-23"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-24"></a><span class="cm"> *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)&quot;</span>
+<a name="gbab-25"></a><span class="cm"> *</span>
+<a name="gbab-26"></a><span class="cm"> * 4. The names &quot;OpenSSL Toolkit&quot; and &quot;OpenSSL Project&quot; must not be used to</span>
+<a name="gbab-27"></a><span class="cm"> *    endorse or promote products derived from this software without</span>
+<a name="gbab-28"></a><span class="cm"> *    prior written permission. For written permission, please contact</span>
+<a name="gbab-29"></a><span class="cm"> *    licensing@OpenSSL.org.</span>
+<a name="gbab-30"></a><span class="cm"> *</span>
+<a name="gbab-31"></a><span class="cm"> * 5. Products derived from this software may not be called &quot;OpenSSL&quot;</span>
+<a name="gbab-32"></a><span class="cm"> *    nor may &quot;OpenSSL&quot; appear in their names without prior written</span>
+<a name="gbab-33"></a><span class="cm"> *    permission of the OpenSSL Project.</span>
+<a name="gbab-34"></a><span class="cm"> *</span>
+<a name="gbab-35"></a><span class="cm"> * 6. Redistributions of any form whatsoever must retain the following</span>
+<a name="gbab-36"></a><span class="cm"> *    acknowledgment:</span>
+<a name="gbab-37"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-38"></a><span class="cm"> *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)&quot;</span>
+<a name="gbab-39"></a><span class="cm"> *</span>
+<a name="gbab-40"></a><span class="cm"> * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS&#39;&#39; AND ANY</span>
+<a name="gbab-41"></a><span class="cm"> * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<a name="gbab-42"></a><span class="cm"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR</span>
+<a name="gbab-43"></a><span class="cm"> * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR</span>
+<a name="gbab-44"></a><span class="cm"> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<a name="gbab-45"></a><span class="cm"> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT</span>
+<a name="gbab-46"></a><span class="cm"> * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<a name="gbab-47"></a><span class="cm"> * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)</span>
+<a name="gbab-48"></a><span class="cm"> * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,</span>
+<a name="gbab-49"></a><span class="cm"> * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<a name="gbab-50"></a><span class="cm"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED</span>
+<a name="gbab-51"></a><span class="cm"> * OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-52"></a><span class="cm"> * ====================================================================</span>
+<a name="gbab-53"></a><span class="cm"> *</span>
+<a name="gbab-54"></a><span class="cm"> * This product includes cryptographic software written by Eric Young</span>
+<a name="gbab-55"></a><span class="cm"> * (eay@cryptsoft.com).  This product includes software written by Tim</span>
+<a name="gbab-56"></a><span class="cm"> * Hudson (tjh@cryptsoft.com).</span>
+<a name="gbab-57"></a><span class="cm"> *</span>
+<a name="gbab-58"></a><span class="cm"> */</span>
+<a name="gbab-59"></a><span class="cm">/* ====================================================================</span>
+<a name="gbab-60"></a><span class="cm"> * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.</span>
+<a name="gbab-61"></a><span class="cm"> * ECDH support in OpenSSL originally developed by </span>
+<a name="gbab-62"></a><span class="cm"> * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.</span>
+<a name="gbab-63"></a><span class="cm"> */</span>
+<a name="gbab-64"></a>
+<a name="gbab-65"></a><span class="cp">#ifndef HEADER_ENGINE_H</span>
+<a name="gbab-66"></a><span class="cp">#define HEADER_ENGINE_H</span>
+<a name="gbab-67"></a>
+<a name="gbab-68"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/opensslconf.h&gt;</span><span class="cp"></span>
+<a name="gbab-69"></a>
+<a name="gbab-70"></a><span class="cp">#ifdef OPENSSL_NO_ENGINE</span>
+<a name="gbab-71"></a><span class="cp">#error ENGINE is disabled.</span>
+<a name="gbab-72"></a><span class="cp">#endif</span>
+<a name="gbab-73"></a>
+<a name="gbab-74"></a><span class="cp">#ifndef OPENSSL_NO_DEPRECATED</span>
+<a name="gbab-75"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/bn.h&gt;</span><span class="cp"></span>
+<a name="gbab-76"></a><span class="cp">#ifndef OPENSSL_NO_RSA</span>
+<a name="gbab-77"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/rsa.h&gt;</span><span class="cp"></span>
+<a name="gbab-78"></a><span class="cp">#endif</span>
+<a name="gbab-79"></a><span class="cp">#ifndef OPENSSL_NO_DSA</span>
+<a name="gbab-80"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/dsa.h&gt;</span><span class="cp"></span>
+<a name="gbab-81"></a><span class="cp">#endif</span>
+<a name="gbab-82"></a><span class="cp">#ifndef OPENSSL_NO_DH</span>
+<a name="gbab-83"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/dh.h&gt;</span><span class="cp"></span>
+<a name="gbab-84"></a><span class="cp">#endif</span>
+<a name="gbab-85"></a><span class="cp">#ifndef OPENSSL_NO_ECDH</span>
+<a name="gbab-86"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/ecdh.h&gt;</span><span class="cp"></span>
+<a name="gbab-87"></a><span class="cp">#endif</span>
+<a name="gbab-88"></a><span class="cp">#ifndef OPENSSL_NO_ECDSA</span>
+<a name="gbab-89"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/ecdsa.h&gt;</span><span class="cp"></span>
+<a name="gbab-90"></a><span class="cp">#endif</span>
+<a name="gbab-91"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/rand.h&gt;</span><span class="cp"></span>
+<a name="gbab-92"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/ui.h&gt;</span><span class="cp"></span>
+<a name="gbab-93"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/err.h&gt;</span><span class="cp"></span>
+<a name="gbab-94"></a><span class="cp">#endif</span>
+<a name="gbab-95"></a>
+<a name="gbab-96"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/ossl_typ.h&gt;</span><span class="cp"></span>
+<a name="gbab-97"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/symhacks.h&gt;</span><span class="cp"></span>
+<a name="gbab-98"></a>
+<a name="gbab-99"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/x509.h&gt;</span><span class="cp"></span>
+<a name="gbab-100"></a>
+<a name="gbab-101"></a><span class="cp">#ifdef  __cplusplus</span>
+<a name="gbab-102"></a><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<a name="gbab-103"></a><span class="cp">#endif</span>
+<a name="gbab-104"></a>
+<a name="gbab-105"></a><span class="cm">/*</span>
+<a name="gbab-106"></a><span class="cm"> * These flags are used to control combinations of algorithm (methods) by</span>
+<a name="gbab-107"></a><span class="cm"> * bitwise &quot;OR&quot;ing.</span>
+<a name="gbab-108"></a><span class="cm"> */</span>
+<a name="gbab-109"></a><span class="cp">#define ENGINE_METHOD_RSA		(unsigned int)0x0001</span>
+<a name="gbab-110"></a><span class="cp">#define ENGINE_METHOD_DSA		(unsigned int)0x0002</span>
+<a name="gbab-111"></a><span class="cp">#define ENGINE_METHOD_DH		(unsigned int)0x0004</span>
+<a name="gbab-112"></a><span class="cp">#define ENGINE_METHOD_RAND		(unsigned int)0x0008</span>
+<a name="gbab-113"></a><span class="cp">#define ENGINE_METHOD_ECDH		(unsigned int)0x0010</span>
+<a name="gbab-114"></a><span class="cp">#define ENGINE_METHOD_ECDSA		(unsigned int)0x0020</span>
+<a name="gbab-115"></a><span class="cp">#define ENGINE_METHOD_CIPHERS		(unsigned int)0x0040</span>
+<a name="gbab-116"></a><span class="cp">#define ENGINE_METHOD_DIGESTS		(unsigned int)0x0080</span>
+<a name="gbab-117"></a><span class="cp">#define ENGINE_METHOD_STORE		(unsigned int)0x0100</span>
+<a name="gbab-118"></a><span class="cp">#define ENGINE_METHOD_PKEY_METHS	(unsigned int)0x0200</span>
+<a name="gbab-119"></a><span class="cp">#define ENGINE_METHOD_PKEY_ASN1_METHS	(unsigned int)0x0400</span>
+<a name="gbab-120"></a><span class="cm">/* Obvious all-or-nothing cases. */</span>
+<a name="gbab-121"></a><span class="cp">#define ENGINE_METHOD_ALL		(unsigned int)0xFFFF</span>
+<a name="gbab-122"></a><span class="cp">#define ENGINE_METHOD_NONE		(unsigned int)0x0000</span>
+<a name="gbab-123"></a>
+<a name="gbab-124"></a><span class="cm">/*</span>
+<a name="gbab-125"></a><span class="cm"> * This(ese) flag(s) controls behaviour of the ENGINE_TABLE mechanism used</span>
+<a name="gbab-126"></a><span class="cm"> * internally to control registration of ENGINE implementations, and can be</span>
+<a name="gbab-127"></a><span class="cm"> * set by ENGINE_set_table_flags(). The &quot;NOINIT&quot; flag prevents attempts to</span>
+<a name="gbab-128"></a><span class="cm"> * initialise registered ENGINEs if they are not already initialised.</span>
+<a name="gbab-129"></a><span class="cm"> */</span>
+<a name="gbab-130"></a><span class="cp">#define ENGINE_TABLE_FLAG_NOINIT	(unsigned int)0x0001</span>
+<a name="gbab-131"></a>
+<a name="gbab-132"></a><span class="cm">/* ENGINE flags that can be set by ENGINE_set_flags(). */</span>
+<a name="gbab-133"></a><span class="cm">/* Not used */</span>
+<a name="gbab-134"></a><span class="cm">/* #define ENGINE_FLAGS_MALLOCED        0x0001 */</span>
+<a name="gbab-135"></a>
+<a name="gbab-136"></a><span class="cm">/*</span>
+<a name="gbab-137"></a><span class="cm"> * This flag is for ENGINEs that wish to handle the various &#39;CMD&#39;-related</span>
+<a name="gbab-138"></a><span class="cm"> * control commands on their own. Without this flag, ENGINE_ctrl() handles</span>
+<a name="gbab-139"></a><span class="cm"> * these control commands on behalf of the ENGINE using their &quot;cmd_defns&quot;</span>
+<a name="gbab-140"></a><span class="cm"> * data.</span>
+<a name="gbab-141"></a><span class="cm"> */</span>
+<a name="gbab-142"></a><span class="cp">#define ENGINE_FLAGS_MANUAL_CMD_CTRL	(int)0x0002</span>
+<a name="gbab-143"></a>
+<a name="gbab-144"></a><span class="cm">/*</span>
+<a name="gbab-145"></a><span class="cm"> * This flag is for ENGINEs who return new duplicate structures when found</span>
+<a name="gbab-146"></a><span class="cm"> * via &quot;ENGINE_by_id()&quot;. When an ENGINE must store state (eg. if</span>
+<a name="gbab-147"></a><span class="cm"> * ENGINE_ctrl() commands are called in sequence as part of some stateful</span>
+<a name="gbab-148"></a><span class="cm"> * process like key-generation setup and execution), it can set this flag -</span>
+<a name="gbab-149"></a><span class="cm"> * then each attempt to obtain the ENGINE will result in it being copied into</span>
+<a name="gbab-150"></a><span class="cm"> * a new structure. Normally, ENGINEs don&#39;t declare this flag so</span>
+<a name="gbab-151"></a><span class="cm"> * ENGINE_by_id() just increments the existing ENGINE&#39;s structural reference</span>
+<a name="gbab-152"></a><span class="cm"> * count.</span>
+<a name="gbab-153"></a><span class="cm"> */</span>
+<a name="gbab-154"></a><span class="cp">#define ENGINE_FLAGS_BY_ID_COPY		(int)0x0004</span>
+<a name="gbab-155"></a>
+<a name="gbab-156"></a><span class="cm">/*</span>
+<a name="gbab-157"></a><span class="cm"> * This flag if for an ENGINE that does not want its methods registered as</span>
+<a name="gbab-158"></a><span class="cm"> * part of ENGINE_register_all_complete() for example if the methods are not</span>
+<a name="gbab-159"></a><span class="cm"> * usable as default methods.</span>
+<a name="gbab-160"></a><span class="cm"> */</span>
+<a name="gbab-161"></a>
+<a name="gbab-162"></a><span class="cp">#define ENGINE_FLAGS_NO_REGISTER_ALL	(int)0x0008</span>
+<a name="gbab-163"></a>
+<a name="gbab-164"></a><span class="cm">/*</span>
+<a name="gbab-165"></a><span class="cm"> * ENGINEs can support their own command types, and these flags are used in</span>
+<a name="gbab-166"></a><span class="cm"> * ENGINE_CTRL_GET_CMD_FLAGS to indicate to the caller what kind of input</span>
+<a name="gbab-167"></a><span class="cm"> * each command expects. Currently only numeric and string input is</span>
+<a name="gbab-168"></a><span class="cm"> * supported. If a control command supports none of the _NUMERIC, _STRING, or</span>
+<a name="gbab-169"></a><span class="cm"> * _NO_INPUT options, then it is regarded as an &quot;internal&quot; control command -</span>
+<a name="gbab-170"></a><span class="cm"> * and not for use in config setting situations. As such, they&#39;re not</span>
+<a name="gbab-171"></a><span class="cm"> * available to the ENGINE_ctrl_cmd_string() function, only raw ENGINE_ctrl()</span>
+<a name="gbab-172"></a><span class="cm"> * access. Changes to this list of &#39;command types&#39; should be reflected</span>
+<a name="gbab-173"></a><span class="cm"> * carefully in ENGINE_cmd_is_executable() and ENGINE_ctrl_cmd_string().</span>
+<a name="gbab-174"></a><span class="cm"> */</span>
+<a name="gbab-175"></a>
+<a name="gbab-176"></a><span class="cm">/* accepts a &#39;long&#39; input value (3rd parameter to ENGINE_ctrl) */</span>
+<a name="gbab-177"></a><span class="cp">#define ENGINE_CMD_FLAG_NUMERIC		(unsigned int)0x0001</span>
+<a name="gbab-178"></a><span class="cm">/*</span>
+<a name="gbab-179"></a><span class="cm"> * accepts string input (cast from &#39;void*&#39; to &#39;const char *&#39;, 4th parameter</span>
+<a name="gbab-180"></a><span class="cm"> * to ENGINE_ctrl)</span>
+<a name="gbab-181"></a><span class="cm"> */</span>
+<a name="gbab-182"></a><span class="cp">#define ENGINE_CMD_FLAG_STRING		(unsigned int)0x0002</span>
+<a name="gbab-183"></a><span class="cm">/*</span>
+<a name="gbab-184"></a><span class="cm"> * Indicates that the control command takes *no* input. Ie. the control</span>
+<a name="gbab-185"></a><span class="cm"> * command is unparameterised.</span>
+<a name="gbab-186"></a><span class="cm"> */</span>
+<a name="gbab-187"></a><span class="cp">#define ENGINE_CMD_FLAG_NO_INPUT	(unsigned int)0x0004</span>
+<a name="gbab-188"></a><span class="cm">/*</span>
+<a name="gbab-189"></a><span class="cm"> * Indicates that the control command is internal. This control command won&#39;t</span>
+<a name="gbab-190"></a><span class="cm"> * be shown in any output, and is only usable through the ENGINE_ctrl_cmd()</span>
+<a name="gbab-191"></a><span class="cm"> * function.</span>
+<a name="gbab-192"></a><span class="cm"> */</span>
+<a name="gbab-193"></a><span class="cp">#define ENGINE_CMD_FLAG_INTERNAL	(unsigned int)0x0008</span>
+<a name="gbab-194"></a>
+<a name="gbab-195"></a><span class="cm">/*</span>
+<a name="gbab-196"></a><span class="cm"> * NB: These 3 control commands are deprecated and should not be used.</span>
+<a name="gbab-197"></a><span class="cm"> * ENGINEs relying on these commands should compile conditional support for</span>
+<a name="gbab-198"></a><span class="cm"> * compatibility (eg. if these symbols are defined) but should also migrate</span>
+<a name="gbab-199"></a><span class="cm"> * the same functionality to their own ENGINE-specific control functions that</span>
+<a name="gbab-200"></a><span class="cm"> * can be &quot;discovered&quot; by calling applications. The fact these control</span>
+<a name="gbab-201"></a><span class="cm"> * commands wouldn&#39;t be &quot;executable&quot; (ie. usable by text-based config)</span>
+<a name="gbab-202"></a><span class="cm"> * doesn&#39;t change the fact that application code can find and use them</span>
+<a name="gbab-203"></a><span class="cm"> * without requiring per-ENGINE hacking.</span>
+<a name="gbab-204"></a><span class="cm"> */</span>
+<a name="gbab-205"></a>
+<a name="gbab-206"></a><span class="cm">/*</span>
+<a name="gbab-207"></a><span class="cm"> * These flags are used to tell the ctrl function what should be done. All</span>
+<a name="gbab-208"></a><span class="cm"> * command numbers are shared between all engines, even if some don&#39;t make</span>
+<a name="gbab-209"></a><span class="cm"> * sense to some engines.  In such a case, they do nothing but return the</span>
+<a name="gbab-210"></a><span class="cm"> * error ENGINE_R_CTRL_COMMAND_NOT_IMPLEMENTED.</span>
+<a name="gbab-211"></a><span class="cm"> */</span>
+<a name="gbab-212"></a><span class="cp">#define ENGINE_CTRL_SET_LOGSTREAM		1</span>
+<a name="gbab-213"></a><span class="cp">#define ENGINE_CTRL_SET_PASSWORD_CALLBACK	2</span>
+<a name="gbab-214"></a><span class="cp"># define ENGINE_CTRL_HUP                         3</span><span class="cm">/* Close and reinitialise</span>
+<a name="gbab-215"></a><span class="cm">                                                   * any handles/connections</span>
+<a name="gbab-216"></a><span class="cm">                                                   * etc. */</span><span class="cp"></span>
+<a name="gbab-217"></a><span class="cp">#define ENGINE_CTRL_SET_USER_INTERFACE          4 </span><span class="cm">/* Alternative to callback */</span><span class="cp"></span>
+<a name="gbab-218"></a><span class="cp">#define ENGINE_CTRL_SET_CALLBACK_DATA           5 </span><span class="cm">/* User-specific data, used</span>
+<a name="gbab-219"></a><span class="cm">                                                   * when calling the password</span>
+<a name="gbab-220"></a><span class="cm">                                                   * callback and the user</span>
+<a name="gbab-221"></a><span class="cm">                                                   * interface */</span><span class="cp"></span>
+<a name="gbab-222"></a><span class="cp"># define ENGINE_CTRL_LOAD_CONFIGURATION          6</span><span class="cm">/* Load a configuration,</span>
+<a name="gbab-223"></a><span class="cm">                                                   * given a string that</span>
+<a name="gbab-224"></a><span class="cm">                                                   * represents a file name</span>
+<a name="gbab-225"></a><span class="cm">                                                   * or so */</span><span class="cp"></span>
+<a name="gbab-226"></a><span class="cp">#define ENGINE_CTRL_LOAD_SECTION		7 </span><span class="cm">/* Load data from a given</span>
+<a name="gbab-227"></a><span class="cm">                                                   * section in the already</span>
+<a name="gbab-228"></a><span class="cm">                                                   * loaded configuration */</span><span class="cp"></span>
+<a name="gbab-229"></a>
+<a name="gbab-230"></a><span class="cm">/*</span>
+<a name="gbab-231"></a><span class="cm"> * These control commands allow an application to deal with an arbitrary</span>
+<a name="gbab-232"></a><span class="cm"> * engine in a dynamic way. Warn: Negative return values indicate errors FOR</span>
+<a name="gbab-233"></a><span class="cm"> * THESE COMMANDS because zero is used to indicate &#39;end-of-list&#39;. Other</span>
+<a name="gbab-234"></a><span class="cm"> * commands, including ENGINE-specific command types, return zero for an</span>
+<a name="gbab-235"></a><span class="cm"> * error. An ENGINE can choose to implement these ctrl functions, and can</span>
+<a name="gbab-236"></a><span class="cm"> * internally manage things however it chooses - it does so by setting the</span>
+<a name="gbab-237"></a><span class="cm"> * ENGINE_FLAGS_MANUAL_CMD_CTRL flag (using ENGINE_set_flags()). Otherwise</span>
+<a name="gbab-238"></a><span class="cm"> * the ENGINE_ctrl() code handles this on the ENGINE&#39;s behalf using the</span>
+<a name="gbab-239"></a><span class="cm"> * cmd_defns data (set using ENGINE_set_cmd_defns()). This means an ENGINE&#39;s</span>
+<a name="gbab-240"></a><span class="cm"> * ctrl() handler need only implement its own commands - the above &quot;meta&quot;</span>
+<a name="gbab-241"></a><span class="cm"> * commands will be taken care of.</span>
+<a name="gbab-242"></a><span class="cm"> */</span>
+<a name="gbab-243"></a>
+<a name="gbab-244"></a><span class="cm">/*</span>
+<a name="gbab-245"></a><span class="cm"> * Returns non-zero if the supplied ENGINE has a ctrl() handler. If &quot;not&quot;,</span>
+<a name="gbab-246"></a><span class="cm"> * then all the remaining control commands will return failure, so it is</span>
+<a name="gbab-247"></a><span class="cm"> * worth checking this first if the caller is trying to &quot;discover&quot; the</span>
+<a name="gbab-248"></a><span class="cm"> * engine&#39;s capabilities and doesn&#39;t want errors generated unnecessarily.</span>
+<a name="gbab-249"></a><span class="cm"> */</span>
+<a name="gbab-250"></a><span class="cp">#define ENGINE_CTRL_HAS_CTRL_FUNCTION		10</span>
+<a name="gbab-251"></a><span class="cm">/*</span>
+<a name="gbab-252"></a><span class="cm"> * Returns a positive command number for the first command supported by the</span>
+<a name="gbab-253"></a><span class="cm"> * engine. Returns zero if no ctrl commands are supported.</span>
+<a name="gbab-254"></a><span class="cm"> */</span>
+<a name="gbab-255"></a><span class="cp">#define ENGINE_CTRL_GET_FIRST_CMD_TYPE		11</span>
+<a name="gbab-256"></a><span class="cm">/*</span>
+<a name="gbab-257"></a><span class="cm"> * The &#39;long&#39; argument specifies a command implemented by the engine, and the</span>
+<a name="gbab-258"></a><span class="cm"> * return value is the next command supported, or zero if there are no more.</span>
+<a name="gbab-259"></a><span class="cm"> */</span>
+<a name="gbab-260"></a><span class="cp">#define ENGINE_CTRL_GET_NEXT_CMD_TYPE		12</span>
+<a name="gbab-261"></a><span class="cm">/*</span>
+<a name="gbab-262"></a><span class="cm"> * The &#39;void*&#39; argument is a command name (cast from &#39;const char *&#39;), and the</span>
+<a name="gbab-263"></a><span class="cm"> * return value is the command that corresponds to it.</span>
+<a name="gbab-264"></a><span class="cm"> */</span>
+<a name="gbab-265"></a><span class="cp">#define ENGINE_CTRL_GET_CMD_FROM_NAME		13</span>
+<a name="gbab-266"></a><span class="cm">/*</span>
+<a name="gbab-267"></a><span class="cm"> * The next two allow a command to be converted into its corresponding string</span>
+<a name="gbab-268"></a><span class="cm"> * form. In each case, the &#39;long&#39; argument supplies the command. In the</span>
+<a name="gbab-269"></a><span class="cm"> * NAME_LEN case, the return value is the length of the command name (not</span>
+<a name="gbab-270"></a><span class="cm"> * counting a trailing EOL). In the NAME case, the &#39;void*&#39; argument must be a</span>
+<a name="gbab-271"></a><span class="cm"> * string buffer large enough, and it will be populated with the name of the</span>
+<a name="gbab-272"></a><span class="cm"> * command (WITH a trailing EOL).</span>
+<a name="gbab-273"></a><span class="cm"> */</span>
+<a name="gbab-274"></a><span class="cp">#define ENGINE_CTRL_GET_NAME_LEN_FROM_CMD	14</span>
+<a name="gbab-275"></a><span class="cp">#define ENGINE_CTRL_GET_NAME_FROM_CMD		15</span>
+<a name="gbab-276"></a><span class="cm">/* The next two are similar but give a &quot;short description&quot; of a command. */</span>
+<a name="gbab-277"></a><span class="cp">#define ENGINE_CTRL_GET_DESC_LEN_FROM_CMD	16</span>
+<a name="gbab-278"></a><span class="cp">#define ENGINE_CTRL_GET_DESC_FROM_CMD		17</span>
+<a name="gbab-279"></a><span class="cm">/*</span>
+<a name="gbab-280"></a><span class="cm"> * With this command, the return value is the OR&#39;d combination of</span>
+<a name="gbab-281"></a><span class="cm"> * ENGINE_CMD_FLAG_*** values that indicate what kind of input a given</span>
+<a name="gbab-282"></a><span class="cm"> * engine-specific ctrl command expects.</span>
+<a name="gbab-283"></a><span class="cm"> */</span>
+<a name="gbab-284"></a><span class="cp">#define ENGINE_CTRL_GET_CMD_FLAGS		18</span>
+<a name="gbab-285"></a>
+<a name="gbab-286"></a><span class="cm">/*</span>
+<a name="gbab-287"></a><span class="cm"> * ENGINE implementations should start the numbering of their own control</span>
+<a name="gbab-288"></a><span class="cm"> * commands from this value. (ie. ENGINE_CMD_BASE, ENGINE_CMD_BASE + 1, etc).</span>
+<a name="gbab-289"></a><span class="cm"> */</span>
+<a name="gbab-290"></a><span class="cp">#define ENGINE_CMD_BASE				200</span>
+<a name="gbab-291"></a>
+<a name="gbab-292"></a><span class="cm">/*</span>
+<a name="gbab-293"></a><span class="cm"> * NB: These 2 nCipher &quot;chil&quot; control commands are deprecated, and their</span>
+<a name="gbab-294"></a><span class="cm"> * functionality is now available through ENGINE-specific control commands</span>
+<a name="gbab-295"></a><span class="cm"> * (exposed through the above-mentioned &#39;CMD&#39;-handling). Code using these 2</span>
+<a name="gbab-296"></a><span class="cm"> * commands should be migrated to the more general command handling before</span>
+<a name="gbab-297"></a><span class="cm"> * these are removed.</span>
+<a name="gbab-298"></a><span class="cm"> */</span>
+<a name="gbab-299"></a>
+<a name="gbab-300"></a><span class="cm">/* Flags specific to the nCipher &quot;chil&quot; engine */</span>
+<a name="gbab-301"></a><span class="cp">#define ENGINE_CTRL_CHIL_SET_FORKCHECK		100</span>
+<a name="gbab-302"></a>        <span class="cm">/*</span>
+<a name="gbab-303"></a><span class="cm">         * Depending on the value of the (long)i argument, this sets or</span>
+<a name="gbab-304"></a><span class="cm">	 * unsets the SimpleForkCheck flag in the CHIL API to enable or</span>
+<a name="gbab-305"></a><span class="cm">	 * disable checking and workarounds for applications that fork().</span>
+<a name="gbab-306"></a><span class="cm">	 */</span>
+<a name="gbab-307"></a><span class="cp">#define ENGINE_CTRL_CHIL_NO_LOCKING		101</span>
+<a name="gbab-308"></a>        <span class="cm">/*</span>
+<a name="gbab-309"></a><span class="cm">         * This prevents the initialisation function from providing mutex</span>
+<a name="gbab-310"></a><span class="cm">         * callbacks to the nCipher library.</span>
+<a name="gbab-311"></a><span class="cm">         */</span>
+<a name="gbab-312"></a>
+<a name="gbab-313"></a><span class="cm">/*</span>
+<a name="gbab-314"></a><span class="cm"> * If an ENGINE supports its own specific control commands and wishes the</span>
+<a name="gbab-315"></a><span class="cm"> * framework to handle the above &#39;ENGINE_CMD_***&#39;-manipulation commands on</span>
+<a name="gbab-316"></a><span class="cm"> * its behalf, it should supply a null-terminated array of ENGINE_CMD_DEFN</span>
+<a name="gbab-317"></a><span class="cm"> * entries to ENGINE_set_cmd_defns(). It should also implement a ctrl()</span>
+<a name="gbab-318"></a><span class="cm"> * handler that supports the stated commands (ie. the &quot;cmd_num&quot; entries as</span>
+<a name="gbab-319"></a><span class="cm"> * described by the array). NB: The array must be ordered in increasing order</span>
+<a name="gbab-320"></a><span class="cm"> * of cmd_num. &quot;null-terminated&quot; means that the last ENGINE_CMD_DEFN element</span>
+<a name="gbab-321"></a><span class="cm"> * has cmd_num set to zero and/or cmd_name set to NULL.</span>
+<a name="gbab-322"></a><span class="cm"> */</span>
+<a name="gbab-323"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">ENGINE_CMD_DEFN_st</span> <span class="p">{</span>
+<a name="gbab-324"></a>	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">cmd_num</span><span class="p">;</span> <span class="cm">/* The command number */</span>
+<a name="gbab-325"></a>	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">cmd_name</span><span class="p">;</span> <span class="cm">/* The command name itself */</span>
+<a name="gbab-326"></a>	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">cmd_desc</span><span class="p">;</span> <span class="cm">/* A short description of the command */</span>
+<a name="gbab-327"></a>	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">cmd_flags</span><span class="p">;</span> <span class="cm">/* The input the command expects */</span>
+<a name="gbab-328"></a>	<span class="p">}</span> <span class="n">ENGINE_CMD_DEFN</span><span class="p">;</span>
+<a name="gbab-329"></a>
+<a name="gbab-330"></a><span class="cm">/* Generic function pointer */</span>
+<a name="gbab-331"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">ENGINE_GEN_FUNC_PTR</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-332"></a><span class="cm">/* Generic function pointer taking no arguments */</span>
+<a name="gbab-333"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">ENGINE_GEN_INT_FUNC_PTR</span><span class="p">)(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-334"></a><span class="cm">/* Specific control function pointer */</span>
+<a name="gbab-335"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">ENGINE_CTRL_FUNC_PTR</span><span class="p">)</span> <span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">long</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">,</span>
+<a name="gbab-336"></a>                                     <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span> <span class="p">(</span><span class="kt">void</span><span class="p">));</span>
+<a name="gbab-337"></a><span class="cm">/* Generic load_key function pointer */</span>
+<a name="gbab-338"></a><span class="k">typedef</span> <span class="n">EVP_PKEY</span> <span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">ENGINE_LOAD_KEY_PTR</span><span class="p">)(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span>
+<a name="gbab-339"></a>                                         <span class="n">UI_METHOD</span> <span class="o">*</span><span class="n">ui_method</span><span class="p">,</span>
+<a name="gbab-340"></a>                                         <span class="kt">void</span> <span class="o">*</span><span class="n">callback_data</span><span class="p">);</span>
+<a name="gbab-341"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">ENGINE_SSL_CLIENT_CERT_PTR</span><span class="p">)(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="p">,</span> <span class="n">SSL</span> <span class="o">*</span><span class="n">ssl</span><span class="p">,</span>
+<a name="gbab-342"></a>                                           <span class="n">STACK_OF</span><span class="p">(</span><span class="n">X509_NAME</span><span class="p">)</span> <span class="o">*</span><span class="n">ca_dn</span><span class="p">,</span>
+<a name="gbab-343"></a>                                           <span class="n">X509</span> <span class="o">**</span><span class="n">pcert</span><span class="p">,</span> <span class="n">EVP_PKEY</span> <span class="o">**</span><span class="n">pkey</span><span class="p">,</span>
+<a name="gbab-344"></a>                                           <span class="n">STACK_OF</span><span class="p">(</span><span class="n">X509</span><span class="p">)</span> <span class="o">**</span><span class="n">pother</span><span class="p">,</span>
+<a name="gbab-345"></a>                                           <span class="n">UI_METHOD</span> <span class="o">*</span><span class="n">ui_method</span><span class="p">,</span>
+<a name="gbab-346"></a>                                           <span class="kt">void</span> <span class="o">*</span><span class="n">callback_data</span><span class="p">);</span>
+<a name="gbab-347"></a><span class="cm">/*-</span>
+<a name="gbab-348"></a><span class="cm"> * These callback types are for an ENGINE&#39;s handler for cipher and digest logic.</span>
+<a name="gbab-349"></a><span class="cm"> * These handlers have these prototypes;</span>
+<a name="gbab-350"></a><span class="cm"> *   int foo(ENGINE *e, const EVP_CIPHER **cipher, const int **nids, int nid);</span>
+<a name="gbab-351"></a><span class="cm"> *   int foo(ENGINE *e, const EVP_MD **digest, const int **nids, int nid);</span>
+<a name="gbab-352"></a><span class="cm"> * Looking at how to implement these handlers in the case of cipher support, if</span>
+<a name="gbab-353"></a><span class="cm"> * the framework wants the EVP_CIPHER for &#39;nid&#39;, it will call;</span>
+<a name="gbab-354"></a><span class="cm"> *   foo(e, &amp;p_evp_cipher, NULL, nid);    (return zero for failure)</span>
+<a name="gbab-355"></a><span class="cm"> * If the framework wants a list of supported &#39;nid&#39;s, it will call;</span>
+<a name="gbab-356"></a><span class="cm"> *   foo(e, NULL, &amp;p_nids, 0); (returns number of &#39;nids&#39; or -1 for error)</span>
+<a name="gbab-357"></a><span class="cm"> */</span>
+<a name="gbab-358"></a><span class="cm">/*</span>
+<a name="gbab-359"></a><span class="cm"> * Returns to a pointer to the array of supported cipher &#39;nid&#39;s. If the</span>
+<a name="gbab-360"></a><span class="cm"> * second parameter is non-NULL it is set to the size of the returned array.</span>
+<a name="gbab-361"></a><span class="cm"> */</span>
+<a name="gbab-362"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">ENGINE_CIPHERS_PTR</span><span class="p">)</span> <span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">EVP_CIPHER</span> <span class="o">**</span><span class="p">,</span>
+<a name="gbab-363"></a>                                   <span class="k">const</span> <span class="kt">int</span> <span class="o">**</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-364"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">ENGINE_DIGESTS_PTR</span><span class="p">)</span> <span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="n">EVP_MD</span> <span class="o">**</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">**</span><span class="p">,</span>
+<a name="gbab-365"></a>                                   <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-366"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">ENGINE_PKEY_METHS_PTR</span><span class="p">)</span> <span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="p">,</span> <span class="n">EVP_PKEY_METHOD</span> <span class="o">**</span><span class="p">,</span>
+<a name="gbab-367"></a>                                      <span class="k">const</span> <span class="kt">int</span> <span class="o">**</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-368"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">ENGINE_PKEY_ASN1_METHS_PTR</span><span class="p">)</span> <span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="p">,</span> <span class="n">EVP_PKEY_ASN1_METHOD</span> <span class="o">**</span><span class="p">,</span>
+<a name="gbab-369"></a>                                           <span class="k">const</span> <span class="kt">int</span> <span class="o">**</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-370"></a><span class="cm">/*</span>
+<a name="gbab-371"></a><span class="cm"> * STRUCTURE functions ... all of these functions deal with pointers to</span>
+<a name="gbab-372"></a><span class="cm"> * ENGINE structures where the pointers have a &quot;structural reference&quot;. This</span>
+<a name="gbab-373"></a><span class="cm"> * means that their reference is to allowed access to the structure but it</span>
+<a name="gbab-374"></a><span class="cm"> * does not imply that the structure is functional. To simply increment or</span>
+<a name="gbab-375"></a><span class="cm"> * decrement the structural reference count, use ENGINE_by_id and</span>
+<a name="gbab-376"></a><span class="cm"> * ENGINE_free. NB: This is not required when iterating using ENGINE_get_next</span>
+<a name="gbab-377"></a><span class="cm"> * as it will automatically decrement the structural reference count of the</span>
+<a name="gbab-378"></a><span class="cm"> * &quot;current&quot; ENGINE and increment the structural reference count of the</span>
+<a name="gbab-379"></a><span class="cm"> * ENGINE it returns (unless it is NULL).</span>
+<a name="gbab-380"></a><span class="cm"> */</span>
+<a name="gbab-381"></a>
+<a name="gbab-382"></a><span class="cm">/* Get the first/last &quot;ENGINE&quot; type available. */</span>
+<a name="gbab-383"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_first</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-384"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_last</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-385"></a><span class="cm">/* Iterate to the next/previous &quot;ENGINE&quot; type (NULL = end of the list). */</span>
+<a name="gbab-386"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_next</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-387"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_prev</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-388"></a><span class="cm">/* Add another &quot;ENGINE&quot; type into the array. */</span>
+<a name="gbab-389"></a><span class="kt">int</span> <span class="nf">ENGINE_add</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-390"></a><span class="cm">/* Remove an existing &quot;ENGINE&quot; type from the array. */</span>
+<a name="gbab-391"></a><span class="kt">int</span> <span class="nf">ENGINE_remove</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-392"></a><span class="cm">/* Retrieve an engine from the list by its unique &quot;id&quot; value. */</span>
+<a name="gbab-393"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_by_id</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">id</span><span class="p">);</span>
+<a name="gbab-394"></a><span class="cm">/* Add all the built-in engines. */</span>
+<a name="gbab-395"></a><span class="kt">void</span> <span class="nf">ENGINE_load_openssl</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-396"></a><span class="kt">void</span> <span class="nf">ENGINE_load_dynamic</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-397"></a><span class="cp">#ifndef OPENSSL_NO_STATIC_ENGINE</span>
+<a name="gbab-398"></a><span class="kt">void</span> <span class="nf">ENGINE_load_4758cca</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-399"></a><span class="kt">void</span> <span class="nf">ENGINE_load_aep</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-400"></a><span class="kt">void</span> <span class="nf">ENGINE_load_atalla</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-401"></a><span class="kt">void</span> <span class="nf">ENGINE_load_chil</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-402"></a><span class="kt">void</span> <span class="nf">ENGINE_load_cswift</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-403"></a><span class="kt">void</span> <span class="nf">ENGINE_load_nuron</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-404"></a><span class="kt">void</span> <span class="nf">ENGINE_load_sureware</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-405"></a><span class="kt">void</span> <span class="nf">ENGINE_load_ubsec</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-406"></a><span class="kt">void</span> <span class="nf">ENGINE_load_padlock</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-407"></a><span class="kt">void</span> <span class="nf">ENGINE_load_capi</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-408"></a><span class="cp">#ifndef OPENSSL_NO_GMP</span>
+<a name="gbab-409"></a><span class="kt">void</span> <span class="nf">ENGINE_load_gmp</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-410"></a><span class="cp">#endif</span>
+<a name="gbab-411"></a><span class="cp">#ifndef OPENSSL_NO_GOST</span>
+<a name="gbab-412"></a><span class="kt">void</span> <span class="nf">ENGINE_load_gost</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-413"></a><span class="cp">#endif</span>
+<a name="gbab-414"></a><span class="cp">#endif</span>
+<a name="gbab-415"></a><span class="kt">void</span> <span class="nf">ENGINE_load_cryptodev</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-416"></a><span class="kt">void</span> <span class="nf">ENGINE_load_rdrand</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-417"></a><span class="kt">void</span> <span class="nf">ENGINE_load_builtin_engines</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-418"></a>
+<a name="gbab-419"></a><span class="cm">/*</span>
+<a name="gbab-420"></a><span class="cm"> * Get and set global flags (ENGINE_TABLE_FLAG_***) for the implementation</span>
+<a name="gbab-421"></a><span class="cm"> * &quot;registry&quot; handling.</span>
+<a name="gbab-422"></a><span class="cm"> */</span>
+<a name="gbab-423"></a><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">ENGINE_get_table_flags</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-424"></a><span class="kt">void</span> <span class="nf">ENGINE_set_table_flags</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">);</span>
+<a name="gbab-425"></a>
+<a name="gbab-426"></a><span class="cm">/*- Manage registration of ENGINEs per &quot;table&quot;. For each type, there are 3</span>
+<a name="gbab-427"></a><span class="cm"> * functions;</span>
+<a name="gbab-428"></a><span class="cm"> *   ENGINE_register_***(e) - registers the implementation from &#39;e&#39; (if it has one)</span>
+<a name="gbab-429"></a><span class="cm"> *   ENGINE_unregister_***(e) - unregister the implementation from &#39;e&#39;</span>
+<a name="gbab-430"></a><span class="cm"> *   ENGINE_register_all_***() - call ENGINE_register_***() for each &#39;e&#39; in the list</span>
+<a name="gbab-431"></a><span class="cm"> * Cleanup is automatically registered from each table when required, so</span>
+<a name="gbab-432"></a><span class="cm"> * ENGINE_cleanup() will reverse any &quot;register&quot; operations.</span>
+<a name="gbab-433"></a><span class="cm"> */</span>
+<a name="gbab-434"></a>
+<a name="gbab-435"></a><span class="kt">int</span> <span class="nf">ENGINE_register_RSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-436"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_RSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-437"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_RSA</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-438"></a>
+<a name="gbab-439"></a><span class="kt">int</span> <span class="nf">ENGINE_register_DSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-440"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_DSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-441"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_DSA</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-442"></a>
+<a name="gbab-443"></a><span class="kt">int</span> <span class="nf">ENGINE_register_ECDH</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-444"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_ECDH</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-445"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_ECDH</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-446"></a>
+<a name="gbab-447"></a><span class="kt">int</span> <span class="nf">ENGINE_register_ECDSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-448"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_ECDSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-449"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_ECDSA</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-450"></a>
+<a name="gbab-451"></a><span class="kt">int</span> <span class="nf">ENGINE_register_DH</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-452"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_DH</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-453"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_DH</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-454"></a>
+<a name="gbab-455"></a><span class="kt">int</span> <span class="nf">ENGINE_register_RAND</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-456"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_RAND</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-457"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_RAND</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-458"></a>
+<a name="gbab-459"></a><span class="kt">int</span> <span class="nf">ENGINE_register_STORE</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-460"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_STORE</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-461"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_STORE</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-462"></a>
+<a name="gbab-463"></a><span class="kt">int</span> <span class="nf">ENGINE_register_ciphers</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-464"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_ciphers</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-465"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_ciphers</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-466"></a>
+<a name="gbab-467"></a><span class="kt">int</span> <span class="nf">ENGINE_register_digests</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-468"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_digests</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-469"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_digests</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-470"></a>
+<a name="gbab-471"></a><span class="kt">int</span> <span class="nf">ENGINE_register_pkey_meths</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-472"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_pkey_meths</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-473"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_pkey_meths</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-474"></a>
+<a name="gbab-475"></a><span class="kt">int</span> <span class="nf">ENGINE_register_pkey_asn1_meths</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-476"></a><span class="kt">void</span> <span class="nf">ENGINE_unregister_pkey_asn1_meths</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-477"></a><span class="kt">void</span> <span class="nf">ENGINE_register_all_pkey_asn1_meths</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-478"></a>
+<a name="gbab-479"></a><span class="cm">/*</span>
+<a name="gbab-480"></a><span class="cm"> * These functions register all support from the above categories. Note, use</span>
+<a name="gbab-481"></a><span class="cm"> * of these functions can result in static linkage of code your application</span>
+<a name="gbab-482"></a><span class="cm"> * may not need. If you only need a subset of functionality, consider using</span>
+<a name="gbab-483"></a><span class="cm"> * more selective initialisation.</span>
+<a name="gbab-484"></a><span class="cm"> */</span>
+<a name="gbab-485"></a><span class="kt">int</span> <span class="nf">ENGINE_register_complete</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-486"></a><span class="kt">int</span> <span class="nf">ENGINE_register_all_complete</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-487"></a>
+<a name="gbab-488"></a><span class="cm">/*</span>
+<a name="gbab-489"></a><span class="cm"> * Send parametrised control commands to the engine. The possibilities to</span>
+<a name="gbab-490"></a><span class="cm"> * send down an integer, a pointer to data or a function pointer are</span>
+<a name="gbab-491"></a><span class="cm"> * provided. Any of the parameters may or may not be NULL, depending on the</span>
+<a name="gbab-492"></a><span class="cm"> * command number. In actuality, this function only requires a structural</span>
+<a name="gbab-493"></a><span class="cm"> * (rather than functional) reference to an engine, but many control commands</span>
+<a name="gbab-494"></a><span class="cm"> * may require the engine be functional. The caller should be aware of trying</span>
+<a name="gbab-495"></a><span class="cm"> * commands that require an operational ENGINE, and only use functional</span>
+<a name="gbab-496"></a><span class="cm"> * references in such situations.</span>
+<a name="gbab-497"></a><span class="cm"> */</span>
+<a name="gbab-498"></a><span class="kt">int</span> <span class="nf">ENGINE_ctrl</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cmd</span><span class="p">,</span> <span class="kt">long</span> <span class="n">i</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="kt">void</span><span class="p">));</span>
+<a name="gbab-499"></a>
+<a name="gbab-500"></a><span class="cm">/*</span>
+<a name="gbab-501"></a><span class="cm"> * This function tests if an ENGINE-specific command is usable as a</span>
+<a name="gbab-502"></a><span class="cm"> * &quot;setting&quot;. Eg. in an application&#39;s config file that gets processed through</span>
+<a name="gbab-503"></a><span class="cm"> * ENGINE_ctrl_cmd_string(). If this returns zero, it is not available to</span>
+<a name="gbab-504"></a><span class="cm"> * ENGINE_ctrl_cmd_string(), only ENGINE_ctrl().</span>
+<a name="gbab-505"></a><span class="cm"> */</span>
+<a name="gbab-506"></a><span class="kt">int</span> <span class="nf">ENGINE_cmd_is_executable</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cmd</span><span class="p">);</span>
+<a name="gbab-507"></a>
+<a name="gbab-508"></a><span class="cm">/*</span>
+<a name="gbab-509"></a><span class="cm"> * This function works like ENGINE_ctrl() with the exception of taking a</span>
+<a name="gbab-510"></a><span class="cm"> * command name instead of a command number, and can handle optional</span>
+<a name="gbab-511"></a><span class="cm"> * commands. See the comment on ENGINE_ctrl_cmd_string() for an explanation</span>
+<a name="gbab-512"></a><span class="cm"> * on how to use the cmd_name and cmd_optional.</span>
+<a name="gbab-513"></a><span class="cm"> */</span>
+<a name="gbab-514"></a><span class="kt">int</span> <span class="nf">ENGINE_ctrl_cmd</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">cmd_name</span><span class="p">,</span>
+<a name="gbab-515"></a>        <span class="kt">long</span> <span class="n">i</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="kt">void</span><span class="p">),</span> <span class="kt">int</span> <span class="n">cmd_optional</span><span class="p">);</span>
+<a name="gbab-516"></a>
+<a name="gbab-517"></a><span class="cm">/*</span>
+<a name="gbab-518"></a><span class="cm"> * This function passes a command-name and argument to an ENGINE. The</span>
+<a name="gbab-519"></a><span class="cm"> * cmd_name is converted to a command number and the control command is</span>
+<a name="gbab-520"></a><span class="cm"> * called using &#39;arg&#39; as an argument (unless the ENGINE doesn&#39;t support such</span>
+<a name="gbab-521"></a><span class="cm"> * a command, in which case no control command is called). The command is</span>
+<a name="gbab-522"></a><span class="cm"> * checked for input flags, and if necessary the argument will be converted</span>
+<a name="gbab-523"></a><span class="cm"> * to a numeric value. If cmd_optional is non-zero, then if the ENGINE</span>
+<a name="gbab-524"></a><span class="cm"> * doesn&#39;t support the given cmd_name the return value will be success</span>
+<a name="gbab-525"></a><span class="cm"> * anyway. This function is intended for applications to use so that users</span>
+<a name="gbab-526"></a><span class="cm"> * (or config files) can supply engine-specific config data to the ENGINE at</span>
+<a name="gbab-527"></a><span class="cm"> * run-time to control behaviour of specific engines. As such, it shouldn&#39;t</span>
+<a name="gbab-528"></a><span class="cm"> * be used for calling ENGINE_ctrl() functions that return data, deal with</span>
+<a name="gbab-529"></a><span class="cm"> * binary data, or that are otherwise supposed to be used directly through</span>
+<a name="gbab-530"></a><span class="cm"> * ENGINE_ctrl() in application code. Any &quot;return&quot; data from an ENGINE_ctrl()</span>
+<a name="gbab-531"></a><span class="cm"> * operation in this function will be lost - the return value is interpreted</span>
+<a name="gbab-532"></a><span class="cm"> * as failure if the return value is zero, success otherwise, and this</span>
+<a name="gbab-533"></a><span class="cm"> * function returns a boolean value as a result. In other words, vendors of</span>
+<a name="gbab-534"></a><span class="cm"> * &#39;ENGINE&#39;-enabled devices should write ENGINE implementations with</span>
+<a name="gbab-535"></a><span class="cm"> * parameterisations that work in this scheme, so that compliant ENGINE-based</span>
+<a name="gbab-536"></a><span class="cm"> * applications can work consistently with the same configuration for the</span>
+<a name="gbab-537"></a><span class="cm"> * same ENGINE-enabled devices, across applications.</span>
+<a name="gbab-538"></a><span class="cm"> */</span>
+<a name="gbab-539"></a><span class="kt">int</span> <span class="nf">ENGINE_ctrl_cmd_string</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">cmd_name</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span>
+<a name="gbab-540"></a>				<span class="kt">int</span> <span class="n">cmd_optional</span><span class="p">);</span>
+<a name="gbab-541"></a>
+<a name="gbab-542"></a><span class="cm">/*</span>
+<a name="gbab-543"></a><span class="cm"> * These functions are useful for manufacturing new ENGINE structures. They</span>
+<a name="gbab-544"></a><span class="cm"> * don&#39;t address reference counting at all - one uses them to populate an</span>
+<a name="gbab-545"></a><span class="cm"> * ENGINE structure with personalised implementations of things prior to</span>
+<a name="gbab-546"></a><span class="cm"> * using it directly or adding it to the builtin ENGINE list in OpenSSL.</span>
+<a name="gbab-547"></a><span class="cm"> * These are also here so that the ENGINE structure doesn&#39;t have to be</span>
+<a name="gbab-548"></a><span class="cm"> * exposed and break binary compatibility!</span>
+<a name="gbab-549"></a><span class="cm"> */</span>
+<a name="gbab-550"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_new</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-551"></a><span class="kt">int</span> <span class="nf">ENGINE_free</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-552"></a><span class="kt">int</span> <span class="nf">ENGINE_up_ref</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-553"></a><span class="kt">int</span> <span class="nf">ENGINE_set_id</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">id</span><span class="p">);</span>
+<a name="gbab-554"></a><span class="kt">int</span> <span class="nf">ENGINE_set_name</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">);</span>
+<a name="gbab-555"></a><span class="kt">int</span> <span class="nf">ENGINE_set_RSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="n">RSA_METHOD</span> <span class="o">*</span><span class="n">rsa_meth</span><span class="p">);</span>
+<a name="gbab-556"></a><span class="kt">int</span> <span class="nf">ENGINE_set_DSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="n">DSA_METHOD</span> <span class="o">*</span><span class="n">dsa_meth</span><span class="p">);</span>
+<a name="gbab-557"></a><span class="kt">int</span> <span class="nf">ENGINE_set_ECDH</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="n">ECDH_METHOD</span> <span class="o">*</span><span class="n">ecdh_meth</span><span class="p">);</span>
+<a name="gbab-558"></a><span class="kt">int</span> <span class="nf">ENGINE_set_ECDSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="n">ECDSA_METHOD</span> <span class="o">*</span><span class="n">ecdsa_meth</span><span class="p">);</span>
+<a name="gbab-559"></a><span class="kt">int</span> <span class="nf">ENGINE_set_DH</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="n">DH_METHOD</span> <span class="o">*</span><span class="n">dh_meth</span><span class="p">);</span>
+<a name="gbab-560"></a><span class="kt">int</span> <span class="nf">ENGINE_set_RAND</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="n">RAND_METHOD</span> <span class="o">*</span><span class="n">rand_meth</span><span class="p">);</span>
+<a name="gbab-561"></a><span class="kt">int</span> <span class="nf">ENGINE_set_STORE</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="n">STORE_METHOD</span> <span class="o">*</span><span class="n">store_meth</span><span class="p">);</span>
+<a name="gbab-562"></a><span class="kt">int</span> <span class="nf">ENGINE_set_destroy_function</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">ENGINE_GEN_INT_FUNC_PTR</span> <span class="n">destroy_f</span><span class="p">);</span>
+<a name="gbab-563"></a><span class="kt">int</span> <span class="nf">ENGINE_set_init_function</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">ENGINE_GEN_INT_FUNC_PTR</span> <span class="n">init_f</span><span class="p">);</span>
+<a name="gbab-564"></a><span class="kt">int</span> <span class="nf">ENGINE_set_finish_function</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">ENGINE_GEN_INT_FUNC_PTR</span> <span class="n">finish_f</span><span class="p">);</span>
+<a name="gbab-565"></a><span class="kt">int</span> <span class="nf">ENGINE_set_ctrl_function</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">ENGINE_CTRL_FUNC_PTR</span> <span class="n">ctrl_f</span><span class="p">);</span>
+<a name="gbab-566"></a><span class="kt">int</span> <span class="nf">ENGINE_set_load_privkey_function</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span>
+<a name="gbab-567"></a>                                     <span class="n">ENGINE_LOAD_KEY_PTR</span> <span class="n">loadpriv_f</span><span class="p">);</span>
+<a name="gbab-568"></a><span class="kt">int</span> <span class="nf">ENGINE_set_load_pubkey_function</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">ENGINE_LOAD_KEY_PTR</span> <span class="n">loadpub_f</span><span class="p">);</span>
+<a name="gbab-569"></a><span class="kt">int</span> <span class="nf">ENGINE_set_load_ssl_client_cert_function</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span>
+<a name="gbab-570"></a>                                             <span class="n">ENGINE_SSL_CLIENT_CERT_PTR</span>
+<a name="gbab-571"></a>                                             <span class="n">loadssl_f</span><span class="p">);</span>
+<a name="gbab-572"></a><span class="kt">int</span> <span class="nf">ENGINE_set_ciphers</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">ENGINE_CIPHERS_PTR</span> <span class="n">f</span><span class="p">);</span>
+<a name="gbab-573"></a><span class="kt">int</span> <span class="nf">ENGINE_set_digests</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">ENGINE_DIGESTS_PTR</span> <span class="n">f</span><span class="p">);</span>
+<a name="gbab-574"></a><span class="kt">int</span> <span class="nf">ENGINE_set_pkey_meths</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">ENGINE_PKEY_METHS_PTR</span> <span class="n">f</span><span class="p">);</span>
+<a name="gbab-575"></a><span class="kt">int</span> <span class="nf">ENGINE_set_pkey_asn1_meths</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">ENGINE_PKEY_ASN1_METHS_PTR</span> <span class="n">f</span><span class="p">);</span>
+<a name="gbab-576"></a><span class="kt">int</span> <span class="nf">ENGINE_set_flags</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">);</span>
+<a name="gbab-577"></a><span class="kt">int</span> <span class="nf">ENGINE_set_cmd_defns</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="n">ENGINE_CMD_DEFN</span> <span class="o">*</span><span class="n">defns</span><span class="p">);</span>
+<a name="gbab-578"></a><span class="cm">/* These functions allow control over any per-structure ENGINE data. */</span>
+<a name="gbab-579"></a><span class="kt">int</span> <span class="nf">ENGINE_get_ex_new_index</span><span class="p">(</span><span class="kt">long</span> <span class="n">argl</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">argp</span><span class="p">,</span> <span class="n">CRYPTO_EX_new</span> <span class="o">*</span><span class="n">new_func</span><span class="p">,</span>
+<a name="gbab-580"></a>                            <span class="n">CRYPTO_EX_dup</span> <span class="o">*</span><span class="n">dup_func</span><span class="p">,</span>
+<a name="gbab-581"></a>                            <span class="n">CRYPTO_EX_free</span> <span class="o">*</span><span class="n">free_func</span><span class="p">);</span>
+<a name="gbab-582"></a><span class="kt">int</span> <span class="nf">ENGINE_set_ex_data</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">);</span>
+<a name="gbab-583"></a><span class="kt">void</span> <span class="o">*</span><span class="nf">ENGINE_get_ex_data</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">);</span>
+<a name="gbab-584"></a>
+<a name="gbab-585"></a><span class="cm">/*</span>
+<a name="gbab-586"></a><span class="cm"> * This function cleans up anything that needs it. Eg. the ENGINE_add()</span>
+<a name="gbab-587"></a><span class="cm"> * function automatically ensures the list cleanup function is registered to</span>
+<a name="gbab-588"></a><span class="cm"> * be called from ENGINE_cleanup(). Similarly, all ENGINE_register_***</span>
+<a name="gbab-589"></a><span class="cm"> * functions ensure ENGINE_cleanup() will clean up after them.</span>
+<a name="gbab-590"></a><span class="cm"> */</span>
+<a name="gbab-591"></a><span class="kt">void</span> <span class="nf">ENGINE_cleanup</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-592"></a>
+<a name="gbab-593"></a><span class="cm">/*</span>
+<a name="gbab-594"></a><span class="cm"> * These return values from within the ENGINE structure. These can be useful</span>
+<a name="gbab-595"></a><span class="cm"> * with functional references as well as structural references - it depends</span>
+<a name="gbab-596"></a><span class="cm"> * which you obtained. Using the result for functional purposes if you only</span>
+<a name="gbab-597"></a><span class="cm"> * obtained a structural reference may be problematic!</span>
+<a name="gbab-598"></a><span class="cm"> */</span>
+<a name="gbab-599"></a><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">ENGINE_get_id</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-600"></a><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">ENGINE_get_name</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-601"></a><span class="k">const</span> <span class="n">RSA_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_RSA</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-602"></a><span class="k">const</span> <span class="n">DSA_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_DSA</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-603"></a><span class="k">const</span> <span class="n">ECDH_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_ECDH</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-604"></a><span class="k">const</span> <span class="n">ECDSA_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_ECDSA</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-605"></a><span class="k">const</span> <span class="n">DH_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_DH</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-606"></a><span class="k">const</span> <span class="n">RAND_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_RAND</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-607"></a><span class="k">const</span> <span class="n">STORE_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_STORE</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-608"></a><span class="n">ENGINE_GEN_INT_FUNC_PTR</span> <span class="nf">ENGINE_get_destroy_function</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-609"></a><span class="n">ENGINE_GEN_INT_FUNC_PTR</span> <span class="nf">ENGINE_get_init_function</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-610"></a><span class="n">ENGINE_GEN_INT_FUNC_PTR</span> <span class="nf">ENGINE_get_finish_function</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-611"></a><span class="n">ENGINE_CTRL_FUNC_PTR</span> <span class="nf">ENGINE_get_ctrl_function</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-612"></a><span class="n">ENGINE_LOAD_KEY_PTR</span> <span class="nf">ENGINE_get_load_privkey_function</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-613"></a><span class="n">ENGINE_LOAD_KEY_PTR</span> <span class="nf">ENGINE_get_load_pubkey_function</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-614"></a><span class="n">ENGINE_SSL_CLIENT_CERT_PTR</span> <span class="nf">ENGINE_get_ssl_client_cert_function</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span>
+<a name="gbab-615"></a>                                                               <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-616"></a><span class="n">ENGINE_CIPHERS_PTR</span> <span class="nf">ENGINE_get_ciphers</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-617"></a><span class="n">ENGINE_DIGESTS_PTR</span> <span class="nf">ENGINE_get_digests</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-618"></a><span class="n">ENGINE_PKEY_METHS_PTR</span> <span class="nf">ENGINE_get_pkey_meths</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-619"></a><span class="n">ENGINE_PKEY_ASN1_METHS_PTR</span> <span class="nf">ENGINE_get_pkey_asn1_meths</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-620"></a><span class="k">const</span> <span class="n">EVP_CIPHER</span> <span class="o">*</span><span class="nf">ENGINE_get_cipher</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nid</span><span class="p">);</span>
+<a name="gbab-621"></a><span class="k">const</span> <span class="n">EVP_MD</span> <span class="o">*</span><span class="nf">ENGINE_get_digest</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nid</span><span class="p">);</span>
+<a name="gbab-622"></a><span class="k">const</span> <span class="n">EVP_PKEY_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_pkey_meth</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nid</span><span class="p">);</span>
+<a name="gbab-623"></a><span class="k">const</span> <span class="n">EVP_PKEY_ASN1_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_pkey_asn1_meth</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nid</span><span class="p">);</span>
+<a name="gbab-624"></a><span class="k">const</span> <span class="n">EVP_PKEY_ASN1_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_get_pkey_asn1_meth_str</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span>
+<a name="gbab-625"></a>                                                          <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">,</span>
+<a name="gbab-626"></a>                                                          <span class="kt">int</span> <span class="n">len</span><span class="p">);</span>
+<a name="gbab-627"></a><span class="k">const</span> <span class="n">EVP_PKEY_ASN1_METHOD</span> <span class="o">*</span><span class="nf">ENGINE_pkey_asn1_find_str</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">**</span><span class="n">pe</span><span class="p">,</span>
+<a name="gbab-628"></a>                                                      <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">,</span>
+<a name="gbab-629"></a>                                                      <span class="kt">int</span> <span class="n">len</span><span class="p">);</span>
+<a name="gbab-630"></a><span class="k">const</span> <span class="n">ENGINE_CMD_DEFN</span> <span class="o">*</span><span class="nf">ENGINE_get_cmd_defns</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-631"></a><span class="kt">int</span> <span class="nf">ENGINE_get_flags</span><span class="p">(</span><span class="k">const</span> <span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-632"></a>
+<a name="gbab-633"></a><span class="cm">/*</span>
+<a name="gbab-634"></a><span class="cm"> * FUNCTIONAL functions. These functions deal with ENGINE structures that</span>
+<a name="gbab-635"></a><span class="cm"> * have (or will) be initialised for use. Broadly speaking, the structural</span>
+<a name="gbab-636"></a><span class="cm"> * functions are useful for iterating the list of available engine types,</span>
+<a name="gbab-637"></a><span class="cm"> * creating new engine types, and other &quot;list&quot; operations. These functions</span>
+<a name="gbab-638"></a><span class="cm"> * actually deal with ENGINEs that are to be used. As such these functions</span>
+<a name="gbab-639"></a><span class="cm"> * can fail (if applicable) when particular engines are unavailable - eg. if</span>
+<a name="gbab-640"></a><span class="cm"> * a hardware accelerator is not attached or not functioning correctly. Each</span>
+<a name="gbab-641"></a><span class="cm"> * ENGINE has 2 reference counts; structural and functional. Every time a</span>
+<a name="gbab-642"></a><span class="cm"> * functional reference is obtained or released, a corresponding structural</span>
+<a name="gbab-643"></a><span class="cm"> * reference is automatically obtained or released too.</span>
+<a name="gbab-644"></a><span class="cm"> */</span>
+<a name="gbab-645"></a>
+<a name="gbab-646"></a><span class="cm">/*</span>
+<a name="gbab-647"></a><span class="cm"> * Initialise a engine type for use (or up its reference count if it&#39;s</span>
+<a name="gbab-648"></a><span class="cm"> * already in use). This will fail if the engine is not currently operational</span>
+<a name="gbab-649"></a><span class="cm"> * and cannot initialise.</span>
+<a name="gbab-650"></a><span class="cm"> */</span>
+<a name="gbab-651"></a><span class="kt">int</span> <span class="nf">ENGINE_init</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-652"></a><span class="cm">/*</span>
+<a name="gbab-653"></a><span class="cm"> * Free a functional reference to a engine type. This does not require a</span>
+<a name="gbab-654"></a><span class="cm"> * corresponding call to ENGINE_free as it also releases a structural</span>
+<a name="gbab-655"></a><span class="cm"> * reference.</span>
+<a name="gbab-656"></a><span class="cm"> */</span>
+<a name="gbab-657"></a><span class="kt">int</span> <span class="nf">ENGINE_finish</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-658"></a>
+<a name="gbab-659"></a><span class="cm">/*</span>
+<a name="gbab-660"></a><span class="cm"> * The following functions handle keys that are stored in some secondary</span>
+<a name="gbab-661"></a><span class="cm"> * location, handled by the engine.  The storage may be on a card or</span>
+<a name="gbab-662"></a><span class="cm"> * whatever.</span>
+<a name="gbab-663"></a><span class="cm"> */</span>
+<a name="gbab-664"></a><span class="n">EVP_PKEY</span> <span class="o">*</span><span class="nf">ENGINE_load_private_key</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key_id</span><span class="p">,</span>
+<a name="gbab-665"></a>	<span class="n">UI_METHOD</span> <span class="o">*</span><span class="n">ui_method</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">callback_data</span><span class="p">);</span>
+<a name="gbab-666"></a><span class="n">EVP_PKEY</span> <span class="o">*</span><span class="nf">ENGINE_load_public_key</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">key_id</span><span class="p">,</span>
+<a name="gbab-667"></a>	<span class="n">UI_METHOD</span> <span class="o">*</span><span class="n">ui_method</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">callback_data</span><span class="p">);</span>
+<a name="gbab-668"></a><span class="kt">int</span> <span class="nf">ENGINE_load_ssl_client_cert</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">SSL</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span>
+<a name="gbab-669"></a>                                <span class="n">STACK_OF</span><span class="p">(</span><span class="n">X509_NAME</span><span class="p">)</span> <span class="o">*</span><span class="n">ca_dn</span><span class="p">,</span> <span class="n">X509</span> <span class="o">**</span><span class="n">pcert</span><span class="p">,</span>
+<a name="gbab-670"></a>                                <span class="n">EVP_PKEY</span> <span class="o">**</span><span class="n">ppkey</span><span class="p">,</span> <span class="n">STACK_OF</span><span class="p">(</span><span class="n">X509</span><span class="p">)</span> <span class="o">**</span><span class="n">pother</span><span class="p">,</span>
+<a name="gbab-671"></a>	<span class="n">UI_METHOD</span> <span class="o">*</span><span class="n">ui_method</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">callback_data</span><span class="p">);</span>
+<a name="gbab-672"></a>
+<a name="gbab-673"></a><span class="cm">/*</span>
+<a name="gbab-674"></a><span class="cm"> * This returns a pointer for the current ENGINE structure that is (by</span>
+<a name="gbab-675"></a><span class="cm"> * default) performing any RSA operations. The value returned is an</span>
+<a name="gbab-676"></a><span class="cm"> * incremented reference, so it should be free&#39;d (ENGINE_finish) before it is</span>
+<a name="gbab-677"></a><span class="cm"> * discarded.</span>
+<a name="gbab-678"></a><span class="cm"> */</span>
+<a name="gbab-679"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_default_RSA</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-680"></a><span class="cm">/* Same for the other &quot;methods&quot; */</span>
+<a name="gbab-681"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_default_DSA</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-682"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_default_ECDH</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-683"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_default_ECDSA</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-684"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_default_DH</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-685"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_default_RAND</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-686"></a><span class="cm">/*</span>
+<a name="gbab-687"></a><span class="cm"> * These functions can be used to get a functional reference to perform</span>
+<a name="gbab-688"></a><span class="cm"> * ciphering or digesting corresponding to &quot;nid&quot;.</span>
+<a name="gbab-689"></a><span class="cm"> */</span>
+<a name="gbab-690"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_cipher_engine</span><span class="p">(</span><span class="kt">int</span> <span class="n">nid</span><span class="p">);</span>
+<a name="gbab-691"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_digest_engine</span><span class="p">(</span><span class="kt">int</span> <span class="n">nid</span><span class="p">);</span>
+<a name="gbab-692"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_pkey_meth_engine</span><span class="p">(</span><span class="kt">int</span> <span class="n">nid</span><span class="p">);</span>
+<a name="gbab-693"></a><span class="n">ENGINE</span> <span class="o">*</span><span class="nf">ENGINE_get_pkey_asn1_meth_engine</span><span class="p">(</span><span class="kt">int</span> <span class="n">nid</span><span class="p">);</span>
+<a name="gbab-694"></a>
+<a name="gbab-695"></a><span class="cm">/*</span>
+<a name="gbab-696"></a><span class="cm"> * This sets a new default ENGINE structure for performing RSA operations. If</span>
+<a name="gbab-697"></a><span class="cm"> * the result is non-zero (success) then the ENGINE structure will have had</span>
+<a name="gbab-698"></a><span class="cm"> * its reference count up&#39;d so the caller should still free their own</span>
+<a name="gbab-699"></a><span class="cm"> * reference &#39;e&#39;.</span>
+<a name="gbab-700"></a><span class="cm"> */</span>
+<a name="gbab-701"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_RSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-702"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_string</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">def_list</span><span class="p">);</span>
+<a name="gbab-703"></a><span class="cm">/* Same for the other &quot;methods&quot; */</span>
+<a name="gbab-704"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_DSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-705"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_ECDH</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-706"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_ECDSA</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-707"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_DH</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-708"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_RAND</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-709"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_ciphers</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-710"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_digests</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-711"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_pkey_meths</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-712"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default_pkey_asn1_meths</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">);</span>
+<a name="gbab-713"></a>
+<a name="gbab-714"></a><span class="cm">/*</span>
+<a name="gbab-715"></a><span class="cm"> * The combination &quot;set&quot; - the flags are bitwise &quot;OR&quot;d from the</span>
+<a name="gbab-716"></a><span class="cm"> * ENGINE_METHOD_*** defines above. As with the &quot;ENGINE_register_complete()&quot;</span>
+<a name="gbab-717"></a><span class="cm"> * function, this function can result in unnecessary static linkage. If your</span>
+<a name="gbab-718"></a><span class="cm"> * application requires only specific functionality, consider using more</span>
+<a name="gbab-719"></a><span class="cm"> * selective functions.</span>
+<a name="gbab-720"></a><span class="cm"> */</span>
+<a name="gbab-721"></a><span class="kt">int</span> <span class="nf">ENGINE_set_default</span><span class="p">(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">);</span>
+<a name="gbab-722"></a>
+<a name="gbab-723"></a><span class="kt">void</span> <span class="nf">ENGINE_add_conf_module</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-724"></a>
+<a name="gbab-725"></a><span class="cm">/* Deprecated functions ... */</span>
+<a name="gbab-726"></a><span class="cm">/* int ENGINE_clear_defaults(void); */</span>
+<a name="gbab-727"></a>
+<a name="gbab-728"></a><span class="cm">/**************************/</span>
+<a name="gbab-729"></a><span class="cm">/* DYNAMIC ENGINE SUPPORT */</span>
+<a name="gbab-730"></a><span class="cm">/**************************/</span>
+<a name="gbab-731"></a>
+<a name="gbab-732"></a><span class="cm">/* Binary/behaviour compatibility levels */</span>
+<a name="gbab-733"></a><span class="cp">#define OSSL_DYNAMIC_VERSION		(unsigned long)0x00020000</span>
+<a name="gbab-734"></a><span class="cm">/*</span>
+<a name="gbab-735"></a><span class="cm"> * Binary versions older than this are too old for us (whether we&#39;re a loader</span>
+<a name="gbab-736"></a><span class="cm"> * or a loadee)</span>
+<a name="gbab-737"></a><span class="cm"> */</span>
+<a name="gbab-738"></a><span class="cp">#define OSSL_DYNAMIC_OLDEST		(unsigned long)0x00020000</span>
+<a name="gbab-739"></a>
+<a name="gbab-740"></a><span class="cm">/*</span>
+<a name="gbab-741"></a><span class="cm"> * When compiling an ENGINE entirely as an external shared library, loadable</span>
+<a name="gbab-742"></a><span class="cm"> * by the &quot;dynamic&quot; ENGINE, these types are needed. The &#39;dynamic_fns&#39;</span>
+<a name="gbab-743"></a><span class="cm"> * structure type provides the calling application&#39;s (or library&#39;s) error</span>
+<a name="gbab-744"></a><span class="cm"> * functionality and memory management function pointers to the loaded</span>
+<a name="gbab-745"></a><span class="cm"> * library. These should be used/set in the loaded library code so that the</span>
+<a name="gbab-746"></a><span class="cm"> * loading application&#39;s &#39;state&#39; will be used/changed in all operations. The</span>
+<a name="gbab-747"></a><span class="cm"> * &#39;static_state&#39; pointer allows the loaded library to know if it shares the</span>
+<a name="gbab-748"></a><span class="cm"> * same static data as the calling application (or library), and thus whether</span>
+<a name="gbab-749"></a><span class="cm"> * these callbacks need to be set or not.</span>
+<a name="gbab-750"></a><span class="cm"> */</span>
+<a name="gbab-751"></a><span class="k">typedef</span> <span class="kt">void</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">dyn_MEM_malloc_cb</span><span class="p">)(</span><span class="kt">size_t</span><span class="p">);</span>
+<a name="gbab-752"></a><span class="k">typedef</span> <span class="kt">void</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">dyn_MEM_realloc_cb</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">,</span> <span class="kt">size_t</span><span class="p">);</span>
+<a name="gbab-753"></a><span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">dyn_MEM_free_cb</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-754"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">st_dynamic_MEM_fns</span> <span class="p">{</span>
+<a name="gbab-755"></a>	<span class="n">dyn_MEM_malloc_cb</span>			<span class="n">malloc_cb</span><span class="p">;</span>
+<a name="gbab-756"></a>	<span class="n">dyn_MEM_realloc_cb</span>			<span class="n">realloc_cb</span><span class="p">;</span>
+<a name="gbab-757"></a>	<span class="n">dyn_MEM_free_cb</span>				<span class="n">free_cb</span><span class="p">;</span>
+<a name="gbab-758"></a>	<span class="p">}</span> <span class="n">dynamic_MEM_fns</span><span class="p">;</span>
+<a name="gbab-759"></a><span class="cm">/*</span>
+<a name="gbab-760"></a><span class="cm"> * FIXME: Perhaps the memory and locking code (crypto.h) should declare and</span>
+<a name="gbab-761"></a><span class="cm"> * use these types so we (and any other dependant code) can simplify a bit??</span>
+<a name="gbab-762"></a><span class="cm"> */</span>
+<a name="gbab-763"></a><span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">dyn_lock_locking_cb</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="p">,</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span><span class="kt">int</span><span class="p">);</span>
+<a name="gbab-764"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">dyn_lock_add_lock_cb</span><span class="p">)(</span><span class="kt">int</span><span class="o">*</span><span class="p">,</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="p">,</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span><span class="kt">int</span><span class="p">);</span>
+<a name="gbab-765"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">CRYPTO_dynlock_value</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">dyn_dynlock_create_cb</span><span class="p">)</span> <span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span>
+<a name="gbab-766"></a>                                                               <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-767"></a><span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">dyn_dynlock_lock_cb</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span><span class="k">struct</span> <span class="n">CRYPTO_dynlock_value</span> <span class="o">*</span><span class="p">,</span>
+<a name="gbab-768"></a>						<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span><span class="kt">int</span><span class="p">);</span>
+<a name="gbab-769"></a><span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">dyn_dynlock_destroy_cb</span><span class="p">)(</span><span class="k">struct</span> <span class="n">CRYPTO_dynlock_value</span> <span class="o">*</span><span class="p">,</span>
+<a name="gbab-770"></a>						<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span><span class="kt">int</span><span class="p">);</span>
+<a name="gbab-771"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">st_dynamic_LOCK_fns</span> <span class="p">{</span>
+<a name="gbab-772"></a>	<span class="n">dyn_lock_locking_cb</span>			<span class="n">lock_locking_cb</span><span class="p">;</span>
+<a name="gbab-773"></a>	<span class="n">dyn_lock_add_lock_cb</span>			<span class="n">lock_add_lock_cb</span><span class="p">;</span>
+<a name="gbab-774"></a>	<span class="n">dyn_dynlock_create_cb</span>			<span class="n">dynlock_create_cb</span><span class="p">;</span>
+<a name="gbab-775"></a>	<span class="n">dyn_dynlock_lock_cb</span>			<span class="n">dynlock_lock_cb</span><span class="p">;</span>
+<a name="gbab-776"></a>	<span class="n">dyn_dynlock_destroy_cb</span>			<span class="n">dynlock_destroy_cb</span><span class="p">;</span>
+<a name="gbab-777"></a>	<span class="p">}</span> <span class="n">dynamic_LOCK_fns</span><span class="p">;</span>
+<a name="gbab-778"></a><span class="cm">/* The top-level structure */</span>
+<a name="gbab-779"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">st_dynamic_fns</span> <span class="p">{</span>
+<a name="gbab-780"></a>	<span class="kt">void</span> 					<span class="o">*</span><span class="n">static_state</span><span class="p">;</span>
+<a name="gbab-781"></a>	<span class="k">const</span> <span class="n">ERR_FNS</span>				<span class="o">*</span><span class="n">err_fns</span><span class="p">;</span>
+<a name="gbab-782"></a>	<span class="k">const</span> <span class="n">CRYPTO_EX_DATA_IMPL</span>		<span class="o">*</span><span class="n">ex_data_fns</span><span class="p">;</span>
+<a name="gbab-783"></a>	<span class="n">dynamic_MEM_fns</span>				<span class="n">mem_fns</span><span class="p">;</span>
+<a name="gbab-784"></a>	<span class="n">dynamic_LOCK_fns</span>			<span class="n">lock_fns</span><span class="p">;</span>
+<a name="gbab-785"></a>	<span class="p">}</span> <span class="n">dynamic_fns</span><span class="p">;</span>
+<a name="gbab-786"></a>
+<a name="gbab-787"></a><span class="cm">/*</span>
+<a name="gbab-788"></a><span class="cm"> * The version checking function should be of this prototype. NB: The</span>
+<a name="gbab-789"></a><span class="cm"> * ossl_version value passed in is the OSSL_DYNAMIC_VERSION of the loading</span>
+<a name="gbab-790"></a><span class="cm"> * code. If this function returns zero, it indicates a (potential) version</span>
+<a name="gbab-791"></a><span class="cm"> * incompatibility and the loaded library doesn&#39;t believe it can proceed.</span>
+<a name="gbab-792"></a><span class="cm"> * Otherwise, the returned value is the (latest) version supported by the</span>
+<a name="gbab-793"></a><span class="cm"> * loading library. The loader may still decide that the loaded code&#39;s</span>
+<a name="gbab-794"></a><span class="cm"> * version is unsatisfactory and could veto the load. The function is</span>
+<a name="gbab-795"></a><span class="cm"> * expected to be implemented with the symbol name &quot;v_check&quot;, and a default</span>
+<a name="gbab-796"></a><span class="cm"> * implementation can be fully instantiated with</span>
+<a name="gbab-797"></a><span class="cm"> * IMPLEMENT_DYNAMIC_CHECK_FN().</span>
+<a name="gbab-798"></a><span class="cm"> */</span>
+<a name="gbab-799"></a><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="nf">long</span> <span class="p">(</span><span class="o">*</span><span class="n">dynamic_v_check_fn</span><span class="p">)(</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">ossl_version</span><span class="p">);</span>
+<a name="gbab-800"></a><span class="cp">#define IMPLEMENT_DYNAMIC_CHECK_FN() \</span>
+<a name="gbab-801"></a><span class="cp">	OPENSSL_EXPORT unsigned long v_check(unsigned long v); \</span>
+<a name="gbab-802"></a><span class="cp">	OPENSSL_EXPORT unsigned long v_check(unsigned long v) { \</span>
+<a name="gbab-803"></a><span class="cp">		if(v &gt;= OSSL_DYNAMIC_OLDEST) return OSSL_DYNAMIC_VERSION; \</span>
+<a name="gbab-804"></a><span class="cp">		return 0; }</span>
+<a name="gbab-805"></a>
+<a name="gbab-806"></a><span class="cm">/*</span>
+<a name="gbab-807"></a><span class="cm"> * This function is passed the ENGINE structure to initialise with its own</span>
+<a name="gbab-808"></a><span class="cm"> * function and command settings. It should not adjust the structural or</span>
+<a name="gbab-809"></a><span class="cm"> * functional reference counts. If this function returns zero, (a) the load</span>
+<a name="gbab-810"></a><span class="cm"> * will be aborted, (b) the previous ENGINE state will be memcpy&#39;d back onto</span>
+<a name="gbab-811"></a><span class="cm"> * the structure, and (c) the shared library will be unloaded. So</span>
+<a name="gbab-812"></a><span class="cm"> * implementations should do their own internal cleanup in failure</span>
+<a name="gbab-813"></a><span class="cm"> * circumstances otherwise they could leak. The &#39;id&#39; parameter, if non-NULL,</span>
+<a name="gbab-814"></a><span class="cm"> * represents the ENGINE id that the loader is looking for. If this is NULL,</span>
+<a name="gbab-815"></a><span class="cm"> * the shared library can choose to return failure or to initialise a</span>
+<a name="gbab-816"></a><span class="cm"> * &#39;default&#39; ENGINE. If non-NULL, the shared library must initialise only an</span>
+<a name="gbab-817"></a><span class="cm"> * ENGINE matching the passed &#39;id&#39;. The function is expected to be</span>
+<a name="gbab-818"></a><span class="cm"> * implemented with the symbol name &quot;bind_engine&quot;. A standard implementation</span>
+<a name="gbab-819"></a><span class="cm"> * can be instantiated with IMPLEMENT_DYNAMIC_BIND_FN(fn) where the parameter</span>
+<a name="gbab-820"></a><span class="cm"> * &#39;fn&#39; is a callback function that populates the ENGINE structure and</span>
+<a name="gbab-821"></a><span class="cm"> * returns an int value (zero for failure). &#39;fn&#39; should have prototype;</span>
+<a name="gbab-822"></a><span class="cm"> * [static] int fn(ENGINE *e, const char *id);</span>
+<a name="gbab-823"></a><span class="cm"> */</span>
+<a name="gbab-824"></a><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">dynamic_bind_engine</span><span class="p">)(</span><span class="n">ENGINE</span> <span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">id</span><span class="p">,</span>
+<a name="gbab-825"></a>				<span class="k">const</span> <span class="n">dynamic_fns</span> <span class="o">*</span><span class="n">fns</span><span class="p">);</span>
+<a name="gbab-826"></a><span class="cp">#define IMPLEMENT_DYNAMIC_BIND_FN(fn) \</span>
+<a name="gbab-827"></a><span class="cp">	OPENSSL_EXPORT \</span>
+<a name="gbab-828"></a><span class="cp">	int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns); \</span>
+<a name="gbab-829"></a><span class="cp">	OPENSSL_EXPORT \</span>
+<a name="gbab-830"></a><span class="cp">	int bind_engine(ENGINE *e, const char *id, const dynamic_fns *fns) { \</span>
+<a name="gbab-831"></a><span class="cp">		if(ENGINE_get_static_state() == fns-&gt;static_state) goto skip_cbs; \</span>
+<a name="gbab-832"></a><span class="cp">		if(!CRYPTO_set_mem_functions(fns-&gt;mem_fns.malloc_cb, \</span>
+<a name="gbab-833"></a><span class="cp">			fns-&gt;mem_fns.realloc_cb, fns-&gt;mem_fns.free_cb)) \</span>
+<a name="gbab-834"></a><span class="cp">			return 0; \</span>
+<a name="gbab-835"></a><span class="cp">		CRYPTO_set_locking_callback(fns-&gt;lock_fns.lock_locking_cb); \</span>
+<a name="gbab-836"></a><span class="cp">		CRYPTO_set_add_lock_callback(fns-&gt;lock_fns.lock_add_lock_cb); \</span>
+<a name="gbab-837"></a><span class="cp">		CRYPTO_set_dynlock_create_callback(fns-&gt;lock_fns.dynlock_create_cb); \</span>
+<a name="gbab-838"></a><span class="cp">		CRYPTO_set_dynlock_lock_callback(fns-&gt;lock_fns.dynlock_lock_cb); \</span>
+<a name="gbab-839"></a><span class="cp">		CRYPTO_set_dynlock_destroy_callback(fns-&gt;lock_fns.dynlock_destroy_cb); \</span>
+<a name="gbab-840"></a><span class="cp">		if(!CRYPTO_set_ex_data_implementation(fns-&gt;ex_data_fns)) \</span>
+<a name="gbab-841"></a><span class="cp">			return 0; \</span>
+<a name="gbab-842"></a><span class="cp">		if(!ERR_set_implementation(fns-&gt;err_fns)) return 0; \</span>
+<a name="gbab-843"></a><span class="cp">	skip_cbs: \</span>
+<a name="gbab-844"></a><span class="cp">		if(!fn(e,id)) return 0; \</span>
+<a name="gbab-845"></a><span class="cp">		return 1; }</span>
+<a name="gbab-846"></a>
+<a name="gbab-847"></a><span class="cm">/*</span>
+<a name="gbab-848"></a><span class="cm"> * If the loading application (or library) and the loaded ENGINE library</span>
+<a name="gbab-849"></a><span class="cm"> * share the same static data (eg. they&#39;re both dynamically linked to the</span>
+<a name="gbab-850"></a><span class="cm"> * same libcrypto.so) we need a way to avoid trying to set system callbacks -</span>
+<a name="gbab-851"></a><span class="cm"> * this would fail, and for the same reason that it&#39;s unnecessary to try. If</span>
+<a name="gbab-852"></a><span class="cm"> * the loaded ENGINE has (or gets from through the loader) its own copy of</span>
+<a name="gbab-853"></a><span class="cm"> * the libcrypto static data, we will need to set the callbacks. The easiest</span>
+<a name="gbab-854"></a><span class="cm"> * way to detect this is to have a function that returns a pointer to some</span>
+<a name="gbab-855"></a><span class="cm"> * static data and let the loading application and loaded ENGINE compare</span>
+<a name="gbab-856"></a><span class="cm"> * their respective values.</span>
+<a name="gbab-857"></a><span class="cm"> */</span>
+<a name="gbab-858"></a><span class="kt">void</span> <span class="o">*</span><span class="nf">ENGINE_get_static_state</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-859"></a>
+<a name="gbab-860"></a><span class="cp">#if defined(__OpenBSD__) || defined(__FreeBSD__) || defined(HAVE_CRYPTODEV)</span>
+<a name="gbab-861"></a><span class="kt">void</span> <span class="nf">ENGINE_setup_bsd_cryptodev</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-862"></a><span class="cp">#endif</span>
+<a name="gbab-863"></a>
+<a name="gbab-864"></a><span class="cm">/* BEGIN ERROR CODES */</span>
+<a name="gbab-865"></a><span class="cm">/*</span>
+<a name="gbab-866"></a><span class="cm"> * The following lines are auto generated by the script mkerr.pl. Any changes</span>
+<a name="gbab-867"></a><span class="cm"> * made after this point may be overwritten when the script is next run.</span>
+<a name="gbab-868"></a><span class="cm"> */</span>
+<a name="gbab-869"></a><span class="kt">void</span> <span class="nf">ERR_load_ENGINE_strings</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-870"></a>
+<a name="gbab-871"></a><span class="cm">/* Error codes for the ENGINE functions. */</span>
+<a name="gbab-872"></a>
+<a name="gbab-873"></a><span class="cm">/* Function codes. */</span>
+<a name="gbab-874"></a><span class="cp">#define ENGINE_F_DYNAMIC_CTRL				 180</span>
+<a name="gbab-875"></a><span class="cp">#define ENGINE_F_DYNAMIC_GET_DATA_CTX			 181</span>
+<a name="gbab-876"></a><span class="cp">#define ENGINE_F_DYNAMIC_LOAD				 182</span>
+<a name="gbab-877"></a><span class="cp">#define ENGINE_F_DYNAMIC_SET_DATA_CTX			 183</span>
+<a name="gbab-878"></a><span class="cp">#define ENGINE_F_ENGINE_ADD				 105</span>
+<a name="gbab-879"></a><span class="cp">#define ENGINE_F_ENGINE_BY_ID				 106</span>
+<a name="gbab-880"></a><span class="cp">#define ENGINE_F_ENGINE_CMD_IS_EXECUTABLE		 170</span>
+<a name="gbab-881"></a><span class="cp">#define ENGINE_F_ENGINE_CTRL				 142</span>
+<a name="gbab-882"></a><span class="cp">#define ENGINE_F_ENGINE_CTRL_CMD			 178</span>
+<a name="gbab-883"></a><span class="cp">#define ENGINE_F_ENGINE_CTRL_CMD_STRING			 171</span>
+<a name="gbab-884"></a><span class="cp">#define ENGINE_F_ENGINE_FINISH				 107</span>
+<a name="gbab-885"></a><span class="cp">#define ENGINE_F_ENGINE_FREE_UTIL			 108</span>
+<a name="gbab-886"></a><span class="cp">#define ENGINE_F_ENGINE_GET_CIPHER			 185</span>
+<a name="gbab-887"></a><span class="cp">#define ENGINE_F_ENGINE_GET_DEFAULT_TYPE		 177</span>
+<a name="gbab-888"></a><span class="cp">#define ENGINE_F_ENGINE_GET_DIGEST			 186</span>
+<a name="gbab-889"></a><span class="cp">#define ENGINE_F_ENGINE_GET_NEXT			 115</span>
+<a name="gbab-890"></a><span class="cp">#define ENGINE_F_ENGINE_GET_PKEY_ASN1_METH		 193</span>
+<a name="gbab-891"></a><span class="cp">#define ENGINE_F_ENGINE_GET_PKEY_METH			 192</span>
+<a name="gbab-892"></a><span class="cp">#define ENGINE_F_ENGINE_GET_PREV			 116</span>
+<a name="gbab-893"></a><span class="cp">#define ENGINE_F_ENGINE_INIT				 119</span>
+<a name="gbab-894"></a><span class="cp">#define ENGINE_F_ENGINE_LIST_ADD			 120</span>
+<a name="gbab-895"></a><span class="cp">#define ENGINE_F_ENGINE_LIST_REMOVE			 121</span>
+<a name="gbab-896"></a><span class="cp">#define ENGINE_F_ENGINE_LOAD_PRIVATE_KEY		 150</span>
+<a name="gbab-897"></a><span class="cp">#define ENGINE_F_ENGINE_LOAD_PUBLIC_KEY			 151</span>
+<a name="gbab-898"></a><span class="cp">#define ENGINE_F_ENGINE_LOAD_SSL_CLIENT_CERT		 194</span>
+<a name="gbab-899"></a><span class="cp">#define ENGINE_F_ENGINE_NEW				 122</span>
+<a name="gbab-900"></a><span class="cp">#define ENGINE_F_ENGINE_REMOVE				 123</span>
+<a name="gbab-901"></a><span class="cp">#define ENGINE_F_ENGINE_SET_DEFAULT_STRING		 189</span>
+<a name="gbab-902"></a><span class="cp">#define ENGINE_F_ENGINE_SET_DEFAULT_TYPE		 126</span>
+<a name="gbab-903"></a><span class="cp">#define ENGINE_F_ENGINE_SET_ID				 129</span>
+<a name="gbab-904"></a><span class="cp">#define ENGINE_F_ENGINE_SET_NAME			 130</span>
+<a name="gbab-905"></a><span class="cp">#define ENGINE_F_ENGINE_TABLE_REGISTER			 184</span>
+<a name="gbab-906"></a><span class="cp">#define ENGINE_F_ENGINE_UNLOAD_KEY			 152</span>
+<a name="gbab-907"></a><span class="cp">#define ENGINE_F_ENGINE_UNLOCKED_FINISH			 191</span>
+<a name="gbab-908"></a><span class="cp">#define ENGINE_F_ENGINE_UP_REF				 190</span>
+<a name="gbab-909"></a><span class="cp">#define ENGINE_F_INT_CTRL_HELPER			 172</span>
+<a name="gbab-910"></a><span class="cp">#define ENGINE_F_INT_ENGINE_CONFIGURE			 188</span>
+<a name="gbab-911"></a><span class="cp">#define ENGINE_F_INT_ENGINE_MODULE_INIT			 187</span>
+<a name="gbab-912"></a><span class="cp">#define ENGINE_F_LOG_MESSAGE				 141</span>
+<a name="gbab-913"></a>
+<a name="gbab-914"></a><span class="cm">/* Reason codes. */</span>
+<a name="gbab-915"></a><span class="cp">#define ENGINE_R_ALREADY_LOADED				 100</span>
+<a name="gbab-916"></a><span class="cp">#define ENGINE_R_ARGUMENT_IS_NOT_A_NUMBER		 133</span>
+<a name="gbab-917"></a><span class="cp">#define ENGINE_R_CMD_NOT_EXECUTABLE			 134</span>
+<a name="gbab-918"></a><span class="cp">#define ENGINE_R_COMMAND_TAKES_INPUT			 135</span>
+<a name="gbab-919"></a><span class="cp">#define ENGINE_R_COMMAND_TAKES_NO_INPUT			 136</span>
+<a name="gbab-920"></a><span class="cp">#define ENGINE_R_CONFLICTING_ENGINE_ID			 103</span>
+<a name="gbab-921"></a><span class="cp">#define ENGINE_R_CTRL_COMMAND_NOT_IMPLEMENTED		 119</span>
+<a name="gbab-922"></a><span class="cp">#define ENGINE_R_DH_NOT_IMPLEMENTED			 139</span>
+<a name="gbab-923"></a><span class="cp">#define ENGINE_R_DSA_NOT_IMPLEMENTED			 140</span>
+<a name="gbab-924"></a><span class="cp">#define ENGINE_R_DSO_FAILURE				 104</span>
+<a name="gbab-925"></a><span class="cp">#define ENGINE_R_DSO_NOT_FOUND				 132</span>
+<a name="gbab-926"></a><span class="cp">#define ENGINE_R_ENGINES_SECTION_ERROR			 148</span>
+<a name="gbab-927"></a><span class="cp">#define ENGINE_R_ENGINE_CONFIGURATION_ERROR		 102</span>
+<a name="gbab-928"></a><span class="cp">#define ENGINE_R_ENGINE_IS_NOT_IN_LIST			 105</span>
+<a name="gbab-929"></a><span class="cp">#define ENGINE_R_ENGINE_SECTION_ERROR			 149</span>
+<a name="gbab-930"></a><span class="cp">#define ENGINE_R_FAILED_LOADING_PRIVATE_KEY		 128</span>
+<a name="gbab-931"></a><span class="cp">#define ENGINE_R_FAILED_LOADING_PUBLIC_KEY		 129</span>
+<a name="gbab-932"></a><span class="cp">#define ENGINE_R_FINISH_FAILED				 106</span>
+<a name="gbab-933"></a><span class="cp">#define ENGINE_R_GET_HANDLE_FAILED			 107</span>
+<a name="gbab-934"></a><span class="cp">#define ENGINE_R_ID_OR_NAME_MISSING			 108</span>
+<a name="gbab-935"></a><span class="cp">#define ENGINE_R_INIT_FAILED				 109</span>
+<a name="gbab-936"></a><span class="cp">#define ENGINE_R_INTERNAL_LIST_ERROR			 110</span>
+<a name="gbab-937"></a><span class="cp">#define ENGINE_R_INVALID_ARGUMENT			 143</span>
+<a name="gbab-938"></a><span class="cp">#define ENGINE_R_INVALID_CMD_NAME			 137</span>
+<a name="gbab-939"></a><span class="cp">#define ENGINE_R_INVALID_CMD_NUMBER			 138</span>
+<a name="gbab-940"></a><span class="cp">#define ENGINE_R_INVALID_INIT_VALUE			 151</span>
+<a name="gbab-941"></a><span class="cp">#define ENGINE_R_INVALID_STRING				 150</span>
+<a name="gbab-942"></a><span class="cp">#define ENGINE_R_NOT_INITIALISED			 117</span>
+<a name="gbab-943"></a><span class="cp">#define ENGINE_R_NOT_LOADED				 112</span>
+<a name="gbab-944"></a><span class="cp">#define ENGINE_R_NO_CONTROL_FUNCTION			 120</span>
+<a name="gbab-945"></a><span class="cp">#define ENGINE_R_NO_INDEX				 144</span>
+<a name="gbab-946"></a><span class="cp">#define ENGINE_R_NO_LOAD_FUNCTION			 125</span>
+<a name="gbab-947"></a><span class="cp">#define ENGINE_R_NO_REFERENCE				 130</span>
+<a name="gbab-948"></a><span class="cp">#define ENGINE_R_NO_SUCH_ENGINE				 116</span>
+<a name="gbab-949"></a><span class="cp">#define ENGINE_R_NO_UNLOAD_FUNCTION			 126</span>
+<a name="gbab-950"></a><span class="cp">#define ENGINE_R_PROVIDE_PARAMETERS			 113</span>
+<a name="gbab-951"></a><span class="cp">#define ENGINE_R_RSA_NOT_IMPLEMENTED			 141</span>
+<a name="gbab-952"></a><span class="cp">#define ENGINE_R_UNIMPLEMENTED_CIPHER			 146</span>
+<a name="gbab-953"></a><span class="cp">#define ENGINE_R_UNIMPLEMENTED_DIGEST			 147</span>
+<a name="gbab-954"></a><span class="cp">#define ENGINE_R_UNIMPLEMENTED_PUBLIC_KEY_METHOD	 101</span>
+<a name="gbab-955"></a><span class="cp">#define ENGINE_R_VERSION_INCOMPATIBILITY		 145</span>
+<a name="gbab-956"></a>
+<a name="gbab-957"></a><span class="cp">#ifdef  __cplusplus</span>
+<a name="gbab-958"></a><span class="p">}</span>
+<a name="gbab-959"></a><span class="cp">#endif</span>
+<a name="gbab-960"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

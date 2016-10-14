@@ -1,0 +1,215 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-3"></a><span class="cm">/*  ftcimage.h                                                             */</span>
+<a name="gbab-4"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-5"></a><span class="cm">/*    FreeType Generic Image cache (specification)                         */</span>
+<a name="gbab-6"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-7"></a><span class="cm">/*  Copyright 2000-2016 by                                                 */</span>
+<a name="gbab-8"></a><span class="cm">/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-10"></a><span class="cm">/*  This file is part of the FreeType project, and may only be used,       */</span>
+<a name="gbab-11"></a><span class="cm">/*  modified, and distributed under the terms of the FreeType project      */</span>
+<a name="gbab-12"></a><span class="cm">/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */</span>
+<a name="gbab-13"></a><span class="cm">/*  this file you indicate that you have read the license and              */</span>
+<a name="gbab-14"></a><span class="cm">/*  understand and accept it fully.                                        */</span>
+<a name="gbab-15"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-16"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a> <span class="cm">/*</span>
+<a name="gbab-20"></a><span class="cm">  *  FTC_ICache is an _abstract_ cache used to store a single FT_Glyph</span>
+<a name="gbab-21"></a><span class="cm">  *  image per cache node.</span>
+<a name="gbab-22"></a><span class="cm">  *</span>
+<a name="gbab-23"></a><span class="cm">  *  FTC_ICache extends FTC_GCache.  For an implementation example,</span>
+<a name="gbab-24"></a><span class="cm">  *  see FTC_ImageCache in `src/cache/ftbasic.c&#39;.</span>
+<a name="gbab-25"></a><span class="cm">  */</span>
+<a name="gbab-26"></a>
+<a name="gbab-27"></a>
+<a name="gbab-28"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-29"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-30"></a>  <span class="cm">/* Each image cache really manages FT_Glyph objects.                     */</span>
+<a name="gbab-31"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-32"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-33"></a>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a><span class="cp">#ifndef FTCIMAGE_H_</span>
+<a name="gbab-36"></a><span class="cp">#define FTCIMAGE_H_</span>
+<a name="gbab-37"></a>
+<a name="gbab-38"></a>
+<a name="gbab-39"></a><span class="cp">#include</span> <span class="cpf">&lt;ft2build.h&gt;</span><span class="cp"></span>
+<a name="gbab-40"></a><span class="cp">#include</span> <span class="cpf">FT_CACHE_H</span><span class="cp"></span>
+<a name="gbab-41"></a><span class="cp">#include</span> <span class="cpf">&quot;ftcglyph.h&quot;</span><span class="cp"></span>
+<a name="gbab-42"></a>
+<a name="gbab-43"></a><span class="n">FT_BEGIN_HEADER</span>
+<a name="gbab-44"></a>
+<a name="gbab-45"></a>
+<a name="gbab-46"></a>  <span class="cm">/* the FT_Glyph image node type - we store only 1 glyph per node */</span>
+<a name="gbab-47"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">FTC_INodeRec_</span>
+<a name="gbab-48"></a>  <span class="p">{</span>
+<a name="gbab-49"></a>    <span class="n">FTC_GNodeRec</span>  <span class="n">gnode</span><span class="p">;</span>
+<a name="gbab-50"></a>    <span class="n">FT_Glyph</span>      <span class="n">glyph</span><span class="p">;</span>
+<a name="gbab-51"></a>
+<a name="gbab-52"></a>  <span class="p">}</span> <span class="n">FTC_INodeRec</span><span class="p">,</span> <span class="o">*</span><span class="n">FTC_INode</span><span class="p">;</span>
+<a name="gbab-53"></a>
+<a name="gbab-54"></a><span class="cp">#define FTC_INODE( x )         ( (FTC_INode)( x ) )</span>
+<a name="gbab-55"></a><span class="cp">#define FTC_INODE_GINDEX( x )  FTC_GNODE(x)-&gt;gindex</span>
+<a name="gbab-56"></a><span class="cp">#define FTC_INODE_FAMILY( x )  FTC_GNODE(x)-&gt;family</span>
+<a name="gbab-57"></a>
+<a name="gbab-58"></a>  <span class="k">typedef</span> <span class="nf">FT_Error</span>
+<a name="gbab-59"></a>  <span class="p">(</span><span class="o">*</span><span class="n">FTC_IFamily_LoadGlyphFunc</span><span class="p">)(</span> <span class="n">FTC_Family</span>  <span class="n">family</span><span class="p">,</span>
+<a name="gbab-60"></a>                                <span class="n">FT_UInt</span>     <span class="n">gindex</span><span class="p">,</span>
+<a name="gbab-61"></a>                                <span class="n">FTC_Cache</span>   <span class="n">cache</span><span class="p">,</span>
+<a name="gbab-62"></a>                                <span class="n">FT_Glyph</span>   <span class="o">*</span><span class="n">aglyph</span> <span class="p">);</span>
+<a name="gbab-63"></a>
+<a name="gbab-64"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">FTC_IFamilyClassRec_</span>
+<a name="gbab-65"></a>  <span class="p">{</span>
+<a name="gbab-66"></a>    <span class="n">FTC_MruListClassRec</span>        <span class="n">clazz</span><span class="p">;</span>
+<a name="gbab-67"></a>    <span class="n">FTC_IFamily_LoadGlyphFunc</span>  <span class="n">family_load_glyph</span><span class="p">;</span>
+<a name="gbab-68"></a>
+<a name="gbab-69"></a>  <span class="p">}</span> <span class="n">FTC_IFamilyClassRec</span><span class="p">;</span>
+<a name="gbab-70"></a>
+<a name="gbab-71"></a>  <span class="k">typedef</span> <span class="k">const</span> <span class="n">FTC_IFamilyClassRec</span><span class="o">*</span>  <span class="n">FTC_IFamilyClass</span><span class="p">;</span>
+<a name="gbab-72"></a>
+<a name="gbab-73"></a><span class="cp">#define FTC_IFAMILY_CLASS( x )  ((FTC_IFamilyClass)(x))</span>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a><span class="cp">#define FTC_CACHE_IFAMILY_CLASS( x ) \</span>
+<a name="gbab-76"></a><span class="cp">          FTC_IFAMILY_CLASS( FTC_CACHE_GCACHE_CLASS(x)-&gt;family_class )</span>
+<a name="gbab-77"></a>
+<a name="gbab-78"></a>
+<a name="gbab-79"></a>  <span class="cm">/* can be used as a @FTC_Node_FreeFunc */</span>
+<a name="gbab-80"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span>
+<a name="gbab-81"></a>  <span class="n">FTC_INode_Free</span><span class="p">(</span> <span class="n">FTC_INode</span>  <span class="n">inode</span><span class="p">,</span>
+<a name="gbab-82"></a>                  <span class="n">FTC_Cache</span>  <span class="n">cache</span> <span class="p">);</span>
+<a name="gbab-83"></a>
+<a name="gbab-84"></a>  <span class="cm">/* Can be used as @FTC_Node_NewFunc.  `gquery.index&#39; and `gquery.family&#39;</span>
+<a name="gbab-85"></a><span class="cm">   * must be set correctly.  This function will call the `family_load_glyph&#39;</span>
+<a name="gbab-86"></a><span class="cm">   * method to load the FT_Glyph into the cache node.</span>
+<a name="gbab-87"></a><span class="cm">   */</span>
+<a name="gbab-88"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-89"></a>  <span class="n">FTC_INode_New</span><span class="p">(</span> <span class="n">FTC_INode</span>   <span class="o">*</span><span class="n">pinode</span><span class="p">,</span>
+<a name="gbab-90"></a>                 <span class="n">FTC_GQuery</span>   <span class="n">gquery</span><span class="p">,</span>
+<a name="gbab-91"></a>                 <span class="n">FTC_Cache</span>    <span class="n">cache</span> <span class="p">);</span>
+<a name="gbab-92"></a>
+<a name="gbab-93"></a><span class="cp">#if 0</span><span class="c"></span>
+<a name="gbab-94"></a><span class="c">  /* can be used as @FTC_Node_WeightFunc */</span>
+<a name="gbab-95"></a><span class="c">  FT_LOCAL( FT_ULong )</span>
+<a name="gbab-96"></a><span class="c">  FTC_INode_Weight( FTC_INode  inode );</span>
+<a name="gbab-97"></a><span class="cp">#endif</span>
+<a name="gbab-98"></a>
+<a name="gbab-99"></a>
+<a name="gbab-100"></a> <span class="cm">/* */</span>
+<a name="gbab-101"></a>
+<a name="gbab-102"></a><span class="n">FT_END_HEADER</span>
+<a name="gbab-103"></a>
+<a name="gbab-104"></a><span class="cp">#endif </span><span class="cm">/* FTCIMAGE_H_ */</span><span class="cp"></span>
+<a name="gbab-105"></a>
+<a name="gbab-106"></a>
+<a name="gbab-107"></a><span class="cm">/* END */</span>
+</pre></div>
+</td></tr></table>

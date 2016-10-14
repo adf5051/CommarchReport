@@ -1,0 +1,59 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="ch">#!/bin/bash</span>
+<a name="gbab-2"></a><span class="c1"># When scanning for demos, the project manager sorts them based on their</span>
+<a name="gbab-3"></a><span class="c1"># timestamp, i.e. last modification date. This can make for a pretty</span>
+<a name="gbab-4"></a><span class="c1"># messy output, so this script &#39;touches&#39; each engine.cfg file in reverse</span>
+<a name="gbab-5"></a><span class="c1"># alphabetical order to ensure a nice listing.</span>
+<a name="gbab-6"></a><span class="c1">#</span>
+<a name="gbab-7"></a><span class="c1"># It&#39;s good practice to run it once before packaging demos on the build</span>
+<a name="gbab-8"></a><span class="c1"># server.</span>
+<a name="gbab-9"></a>
+<a name="gbab-10"></a><span class="k">if</span> <span class="o">[</span> ! -d <span class="s2">&quot;demos&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+<a name="gbab-11"></a>  <span class="nb">echo</span> <span class="s2">&quot;Run this script from the root directory where &#39;demos/&#39; is contained.&quot;</span>
+<a name="gbab-12"></a>  <span class="nb">exit</span> 1
+<a name="gbab-13"></a><span class="k">fi</span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="k">if</span> <span class="o">[</span> -e demos.list <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+<a name="gbab-16"></a>  rm -f demos.list
+<a name="gbab-17"></a><span class="k">fi</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="k">for</span> dir in 2d 3d gui misc viewport<span class="p">;</span> <span class="k">do</span>
+<a name="gbab-20"></a>  find <span class="s2">&quot;demos/</span><span class="nv">$dir</span><span class="s2">&quot;</span> -name <span class="s2">&quot;engine.cfg&quot;</span> <span class="p">|</span>sort &gt;&gt; demos.list
+<a name="gbab-21"></a><span class="k">done</span>
+<a name="gbab-22"></a>cat demos.list <span class="p">|</span>sort -r &gt; demos_r.list
+<a name="gbab-23"></a>
+<a name="gbab-24"></a><span class="k">while</span> <span class="nb">read</span> line<span class="p">;</span> <span class="k">do</span>
+<a name="gbab-25"></a>  touch <span class="nv">$line</span>
+<a name="gbab-26"></a>  sleep 0.2
+<a name="gbab-27"></a><span class="k">done</span> &lt; demos_r.list
+<a name="gbab-28"></a>
+<a name="gbab-29"></a><span class="c1">#rm -f demos.list demos_r.list</span>
+</pre></div>
+</td></tr></table>

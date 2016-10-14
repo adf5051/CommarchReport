@@ -1,0 +1,269 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* arm_init.c - NEON optimised filter functions</span>
+<a name="gbab-2"></a><span class="cm"> *</span>
+<a name="gbab-3"></a><span class="cm"> * Copyright (c) 2014,2016 Glenn Randers-Pehrson</span>
+<a name="gbab-4"></a><span class="cm"> * Written by Mans Rullgard, 2011.</span>
+<a name="gbab-5"></a><span class="cm"> * Last changed in libpng 1.6.22 [June 9, 2016]</span>
+<a name="gbab-6"></a><span class="cm"> *</span>
+<a name="gbab-7"></a><span class="cm"> * This code is released under the libpng license.</span>
+<a name="gbab-8"></a><span class="cm"> * For conditions of distribution and use, see the disclaimer</span>
+<a name="gbab-9"></a><span class="cm"> * and license in png.h</span>
+<a name="gbab-10"></a><span class="cm"> */</span>
+<a name="gbab-11"></a><span class="cm">/* Below, after checking __linux__, various non-C90 POSIX 1003.1 functions are</span>
+<a name="gbab-12"></a><span class="cm"> * called.</span>
+<a name="gbab-13"></a><span class="cm"> */</span>
+<a name="gbab-14"></a><span class="cp">#define _POSIX_SOURCE 1</span>
+<a name="gbab-15"></a>
+<a name="gbab-16"></a><span class="cp">#include</span> <span class="cpf">&quot;../pngpriv.h&quot;</span><span class="cp"></span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a><span class="cp">#ifdef PNG_READ_SUPPORTED</span>
+<a name="gbab-19"></a>
+<a name="gbab-20"></a><span class="cp">#if PNG_ARM_NEON_OPT &gt; 0</span>
+<a name="gbab-21"></a><span class="cp">#ifdef PNG_ARM_NEON_CHECK_SUPPORTED </span><span class="cm">/* Do run-time checks */</span><span class="cp"></span>
+<a name="gbab-22"></a><span class="cm">/* WARNING: it is strongly recommended that you do not build libpng with</span>
+<a name="gbab-23"></a><span class="cm"> * run-time checks for CPU features if at all possible.  In the case of the ARM</span>
+<a name="gbab-24"></a><span class="cm"> * NEON instructions there is no processor-specific way of detecting the</span>
+<a name="gbab-25"></a><span class="cm"> * presence of the required support, therefore run-time detection is extremely</span>
+<a name="gbab-26"></a><span class="cm"> * OS specific.</span>
+<a name="gbab-27"></a><span class="cm"> *</span>
+<a name="gbab-28"></a><span class="cm"> * You may set the macro PNG_ARM_NEON_FILE to the file name of file containing</span>
+<a name="gbab-29"></a><span class="cm"> * a fragment of C source code which defines the png_have_neon function.  There</span>
+<a name="gbab-30"></a><span class="cm"> * are a number of implementations in contrib/arm-neon, but the only one that</span>
+<a name="gbab-31"></a><span class="cm"> * has partial support is contrib/arm-neon/linux.c - a generic Linux</span>
+<a name="gbab-32"></a><span class="cm"> * implementation which reads /proc/cpufino.</span>
+<a name="gbab-33"></a><span class="cm"> */</span>
+<a name="gbab-34"></a><span class="cp">#ifndef PNG_ARM_NEON_FILE</span>
+<a name="gbab-35"></a><span class="cp">#  ifdef __linux__</span>
+<a name="gbab-36"></a><span class="cp">#     define PNG_ARM_NEON_FILE &quot;contrib/arm-neon/linux.c&quot;</span>
+<a name="gbab-37"></a><span class="cp">#  endif</span>
+<a name="gbab-38"></a><span class="cp">#endif</span>
+<a name="gbab-39"></a>
+<a name="gbab-40"></a><span class="cp">#ifdef PNG_ARM_NEON_FILE</span>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a><span class="cp">#include</span> <span class="cpf">&lt;signal.h&gt; /* for sig_atomic_t */</span><span class="cp"></span>
+<a name="gbab-43"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">png_have_neon</span><span class="p">(</span><span class="n">png_structp</span> <span class="n">png_ptr</span><span class="p">);</span>
+<a name="gbab-44"></a><span class="cp">#include</span> <span class="cpf">PNG_ARM_NEON_FILE</span><span class="cp"></span>
+<a name="gbab-45"></a>
+<a name="gbab-46"></a><span class="cp">#else  </span><span class="cm">/* PNG_ARM_NEON_FILE */</span><span class="cp"></span>
+<a name="gbab-47"></a><span class="cp">#  error &quot;PNG_ARM_NEON_FILE undefined: no support for run-time ARM NEON checks&quot;</span>
+<a name="gbab-48"></a><span class="cp">#endif </span><span class="cm">/* PNG_ARM_NEON_FILE */</span><span class="cp"></span>
+<a name="gbab-49"></a><span class="cp">#endif </span><span class="cm">/* PNG_ARM_NEON_CHECK_SUPPORTED */</span><span class="cp"></span>
+<a name="gbab-50"></a>
+<a name="gbab-51"></a><span class="cp">#ifndef PNG_ALIGNED_MEMORY_SUPPORTED</span>
+<a name="gbab-52"></a><span class="cp">#  error &quot;ALIGNED_MEMORY is required; set: -DPNG_ALIGNED_MEMORY_SUPPORTED&quot;</span>
+<a name="gbab-53"></a><span class="cp">#endif</span>
+<a name="gbab-54"></a>
+<a name="gbab-55"></a><span class="kt">void</span>
+<a name="gbab-56"></a><span class="nf">png_init_filter_functions_neon</span><span class="p">(</span><span class="n">png_structp</span> <span class="n">pp</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">bpp</span><span class="p">)</span>
+<a name="gbab-57"></a><span class="p">{</span>
+<a name="gbab-58"></a>   <span class="cm">/* The switch statement is compiled in for ARM_NEON_API, the call to</span>
+<a name="gbab-59"></a><span class="cm">    * png_have_neon is compiled in for ARM_NEON_CHECK.  If both are defined</span>
+<a name="gbab-60"></a><span class="cm">    * the check is only performed if the API has not set the NEON option on</span>
+<a name="gbab-61"></a><span class="cm">    * or off explicitly.  In this case the check controls what happens.</span>
+<a name="gbab-62"></a><span class="cm">    *</span>
+<a name="gbab-63"></a><span class="cm">    * If the CHECK is not compiled in and the option is UNSET the behavior prior</span>
+<a name="gbab-64"></a><span class="cm">    * to 1.6.7 was to use the NEON code - this was a bug caused by having the</span>
+<a name="gbab-65"></a><span class="cm">    * wrong order of the &#39;ON&#39; and &#39;default&#39; cases.  UNSET now defaults to OFF,</span>
+<a name="gbab-66"></a><span class="cm">    * as documented in png.h</span>
+<a name="gbab-67"></a><span class="cm">    */</span>
+<a name="gbab-68"></a>   <span class="n">png_debug</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;in png_init_filter_functions_neon&quot;</span><span class="p">);</span>
+<a name="gbab-69"></a><span class="cp">#ifdef PNG_ARM_NEON_API_SUPPORTED</span>
+<a name="gbab-70"></a>   <span class="k">switch</span> <span class="p">((</span><span class="n">pp</span><span class="o">-&gt;</span><span class="n">options</span> <span class="o">&gt;&gt;</span> <span class="n">PNG_ARM_NEON</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">)</span>
+<a name="gbab-71"></a>   <span class="p">{</span>
+<a name="gbab-72"></a>      <span class="k">case</span> <span class="nl">PNG_OPTION_UNSET</span><span class="p">:</span>
+<a name="gbab-73"></a>         <span class="cm">/* Allow the run-time check to execute if it has been enabled -</span>
+<a name="gbab-74"></a><span class="cm">          * thus both API and CHECK can be turned on.  If it isn&#39;t supported</span>
+<a name="gbab-75"></a><span class="cm">          * this case will fall through to the &#39;default&#39; below, which just</span>
+<a name="gbab-76"></a><span class="cm">          * returns.</span>
+<a name="gbab-77"></a><span class="cm">          */</span>
+<a name="gbab-78"></a><span class="cp">#endif </span><span class="cm">/* PNG_ARM_NEON_API_SUPPORTED */</span><span class="cp"></span>
+<a name="gbab-79"></a><span class="cp">#ifdef PNG_ARM_NEON_CHECK_SUPPORTED</span>
+<a name="gbab-80"></a>         <span class="p">{</span>
+<a name="gbab-81"></a>            <span class="k">static</span> <span class="k">volatile</span> <span class="kt">sig_atomic_t</span> <span class="n">no_neon</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="cm">/* not checked */</span>
+<a name="gbab-82"></a>
+<a name="gbab-83"></a>            <span class="k">if</span> <span class="p">(</span><span class="n">no_neon</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+<a name="gbab-84"></a>               <span class="n">no_neon</span> <span class="o">=</span> <span class="o">!</span><span class="n">png_have_neon</span><span class="p">(</span><span class="n">pp</span><span class="p">);</span>
+<a name="gbab-85"></a>
+<a name="gbab-86"></a>            <span class="k">if</span> <span class="p">(</span><span class="n">no_neon</span><span class="p">)</span>
+<a name="gbab-87"></a>               <span class="k">return</span><span class="p">;</span>
+<a name="gbab-88"></a>         <span class="p">}</span>
+<a name="gbab-89"></a><span class="cp">#ifdef PNG_ARM_NEON_API_SUPPORTED</span>
+<a name="gbab-90"></a>         <span class="k">break</span><span class="p">;</span>
+<a name="gbab-91"></a><span class="cp">#endif</span>
+<a name="gbab-92"></a><span class="cp">#endif </span><span class="cm">/* PNG_ARM_NEON_CHECK_SUPPORTED */</span><span class="cp"></span>
+<a name="gbab-93"></a>
+<a name="gbab-94"></a><span class="cp">#ifdef PNG_ARM_NEON_API_SUPPORTED</span>
+<a name="gbab-95"></a>      <span class="k">default</span><span class="o">:</span> <span class="cm">/* OFF or INVALID */</span>
+<a name="gbab-96"></a>         <span class="k">return</span><span class="p">;</span>
+<a name="gbab-97"></a>
+<a name="gbab-98"></a>      <span class="k">case</span> <span class="nl">PNG_OPTION_ON</span><span class="p">:</span>
+<a name="gbab-99"></a>         <span class="cm">/* Option turned on */</span>
+<a name="gbab-100"></a>         <span class="k">break</span><span class="p">;</span>
+<a name="gbab-101"></a>   <span class="p">}</span>
+<a name="gbab-102"></a><span class="cp">#endif</span>
+<a name="gbab-103"></a>
+<a name="gbab-104"></a>   <span class="cm">/* IMPORTANT: any new external functions used here must be declared using</span>
+<a name="gbab-105"></a><span class="cm">    * PNG_INTERNAL_FUNCTION in ../pngpriv.h.  This is required so that the</span>
+<a name="gbab-106"></a><span class="cm">    * &#39;prefix&#39; option to configure works:</span>
+<a name="gbab-107"></a><span class="cm">    *</span>
+<a name="gbab-108"></a><span class="cm">    *    ./configure --with-libpng-prefix=foobar_</span>
+<a name="gbab-109"></a><span class="cm">    *</span>
+<a name="gbab-110"></a><span class="cm">    * Verify you have got this right by running the above command, doing a build</span>
+<a name="gbab-111"></a><span class="cm">    * and examining pngprefix.h; it must contain a #define for every external</span>
+<a name="gbab-112"></a><span class="cm">    * function you add.  (Notice that this happens automatically for the</span>
+<a name="gbab-113"></a><span class="cm">    * initialization function.)</span>
+<a name="gbab-114"></a><span class="cm">    */</span>
+<a name="gbab-115"></a>   <span class="n">pp</span><span class="o">-&gt;</span><span class="n">read_filter</span><span class="p">[</span><span class="n">PNG_FILTER_VALUE_UP</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">png_read_filter_row_up_neon</span><span class="p">;</span>
+<a name="gbab-116"></a>
+<a name="gbab-117"></a>   <span class="k">if</span> <span class="p">(</span><span class="n">bpp</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
+<a name="gbab-118"></a>   <span class="p">{</span>
+<a name="gbab-119"></a>      <span class="n">pp</span><span class="o">-&gt;</span><span class="n">read_filter</span><span class="p">[</span><span class="n">PNG_FILTER_VALUE_SUB</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">png_read_filter_row_sub3_neon</span><span class="p">;</span>
+<a name="gbab-120"></a>      <span class="n">pp</span><span class="o">-&gt;</span><span class="n">read_filter</span><span class="p">[</span><span class="n">PNG_FILTER_VALUE_AVG</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">png_read_filter_row_avg3_neon</span><span class="p">;</span>
+<a name="gbab-121"></a>      <span class="n">pp</span><span class="o">-&gt;</span><span class="n">read_filter</span><span class="p">[</span><span class="n">PNG_FILTER_VALUE_PAETH</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span>
+<a name="gbab-122"></a>         <span class="n">png_read_filter_row_paeth3_neon</span><span class="p">;</span>
+<a name="gbab-123"></a>   <span class="p">}</span>
+<a name="gbab-124"></a>
+<a name="gbab-125"></a>   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">bpp</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+<a name="gbab-126"></a>   <span class="p">{</span>
+<a name="gbab-127"></a>      <span class="n">pp</span><span class="o">-&gt;</span><span class="n">read_filter</span><span class="p">[</span><span class="n">PNG_FILTER_VALUE_SUB</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">png_read_filter_row_sub4_neon</span><span class="p">;</span>
+<a name="gbab-128"></a>      <span class="n">pp</span><span class="o">-&gt;</span><span class="n">read_filter</span><span class="p">[</span><span class="n">PNG_FILTER_VALUE_AVG</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">png_read_filter_row_avg4_neon</span><span class="p">;</span>
+<a name="gbab-129"></a>      <span class="n">pp</span><span class="o">-&gt;</span><span class="n">read_filter</span><span class="p">[</span><span class="n">PNG_FILTER_VALUE_PAETH</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span>
+<a name="gbab-130"></a>          <span class="n">png_read_filter_row_paeth4_neon</span><span class="p">;</span>
+<a name="gbab-131"></a>   <span class="p">}</span>
+<a name="gbab-132"></a><span class="p">}</span>
+<a name="gbab-133"></a><span class="cp">#endif </span><span class="cm">/* PNG_ARM_NEON_OPT &gt; 0 */</span><span class="cp"></span>
+<a name="gbab-134"></a><span class="cp">#endif </span><span class="cm">/* READ */</span><span class="cp"></span>
+</pre></div>
+</td></tr></table>

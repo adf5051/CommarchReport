@@ -1,0 +1,767 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="c1">// Copyright 2013 Google Inc. All Rights Reserved.</span>
+<a name="gbab-2"></a><span class="c1">//</span>
+<a name="gbab-3"></a><span class="c1">// Use of this source code is governed by a BSD-style license</span>
+<a name="gbab-4"></a><span class="c1">// that can be found in the COPYING file in the root of the source</span>
+<a name="gbab-5"></a><span class="c1">// tree. An additional intellectual property rights grant can be found</span>
+<a name="gbab-6"></a><span class="c1">// in the file PATENTS. All contributing project authors may</span>
+<a name="gbab-7"></a><span class="c1">// be found in the AUTHORS file in the root of the source tree.</span>
+<a name="gbab-8"></a><span class="c1">// -----------------------------------------------------------------------------</span>
+<a name="gbab-9"></a><span class="c1">//</span>
+<a name="gbab-10"></a><span class="c1">// Utilities for processing transparent channel.</span>
+<a name="gbab-11"></a><span class="c1">//</span>
+<a name="gbab-12"></a><span class="c1">// Author: Skal (pascal.massimino@gmail.com)</span>
+<a name="gbab-13"></a>
+<a name="gbab-14"></a><span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
+<a name="gbab-15"></a><span class="cp">#include</span> <span class="cpf">&quot;./dsp.h&quot;</span><span class="cp"></span>
+<a name="gbab-16"></a>
+<a name="gbab-17"></a><span class="c1">// Tables can be faster on some platform but incur some extra binary size (~2k).</span>
+<a name="gbab-18"></a><span class="c1">// #define USE_TABLES_FOR_ALPHA_MULT</span>
+<a name="gbab-19"></a>
+<a name="gbab-20"></a><span class="c1">// -----------------------------------------------------------------------------</span>
+<a name="gbab-21"></a>
+<a name="gbab-22"></a><span class="cp">#define MFIX 24    </span><span class="c1">// 24bit fixed-point arithmetic</span>
+<a name="gbab-23"></a><span class="cp">#define HALF ((1u &lt;&lt; MFIX) &gt;&gt; 1)</span>
+<a name="gbab-24"></a><span class="cp">#define KINV_255 ((1u &lt;&lt; MFIX) / 255u)</span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="k">static</span> <span class="kt">uint32_t</span> <span class="nf">Mult</span><span class="p">(</span><span class="kt">uint8_t</span> <span class="n">x</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">mult</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-27"></a>  <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">mult</span> <span class="o">+</span> <span class="n">HALF</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">MFIX</span><span class="p">;</span>
+<a name="gbab-28"></a>  <span class="n">assert</span><span class="p">(</span><span class="n">v</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">);</span>  <span class="c1">// &lt;- 24bit precision is enough to ensure that.</span>
+<a name="gbab-29"></a>  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+<a name="gbab-30"></a><span class="p">}</span>
+<a name="gbab-31"></a>
+<a name="gbab-32"></a><span class="cp">#ifdef USE_TABLES_FOR_ALPHA_MULT</span>
+<a name="gbab-33"></a>
+<a name="gbab-34"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">kMultTables</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">256</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-35"></a>  <span class="p">{</span>    <span class="c1">// (255u &lt;&lt; MFIX) / alpha</span>
+<a name="gbab-36"></a>    <span class="mh">0x00000000</span><span class="p">,</span> <span class="mh">0xff000000</span><span class="p">,</span> <span class="mh">0x7f800000</span><span class="p">,</span> <span class="mh">0x55000000</span><span class="p">,</span> <span class="mh">0x3fc00000</span><span class="p">,</span> <span class="mh">0x33000000</span><span class="p">,</span>
+<a name="gbab-37"></a>    <span class="mh">0x2a800000</span><span class="p">,</span> <span class="mh">0x246db6db</span><span class="p">,</span> <span class="mh">0x1fe00000</span><span class="p">,</span> <span class="mh">0x1c555555</span><span class="p">,</span> <span class="mh">0x19800000</span><span class="p">,</span> <span class="mh">0x172e8ba2</span><span class="p">,</span>
+<a name="gbab-38"></a>    <span class="mh">0x15400000</span><span class="p">,</span> <span class="mh">0x139d89d8</span><span class="p">,</span> <span class="mh">0x1236db6d</span><span class="p">,</span> <span class="mh">0x11000000</span><span class="p">,</span> <span class="mh">0x0ff00000</span><span class="p">,</span> <span class="mh">0x0f000000</span><span class="p">,</span>
+<a name="gbab-39"></a>    <span class="mh">0x0e2aaaaa</span><span class="p">,</span> <span class="mh">0x0d6bca1a</span><span class="p">,</span> <span class="mh">0x0cc00000</span><span class="p">,</span> <span class="mh">0x0c249249</span><span class="p">,</span> <span class="mh">0x0b9745d1</span><span class="p">,</span> <span class="mh">0x0b1642c8</span><span class="p">,</span>
+<a name="gbab-40"></a>    <span class="mh">0x0aa00000</span><span class="p">,</span> <span class="mh">0x0a333333</span><span class="p">,</span> <span class="mh">0x09cec4ec</span><span class="p">,</span> <span class="mh">0x0971c71c</span><span class="p">,</span> <span class="mh">0x091b6db6</span><span class="p">,</span> <span class="mh">0x08cb08d3</span><span class="p">,</span>
+<a name="gbab-41"></a>    <span class="mh">0x08800000</span><span class="p">,</span> <span class="mh">0x0839ce73</span><span class="p">,</span> <span class="mh">0x07f80000</span><span class="p">,</span> <span class="mh">0x07ba2e8b</span><span class="p">,</span> <span class="mh">0x07800000</span><span class="p">,</span> <span class="mh">0x07492492</span><span class="p">,</span>
+<a name="gbab-42"></a>    <span class="mh">0x07155555</span><span class="p">,</span> <span class="mh">0x06e45306</span><span class="p">,</span> <span class="mh">0x06b5e50d</span><span class="p">,</span> <span class="mh">0x0689d89d</span><span class="p">,</span> <span class="mh">0x06600000</span><span class="p">,</span> <span class="mh">0x063831f3</span><span class="p">,</span>
+<a name="gbab-43"></a>    <span class="mh">0x06124924</span><span class="p">,</span> <span class="mh">0x05ee23b8</span><span class="p">,</span> <span class="mh">0x05cba2e8</span><span class="p">,</span> <span class="mh">0x05aaaaaa</span><span class="p">,</span> <span class="mh">0x058b2164</span><span class="p">,</span> <span class="mh">0x056cefa8</span><span class="p">,</span>
+<a name="gbab-44"></a>    <span class="mh">0x05500000</span><span class="p">,</span> <span class="mh">0x05343eb1</span><span class="p">,</span> <span class="mh">0x05199999</span><span class="p">,</span> <span class="mh">0x05000000</span><span class="p">,</span> <span class="mh">0x04e76276</span><span class="p">,</span> <span class="mh">0x04cfb2b7</span><span class="p">,</span>
+<a name="gbab-45"></a>    <span class="mh">0x04b8e38e</span><span class="p">,</span> <span class="mh">0x04a2e8ba</span><span class="p">,</span> <span class="mh">0x048db6db</span><span class="p">,</span> <span class="mh">0x0479435e</span><span class="p">,</span> <span class="mh">0x04658469</span><span class="p">,</span> <span class="mh">0x045270d0</span><span class="p">,</span>
+<a name="gbab-46"></a>    <span class="mh">0x04400000</span><span class="p">,</span> <span class="mh">0x042e29f7</span><span class="p">,</span> <span class="mh">0x041ce739</span><span class="p">,</span> <span class="mh">0x040c30c3</span><span class="p">,</span> <span class="mh">0x03fc0000</span><span class="p">,</span> <span class="mh">0x03ec4ec4</span><span class="p">,</span>
+<a name="gbab-47"></a>    <span class="mh">0x03dd1745</span><span class="p">,</span> <span class="mh">0x03ce540f</span><span class="p">,</span> <span class="mh">0x03c00000</span><span class="p">,</span> <span class="mh">0x03b21642</span><span class="p">,</span> <span class="mh">0x03a49249</span><span class="p">,</span> <span class="mh">0x03976fc6</span><span class="p">,</span>
+<a name="gbab-48"></a>    <span class="mh">0x038aaaaa</span><span class="p">,</span> <span class="mh">0x037e3f1f</span><span class="p">,</span> <span class="mh">0x03722983</span><span class="p">,</span> <span class="mh">0x03666666</span><span class="p">,</span> <span class="mh">0x035af286</span><span class="p">,</span> <span class="mh">0x034fcace</span><span class="p">,</span>
+<a name="gbab-49"></a>    <span class="mh">0x0344ec4e</span><span class="p">,</span> <span class="mh">0x033a5440</span><span class="p">,</span> <span class="mh">0x03300000</span><span class="p">,</span> <span class="mh">0x0325ed09</span><span class="p">,</span> <span class="mh">0x031c18f9</span><span class="p">,</span> <span class="mh">0x0312818a</span><span class="p">,</span>
+<a name="gbab-50"></a>    <span class="mh">0x03092492</span><span class="p">,</span> <span class="mh">0x03000000</span><span class="p">,</span> <span class="mh">0x02f711dc</span><span class="p">,</span> <span class="mh">0x02ee5846</span><span class="p">,</span> <span class="mh">0x02e5d174</span><span class="p">,</span> <span class="mh">0x02dd7baf</span><span class="p">,</span>
+<a name="gbab-51"></a>    <span class="mh">0x02d55555</span><span class="p">,</span> <span class="mh">0x02cd5cd5</span><span class="p">,</span> <span class="mh">0x02c590b2</span><span class="p">,</span> <span class="mh">0x02bdef7b</span><span class="p">,</span> <span class="mh">0x02b677d4</span><span class="p">,</span> <span class="mh">0x02af286b</span><span class="p">,</span>
+<a name="gbab-52"></a>    <span class="mh">0x02a80000</span><span class="p">,</span> <span class="mh">0x02a0fd5c</span><span class="p">,</span> <span class="mh">0x029a1f58</span><span class="p">,</span> <span class="mh">0x029364d9</span><span class="p">,</span> <span class="mh">0x028ccccc</span><span class="p">,</span> <span class="mh">0x0286562d</span><span class="p">,</span>
+<a name="gbab-53"></a>    <span class="mh">0x02800000</span><span class="p">,</span> <span class="mh">0x0279c952</span><span class="p">,</span> <span class="mh">0x0273b13b</span><span class="p">,</span> <span class="mh">0x026db6db</span><span class="p">,</span> <span class="mh">0x0267d95b</span><span class="p">,</span> <span class="mh">0x026217ec</span><span class="p">,</span>
+<a name="gbab-54"></a>    <span class="mh">0x025c71c7</span><span class="p">,</span> <span class="mh">0x0256e62a</span><span class="p">,</span> <span class="mh">0x0251745d</span><span class="p">,</span> <span class="mh">0x024c1bac</span><span class="p">,</span> <span class="mh">0x0246db6d</span><span class="p">,</span> <span class="mh">0x0241b2f9</span><span class="p">,</span>
+<a name="gbab-55"></a>    <span class="mh">0x023ca1af</span><span class="p">,</span> <span class="mh">0x0237a6f4</span><span class="p">,</span> <span class="mh">0x0232c234</span><span class="p">,</span> <span class="mh">0x022df2df</span><span class="p">,</span> <span class="mh">0x02293868</span><span class="p">,</span> <span class="mh">0x02249249</span><span class="p">,</span>
+<a name="gbab-56"></a>    <span class="mh">0x02200000</span><span class="p">,</span> <span class="mh">0x021b810e</span><span class="p">,</span> <span class="mh">0x021714fb</span><span class="p">,</span> <span class="mh">0x0212bb51</span><span class="p">,</span> <span class="mh">0x020e739c</span><span class="p">,</span> <span class="mh">0x020a3d70</span><span class="p">,</span>
+<a name="gbab-57"></a>    <span class="mh">0x02061861</span><span class="p">,</span> <span class="mh">0x02020408</span><span class="p">,</span> <span class="mh">0x01fe0000</span><span class="p">,</span> <span class="mh">0x01fa0be8</span><span class="p">,</span> <span class="mh">0x01f62762</span><span class="p">,</span> <span class="mh">0x01f25213</span><span class="p">,</span>
+<a name="gbab-58"></a>    <span class="mh">0x01ee8ba2</span><span class="p">,</span> <span class="mh">0x01ead3ba</span><span class="p">,</span> <span class="mh">0x01e72a07</span><span class="p">,</span> <span class="mh">0x01e38e38</span><span class="p">,</span> <span class="mh">0x01e00000</span><span class="p">,</span> <span class="mh">0x01dc7f10</span><span class="p">,</span>
+<a name="gbab-59"></a>    <span class="mh">0x01d90b21</span><span class="p">,</span> <span class="mh">0x01d5a3e9</span><span class="p">,</span> <span class="mh">0x01d24924</span><span class="p">,</span> <span class="mh">0x01cefa8d</span><span class="p">,</span> <span class="mh">0x01cbb7e3</span><span class="p">,</span> <span class="mh">0x01c880e5</span><span class="p">,</span>
+<a name="gbab-60"></a>    <span class="mh">0x01c55555</span><span class="p">,</span> <span class="mh">0x01c234f7</span><span class="p">,</span> <span class="mh">0x01bf1f8f</span><span class="p">,</span> <span class="mh">0x01bc14e5</span><span class="p">,</span> <span class="mh">0x01b914c1</span><span class="p">,</span> <span class="mh">0x01b61eed</span><span class="p">,</span>
+<a name="gbab-61"></a>    <span class="mh">0x01b33333</span><span class="p">,</span> <span class="mh">0x01b05160</span><span class="p">,</span> <span class="mh">0x01ad7943</span><span class="p">,</span> <span class="mh">0x01aaaaaa</span><span class="p">,</span> <span class="mh">0x01a7e567</span><span class="p">,</span> <span class="mh">0x01a5294a</span><span class="p">,</span>
+<a name="gbab-62"></a>    <span class="mh">0x01a27627</span><span class="p">,</span> <span class="mh">0x019fcbd2</span><span class="p">,</span> <span class="mh">0x019d2a20</span><span class="p">,</span> <span class="mh">0x019a90e7</span><span class="p">,</span> <span class="mh">0x01980000</span><span class="p">,</span> <span class="mh">0x01957741</span><span class="p">,</span>
+<a name="gbab-63"></a>    <span class="mh">0x0192f684</span><span class="p">,</span> <span class="mh">0x01907da4</span><span class="p">,</span> <span class="mh">0x018e0c7c</span><span class="p">,</span> <span class="mh">0x018ba2e8</span><span class="p">,</span> <span class="mh">0x018940c5</span><span class="p">,</span> <span class="mh">0x0186e5f0</span><span class="p">,</span>
+<a name="gbab-64"></a>    <span class="mh">0x01849249</span><span class="p">,</span> <span class="mh">0x018245ae</span><span class="p">,</span> <span class="mh">0x01800000</span><span class="p">,</span> <span class="mh">0x017dc11f</span><span class="p">,</span> <span class="mh">0x017b88ee</span><span class="p">,</span> <span class="mh">0x0179574e</span><span class="p">,</span>
+<a name="gbab-65"></a>    <span class="mh">0x01772c23</span><span class="p">,</span> <span class="mh">0x01750750</span><span class="p">,</span> <span class="mh">0x0172e8ba</span><span class="p">,</span> <span class="mh">0x0170d045</span><span class="p">,</span> <span class="mh">0x016ebdd7</span><span class="p">,</span> <span class="mh">0x016cb157</span><span class="p">,</span>
+<a name="gbab-66"></a>    <span class="mh">0x016aaaaa</span><span class="p">,</span> <span class="mh">0x0168a9b9</span><span class="p">,</span> <span class="mh">0x0166ae6a</span><span class="p">,</span> <span class="mh">0x0164b8a7</span><span class="p">,</span> <span class="mh">0x0162c859</span><span class="p">,</span> <span class="mh">0x0160dd67</span><span class="p">,</span>
+<a name="gbab-67"></a>    <span class="mh">0x015ef7bd</span><span class="p">,</span> <span class="mh">0x015d1745</span><span class="p">,</span> <span class="mh">0x015b3bea</span><span class="p">,</span> <span class="mh">0x01596596</span><span class="p">,</span> <span class="mh">0x01579435</span><span class="p">,</span> <span class="mh">0x0155c7b4</span><span class="p">,</span>
+<a name="gbab-68"></a>    <span class="mh">0x01540000</span><span class="p">,</span> <span class="mh">0x01523d03</span><span class="p">,</span> <span class="mh">0x01507eae</span><span class="p">,</span> <span class="mh">0x014ec4ec</span><span class="p">,</span> <span class="mh">0x014d0fac</span><span class="p">,</span> <span class="mh">0x014b5edc</span><span class="p">,</span>
+<a name="gbab-69"></a>    <span class="mh">0x0149b26c</span><span class="p">,</span> <span class="mh">0x01480a4a</span><span class="p">,</span> <span class="mh">0x01466666</span><span class="p">,</span> <span class="mh">0x0144c6af</span><span class="p">,</span> <span class="mh">0x01432b16</span><span class="p">,</span> <span class="mh">0x0141938b</span><span class="p">,</span>
+<a name="gbab-70"></a>    <span class="mh">0x01400000</span><span class="p">,</span> <span class="mh">0x013e7063</span><span class="p">,</span> <span class="mh">0x013ce4a9</span><span class="p">,</span> <span class="mh">0x013b5cc0</span><span class="p">,</span> <span class="mh">0x0139d89d</span><span class="p">,</span> <span class="mh">0x01385830</span><span class="p">,</span>
+<a name="gbab-71"></a>    <span class="mh">0x0136db6d</span><span class="p">,</span> <span class="mh">0x01356246</span><span class="p">,</span> <span class="mh">0x0133ecad</span><span class="p">,</span> <span class="mh">0x01327a97</span><span class="p">,</span> <span class="mh">0x01310bf6</span><span class="p">,</span> <span class="mh">0x012fa0be</span><span class="p">,</span>
+<a name="gbab-72"></a>    <span class="mh">0x012e38e3</span><span class="p">,</span> <span class="mh">0x012cd459</span><span class="p">,</span> <span class="mh">0x012b7315</span><span class="p">,</span> <span class="mh">0x012a150a</span><span class="p">,</span> <span class="mh">0x0128ba2e</span><span class="p">,</span> <span class="mh">0x01276276</span><span class="p">,</span>
+<a name="gbab-73"></a>    <span class="mh">0x01260dd6</span><span class="p">,</span> <span class="mh">0x0124bc44</span><span class="p">,</span> <span class="mh">0x01236db6</span><span class="p">,</span> <span class="mh">0x01222222</span><span class="p">,</span> <span class="mh">0x0120d97c</span><span class="p">,</span> <span class="mh">0x011f93bc</span><span class="p">,</span>
+<a name="gbab-74"></a>    <span class="mh">0x011e50d7</span><span class="p">,</span> <span class="mh">0x011d10c4</span><span class="p">,</span> <span class="mh">0x011bd37a</span><span class="p">,</span> <span class="mh">0x011a98ef</span><span class="p">,</span> <span class="mh">0x0119611a</span><span class="p">,</span> <span class="mh">0x01182bf2</span><span class="p">,</span>
+<a name="gbab-75"></a>    <span class="mh">0x0116f96f</span><span class="p">,</span> <span class="mh">0x0115c988</span><span class="p">,</span> <span class="mh">0x01149c34</span><span class="p">,</span> <span class="mh">0x0113716a</span><span class="p">,</span> <span class="mh">0x01124924</span><span class="p">,</span> <span class="mh">0x01112358</span><span class="p">,</span>
+<a name="gbab-76"></a>    <span class="mh">0x01100000</span><span class="p">,</span> <span class="mh">0x010edf12</span><span class="p">,</span> <span class="mh">0x010dc087</span><span class="p">,</span> <span class="mh">0x010ca458</span><span class="p">,</span> <span class="mh">0x010b8a7d</span><span class="p">,</span> <span class="mh">0x010a72f0</span><span class="p">,</span>
+<a name="gbab-77"></a>    <span class="mh">0x01095da8</span><span class="p">,</span> <span class="mh">0x01084a9f</span><span class="p">,</span> <span class="mh">0x010739ce</span><span class="p">,</span> <span class="mh">0x01062b2e</span><span class="p">,</span> <span class="mh">0x01051eb8</span><span class="p">,</span> <span class="mh">0x01041465</span><span class="p">,</span>
+<a name="gbab-78"></a>    <span class="mh">0x01030c30</span><span class="p">,</span> <span class="mh">0x01020612</span><span class="p">,</span> <span class="mh">0x01010204</span><span class="p">,</span> <span class="mh">0x01000000</span> <span class="p">},</span>
+<a name="gbab-79"></a>  <span class="p">{</span>   <span class="c1">// alpha * KINV_255</span>
+<a name="gbab-80"></a>    <span class="mh">0x00000000</span><span class="p">,</span> <span class="mh">0x00010101</span><span class="p">,</span> <span class="mh">0x00020202</span><span class="p">,</span> <span class="mh">0x00030303</span><span class="p">,</span> <span class="mh">0x00040404</span><span class="p">,</span> <span class="mh">0x00050505</span><span class="p">,</span>
+<a name="gbab-81"></a>    <span class="mh">0x00060606</span><span class="p">,</span> <span class="mh">0x00070707</span><span class="p">,</span> <span class="mh">0x00080808</span><span class="p">,</span> <span class="mh">0x00090909</span><span class="p">,</span> <span class="mh">0x000a0a0a</span><span class="p">,</span> <span class="mh">0x000b0b0b</span><span class="p">,</span>
+<a name="gbab-82"></a>    <span class="mh">0x000c0c0c</span><span class="p">,</span> <span class="mh">0x000d0d0d</span><span class="p">,</span> <span class="mh">0x000e0e0e</span><span class="p">,</span> <span class="mh">0x000f0f0f</span><span class="p">,</span> <span class="mh">0x00101010</span><span class="p">,</span> <span class="mh">0x00111111</span><span class="p">,</span>
+<a name="gbab-83"></a>    <span class="mh">0x00121212</span><span class="p">,</span> <span class="mh">0x00131313</span><span class="p">,</span> <span class="mh">0x00141414</span><span class="p">,</span> <span class="mh">0x00151515</span><span class="p">,</span> <span class="mh">0x00161616</span><span class="p">,</span> <span class="mh">0x00171717</span><span class="p">,</span>
+<a name="gbab-84"></a>    <span class="mh">0x00181818</span><span class="p">,</span> <span class="mh">0x00191919</span><span class="p">,</span> <span class="mh">0x001a1a1a</span><span class="p">,</span> <span class="mh">0x001b1b1b</span><span class="p">,</span> <span class="mh">0x001c1c1c</span><span class="p">,</span> <span class="mh">0x001d1d1d</span><span class="p">,</span>
+<a name="gbab-85"></a>    <span class="mh">0x001e1e1e</span><span class="p">,</span> <span class="mh">0x001f1f1f</span><span class="p">,</span> <span class="mh">0x00202020</span><span class="p">,</span> <span class="mh">0x00212121</span><span class="p">,</span> <span class="mh">0x00222222</span><span class="p">,</span> <span class="mh">0x00232323</span><span class="p">,</span>
+<a name="gbab-86"></a>    <span class="mh">0x00242424</span><span class="p">,</span> <span class="mh">0x00252525</span><span class="p">,</span> <span class="mh">0x00262626</span><span class="p">,</span> <span class="mh">0x00272727</span><span class="p">,</span> <span class="mh">0x00282828</span><span class="p">,</span> <span class="mh">0x00292929</span><span class="p">,</span>
+<a name="gbab-87"></a>    <span class="mh">0x002a2a2a</span><span class="p">,</span> <span class="mh">0x002b2b2b</span><span class="p">,</span> <span class="mh">0x002c2c2c</span><span class="p">,</span> <span class="mh">0x002d2d2d</span><span class="p">,</span> <span class="mh">0x002e2e2e</span><span class="p">,</span> <span class="mh">0x002f2f2f</span><span class="p">,</span>
+<a name="gbab-88"></a>    <span class="mh">0x00303030</span><span class="p">,</span> <span class="mh">0x00313131</span><span class="p">,</span> <span class="mh">0x00323232</span><span class="p">,</span> <span class="mh">0x00333333</span><span class="p">,</span> <span class="mh">0x00343434</span><span class="p">,</span> <span class="mh">0x00353535</span><span class="p">,</span>
+<a name="gbab-89"></a>    <span class="mh">0x00363636</span><span class="p">,</span> <span class="mh">0x00373737</span><span class="p">,</span> <span class="mh">0x00383838</span><span class="p">,</span> <span class="mh">0x00393939</span><span class="p">,</span> <span class="mh">0x003a3a3a</span><span class="p">,</span> <span class="mh">0x003b3b3b</span><span class="p">,</span>
+<a name="gbab-90"></a>    <span class="mh">0x003c3c3c</span><span class="p">,</span> <span class="mh">0x003d3d3d</span><span class="p">,</span> <span class="mh">0x003e3e3e</span><span class="p">,</span> <span class="mh">0x003f3f3f</span><span class="p">,</span> <span class="mh">0x00404040</span><span class="p">,</span> <span class="mh">0x00414141</span><span class="p">,</span>
+<a name="gbab-91"></a>    <span class="mh">0x00424242</span><span class="p">,</span> <span class="mh">0x00434343</span><span class="p">,</span> <span class="mh">0x00444444</span><span class="p">,</span> <span class="mh">0x00454545</span><span class="p">,</span> <span class="mh">0x00464646</span><span class="p">,</span> <span class="mh">0x00474747</span><span class="p">,</span>
+<a name="gbab-92"></a>    <span class="mh">0x00484848</span><span class="p">,</span> <span class="mh">0x00494949</span><span class="p">,</span> <span class="mh">0x004a4a4a</span><span class="p">,</span> <span class="mh">0x004b4b4b</span><span class="p">,</span> <span class="mh">0x004c4c4c</span><span class="p">,</span> <span class="mh">0x004d4d4d</span><span class="p">,</span>
+<a name="gbab-93"></a>    <span class="mh">0x004e4e4e</span><span class="p">,</span> <span class="mh">0x004f4f4f</span><span class="p">,</span> <span class="mh">0x00505050</span><span class="p">,</span> <span class="mh">0x00515151</span><span class="p">,</span> <span class="mh">0x00525252</span><span class="p">,</span> <span class="mh">0x00535353</span><span class="p">,</span>
+<a name="gbab-94"></a>    <span class="mh">0x00545454</span><span class="p">,</span> <span class="mh">0x00555555</span><span class="p">,</span> <span class="mh">0x00565656</span><span class="p">,</span> <span class="mh">0x00575757</span><span class="p">,</span> <span class="mh">0x00585858</span><span class="p">,</span> <span class="mh">0x00595959</span><span class="p">,</span>
+<a name="gbab-95"></a>    <span class="mh">0x005a5a5a</span><span class="p">,</span> <span class="mh">0x005b5b5b</span><span class="p">,</span> <span class="mh">0x005c5c5c</span><span class="p">,</span> <span class="mh">0x005d5d5d</span><span class="p">,</span> <span class="mh">0x005e5e5e</span><span class="p">,</span> <span class="mh">0x005f5f5f</span><span class="p">,</span>
+<a name="gbab-96"></a>    <span class="mh">0x00606060</span><span class="p">,</span> <span class="mh">0x00616161</span><span class="p">,</span> <span class="mh">0x00626262</span><span class="p">,</span> <span class="mh">0x00636363</span><span class="p">,</span> <span class="mh">0x00646464</span><span class="p">,</span> <span class="mh">0x00656565</span><span class="p">,</span>
+<a name="gbab-97"></a>    <span class="mh">0x00666666</span><span class="p">,</span> <span class="mh">0x00676767</span><span class="p">,</span> <span class="mh">0x00686868</span><span class="p">,</span> <span class="mh">0x00696969</span><span class="p">,</span> <span class="mh">0x006a6a6a</span><span class="p">,</span> <span class="mh">0x006b6b6b</span><span class="p">,</span>
+<a name="gbab-98"></a>    <span class="mh">0x006c6c6c</span><span class="p">,</span> <span class="mh">0x006d6d6d</span><span class="p">,</span> <span class="mh">0x006e6e6e</span><span class="p">,</span> <span class="mh">0x006f6f6f</span><span class="p">,</span> <span class="mh">0x00707070</span><span class="p">,</span> <span class="mh">0x00717171</span><span class="p">,</span>
+<a name="gbab-99"></a>    <span class="mh">0x00727272</span><span class="p">,</span> <span class="mh">0x00737373</span><span class="p">,</span> <span class="mh">0x00747474</span><span class="p">,</span> <span class="mh">0x00757575</span><span class="p">,</span> <span class="mh">0x00767676</span><span class="p">,</span> <span class="mh">0x00777777</span><span class="p">,</span>
+<a name="gbab-100"></a>    <span class="mh">0x00787878</span><span class="p">,</span> <span class="mh">0x00797979</span><span class="p">,</span> <span class="mh">0x007a7a7a</span><span class="p">,</span> <span class="mh">0x007b7b7b</span><span class="p">,</span> <span class="mh">0x007c7c7c</span><span class="p">,</span> <span class="mh">0x007d7d7d</span><span class="p">,</span>
+<a name="gbab-101"></a>    <span class="mh">0x007e7e7e</span><span class="p">,</span> <span class="mh">0x007f7f7f</span><span class="p">,</span> <span class="mh">0x00808080</span><span class="p">,</span> <span class="mh">0x00818181</span><span class="p">,</span> <span class="mh">0x00828282</span><span class="p">,</span> <span class="mh">0x00838383</span><span class="p">,</span>
+<a name="gbab-102"></a>    <span class="mh">0x00848484</span><span class="p">,</span> <span class="mh">0x00858585</span><span class="p">,</span> <span class="mh">0x00868686</span><span class="p">,</span> <span class="mh">0x00878787</span><span class="p">,</span> <span class="mh">0x00888888</span><span class="p">,</span> <span class="mh">0x00898989</span><span class="p">,</span>
+<a name="gbab-103"></a>    <span class="mh">0x008a8a8a</span><span class="p">,</span> <span class="mh">0x008b8b8b</span><span class="p">,</span> <span class="mh">0x008c8c8c</span><span class="p">,</span> <span class="mh">0x008d8d8d</span><span class="p">,</span> <span class="mh">0x008e8e8e</span><span class="p">,</span> <span class="mh">0x008f8f8f</span><span class="p">,</span>
+<a name="gbab-104"></a>    <span class="mh">0x00909090</span><span class="p">,</span> <span class="mh">0x00919191</span><span class="p">,</span> <span class="mh">0x00929292</span><span class="p">,</span> <span class="mh">0x00939393</span><span class="p">,</span> <span class="mh">0x00949494</span><span class="p">,</span> <span class="mh">0x00959595</span><span class="p">,</span>
+<a name="gbab-105"></a>    <span class="mh">0x00969696</span><span class="p">,</span> <span class="mh">0x00979797</span><span class="p">,</span> <span class="mh">0x00989898</span><span class="p">,</span> <span class="mh">0x00999999</span><span class="p">,</span> <span class="mh">0x009a9a9a</span><span class="p">,</span> <span class="mh">0x009b9b9b</span><span class="p">,</span>
+<a name="gbab-106"></a>    <span class="mh">0x009c9c9c</span><span class="p">,</span> <span class="mh">0x009d9d9d</span><span class="p">,</span> <span class="mh">0x009e9e9e</span><span class="p">,</span> <span class="mh">0x009f9f9f</span><span class="p">,</span> <span class="mh">0x00a0a0a0</span><span class="p">,</span> <span class="mh">0x00a1a1a1</span><span class="p">,</span>
+<a name="gbab-107"></a>    <span class="mh">0x00a2a2a2</span><span class="p">,</span> <span class="mh">0x00a3a3a3</span><span class="p">,</span> <span class="mh">0x00a4a4a4</span><span class="p">,</span> <span class="mh">0x00a5a5a5</span><span class="p">,</span> <span class="mh">0x00a6a6a6</span><span class="p">,</span> <span class="mh">0x00a7a7a7</span><span class="p">,</span>
+<a name="gbab-108"></a>    <span class="mh">0x00a8a8a8</span><span class="p">,</span> <span class="mh">0x00a9a9a9</span><span class="p">,</span> <span class="mh">0x00aaaaaa</span><span class="p">,</span> <span class="mh">0x00ababab</span><span class="p">,</span> <span class="mh">0x00acacac</span><span class="p">,</span> <span class="mh">0x00adadad</span><span class="p">,</span>
+<a name="gbab-109"></a>    <span class="mh">0x00aeaeae</span><span class="p">,</span> <span class="mh">0x00afafaf</span><span class="p">,</span> <span class="mh">0x00b0b0b0</span><span class="p">,</span> <span class="mh">0x00b1b1b1</span><span class="p">,</span> <span class="mh">0x00b2b2b2</span><span class="p">,</span> <span class="mh">0x00b3b3b3</span><span class="p">,</span>
+<a name="gbab-110"></a>    <span class="mh">0x00b4b4b4</span><span class="p">,</span> <span class="mh">0x00b5b5b5</span><span class="p">,</span> <span class="mh">0x00b6b6b6</span><span class="p">,</span> <span class="mh">0x00b7b7b7</span><span class="p">,</span> <span class="mh">0x00b8b8b8</span><span class="p">,</span> <span class="mh">0x00b9b9b9</span><span class="p">,</span>
+<a name="gbab-111"></a>    <span class="mh">0x00bababa</span><span class="p">,</span> <span class="mh">0x00bbbbbb</span><span class="p">,</span> <span class="mh">0x00bcbcbc</span><span class="p">,</span> <span class="mh">0x00bdbdbd</span><span class="p">,</span> <span class="mh">0x00bebebe</span><span class="p">,</span> <span class="mh">0x00bfbfbf</span><span class="p">,</span>
+<a name="gbab-112"></a>    <span class="mh">0x00c0c0c0</span><span class="p">,</span> <span class="mh">0x00c1c1c1</span><span class="p">,</span> <span class="mh">0x00c2c2c2</span><span class="p">,</span> <span class="mh">0x00c3c3c3</span><span class="p">,</span> <span class="mh">0x00c4c4c4</span><span class="p">,</span> <span class="mh">0x00c5c5c5</span><span class="p">,</span>
+<a name="gbab-113"></a>    <span class="mh">0x00c6c6c6</span><span class="p">,</span> <span class="mh">0x00c7c7c7</span><span class="p">,</span> <span class="mh">0x00c8c8c8</span><span class="p">,</span> <span class="mh">0x00c9c9c9</span><span class="p">,</span> <span class="mh">0x00cacaca</span><span class="p">,</span> <span class="mh">0x00cbcbcb</span><span class="p">,</span>
+<a name="gbab-114"></a>    <span class="mh">0x00cccccc</span><span class="p">,</span> <span class="mh">0x00cdcdcd</span><span class="p">,</span> <span class="mh">0x00cecece</span><span class="p">,</span> <span class="mh">0x00cfcfcf</span><span class="p">,</span> <span class="mh">0x00d0d0d0</span><span class="p">,</span> <span class="mh">0x00d1d1d1</span><span class="p">,</span>
+<a name="gbab-115"></a>    <span class="mh">0x00d2d2d2</span><span class="p">,</span> <span class="mh">0x00d3d3d3</span><span class="p">,</span> <span class="mh">0x00d4d4d4</span><span class="p">,</span> <span class="mh">0x00d5d5d5</span><span class="p">,</span> <span class="mh">0x00d6d6d6</span><span class="p">,</span> <span class="mh">0x00d7d7d7</span><span class="p">,</span>
+<a name="gbab-116"></a>    <span class="mh">0x00d8d8d8</span><span class="p">,</span> <span class="mh">0x00d9d9d9</span><span class="p">,</span> <span class="mh">0x00dadada</span><span class="p">,</span> <span class="mh">0x00dbdbdb</span><span class="p">,</span> <span class="mh">0x00dcdcdc</span><span class="p">,</span> <span class="mh">0x00dddddd</span><span class="p">,</span>
+<a name="gbab-117"></a>    <span class="mh">0x00dedede</span><span class="p">,</span> <span class="mh">0x00dfdfdf</span><span class="p">,</span> <span class="mh">0x00e0e0e0</span><span class="p">,</span> <span class="mh">0x00e1e1e1</span><span class="p">,</span> <span class="mh">0x00e2e2e2</span><span class="p">,</span> <span class="mh">0x00e3e3e3</span><span class="p">,</span>
+<a name="gbab-118"></a>    <span class="mh">0x00e4e4e4</span><span class="p">,</span> <span class="mh">0x00e5e5e5</span><span class="p">,</span> <span class="mh">0x00e6e6e6</span><span class="p">,</span> <span class="mh">0x00e7e7e7</span><span class="p">,</span> <span class="mh">0x00e8e8e8</span><span class="p">,</span> <span class="mh">0x00e9e9e9</span><span class="p">,</span>
+<a name="gbab-119"></a>    <span class="mh">0x00eaeaea</span><span class="p">,</span> <span class="mh">0x00ebebeb</span><span class="p">,</span> <span class="mh">0x00ececec</span><span class="p">,</span> <span class="mh">0x00ededed</span><span class="p">,</span> <span class="mh">0x00eeeeee</span><span class="p">,</span> <span class="mh">0x00efefef</span><span class="p">,</span>
+<a name="gbab-120"></a>    <span class="mh">0x00f0f0f0</span><span class="p">,</span> <span class="mh">0x00f1f1f1</span><span class="p">,</span> <span class="mh">0x00f2f2f2</span><span class="p">,</span> <span class="mh">0x00f3f3f3</span><span class="p">,</span> <span class="mh">0x00f4f4f4</span><span class="p">,</span> <span class="mh">0x00f5f5f5</span><span class="p">,</span>
+<a name="gbab-121"></a>    <span class="mh">0x00f6f6f6</span><span class="p">,</span> <span class="mh">0x00f7f7f7</span><span class="p">,</span> <span class="mh">0x00f8f8f8</span><span class="p">,</span> <span class="mh">0x00f9f9f9</span><span class="p">,</span> <span class="mh">0x00fafafa</span><span class="p">,</span> <span class="mh">0x00fbfbfb</span><span class="p">,</span>
+<a name="gbab-122"></a>    <span class="mh">0x00fcfcfc</span><span class="p">,</span> <span class="mh">0x00fdfdfd</span><span class="p">,</span> <span class="mh">0x00fefefe</span><span class="p">,</span> <span class="mh">0x00ffffff</span> <span class="p">}</span>
+<a name="gbab-123"></a><span class="p">};</span>
+<a name="gbab-124"></a>
+<a name="gbab-125"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">uint32_t</span> <span class="nf">GetScale</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inverse</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-126"></a>  <span class="k">return</span> <span class="n">kMultTables</span><span class="p">[</span><span class="o">!</span><span class="n">inverse</span><span class="p">][</span><span class="n">a</span><span class="p">];</span>
+<a name="gbab-127"></a><span class="p">}</span>
+<a name="gbab-128"></a>
+<a name="gbab-129"></a><span class="cp">#else</span>
+<a name="gbab-130"></a>
+<a name="gbab-131"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">uint32_t</span> <span class="nf">GetScale</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inverse</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-132"></a>  <span class="k">return</span> <span class="n">inverse</span> <span class="o">?</span> <span class="p">(</span><span class="mi">255u</span> <span class="o">&lt;&lt;</span> <span class="n">MFIX</span><span class="p">)</span> <span class="o">/</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">a</span> <span class="o">*</span> <span class="n">KINV_255</span><span class="p">;</span>
+<a name="gbab-133"></a><span class="p">}</span>
+<a name="gbab-134"></a>
+<a name="gbab-135"></a><span class="cp">#endif    </span><span class="c1">// USE_TABLES_FOR_ALPHA_MULT</span>
+<a name="gbab-136"></a>
+<a name="gbab-137"></a><span class="kt">void</span> <span class="nf">WebPMultARGBRowC</span><span class="p">(</span><span class="kt">uint32_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inverse</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-138"></a>  <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+<a name="gbab-139"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-140"></a>    <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">argb</span> <span class="o">=</span> <span class="n">ptr</span><span class="p">[</span><span class="n">x</span><span class="p">];</span>
+<a name="gbab-141"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">argb</span> <span class="o">&lt;</span> <span class="mh">0xff000000u</span><span class="p">)</span> <span class="p">{</span>      <span class="c1">// alpha &lt; 255</span>
+<a name="gbab-142"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">argb</span> <span class="o">&lt;=</span> <span class="mh">0x00ffffffu</span><span class="p">)</span> <span class="p">{</span>   <span class="c1">// alpha == 0</span>
+<a name="gbab-143"></a>        <span class="n">ptr</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-144"></a>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-145"></a>        <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">argb</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">;</span>
+<a name="gbab-146"></a>        <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">GetScale</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">inverse</span><span class="p">);</span>
+<a name="gbab-147"></a>        <span class="kt">uint32_t</span> <span class="n">out</span> <span class="o">=</span> <span class="n">argb</span> <span class="o">&amp;</span> <span class="mh">0xff000000u</span><span class="p">;</span>
+<a name="gbab-148"></a>        <span class="n">out</span> <span class="o">|=</span> <span class="n">Mult</span><span class="p">(</span><span class="n">argb</span> <span class="o">&gt;&gt;</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span> <span class="o">&lt;&lt;</span>  <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-149"></a>        <span class="n">out</span> <span class="o">|=</span> <span class="n">Mult</span><span class="p">(</span><span class="n">argb</span> <span class="o">&gt;&gt;</span>  <span class="mi">8</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span> <span class="o">&lt;&lt;</span>  <span class="mi">8</span><span class="p">;</span>
+<a name="gbab-150"></a>        <span class="n">out</span> <span class="o">|=</span> <span class="n">Mult</span><span class="p">(</span><span class="n">argb</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">;</span>
+<a name="gbab-151"></a>        <span class="n">ptr</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">;</span>
+<a name="gbab-152"></a>      <span class="p">}</span>
+<a name="gbab-153"></a>    <span class="p">}</span>
+<a name="gbab-154"></a>  <span class="p">}</span>
+<a name="gbab-155"></a><span class="p">}</span>
+<a name="gbab-156"></a>
+<a name="gbab-157"></a><span class="kt">void</span> <span class="nf">WebPMultRowC</span><span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">alpha</span><span class="p">,</span>
+<a name="gbab-158"></a>                  <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inverse</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-159"></a>  <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+<a name="gbab-160"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="o">++</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-161"></a>    <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">a</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">[</span><span class="n">x</span><span class="p">];</span>
+<a name="gbab-162"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="mi">255</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-163"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-164"></a>        <span class="n">ptr</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-165"></a>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-166"></a>        <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">GetScale</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">inverse</span><span class="p">);</span>
+<a name="gbab-167"></a>        <span class="n">ptr</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">Mult</span><span class="p">(</span><span class="n">ptr</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">scale</span><span class="p">);</span>
+<a name="gbab-168"></a>      <span class="p">}</span>
+<a name="gbab-169"></a>    <span class="p">}</span>
+<a name="gbab-170"></a>  <span class="p">}</span>
+<a name="gbab-171"></a><span class="p">}</span>
+<a name="gbab-172"></a>
+<a name="gbab-173"></a><span class="cp">#undef KINV_255</span>
+<a name="gbab-174"></a><span class="cp">#undef HALF</span>
+<a name="gbab-175"></a><span class="cp">#undef MFIX</span>
+<a name="gbab-176"></a>
+<a name="gbab-177"></a><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">WebPMultARGBRow</span><span class="p">)(</span><span class="kt">uint32_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inverse</span><span class="p">);</span>
+<a name="gbab-178"></a><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">WebPMultRow</span><span class="p">)(</span><span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">alpha</span><span class="p">,</span>
+<a name="gbab-179"></a>                    <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inverse</span><span class="p">);</span>
+<a name="gbab-180"></a>
+<a name="gbab-181"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-182"></a><span class="c1">// Generic per-plane calls</span>
+<a name="gbab-183"></a>
+<a name="gbab-184"></a><span class="kt">void</span> <span class="nf">WebPMultARGBRows</span><span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span> <span class="n">ptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">stride</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_rows</span><span class="p">,</span>
+<a name="gbab-185"></a>                      <span class="kt">int</span> <span class="n">inverse</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-186"></a>  <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+<a name="gbab-187"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">num_rows</span><span class="p">;</span> <span class="o">++</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-188"></a>    <span class="n">WebPMultARGBRow</span><span class="p">((</span><span class="kt">uint32_t</span><span class="o">*</span><span class="p">)</span><span class="n">ptr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">inverse</span><span class="p">);</span>
+<a name="gbab-189"></a>    <span class="n">ptr</span> <span class="o">+=</span> <span class="n">stride</span><span class="p">;</span>
+<a name="gbab-190"></a>  <span class="p">}</span>
+<a name="gbab-191"></a><span class="p">}</span>
+<a name="gbab-192"></a>
+<a name="gbab-193"></a><span class="kt">void</span> <span class="nf">WebPMultRows</span><span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span> <span class="n">ptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">stride</span><span class="p">,</span>
+<a name="gbab-194"></a>                  <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">alpha</span><span class="p">,</span> <span class="kt">int</span> <span class="n">alpha_stride</span><span class="p">,</span>
+<a name="gbab-195"></a>                  <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_rows</span><span class="p">,</span> <span class="kt">int</span> <span class="n">inverse</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-196"></a>  <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+<a name="gbab-197"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">num_rows</span><span class="p">;</span> <span class="o">++</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-198"></a>    <span class="n">WebPMultRow</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">inverse</span><span class="p">);</span>
+<a name="gbab-199"></a>    <span class="n">ptr</span> <span class="o">+=</span> <span class="n">stride</span><span class="p">;</span>
+<a name="gbab-200"></a>    <span class="n">alpha</span> <span class="o">+=</span> <span class="n">alpha_stride</span><span class="p">;</span>
+<a name="gbab-201"></a>  <span class="p">}</span>
+<a name="gbab-202"></a><span class="p">}</span>
+<a name="gbab-203"></a>
+<a name="gbab-204"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-205"></a><span class="c1">// Premultiplied modes</span>
+<a name="gbab-206"></a>
+<a name="gbab-207"></a><span class="c1">// non dithered-modes</span>
+<a name="gbab-208"></a>
+<a name="gbab-209"></a><span class="c1">// (x * a * 32897) &gt;&gt; 23 is bit-wise equivalent to (int)(x * a / 255.)</span>
+<a name="gbab-210"></a><span class="c1">// for all 8bit x or a. For bit-wise equivalence to (int)(x * a / 255. + .5),</span>
+<a name="gbab-211"></a><span class="c1">// one can use instead: (x * a * 65793 + (1 &lt;&lt; 23)) &gt;&gt; 24</span>
+<a name="gbab-212"></a><span class="cp">#if 1     </span><span class="c1">// (int)(x * a / 255.)</span>
+<a name="gbab-213"></a><span class="cp">#define MULTIPLIER(a)   ((a) * 32897U)</span>
+<a name="gbab-214"></a><span class="cp">#define PREMULTIPLY(x, m) (((x) * (m)) &gt;&gt; 23)</span>
+<a name="gbab-215"></a><span class="cp">#else     </span><span class="c1">// (int)(x * a / 255. + .5)</span>
+<a name="gbab-216"></a><span class="cp">#define MULTIPLIER(a) ((a) * 65793U)</span>
+<a name="gbab-217"></a><span class="cp">#define PREMULTIPLY(x, m) (((x) * (m) + (1U &lt;&lt; 23)) &gt;&gt; 24)</span>
+<a name="gbab-218"></a><span class="cp">#endif</span>
+<a name="gbab-219"></a>
+<a name="gbab-220"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ApplyAlphaMultiply</span><span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span> <span class="n">rgba</span><span class="p">,</span> <span class="kt">int</span> <span class="n">alpha_first</span><span class="p">,</span>
+<a name="gbab-221"></a>                               <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">,</span> <span class="kt">int</span> <span class="n">stride</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-222"></a>  <span class="k">while</span> <span class="p">(</span><span class="n">h</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-223"></a>    <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">rgb</span> <span class="o">=</span> <span class="n">rgba</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha_first</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-224"></a>    <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">rgba</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha_first</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-225"></a>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<a name="gbab-226"></a>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-227"></a>      <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">a</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span><span class="p">];</span>
+<a name="gbab-228"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="mh">0xff</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-229"></a>        <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">mult</span> <span class="o">=</span> <span class="n">MULTIPLIER</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<a name="gbab-230"></a>        <span class="n">rgb</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">PREMULTIPLY</span><span class="p">(</span><span class="n">rgb</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">],</span> <span class="n">mult</span><span class="p">);</span>
+<a name="gbab-231"></a>        <span class="n">rgb</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">PREMULTIPLY</span><span class="p">(</span><span class="n">rgb</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">mult</span><span class="p">);</span>
+<a name="gbab-232"></a>        <span class="n">rgb</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">PREMULTIPLY</span><span class="p">(</span><span class="n">rgb</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">],</span> <span class="n">mult</span><span class="p">);</span>
+<a name="gbab-233"></a>      <span class="p">}</span>
+<a name="gbab-234"></a>    <span class="p">}</span>
+<a name="gbab-235"></a>    <span class="n">rgba</span> <span class="o">+=</span> <span class="n">stride</span><span class="p">;</span>
+<a name="gbab-236"></a>  <span class="p">}</span>
+<a name="gbab-237"></a><span class="p">}</span>
+<a name="gbab-238"></a><span class="cp">#undef MULTIPLIER</span>
+<a name="gbab-239"></a><span class="cp">#undef PREMULTIPLY</span>
+<a name="gbab-240"></a>
+<a name="gbab-241"></a><span class="c1">// rgbA4444</span>
+<a name="gbab-242"></a>
+<a name="gbab-243"></a><span class="cp">#define MULTIPLIER(a)  ((a) * 0x1111)    </span><span class="c1">// 0x1111 ~= (1 &lt;&lt; 16) / 15</span>
+<a name="gbab-244"></a>
+<a name="gbab-245"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">uint8_t</span> <span class="nf">dither_hi</span><span class="p">(</span><span class="kt">uint8_t</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-246"></a>  <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">&amp;</span> <span class="mh">0xf0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">);</span>
+<a name="gbab-247"></a><span class="p">}</span>
+<a name="gbab-248"></a>
+<a name="gbab-249"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">uint8_t</span> <span class="nf">dither_lo</span><span class="p">(</span><span class="kt">uint8_t</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-250"></a>  <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">&amp;</span> <span class="mh">0x0f</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">);</span>
+<a name="gbab-251"></a><span class="p">}</span>
+<a name="gbab-252"></a>
+<a name="gbab-253"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">uint8_t</span> <span class="nf">multiply</span><span class="p">(</span><span class="kt">uint8_t</span> <span class="n">x</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">m</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-254"></a>  <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">m</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">;</span>
+<a name="gbab-255"></a><span class="p">}</span>
+<a name="gbab-256"></a>
+<a name="gbab-257"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">void</span> <span class="nf">ApplyAlphaMultiply4444</span><span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span> <span class="n">rgba4444</span><span class="p">,</span>
+<a name="gbab-258"></a>                                               <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">,</span> <span class="kt">int</span> <span class="n">stride</span><span class="p">,</span>
+<a name="gbab-259"></a>                                               <span class="kt">int</span> <span class="n">rg_byte_pos</span> <span class="cm">/* 0 or 1 */</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-260"></a>  <span class="k">while</span> <span class="p">(</span><span class="n">h</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-261"></a>    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<a name="gbab-262"></a>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-263"></a>      <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">rg</span> <span class="o">=</span> <span class="n">rgba4444</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="n">rg_byte_pos</span><span class="p">];</span>
+<a name="gbab-264"></a>      <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">ba</span> <span class="o">=</span> <span class="n">rgba4444</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">rg_byte_pos</span> <span class="o">^</span> <span class="mi">1</span><span class="p">)];</span>
+<a name="gbab-265"></a>      <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">a</span> <span class="o">=</span> <span class="n">ba</span> <span class="o">&amp;</span> <span class="mh">0x0f</span><span class="p">;</span>
+<a name="gbab-266"></a>      <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">mult</span> <span class="o">=</span> <span class="n">MULTIPLIER</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<a name="gbab-267"></a>      <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">r</span> <span class="o">=</span> <span class="n">multiply</span><span class="p">(</span><span class="n">dither_hi</span><span class="p">(</span><span class="n">rg</span><span class="p">),</span> <span class="n">mult</span><span class="p">);</span>
+<a name="gbab-268"></a>      <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">g</span> <span class="o">=</span> <span class="n">multiply</span><span class="p">(</span><span class="n">dither_lo</span><span class="p">(</span><span class="n">rg</span><span class="p">),</span> <span class="n">mult</span><span class="p">);</span>
+<a name="gbab-269"></a>      <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">b</span> <span class="o">=</span> <span class="n">multiply</span><span class="p">(</span><span class="n">dither_hi</span><span class="p">(</span><span class="n">ba</span><span class="p">),</span> <span class="n">mult</span><span class="p">);</span>
+<a name="gbab-270"></a>      <span class="n">rgba4444</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="n">rg_byte_pos</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">&amp;</span> <span class="mh">0xf0</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">g</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0f</span><span class="p">);</span>
+<a name="gbab-271"></a>      <span class="n">rgba4444</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">rg_byte_pos</span> <span class="o">^</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">&amp;</span> <span class="mh">0xf0</span><span class="p">)</span> <span class="o">|</span> <span class="n">a</span><span class="p">;</span>
+<a name="gbab-272"></a>    <span class="p">}</span>
+<a name="gbab-273"></a>    <span class="n">rgba4444</span> <span class="o">+=</span> <span class="n">stride</span><span class="p">;</span>
+<a name="gbab-274"></a>  <span class="p">}</span>
+<a name="gbab-275"></a><span class="p">}</span>
+<a name="gbab-276"></a><span class="cp">#undef MULTIPLIER</span>
+<a name="gbab-277"></a>
+<a name="gbab-278"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ApplyAlphaMultiply_16b</span><span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span> <span class="n">rgba4444</span><span class="p">,</span>
+<a name="gbab-279"></a>                                   <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="kt">int</span> <span class="n">h</span><span class="p">,</span> <span class="kt">int</span> <span class="n">stride</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-280"></a><span class="cp">#ifdef WEBP_SWAP_16BIT_CSP</span>
+<a name="gbab-281"></a>  <span class="n">ApplyAlphaMultiply4444</span><span class="p">(</span><span class="n">rgba4444</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-282"></a><span class="cp">#else</span>
+<a name="gbab-283"></a>  <span class="n">ApplyAlphaMultiply4444</span><span class="p">(</span><span class="n">rgba4444</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-284"></a><span class="cp">#endif</span>
+<a name="gbab-285"></a><span class="p">}</span>
+<a name="gbab-286"></a>
+<a name="gbab-287"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">DispatchAlpha</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">alpha</span><span class="p">,</span> <span class="kt">int</span> <span class="n">alpha_stride</span><span class="p">,</span>
+<a name="gbab-288"></a>                         <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span>
+<a name="gbab-289"></a>                         <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">,</span> <span class="kt">int</span> <span class="n">dst_stride</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-290"></a>  <span class="kt">uint32_t</span> <span class="n">alpha_mask</span> <span class="o">=</span> <span class="mh">0xff</span><span class="p">;</span>
+<a name="gbab-291"></a>  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+<a name="gbab-292"></a>
+<a name="gbab-293"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-294"></a>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-295"></a>      <span class="k">const</span> <span class="kt">uint32_t</span> <span class="n">alpha_value</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<a name="gbab-296"></a>      <span class="n">dst</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">alpha_value</span><span class="p">;</span>
+<a name="gbab-297"></a>      <span class="n">alpha_mask</span> <span class="o">&amp;=</span> <span class="n">alpha_value</span><span class="p">;</span>
+<a name="gbab-298"></a>    <span class="p">}</span>
+<a name="gbab-299"></a>    <span class="n">alpha</span> <span class="o">+=</span> <span class="n">alpha_stride</span><span class="p">;</span>
+<a name="gbab-300"></a>    <span class="n">dst</span> <span class="o">+=</span> <span class="n">dst_stride</span><span class="p">;</span>
+<a name="gbab-301"></a>  <span class="p">}</span>
+<a name="gbab-302"></a>
+<a name="gbab-303"></a>  <span class="k">return</span> <span class="p">(</span><span class="n">alpha_mask</span> <span class="o">!=</span> <span class="mh">0xff</span><span class="p">);</span>
+<a name="gbab-304"></a><span class="p">}</span>
+<a name="gbab-305"></a>
+<a name="gbab-306"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">DispatchAlphaToGreen</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">alpha</span><span class="p">,</span> <span class="kt">int</span> <span class="n">alpha_stride</span><span class="p">,</span>
+<a name="gbab-307"></a>                                 <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span>
+<a name="gbab-308"></a>                                 <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">,</span> <span class="kt">int</span> <span class="n">dst_stride</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-309"></a>  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+<a name="gbab-310"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-311"></a>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-312"></a>      <span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">;</span>  <span class="c1">// leave A/R/B channels zero&#39;d.</span>
+<a name="gbab-313"></a>    <span class="p">}</span>
+<a name="gbab-314"></a>    <span class="n">alpha</span> <span class="o">+=</span> <span class="n">alpha_stride</span><span class="p">;</span>
+<a name="gbab-315"></a>    <span class="n">dst</span> <span class="o">+=</span> <span class="n">dst_stride</span><span class="p">;</span>
+<a name="gbab-316"></a>  <span class="p">}</span>
+<a name="gbab-317"></a><span class="p">}</span>
+<a name="gbab-318"></a>
+<a name="gbab-319"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">ExtractAlpha</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">argb</span><span class="p">,</span> <span class="kt">int</span> <span class="n">argb_stride</span><span class="p">,</span>
+<a name="gbab-320"></a>                        <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span>
+<a name="gbab-321"></a>                        <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">alpha</span><span class="p">,</span> <span class="kt">int</span> <span class="n">alpha_stride</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-322"></a>  <span class="kt">uint8_t</span> <span class="n">alpha_mask</span> <span class="o">=</span> <span class="mh">0xff</span><span class="p">;</span>
+<a name="gbab-323"></a>  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+<a name="gbab-324"></a>
+<a name="gbab-325"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-326"></a>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-327"></a>      <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">alpha_value</span> <span class="o">=</span> <span class="n">argb</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">i</span><span class="p">];</span>
+<a name="gbab-328"></a>      <span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">alpha_value</span><span class="p">;</span>
+<a name="gbab-329"></a>      <span class="n">alpha_mask</span> <span class="o">&amp;=</span> <span class="n">alpha_value</span><span class="p">;</span>
+<a name="gbab-330"></a>    <span class="p">}</span>
+<a name="gbab-331"></a>    <span class="n">argb</span> <span class="o">+=</span> <span class="n">argb_stride</span><span class="p">;</span>
+<a name="gbab-332"></a>    <span class="n">alpha</span> <span class="o">+=</span> <span class="n">alpha_stride</span><span class="p">;</span>
+<a name="gbab-333"></a>  <span class="p">}</span>
+<a name="gbab-334"></a>  <span class="k">return</span> <span class="p">(</span><span class="n">alpha_mask</span> <span class="o">==</span> <span class="mh">0xff</span><span class="p">);</span>
+<a name="gbab-335"></a><span class="p">}</span>
+<a name="gbab-336"></a>
+<a name="gbab-337"></a><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">WebPApplyAlphaMultiply</span><span class="p">)(</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-338"></a><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">WebPApplyAlphaMultiply4444</span><span class="p">)(</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-339"></a><span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">WebPDispatchAlpha</span><span class="p">)(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-340"></a><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">WebPDispatchAlphaToGreen</span><span class="p">)(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">uint32_t</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-341"></a><span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">WebPExtractAlpha</span><span class="p">)(</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-342"></a>
+<a name="gbab-343"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-344"></a><span class="c1">// Init function</span>
+<a name="gbab-345"></a>
+<a name="gbab-346"></a><span class="k">extern</span> <span class="kt">void</span> <span class="nf">WebPInitAlphaProcessingMIPSdspR2</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-347"></a><span class="k">extern</span> <span class="kt">void</span> <span class="nf">WebPInitAlphaProcessingSSE2</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-348"></a><span class="k">extern</span> <span class="kt">void</span> <span class="nf">WebPInitAlphaProcessingSSE41</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-349"></a>
+<a name="gbab-350"></a><span class="k">static</span> <span class="k">volatile</span> <span class="n">VP8CPUInfo</span> <span class="n">alpha_processing_last_cpuinfo_used</span> <span class="o">=</span>
+<a name="gbab-351"></a>    <span class="p">(</span><span class="n">VP8CPUInfo</span><span class="p">)</span><span class="o">&amp;</span><span class="n">alpha_processing_last_cpuinfo_used</span><span class="p">;</span>
+<a name="gbab-352"></a>
+<a name="gbab-353"></a><span class="n">WEBP_TSAN_IGNORE_FUNCTION</span> <span class="kt">void</span> <span class="nf">WebPInitAlphaProcessing</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-354"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">alpha_processing_last_cpuinfo_used</span> <span class="o">==</span> <span class="n">VP8GetCPUInfo</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+<a name="gbab-355"></a>
+<a name="gbab-356"></a>  <span class="n">WebPMultARGBRow</span> <span class="o">=</span> <span class="n">WebPMultARGBRowC</span><span class="p">;</span>
+<a name="gbab-357"></a>  <span class="n">WebPMultRow</span> <span class="o">=</span> <span class="n">WebPMultRowC</span><span class="p">;</span>
+<a name="gbab-358"></a>  <span class="n">WebPApplyAlphaMultiply</span> <span class="o">=</span> <span class="n">ApplyAlphaMultiply</span><span class="p">;</span>
+<a name="gbab-359"></a>  <span class="n">WebPApplyAlphaMultiply4444</span> <span class="o">=</span> <span class="n">ApplyAlphaMultiply_16b</span><span class="p">;</span>
+<a name="gbab-360"></a>  <span class="n">WebPDispatchAlpha</span> <span class="o">=</span> <span class="n">DispatchAlpha</span><span class="p">;</span>
+<a name="gbab-361"></a>  <span class="n">WebPDispatchAlphaToGreen</span> <span class="o">=</span> <span class="n">DispatchAlphaToGreen</span><span class="p">;</span>
+<a name="gbab-362"></a>  <span class="n">WebPExtractAlpha</span> <span class="o">=</span> <span class="n">ExtractAlpha</span><span class="p">;</span>
+<a name="gbab-363"></a>
+<a name="gbab-364"></a>  <span class="c1">// If defined, use CPUInfo() to overwrite some pointers with faster versions.</span>
+<a name="gbab-365"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">VP8GetCPUInfo</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-366"></a><span class="cp">#if defined(WEBP_USE_SSE2)</span>
+<a name="gbab-367"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">VP8GetCPUInfo</span><span class="p">(</span><span class="n">kSSE2</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-368"></a>      <span class="n">WebPInitAlphaProcessingSSE2</span><span class="p">();</span>
+<a name="gbab-369"></a><span class="cp">#if defined(WEBP_USE_SSE41)</span>
+<a name="gbab-370"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">VP8GetCPUInfo</span><span class="p">(</span><span class="n">kSSE4_1</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-371"></a>        <span class="n">WebPInitAlphaProcessingSSE41</span><span class="p">();</span>
+<a name="gbab-372"></a>      <span class="p">}</span>
+<a name="gbab-373"></a><span class="cp">#endif</span>
+<a name="gbab-374"></a>    <span class="p">}</span>
+<a name="gbab-375"></a><span class="cp">#endif</span>
+<a name="gbab-376"></a><span class="cp">#if defined(WEBP_USE_MIPS_DSP_R2)</span>
+<a name="gbab-377"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">VP8GetCPUInfo</span><span class="p">(</span><span class="n">kMIPSdspR2</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-378"></a>      <span class="n">WebPInitAlphaProcessingMIPSdspR2</span><span class="p">();</span>
+<a name="gbab-379"></a>    <span class="p">}</span>
+<a name="gbab-380"></a><span class="cp">#endif</span>
+<a name="gbab-381"></a>  <span class="p">}</span>
+<a name="gbab-382"></a>  <span class="n">alpha_processing_last_cpuinfo_used</span> <span class="o">=</span> <span class="n">VP8GetCPUInfo</span><span class="p">;</span>
+<a name="gbab-383"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

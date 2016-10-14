@@ -1,0 +1,251 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cp">#include</span> <span class="cpf">&quot;input_action.h&quot;</span><span class="cp"></span>
+<a name="gbab-2"></a><span class="cp">#include</span> <span class="cpf">&quot;os/keyboard.h&quot;</span><span class="cp"></span>
+<a name="gbab-3"></a>
+<a name="gbab-4"></a><span class="kt">void</span> <span class="n">ShortCut</span><span class="o">::</span><span class="n">set_shortcut</span><span class="p">(</span><span class="k">const</span> <span class="n">InputEvent</span><span class="o">&amp;</span> <span class="n">p_shortcut</span><span class="p">){</span>
+<a name="gbab-5"></a>
+<a name="gbab-6"></a>	<span class="n">shortcut</span><span class="o">=</span><span class="n">p_shortcut</span><span class="p">;</span>
+<a name="gbab-7"></a>	<span class="n">emit_changed</span><span class="p">();</span>
+<a name="gbab-8"></a><span class="p">}</span>
+<a name="gbab-9"></a>
+<a name="gbab-10"></a><span class="n">InputEvent</span> <span class="n">ShortCut</span><span class="o">::</span><span class="n">get_shortcut</span><span class="p">()</span> <span class="k">const</span><span class="p">{</span>
+<a name="gbab-11"></a>
+<a name="gbab-12"></a>	<span class="k">return</span> <span class="n">shortcut</span><span class="p">;</span>
+<a name="gbab-13"></a><span class="p">}</span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="kt">bool</span> <span class="n">ShortCut</span><span class="o">::</span><span class="n">is_shortcut</span><span class="p">(</span><span class="k">const</span> <span class="n">InputEvent</span><span class="o">&amp;</span> <span class="n">p_event</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-16"></a>
+<a name="gbab-17"></a>	<span class="kt">bool</span> <span class="n">same</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a>
+<a name="gbab-20"></a>	<span class="k">switch</span><span class="p">(</span><span class="n">p_event</span><span class="p">.</span><span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-21"></a>
+<a name="gbab-22"></a>		<span class="k">case</span> <span class="n">InputEvent</span><span class="o">::</span><span class="nl">KEY</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-23"></a>
+<a name="gbab-24"></a>			<span class="n">same</span><span class="o">=</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">scancode</span><span class="o">==</span><span class="n">p_event</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">scancode</span> <span class="o">&amp;&amp;</span> <span class="n">shortcut</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">mod</span> <span class="o">==</span> <span class="n">p_event</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">mod</span><span class="p">);</span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-27"></a>		<span class="k">case</span> <span class="n">InputEvent</span><span class="o">::</span><span class="nl">JOYSTICK_BUTTON</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-28"></a>
+<a name="gbab-29"></a>			<span class="n">same</span><span class="o">=</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">joy_button</span><span class="p">.</span><span class="n">button_index</span><span class="o">==</span><span class="n">p_event</span><span class="p">.</span><span class="n">joy_button</span><span class="p">.</span><span class="n">button_index</span><span class="p">);</span>
+<a name="gbab-30"></a>
+<a name="gbab-31"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-32"></a>		<span class="k">case</span> <span class="n">InputEvent</span><span class="o">::</span><span class="nl">MOUSE_BUTTON</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-33"></a>
+<a name="gbab-34"></a>			<span class="n">same</span><span class="o">=</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">mouse_button</span><span class="p">.</span><span class="n">button_index</span><span class="o">==</span><span class="n">p_event</span><span class="p">.</span><span class="n">mouse_button</span><span class="p">.</span><span class="n">button_index</span><span class="p">);</span>
+<a name="gbab-35"></a>
+<a name="gbab-36"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-37"></a>		<span class="k">case</span> <span class="n">InputEvent</span><span class="o">::</span><span class="nl">JOYSTICK_MOTION</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-38"></a>
+<a name="gbab-39"></a>			<span class="n">same</span><span class="o">=</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">joy_motion</span><span class="p">.</span><span class="n">axis</span><span class="o">==</span><span class="n">p_event</span><span class="p">.</span><span class="n">joy_motion</span><span class="p">.</span><span class="n">axis</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">joy_motion</span><span class="p">.</span><span class="n">axis_value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">p_event</span><span class="p">.</span><span class="n">joy_motion</span><span class="p">.</span><span class="n">axis_value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">));</span>
+<a name="gbab-40"></a>
+<a name="gbab-41"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-42"></a>		<span class="k">default</span><span class="o">:</span> <span class="p">{};</span>
+<a name="gbab-43"></a>	<span class="p">}</span>
+<a name="gbab-44"></a>
+<a name="gbab-45"></a>	<span class="k">return</span> <span class="n">same</span><span class="p">;</span>
+<a name="gbab-46"></a><span class="p">}</span>
+<a name="gbab-47"></a>
+<a name="gbab-48"></a><span class="n">String</span> <span class="n">ShortCut</span><span class="o">::</span><span class="n">get_as_text</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-49"></a>
+<a name="gbab-50"></a>	<span class="k">switch</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">type</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-51"></a>
+<a name="gbab-52"></a>		<span class="k">case</span> <span class="n">InputEvent</span><span class="o">::</span><span class="nl">NONE</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-53"></a>
+<a name="gbab-54"></a>			<span class="k">return</span> <span class="s">&quot;None&quot;</span><span class="p">;</span>
+<a name="gbab-55"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-56"></a>		<span class="k">case</span> <span class="n">InputEvent</span><span class="o">::</span><span class="nl">KEY</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-57"></a>
+<a name="gbab-58"></a>			<span class="n">String</span> <span class="n">str</span><span class="p">;</span>
+<a name="gbab-59"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">mod</span><span class="p">.</span><span class="n">shift</span><span class="p">)</span>
+<a name="gbab-60"></a>				<span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Shift+&quot;</span><span class="p">);</span>
+<a name="gbab-61"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">mod</span><span class="p">.</span><span class="n">alt</span><span class="p">)</span>
+<a name="gbab-62"></a>				<span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Alt+&quot;</span><span class="p">);</span>
+<a name="gbab-63"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">mod</span><span class="p">.</span><span class="n">control</span><span class="p">)</span>
+<a name="gbab-64"></a>				<span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Ctrl+&quot;</span><span class="p">);</span>
+<a name="gbab-65"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">mod</span><span class="p">.</span><span class="n">meta</span><span class="p">)</span>
+<a name="gbab-66"></a>				<span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Meta+&quot;</span><span class="p">);</span>
+<a name="gbab-67"></a>
+<a name="gbab-68"></a>			<span class="n">str</span><span class="o">+=</span><span class="n">keycode_get_string</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">scancode</span><span class="p">).</span><span class="n">capitalize</span><span class="p">();</span>
+<a name="gbab-69"></a>
+<a name="gbab-70"></a>			<span class="k">return</span> <span class="n">str</span><span class="p">;</span>
+<a name="gbab-71"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-72"></a>		<span class="k">case</span> <span class="n">InputEvent</span><span class="o">::</span><span class="nl">JOYSTICK_BUTTON</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-73"></a>
+<a name="gbab-74"></a>			<span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Device&quot;</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="n">itos</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">device</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;, &quot;</span><span class="o">+</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Button&quot;</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="n">itos</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">joy_button</span><span class="p">.</span><span class="n">button_index</span><span class="p">);</span>
+<a name="gbab-75"></a>			<span class="n">str</span><span class="o">+=</span><span class="s">&quot;.&quot;</span><span class="p">;</span>
+<a name="gbab-76"></a>
+<a name="gbab-77"></a>			<span class="k">return</span> <span class="n">str</span><span class="p">;</span>
+<a name="gbab-78"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-79"></a>		<span class="k">case</span> <span class="n">InputEvent</span><span class="o">::</span><span class="nl">MOUSE_BUTTON</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-80"></a>
+<a name="gbab-81"></a>			<span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Device&quot;</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="n">itos</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">device</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;, &quot;</span><span class="p">;</span>
+<a name="gbab-82"></a>			<span class="k">switch</span> <span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">mouse_button</span><span class="p">.</span><span class="n">button_index</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-83"></a>				<span class="k">case</span> <span class="nl">BUTTON_LEFT</span><span class="p">:</span> <span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Left Button.&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-84"></a>				<span class="k">case</span> <span class="nl">BUTTON_RIGHT</span><span class="p">:</span> <span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Right Button.&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-85"></a>				<span class="k">case</span> <span class="nl">BUTTON_MIDDLE</span><span class="p">:</span> <span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Middle Button.&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-86"></a>				<span class="k">case</span> <span class="nl">BUTTON_WHEEL_UP</span><span class="p">:</span> <span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Wheel Up.&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-87"></a>				<span class="k">case</span> <span class="nl">BUTTON_WHEEL_DOWN</span><span class="p">:</span> <span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Wheel Down.&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-88"></a>				<span class="k">default</span><span class="o">:</span> <span class="n">str</span><span class="o">+=</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Button&quot;</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="n">itos</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">mouse_button</span><span class="p">.</span><span class="n">button_index</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;.&quot;</span><span class="p">;</span>
+<a name="gbab-89"></a>			<span class="p">}</span>
+<a name="gbab-90"></a>
+<a name="gbab-91"></a>			<span class="k">return</span> <span class="n">str</span><span class="p">;</span>
+<a name="gbab-92"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-93"></a>		<span class="k">case</span> <span class="n">InputEvent</span><span class="o">::</span><span class="nl">JOYSTICK_MOTION</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a>			<span class="kt">int</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">shortcut</span><span class="p">.</span><span class="n">joy_motion</span><span class="p">.</span><span class="n">axis</span><span class="p">;</span>
+<a name="gbab-96"></a>			<span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Device&quot;</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="n">itos</span><span class="p">(</span><span class="n">shortcut</span><span class="p">.</span><span class="n">device</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;, &quot;</span><span class="o">+</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Axis&quot;</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; &quot;</span><span class="o">+</span><span class="n">itos</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;.&quot;</span><span class="p">;</span>
+<a name="gbab-97"></a>
+<a name="gbab-98"></a>			<span class="k">return</span> <span class="n">str</span><span class="p">;</span>
+<a name="gbab-99"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-100"></a>	<span class="p">}</span>
+<a name="gbab-101"></a>
+<a name="gbab-102"></a>	<span class="k">return</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+<a name="gbab-103"></a><span class="p">}</span>
+<a name="gbab-104"></a>
+<a name="gbab-105"></a><span class="kt">bool</span> <span class="n">ShortCut</span><span class="o">::</span><span class="n">is_valid</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-106"></a>
+<a name="gbab-107"></a>	<span class="k">return</span> <span class="n">shortcut</span><span class="p">.</span><span class="n">type</span><span class="o">!=</span><span class="n">InputEvent</span><span class="o">::</span><span class="n">NONE</span><span class="p">;</span>
+<a name="gbab-108"></a><span class="p">}</span>
+<a name="gbab-109"></a>
+<a name="gbab-110"></a><span class="kt">void</span> <span class="n">ShortCut</span><span class="o">::</span><span class="n">_bind_methods</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-111"></a>
+<a name="gbab-112"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;set_shortcut&quot;</span><span class="p">,</span><span class="s">&quot;event&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">ShortCut</span><span class="o">::</span><span class="n">set_shortcut</span><span class="p">);</span>
+<a name="gbab-113"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_shortcut&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">ShortCut</span><span class="o">::</span><span class="n">get_shortcut</span><span class="p">);</span>
+<a name="gbab-114"></a>
+<a name="gbab-115"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;is_valid&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">ShortCut</span><span class="o">::</span><span class="n">is_valid</span><span class="p">);</span>
+<a name="gbab-116"></a>
+<a name="gbab-117"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;is_shortcut&quot;</span><span class="p">,</span><span class="s">&quot;event&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">ShortCut</span><span class="o">::</span><span class="n">is_shortcut</span><span class="p">);</span>
+<a name="gbab-118"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_as_text&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">ShortCut</span><span class="o">::</span><span class="n">get_as_text</span><span class="p">);</span>
+<a name="gbab-119"></a>
+<a name="gbab-120"></a>	<span class="n">ADD_PROPERTY</span><span class="p">(</span><span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">INPUT_EVENT</span><span class="p">,</span><span class="s">&quot;shortcut&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;set_shortcut&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;get_shortcut&quot;</span><span class="p">));</span>
+<a name="gbab-121"></a><span class="p">}</span>
+<a name="gbab-122"></a>
+<a name="gbab-123"></a><span class="n">ShortCut</span><span class="o">::</span><span class="n">ShortCut</span><span class="p">(){</span>
+<a name="gbab-124"></a>
+<a name="gbab-125"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

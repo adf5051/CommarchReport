@@ -1,0 +1,903 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* dso.h */</span>
+<a name="gbab-2"></a><span class="cm">/*</span>
+<a name="gbab-3"></a><span class="cm"> * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project</span>
+<a name="gbab-4"></a><span class="cm"> * 2000.</span>
+<a name="gbab-5"></a><span class="cm"> */</span>
+<a name="gbab-6"></a><span class="cm">/* ====================================================================</span>
+<a name="gbab-7"></a><span class="cm"> * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.</span>
+<a name="gbab-8"></a><span class="cm"> *</span>
+<a name="gbab-9"></a><span class="cm"> * Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-10"></a><span class="cm"> * modification, are permitted provided that the following conditions</span>
+<a name="gbab-11"></a><span class="cm"> * are met:</span>
+<a name="gbab-12"></a><span class="cm"> *</span>
+<a name="gbab-13"></a><span class="cm"> * 1. Redistributions of source code must retain the above copyright</span>
+<a name="gbab-14"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer. </span>
+<a name="gbab-15"></a><span class="cm"> *</span>
+<a name="gbab-16"></a><span class="cm"> * 2. Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-17"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer in</span>
+<a name="gbab-18"></a><span class="cm"> *    the documentation and/or other materials provided with the</span>
+<a name="gbab-19"></a><span class="cm"> *    distribution.</span>
+<a name="gbab-20"></a><span class="cm"> *</span>
+<a name="gbab-21"></a><span class="cm"> * 3. All advertising materials mentioning features or use of this</span>
+<a name="gbab-22"></a><span class="cm"> *    software must display the following acknowledgment:</span>
+<a name="gbab-23"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-24"></a><span class="cm"> *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)&quot;</span>
+<a name="gbab-25"></a><span class="cm"> *</span>
+<a name="gbab-26"></a><span class="cm"> * 4. The names &quot;OpenSSL Toolkit&quot; and &quot;OpenSSL Project&quot; must not be used to</span>
+<a name="gbab-27"></a><span class="cm"> *    endorse or promote products derived from this software without</span>
+<a name="gbab-28"></a><span class="cm"> *    prior written permission. For written permission, please contact</span>
+<a name="gbab-29"></a><span class="cm"> *    licensing@OpenSSL.org.</span>
+<a name="gbab-30"></a><span class="cm"> *</span>
+<a name="gbab-31"></a><span class="cm"> * 5. Products derived from this software may not be called &quot;OpenSSL&quot;</span>
+<a name="gbab-32"></a><span class="cm"> *    nor may &quot;OpenSSL&quot; appear in their names without prior written</span>
+<a name="gbab-33"></a><span class="cm"> *    permission of the OpenSSL Project.</span>
+<a name="gbab-34"></a><span class="cm"> *</span>
+<a name="gbab-35"></a><span class="cm"> * 6. Redistributions of any form whatsoever must retain the following</span>
+<a name="gbab-36"></a><span class="cm"> *    acknowledgment:</span>
+<a name="gbab-37"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-38"></a><span class="cm"> *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)&quot;</span>
+<a name="gbab-39"></a><span class="cm"> *</span>
+<a name="gbab-40"></a><span class="cm"> * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS&#39;&#39; AND ANY</span>
+<a name="gbab-41"></a><span class="cm"> * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<a name="gbab-42"></a><span class="cm"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR</span>
+<a name="gbab-43"></a><span class="cm"> * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR</span>
+<a name="gbab-44"></a><span class="cm"> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<a name="gbab-45"></a><span class="cm"> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT</span>
+<a name="gbab-46"></a><span class="cm"> * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<a name="gbab-47"></a><span class="cm"> * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)</span>
+<a name="gbab-48"></a><span class="cm"> * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,</span>
+<a name="gbab-49"></a><span class="cm"> * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<a name="gbab-50"></a><span class="cm"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED</span>
+<a name="gbab-51"></a><span class="cm"> * OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-52"></a><span class="cm"> * ====================================================================</span>
+<a name="gbab-53"></a><span class="cm"> *</span>
+<a name="gbab-54"></a><span class="cm"> * This product includes cryptographic software written by Eric Young</span>
+<a name="gbab-55"></a><span class="cm"> * (eay@cryptsoft.com).  This product includes software written by Tim</span>
+<a name="gbab-56"></a><span class="cm"> * Hudson (tjh@cryptsoft.com).</span>
+<a name="gbab-57"></a><span class="cm"> *</span>
+<a name="gbab-58"></a><span class="cm"> */</span>
+<a name="gbab-59"></a>
+<a name="gbab-60"></a><span class="cp">#ifndef HEADER_DSO_H</span>
+<a name="gbab-61"></a><span class="cp">#define HEADER_DSO_H</span>
+<a name="gbab-62"></a>
+<a name="gbab-63"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/crypto.h&gt;</span><span class="cp"></span>
+<a name="gbab-64"></a>
+<a name="gbab-65"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-66"></a><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<a name="gbab-67"></a><span class="cp">#endif</span>
+<a name="gbab-68"></a>
+<a name="gbab-69"></a><span class="cm">/* These values are used as commands to DSO_ctrl() */</span>
+<a name="gbab-70"></a><span class="cp">#define DSO_CTRL_GET_FLAGS	1</span>
+<a name="gbab-71"></a><span class="cp">#define DSO_CTRL_SET_FLAGS	2</span>
+<a name="gbab-72"></a><span class="cp">#define DSO_CTRL_OR_FLAGS	3</span>
+<a name="gbab-73"></a>
+<a name="gbab-74"></a><span class="cm">/*</span>
+<a name="gbab-75"></a><span class="cm"> * By default, DSO_load() will translate the provided filename into a form</span>
+<a name="gbab-76"></a><span class="cm"> * typical for the platform (more specifically the DSO_METHOD) using the</span>
+<a name="gbab-77"></a><span class="cm"> * dso_name_converter function of the method. Eg. win32 will transform &quot;blah&quot;</span>
+<a name="gbab-78"></a><span class="cm"> * into &quot;blah.dll&quot;, and dlfcn will transform it into &quot;libblah.so&quot;. The</span>
+<a name="gbab-79"></a><span class="cm"> * behaviour can be overriden by setting the name_converter callback in the</span>
+<a name="gbab-80"></a><span class="cm"> * DSO object (using DSO_set_name_converter()). This callback could even</span>
+<a name="gbab-81"></a><span class="cm"> * utilise the DSO_METHOD&#39;s converter too if it only wants to override</span>
+<a name="gbab-82"></a><span class="cm"> * behaviour for one or two possible DSO methods. However, the following flag</span>
+<a name="gbab-83"></a><span class="cm"> * can be set in a DSO to prevent *any* native name-translation at all - eg.</span>
+<a name="gbab-84"></a><span class="cm"> * if the caller has prompted the user for a path to a driver library so the</span>
+<a name="gbab-85"></a><span class="cm"> * filename should be interpreted as-is.</span>
+<a name="gbab-86"></a><span class="cm"> */</span>
+<a name="gbab-87"></a><span class="cp">#define DSO_FLAG_NO_NAME_TRANSLATION		0x01</span>
+<a name="gbab-88"></a><span class="cm">/*</span>
+<a name="gbab-89"></a><span class="cm"> * An extra flag to give if only the extension should be added as</span>
+<a name="gbab-90"></a><span class="cm"> * translation.  This is obviously only of importance on Unix and other</span>
+<a name="gbab-91"></a><span class="cm"> * operating systems where the translation also may prefix the name with</span>
+<a name="gbab-92"></a><span class="cm"> * something, like &#39;lib&#39;, and ignored everywhere else. This flag is also</span>
+<a name="gbab-93"></a><span class="cm"> * ignored if DSO_FLAG_NO_NAME_TRANSLATION is used at the same time.</span>
+<a name="gbab-94"></a><span class="cm"> */</span>
+<a name="gbab-95"></a><span class="cp">#define DSO_FLAG_NAME_TRANSLATION_EXT_ONLY	0x02</span>
+<a name="gbab-96"></a>
+<a name="gbab-97"></a><span class="cm">/*</span>
+<a name="gbab-98"></a><span class="cm"> * The following flag controls the translation of symbol names to upper case.</span>
+<a name="gbab-99"></a><span class="cm"> * This is currently only being implemented for OpenVMS.</span>
+<a name="gbab-100"></a><span class="cm"> */</span>
+<a name="gbab-101"></a><span class="cp">#define DSO_FLAG_UPCASE_SYMBOL			0x10</span>
+<a name="gbab-102"></a>
+<a name="gbab-103"></a><span class="cm">/*</span>
+<a name="gbab-104"></a><span class="cm"> * This flag loads the library with public symbols. Meaning: The exported</span>
+<a name="gbab-105"></a><span class="cm"> * symbols of this library are public to all libraries loaded after this</span>
+<a name="gbab-106"></a><span class="cm"> * library. At the moment only implemented in unix.</span>
+<a name="gbab-107"></a><span class="cm"> */</span>
+<a name="gbab-108"></a><span class="cp">#define DSO_FLAG_GLOBAL_SYMBOLS			0x20</span>
+<a name="gbab-109"></a>
+<a name="gbab-110"></a><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">DSO_FUNC_TYPE</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-111"></a>
+<a name="gbab-112"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">dso_st</span> <span class="n">DSO</span><span class="p">;</span>
+<a name="gbab-113"></a>
+<a name="gbab-114"></a><span class="cm">/*</span>
+<a name="gbab-115"></a><span class="cm"> * The function prototype used for method functions (or caller-provided</span>
+<a name="gbab-116"></a><span class="cm"> * callbacks) that transform filenames. They are passed a DSO structure</span>
+<a name="gbab-117"></a><span class="cm"> * pointer (or NULL if they are to be used independantly of a DSO object) and</span>
+<a name="gbab-118"></a><span class="cm"> * a filename to transform. They should either return NULL (if there is an</span>
+<a name="gbab-119"></a><span class="cm"> * error condition) or a newly allocated string containing the transformed</span>
+<a name="gbab-120"></a><span class="cm"> * form that the caller will need to free with OPENSSL_free() when done.</span>
+<a name="gbab-121"></a><span class="cm"> */</span>
+<a name="gbab-122"></a><span class="k">typedef</span> <span class="kt">char</span><span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">DSO_NAME_CONVERTER_FUNC</span><span class="p">)(</span><span class="n">DSO</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-123"></a><span class="cm">/*</span>
+<a name="gbab-124"></a><span class="cm"> * The function prototype used for method functions (or caller-provided</span>
+<a name="gbab-125"></a><span class="cm"> * callbacks) that merge two file specifications. They are passed a DSO</span>
+<a name="gbab-126"></a><span class="cm"> * structure pointer (or NULL if they are to be used independantly of a DSO</span>
+<a name="gbab-127"></a><span class="cm"> * object) and two file specifications to merge. They should either return</span>
+<a name="gbab-128"></a><span class="cm"> * NULL (if there is an error condition) or a newly allocated string</span>
+<a name="gbab-129"></a><span class="cm"> * containing the result of merging that the caller will need to free with</span>
+<a name="gbab-130"></a><span class="cm"> * OPENSSL_free() when done. Here, merging means that bits and pieces are</span>
+<a name="gbab-131"></a><span class="cm"> * taken from each of the file specifications and added together in whatever</span>
+<a name="gbab-132"></a><span class="cm"> * fashion that is sensible for the DSO method in question.  The only rule</span>
+<a name="gbab-133"></a><span class="cm"> * that really applies is that if the two specification contain pieces of the</span>
+<a name="gbab-134"></a><span class="cm"> * same type, the copy from the first string takes priority.  One could see</span>
+<a name="gbab-135"></a><span class="cm"> * it as the first specification is the one given by the user and the second</span>
+<a name="gbab-136"></a><span class="cm"> * being a bunch of defaults to add on if they&#39;re missing in the first.</span>
+<a name="gbab-137"></a><span class="cm"> */</span>
+<a name="gbab-138"></a><span class="k">typedef</span> <span class="kt">char</span><span class="o">*</span> <span class="p">(</span><span class="o">*</span><span class="n">DSO_MERGER_FUNC</span><span class="p">)(</span><span class="n">DSO</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">);</span>
+<a name="gbab-139"></a>
+<a name="gbab-140"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">dso_meth_st</span> <span class="p">{</span>
+<a name="gbab-141"></a>	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+<a name="gbab-142"></a>    <span class="cm">/*</span>
+<a name="gbab-143"></a><span class="cm">     * Loads a shared library, NB: new DSO_METHODs must ensure that a</span>
+<a name="gbab-144"></a><span class="cm">	 * successful load populates the loaded_filename field, and likewise a</span>
+<a name="gbab-145"></a><span class="cm">     * successful unload OPENSSL_frees and NULLs it out.</span>
+<a name="gbab-146"></a><span class="cm">     */</span>
+<a name="gbab-147"></a>	<span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">dso_load</span><span class="p">)(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-148"></a>	<span class="cm">/* Unloads a shared library */</span>
+<a name="gbab-149"></a>	<span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">dso_unload</span><span class="p">)(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-150"></a>	<span class="cm">/* Binds a variable */</span>
+<a name="gbab-151"></a>	<span class="kt">void</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">dso_bind_var</span><span class="p">)(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">symname</span><span class="p">);</span>
+<a name="gbab-152"></a>    <span class="cm">/*</span>
+<a name="gbab-153"></a><span class="cm">     * Binds a function - assumes a return type of DSO_FUNC_TYPE. This should</span>
+<a name="gbab-154"></a><span class="cm">     * be cast to the real function prototype by the caller. Platforms that</span>
+<a name="gbab-155"></a><span class="cm">     * don&#39;t have compatible representations for different prototypes (this</span>
+<a name="gbab-156"></a><span class="cm">     * is possible within ANSI C) are highly unlikely to have shared</span>
+<a name="gbab-157"></a><span class="cm">     * libraries at all, let alone a DSO_METHOD implemented for them.</span>
+<a name="gbab-158"></a><span class="cm">     */</span>
+<a name="gbab-159"></a>	<span class="n">DSO_FUNC_TYPE</span> <span class="p">(</span><span class="o">*</span><span class="n">dso_bind_func</span><span class="p">)(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">symname</span><span class="p">);</span>
+<a name="gbab-160"></a><span class="cm">/* I don&#39;t think this would actually be used in any circumstances. */</span>
+<a name="gbab-161"></a><span class="cp">#if 0</span><span class="c"></span>
+<a name="gbab-162"></a><span class="c">	/* Unbinds a variable */</span>
+<a name="gbab-163"></a><span class="c">	int (*dso_unbind_var)(DSO *dso, char *symname, void *symptr);</span>
+<a name="gbab-164"></a><span class="c">	/* Unbinds a function */</span>
+<a name="gbab-165"></a><span class="c">	int (*dso_unbind_func)(DSO *dso, char *symname, DSO_FUNC_TYPE symptr);</span>
+<a name="gbab-166"></a><span class="cp">#endif</span>
+<a name="gbab-167"></a>    <span class="cm">/*</span>
+<a name="gbab-168"></a><span class="cm">     * The generic (yuck) &quot;ctrl()&quot; function. NB: Negative return values</span>
+<a name="gbab-169"></a><span class="cm">     * (rather than zero) indicate errors.</span>
+<a name="gbab-170"></a><span class="cm">     */</span>
+<a name="gbab-171"></a>	<span class="kt">long</span> <span class="p">(</span><span class="o">*</span><span class="n">dso_ctrl</span><span class="p">)(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cmd</span><span class="p">,</span> <span class="kt">long</span> <span class="n">larg</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">parg</span><span class="p">);</span>
+<a name="gbab-172"></a>    <span class="cm">/*</span>
+<a name="gbab-173"></a><span class="cm">     * The default DSO_METHOD-specific function for converting filenames to a</span>
+<a name="gbab-174"></a><span class="cm">     * canonical native form.</span>
+<a name="gbab-175"></a><span class="cm">     */</span>
+<a name="gbab-176"></a>	<span class="n">DSO_NAME_CONVERTER_FUNC</span> <span class="n">dso_name_converter</span><span class="p">;</span>
+<a name="gbab-177"></a>    <span class="cm">/*</span>
+<a name="gbab-178"></a><span class="cm">     * The default DSO_METHOD-specific function for converting filenames to a</span>
+<a name="gbab-179"></a><span class="cm">     * canonical native form.</span>
+<a name="gbab-180"></a><span class="cm">     */</span>
+<a name="gbab-181"></a>	<span class="n">DSO_MERGER_FUNC</span> <span class="n">dso_merger</span><span class="p">;</span>
+<a name="gbab-182"></a>	<span class="cm">/* [De]Initialisation handlers. */</span>
+<a name="gbab-183"></a>	<span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">init</span><span class="p">)(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-184"></a>	<span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">finish</span><span class="p">)(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-185"></a>	<span class="cm">/* Return pathname of the module containing location */</span>
+<a name="gbab-186"></a>	<span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">pathbyaddr</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span><span class="kt">int</span> <span class="n">sz</span><span class="p">);</span>
+<a name="gbab-187"></a>	<span class="cm">/* Perform global symbol lookup, i.e. among *all* modules */</span>
+<a name="gbab-188"></a>	<span class="kt">void</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">globallookup</span><span class="p">)(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">symname</span><span class="p">);</span>
+<a name="gbab-189"></a>	<span class="p">}</span> <span class="n">DSO_METHOD</span><span class="p">;</span>
+<a name="gbab-190"></a>
+<a name="gbab-191"></a><span class="cm">/**********************************************************************/</span>
+<a name="gbab-192"></a><span class="cm">/* The low-level handle type used to refer to a loaded shared library */</span>
+<a name="gbab-193"></a>
+<a name="gbab-194"></a><span class="k">struct</span> <span class="n">dso_st</span> <span class="p">{</span>
+<a name="gbab-195"></a>	<span class="n">DSO_METHOD</span> <span class="o">*</span><span class="n">meth</span><span class="p">;</span>
+<a name="gbab-196"></a>    <span class="cm">/*</span>
+<a name="gbab-197"></a><span class="cm">     * Standard dlopen uses a (void *). Win32 uses a HANDLE. VMS doesn&#39;t use</span>
+<a name="gbab-198"></a><span class="cm">     * anything but will need to cache the filename for use in the dso_bind</span>
+<a name="gbab-199"></a><span class="cm">     * handler. All in all, let each method control its own destiny.</span>
+<a name="gbab-200"></a><span class="cm">     * &quot;Handles&quot; and such go in a STACK.</span>
+<a name="gbab-201"></a><span class="cm">     */</span>
+<a name="gbab-202"></a>	<span class="n">STACK_OF</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="o">*</span><span class="n">meth_data</span><span class="p">;</span>
+<a name="gbab-203"></a>	<span class="kt">int</span> <span class="n">references</span><span class="p">;</span>
+<a name="gbab-204"></a>	<span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+<a name="gbab-205"></a>    <span class="cm">/*</span>
+<a name="gbab-206"></a><span class="cm">     * For use by applications etc ... use this for your bits&#39;n&#39;pieces, don&#39;t</span>
+<a name="gbab-207"></a><span class="cm">     * touch meth_data!</span>
+<a name="gbab-208"></a><span class="cm">     */</span>
+<a name="gbab-209"></a>	<span class="n">CRYPTO_EX_DATA</span> <span class="n">ex_data</span><span class="p">;</span>
+<a name="gbab-210"></a>    <span class="cm">/*</span>
+<a name="gbab-211"></a><span class="cm">     * If this callback function pointer is set to non-NULL, then it will be</span>
+<a name="gbab-212"></a><span class="cm">     * used in DSO_load() in place of meth-&gt;dso_name_converter. NB: This</span>
+<a name="gbab-213"></a><span class="cm">     * should normally set using DSO_set_name_converter().</span>
+<a name="gbab-214"></a><span class="cm">     */</span>
+<a name="gbab-215"></a>	<span class="n">DSO_NAME_CONVERTER_FUNC</span> <span class="n">name_converter</span><span class="p">;</span>
+<a name="gbab-216"></a>    <span class="cm">/*</span>
+<a name="gbab-217"></a><span class="cm">     * If this callback function pointer is set to non-NULL, then it will be</span>
+<a name="gbab-218"></a><span class="cm">     * used in DSO_load() in place of meth-&gt;dso_merger. NB: This should</span>
+<a name="gbab-219"></a><span class="cm">     * normally set using DSO_set_merger().</span>
+<a name="gbab-220"></a><span class="cm">     */</span>
+<a name="gbab-221"></a>	<span class="n">DSO_MERGER_FUNC</span> <span class="n">merger</span><span class="p">;</span>
+<a name="gbab-222"></a>    <span class="cm">/*</span>
+<a name="gbab-223"></a><span class="cm">     * This is populated with (a copy of) the platform-independant filename</span>
+<a name="gbab-224"></a><span class="cm">     * used for this DSO.</span>
+<a name="gbab-225"></a><span class="cm">     */</span>
+<a name="gbab-226"></a>	<span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">;</span>
+<a name="gbab-227"></a>    <span class="cm">/*</span>
+<a name="gbab-228"></a><span class="cm">     * This is populated with (a copy of) the translated filename by which</span>
+<a name="gbab-229"></a><span class="cm">	 * the DSO was actually loaded. It is NULL iff the DSO is not currently</span>
+<a name="gbab-230"></a><span class="cm">     * loaded. NB: This is here because the filename translation process may</span>
+<a name="gbab-231"></a><span class="cm">     * involve a callback being invoked more than once not only to convert to</span>
+<a name="gbab-232"></a><span class="cm">     * a platform-specific form, but also to try different filenames in the</span>
+<a name="gbab-233"></a><span class="cm">     * process of trying to perform a load. As such, this variable can be</span>
+<a name="gbab-234"></a><span class="cm">     * used to indicate (a) whether this DSO structure corresponds to a</span>
+<a name="gbab-235"></a><span class="cm">     * loaded library or not, and (b) the filename with which it was actually</span>
+<a name="gbab-236"></a><span class="cm">     * loaded.</span>
+<a name="gbab-237"></a><span class="cm">     */</span>
+<a name="gbab-238"></a>	<span class="kt">char</span> <span class="o">*</span><span class="n">loaded_filename</span><span class="p">;</span>
+<a name="gbab-239"></a>	<span class="p">};</span>
+<a name="gbab-240"></a>
+<a name="gbab-241"></a><span class="n">DSO</span> <span class="o">*</span>	<span class="nf">DSO_new</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-242"></a><span class="n">DSO</span> <span class="o">*</span>	<span class="nf">DSO_new_method</span><span class="p">(</span><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="n">method</span><span class="p">);</span>
+<a name="gbab-243"></a><span class="kt">int</span>	<span class="nf">DSO_free</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-244"></a><span class="kt">int</span>	<span class="nf">DSO_flags</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-245"></a><span class="kt">int</span>	<span class="nf">DSO_up_ref</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-246"></a><span class="kt">long</span>	<span class="nf">DSO_ctrl</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cmd</span><span class="p">,</span> <span class="kt">long</span> <span class="n">larg</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">parg</span><span class="p">);</span>
+<a name="gbab-247"></a>
+<a name="gbab-248"></a><span class="cm">/*</span>
+<a name="gbab-249"></a><span class="cm"> * This function sets the DSO&#39;s name_converter callback. If it is non-NULL,</span>
+<a name="gbab-250"></a><span class="cm"> * then it will be used instead of the associated DSO_METHOD&#39;s function. If</span>
+<a name="gbab-251"></a><span class="cm"> * oldcb is non-NULL then it is set to the function pointer value being</span>
+<a name="gbab-252"></a><span class="cm"> * replaced. Return value is non-zero for success.</span>
+<a name="gbab-253"></a><span class="cm"> */</span>
+<a name="gbab-254"></a><span class="kt">int</span>	<span class="nf">DSO_set_name_converter</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="n">DSO_NAME_CONVERTER_FUNC</span> <span class="n">cb</span><span class="p">,</span>
+<a name="gbab-255"></a>				<span class="n">DSO_NAME_CONVERTER_FUNC</span> <span class="o">*</span><span class="n">oldcb</span><span class="p">);</span>
+<a name="gbab-256"></a><span class="cm">/*</span>
+<a name="gbab-257"></a><span class="cm"> * These functions can be used to get/set the platform-independant filename</span>
+<a name="gbab-258"></a><span class="cm"> * used for a DSO. NB: set will fail if the DSO is already loaded.</span>
+<a name="gbab-259"></a><span class="cm"> */</span>
+<a name="gbab-260"></a><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">DSO_get_filename</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-261"></a><span class="kt">int</span>	<span class="nf">DSO_set_filename</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">);</span>
+<a name="gbab-262"></a><span class="cm">/*</span>
+<a name="gbab-263"></a><span class="cm"> * This function will invoke the DSO&#39;s name_converter callback to translate a</span>
+<a name="gbab-264"></a><span class="cm"> * filename, or if the callback isn&#39;t set it will instead use the DSO_METHOD&#39;s</span>
+<a name="gbab-265"></a><span class="cm"> * converter. If &quot;filename&quot; is NULL, the &quot;filename&quot; in the DSO itself will be</span>
+<a name="gbab-266"></a><span class="cm"> * used. If the DSO_FLAG_NO_NAME_TRANSLATION flag is set, then the filename is</span>
+<a name="gbab-267"></a><span class="cm"> * simply duplicated. NB: This function is usually called from within a</span>
+<a name="gbab-268"></a><span class="cm"> * DSO_METHOD during the processing of a DSO_load() call, and is exposed so</span>
+<a name="gbab-269"></a><span class="cm"> * that caller-created DSO_METHODs can do the same thing. A non-NULL return</span>
+<a name="gbab-270"></a><span class="cm"> * value will need to be OPENSSL_free()&#39;d.</span>
+<a name="gbab-271"></a><span class="cm"> */</span>
+<a name="gbab-272"></a><span class="kt">char</span>	<span class="o">*</span><span class="nf">DSO_convert_filename</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">);</span>
+<a name="gbab-273"></a><span class="cm">/*</span>
+<a name="gbab-274"></a><span class="cm"> * This function will invoke the DSO&#39;s merger callback to merge two file</span>
+<a name="gbab-275"></a><span class="cm"> * specifications, or if the callback isn&#39;t set it will instead use the</span>
+<a name="gbab-276"></a><span class="cm"> * DSO_METHOD&#39;s merger.  A non-NULL return value will need to be</span>
+<a name="gbab-277"></a><span class="cm"> * OPENSSL_free()&#39;d.</span>
+<a name="gbab-278"></a><span class="cm"> */</span>
+<a name="gbab-279"></a><span class="kt">char</span>	<span class="o">*</span><span class="nf">DSO_merge</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filespec1</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filespec2</span><span class="p">);</span>
+<a name="gbab-280"></a><span class="cm">/*</span>
+<a name="gbab-281"></a><span class="cm"> * If the DSO is currently loaded, this returns the filename that it was</span>
+<a name="gbab-282"></a><span class="cm"> * loaded under, otherwise it returns NULL. So it is also useful as a test as</span>
+<a name="gbab-283"></a><span class="cm"> * to whether the DSO is currently loaded. NB: This will not necessarily</span>
+<a name="gbab-284"></a><span class="cm"> * return the same value as DSO_convert_filename(dso, dso-&gt;filename), because</span>
+<a name="gbab-285"></a><span class="cm"> * the DSO_METHOD&#39;s load function may have tried a variety of filenames (with</span>
+<a name="gbab-286"></a><span class="cm"> * and/or without the aid of the converters) before settling on the one it</span>
+<a name="gbab-287"></a><span class="cm"> * actually loaded.</span>
+<a name="gbab-288"></a><span class="cm"> */</span>
+<a name="gbab-289"></a><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">DSO_get_loaded_filename</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-290"></a>
+<a name="gbab-291"></a><span class="kt">void</span>	<span class="nf">DSO_set_default_method</span><span class="p">(</span><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="n">meth</span><span class="p">);</span>
+<a name="gbab-292"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_get_default_method</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-293"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_get_method</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">);</span>
+<a name="gbab-294"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_set_method</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="n">DSO_METHOD</span> <span class="o">*</span><span class="n">meth</span><span class="p">);</span>
+<a name="gbab-295"></a>
+<a name="gbab-296"></a><span class="cm">/*</span>
+<a name="gbab-297"></a><span class="cm"> * The all-singing all-dancing load function, you normally pass NULL for the</span>
+<a name="gbab-298"></a><span class="cm"> * first and third parameters. Use DSO_up and DSO_free for subsequent</span>
+<a name="gbab-299"></a><span class="cm"> * reference count handling. Any flags passed in will be set in the</span>
+<a name="gbab-300"></a><span class="cm"> * constructed DSO after its init() function but before the load operation.</span>
+<a name="gbab-301"></a><span class="cm"> * If &#39;dso&#39; is non-NULL, &#39;flags&#39; is ignored.</span>
+<a name="gbab-302"></a><span class="cm"> */</span>
+<a name="gbab-303"></a><span class="n">DSO</span> <span class="o">*</span><span class="nf">DSO_load</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">,</span> <span class="n">DSO_METHOD</span> <span class="o">*</span><span class="n">meth</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">);</span>
+<a name="gbab-304"></a>
+<a name="gbab-305"></a><span class="cm">/* This function binds to a variable inside a shared library. */</span>
+<a name="gbab-306"></a><span class="kt">void</span> <span class="o">*</span><span class="nf">DSO_bind_var</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">symname</span><span class="p">);</span>
+<a name="gbab-307"></a>
+<a name="gbab-308"></a><span class="cm">/* This function binds to a function inside a shared library. */</span>
+<a name="gbab-309"></a><span class="n">DSO_FUNC_TYPE</span> <span class="nf">DSO_bind_func</span><span class="p">(</span><span class="n">DSO</span> <span class="o">*</span><span class="n">dso</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">symname</span><span class="p">);</span>
+<a name="gbab-310"></a>
+<a name="gbab-311"></a><span class="cm">/*</span>
+<a name="gbab-312"></a><span class="cm"> * This method is the default, but will beg, borrow, or steal whatever method</span>
+<a name="gbab-313"></a><span class="cm"> * should be the default on any particular platform (including</span>
+<a name="gbab-314"></a><span class="cm"> * DSO_METH_null() if necessary).</span>
+<a name="gbab-315"></a><span class="cm"> */</span>
+<a name="gbab-316"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_METHOD_openssl</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-317"></a>
+<a name="gbab-318"></a><span class="cm">/*</span>
+<a name="gbab-319"></a><span class="cm"> * This method is defined for all platforms - if a platform has no DSO</span>
+<a name="gbab-320"></a><span class="cm"> * support then this will be the only method!</span>
+<a name="gbab-321"></a><span class="cm"> */</span>
+<a name="gbab-322"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_METHOD_null</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-323"></a>
+<a name="gbab-324"></a><span class="cm">/*</span>
+<a name="gbab-325"></a><span class="cm"> * If DSO_DLFCN is defined, the standard dlfcn.h-style functions (dlopen,</span>
+<a name="gbab-326"></a><span class="cm"> * dlclose, dlsym, etc) will be used and incorporated into this method. If</span>
+<a name="gbab-327"></a><span class="cm"> * not, this method will return NULL.</span>
+<a name="gbab-328"></a><span class="cm"> */</span>
+<a name="gbab-329"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_METHOD_dlfcn</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-330"></a>
+<a name="gbab-331"></a><span class="cm">/*</span>
+<a name="gbab-332"></a><span class="cm"> * If DSO_DL is defined, the standard dl.h-style functions (shl_load,</span>
+<a name="gbab-333"></a><span class="cm"> * shl_unload, shl_findsym, etc) will be used and incorporated into this</span>
+<a name="gbab-334"></a><span class="cm"> * method. If not, this method will return NULL.</span>
+<a name="gbab-335"></a><span class="cm"> */</span>
+<a name="gbab-336"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_METHOD_dl</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-337"></a>
+<a name="gbab-338"></a><span class="cm">/* If WIN32 is defined, use DLLs. If not, return NULL. */</span>
+<a name="gbab-339"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_METHOD_win32</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-340"></a>
+<a name="gbab-341"></a><span class="cm">/* If VMS is defined, use shared images. If not, return NULL. */</span>
+<a name="gbab-342"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_METHOD_vms</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-343"></a>
+<a name="gbab-344"></a><span class="cm">/*</span>
+<a name="gbab-345"></a><span class="cm"> * This function writes null-terminated pathname of DSO module containing</span>
+<a name="gbab-346"></a><span class="cm"> * &#39;addr&#39; into &#39;sz&#39; large caller-provided &#39;path&#39; and returns the number of</span>
+<a name="gbab-347"></a><span class="cm"> * characters [including trailing zero] written to it. If &#39;sz&#39; is 0 or</span>
+<a name="gbab-348"></a><span class="cm"> * negative, &#39;path&#39; is ignored and required amount of charachers [including</span>
+<a name="gbab-349"></a><span class="cm"> * trailing zero] to accomodate pathname is returned. If &#39;addr&#39; is NULL, then</span>
+<a name="gbab-350"></a><span class="cm"> * pathname of cryptolib itself is returned. Negative or zero return value</span>
+<a name="gbab-351"></a><span class="cm"> * denotes error.</span>
+<a name="gbab-352"></a><span class="cm"> */</span>
+<a name="gbab-353"></a><span class="kt">int</span> <span class="nf">DSO_pathbyaddr</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span><span class="kt">int</span> <span class="n">sz</span><span class="p">);</span>
+<a name="gbab-354"></a>
+<a name="gbab-355"></a><span class="cm">/*</span>
+<a name="gbab-356"></a><span class="cm"> * This function should be used with caution! It looks up symbols in *all*</span>
+<a name="gbab-357"></a><span class="cm"> * loaded modules and if module gets unloaded by somebody else attempt to</span>
+<a name="gbab-358"></a><span class="cm"> * dereference the pointer is doomed to have fatal consequences. Primary</span>
+<a name="gbab-359"></a><span class="cm"> * usage for this function is to probe *core* system functionality, e.g.</span>
+<a name="gbab-360"></a><span class="cm"> * check if getnameinfo(3) is available at run-time without bothering about</span>
+<a name="gbab-361"></a><span class="cm"> * OS-specific details such as libc.so.versioning or where does it actually</span>
+<a name="gbab-362"></a><span class="cm"> * reside: in libc itself or libsocket.</span>
+<a name="gbab-363"></a><span class="cm"> */</span>
+<a name="gbab-364"></a><span class="kt">void</span> <span class="o">*</span><span class="nf">DSO_global_lookup</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">);</span>
+<a name="gbab-365"></a>
+<a name="gbab-366"></a><span class="cm">/* If BeOS is defined, use shared images. If not, return NULL. */</span>
+<a name="gbab-367"></a><span class="n">DSO_METHOD</span> <span class="o">*</span><span class="nf">DSO_METHOD_beos</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-368"></a>
+<a name="gbab-369"></a><span class="cm">/* BEGIN ERROR CODES */</span>
+<a name="gbab-370"></a><span class="cm">/*</span>
+<a name="gbab-371"></a><span class="cm"> * The following lines are auto generated by the script mkerr.pl. Any changes</span>
+<a name="gbab-372"></a><span class="cm"> * made after this point may be overwritten when the script is next run.</span>
+<a name="gbab-373"></a><span class="cm"> */</span>
+<a name="gbab-374"></a><span class="kt">void</span> <span class="nf">ERR_load_DSO_strings</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-375"></a>
+<a name="gbab-376"></a><span class="cm">/* Error codes for the DSO functions. */</span>
+<a name="gbab-377"></a>
+<a name="gbab-378"></a><span class="cm">/* Function codes. */</span>
+<a name="gbab-379"></a><span class="cp">#define DSO_F_BEOS_BIND_FUNC				 144</span>
+<a name="gbab-380"></a><span class="cp">#define DSO_F_BEOS_BIND_VAR				 145</span>
+<a name="gbab-381"></a><span class="cp">#define DSO_F_BEOS_LOAD					 146</span>
+<a name="gbab-382"></a><span class="cp">#define DSO_F_BEOS_NAME_CONVERTER			 147</span>
+<a name="gbab-383"></a><span class="cp">#define DSO_F_BEOS_UNLOAD				 148</span>
+<a name="gbab-384"></a><span class="cp">#define DSO_F_DLFCN_BIND_FUNC				 100</span>
+<a name="gbab-385"></a><span class="cp">#define DSO_F_DLFCN_BIND_VAR				 101</span>
+<a name="gbab-386"></a><span class="cp">#define DSO_F_DLFCN_LOAD				 102</span>
+<a name="gbab-387"></a><span class="cp">#define DSO_F_DLFCN_MERGER				 130</span>
+<a name="gbab-388"></a><span class="cp">#define DSO_F_DLFCN_NAME_CONVERTER			 123</span>
+<a name="gbab-389"></a><span class="cp">#define DSO_F_DLFCN_UNLOAD				 103</span>
+<a name="gbab-390"></a><span class="cp">#define DSO_F_DL_BIND_FUNC				 104</span>
+<a name="gbab-391"></a><span class="cp">#define DSO_F_DL_BIND_VAR				 105</span>
+<a name="gbab-392"></a><span class="cp">#define DSO_F_DL_LOAD					 106</span>
+<a name="gbab-393"></a><span class="cp">#define DSO_F_DL_MERGER					 131</span>
+<a name="gbab-394"></a><span class="cp">#define DSO_F_DL_NAME_CONVERTER				 124</span>
+<a name="gbab-395"></a><span class="cp">#define DSO_F_DL_UNLOAD					 107</span>
+<a name="gbab-396"></a><span class="cp">#define DSO_F_DSO_BIND_FUNC				 108</span>
+<a name="gbab-397"></a><span class="cp">#define DSO_F_DSO_BIND_VAR				 109</span>
+<a name="gbab-398"></a><span class="cp">#define DSO_F_DSO_CONVERT_FILENAME			 126</span>
+<a name="gbab-399"></a><span class="cp">#define DSO_F_DSO_CTRL					 110</span>
+<a name="gbab-400"></a><span class="cp">#define DSO_F_DSO_FREE					 111</span>
+<a name="gbab-401"></a><span class="cp">#define DSO_F_DSO_GET_FILENAME				 127</span>
+<a name="gbab-402"></a><span class="cp">#define DSO_F_DSO_GET_LOADED_FILENAME			 128</span>
+<a name="gbab-403"></a><span class="cp">#define DSO_F_DSO_GLOBAL_LOOKUP				 139</span>
+<a name="gbab-404"></a><span class="cp">#define DSO_F_DSO_LOAD					 112</span>
+<a name="gbab-405"></a><span class="cp">#define DSO_F_DSO_MERGE					 132</span>
+<a name="gbab-406"></a><span class="cp">#define DSO_F_DSO_NEW_METHOD				 113</span>
+<a name="gbab-407"></a><span class="cp">#define DSO_F_DSO_PATHBYADDR				 140</span>
+<a name="gbab-408"></a><span class="cp">#define DSO_F_DSO_SET_FILENAME				 129</span>
+<a name="gbab-409"></a><span class="cp">#define DSO_F_DSO_SET_NAME_CONVERTER			 122</span>
+<a name="gbab-410"></a><span class="cp">#define DSO_F_DSO_UP_REF				 114</span>
+<a name="gbab-411"></a><span class="cp">#define DSO_F_GLOBAL_LOOKUP_FUNC			 138</span>
+<a name="gbab-412"></a><span class="cp">#define DSO_F_PATHBYADDR				 137</span>
+<a name="gbab-413"></a><span class="cp">#define DSO_F_VMS_BIND_SYM				 115</span>
+<a name="gbab-414"></a><span class="cp">#define DSO_F_VMS_LOAD					 116</span>
+<a name="gbab-415"></a><span class="cp">#define DSO_F_VMS_MERGER				 133</span>
+<a name="gbab-416"></a><span class="cp">#define DSO_F_VMS_UNLOAD				 117</span>
+<a name="gbab-417"></a><span class="cp">#define DSO_F_WIN32_BIND_FUNC				 118</span>
+<a name="gbab-418"></a><span class="cp">#define DSO_F_WIN32_BIND_VAR				 119</span>
+<a name="gbab-419"></a><span class="cp">#define DSO_F_WIN32_GLOBALLOOKUP			 142</span>
+<a name="gbab-420"></a><span class="cp">#define DSO_F_WIN32_GLOBALLOOKUP_FUNC			 143</span>
+<a name="gbab-421"></a><span class="cp">#define DSO_F_WIN32_JOINER				 135</span>
+<a name="gbab-422"></a><span class="cp">#define DSO_F_WIN32_LOAD				 120</span>
+<a name="gbab-423"></a><span class="cp">#define DSO_F_WIN32_MERGER				 134</span>
+<a name="gbab-424"></a><span class="cp">#define DSO_F_WIN32_NAME_CONVERTER			 125</span>
+<a name="gbab-425"></a><span class="cp">#define DSO_F_WIN32_PATHBYADDR				 141</span>
+<a name="gbab-426"></a><span class="cp">#define DSO_F_WIN32_SPLITTER				 136</span>
+<a name="gbab-427"></a><span class="cp">#define DSO_F_WIN32_UNLOAD				 121</span>
+<a name="gbab-428"></a>
+<a name="gbab-429"></a><span class="cm">/* Reason codes. */</span>
+<a name="gbab-430"></a><span class="cp">#define DSO_R_CTRL_FAILED				 100</span>
+<a name="gbab-431"></a><span class="cp">#define DSO_R_DSO_ALREADY_LOADED			 110</span>
+<a name="gbab-432"></a><span class="cp">#define DSO_R_EMPTY_FILE_STRUCTURE			 113</span>
+<a name="gbab-433"></a><span class="cp">#define DSO_R_FAILURE					 114</span>
+<a name="gbab-434"></a><span class="cp">#define DSO_R_FILENAME_TOO_BIG				 101</span>
+<a name="gbab-435"></a><span class="cp">#define DSO_R_FINISH_FAILED				 102</span>
+<a name="gbab-436"></a><span class="cp">#define DSO_R_INCORRECT_FILE_SYNTAX			 115</span>
+<a name="gbab-437"></a><span class="cp">#define DSO_R_LOAD_FAILED				 103</span>
+<a name="gbab-438"></a><span class="cp">#define DSO_R_NAME_TRANSLATION_FAILED			 109</span>
+<a name="gbab-439"></a><span class="cp">#define DSO_R_NO_FILENAME				 111</span>
+<a name="gbab-440"></a><span class="cp">#define DSO_R_NO_FILE_SPECIFICATION			 116</span>
+<a name="gbab-441"></a><span class="cp">#define DSO_R_NULL_HANDLE				 104</span>
+<a name="gbab-442"></a><span class="cp">#define DSO_R_SET_FILENAME_FAILED			 112</span>
+<a name="gbab-443"></a><span class="cp">#define DSO_R_STACK_ERROR				 105</span>
+<a name="gbab-444"></a><span class="cp">#define DSO_R_SYM_FAILURE				 106</span>
+<a name="gbab-445"></a><span class="cp">#define DSO_R_UNLOAD_FAILED				 107</span>
+<a name="gbab-446"></a><span class="cp">#define DSO_R_UNSUPPORTED				 108</span>
+<a name="gbab-447"></a>
+<a name="gbab-448"></a><span class="cp">#ifdef  __cplusplus</span>
+<a name="gbab-449"></a><span class="p">}</span>
+<a name="gbab-450"></a><span class="cp">#endif</span>
+<a name="gbab-451"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

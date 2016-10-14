@@ -1,0 +1,509 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*  cp_tables.cpp                                                        */</span>
+<a name="gbab-3"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-4"></a><span class="cm">/*                       This file is part of:                           */</span>
+<a name="gbab-5"></a><span class="cm">/*                           GODOT ENGINE                                */</span>
+<a name="gbab-6"></a><span class="cm">/*                    http://www.godotengine.org                         */</span>
+<a name="gbab-7"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-8"></a><span class="cm">/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-10"></a><span class="cm">/* Permission is hereby granted, free of charge, to any person obtaining */</span>
+<a name="gbab-11"></a><span class="cm">/* a copy of this software and associated documentation files (the       */</span>
+<a name="gbab-12"></a><span class="cm">/* &quot;Software&quot;), to deal in the Software without restriction, including   */</span>
+<a name="gbab-13"></a><span class="cm">/* without limitation the rights to use, copy, modify, merge, publish,   */</span>
+<a name="gbab-14"></a><span class="cm">/* distribute, sublicense, and/or sell copies of the Software, and to    */</span>
+<a name="gbab-15"></a><span class="cm">/* permit persons to whom the Software is furnished to do so, subject to */</span>
+<a name="gbab-16"></a><span class="cm">/* the following conditions:                                             */</span>
+<a name="gbab-17"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-18"></a><span class="cm">/* The above copyright notice and this permission notice shall be        */</span>
+<a name="gbab-19"></a><span class="cm">/* included in all copies or substantial portions of the Software.       */</span>
+<a name="gbab-20"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-21"></a><span class="cm">/* THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,       */</span>
+<a name="gbab-22"></a><span class="cm">/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */</span>
+<a name="gbab-23"></a><span class="cm">/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/</span>
+<a name="gbab-24"></a><span class="cm">/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */</span>
+<a name="gbab-25"></a><span class="cm">/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */</span>
+<a name="gbab-26"></a><span class="cm">/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */</span>
+<a name="gbab-27"></a><span class="cm">/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */</span>
+<a name="gbab-28"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-29"></a>
+<a name="gbab-30"></a><span class="cp">#include</span> <span class="cpf">&quot;cp_tables.h&quot;</span><span class="cp"></span>
+<a name="gbab-31"></a>
+<a name="gbab-32"></a><span class="kt">int32_t</span> <span class="n">CPTables</span><span class="o">::</span><span class="n">linear_period_to_freq_tab</span><span class="p">[</span><span class="mi">768</span><span class="p">]</span><span class="o">=</span><span class="p">{</span>
+<a name="gbab-33"></a>
+<a name="gbab-34"></a>	<span class="mi">535232</span><span class="p">,</span><span class="mi">534749</span><span class="p">,</span><span class="mi">534266</span><span class="p">,</span><span class="mi">533784</span><span class="p">,</span><span class="mi">533303</span><span class="p">,</span><span class="mi">532822</span><span class="p">,</span><span class="mi">532341</span><span class="p">,</span><span class="mi">531861</span><span class="p">,</span>
+<a name="gbab-35"></a>	<span class="mi">531381</span><span class="p">,</span><span class="mi">530902</span><span class="p">,</span><span class="mi">530423</span><span class="p">,</span><span class="mi">529944</span><span class="p">,</span><span class="mi">529466</span><span class="p">,</span><span class="mi">528988</span><span class="p">,</span><span class="mi">528511</span><span class="p">,</span><span class="mi">528034</span><span class="p">,</span>
+<a name="gbab-36"></a>	<span class="mi">527558</span><span class="p">,</span><span class="mi">527082</span><span class="p">,</span><span class="mi">526607</span><span class="p">,</span><span class="mi">526131</span><span class="p">,</span><span class="mi">525657</span><span class="p">,</span><span class="mi">525183</span><span class="p">,</span><span class="mi">524709</span><span class="p">,</span><span class="mi">524236</span><span class="p">,</span>
+<a name="gbab-37"></a>	<span class="mi">523763</span><span class="p">,</span><span class="mi">523290</span><span class="p">,</span><span class="mi">522818</span><span class="p">,</span><span class="mi">522346</span><span class="p">,</span><span class="mi">521875</span><span class="p">,</span><span class="mi">521404</span><span class="p">,</span><span class="mi">520934</span><span class="p">,</span><span class="mi">520464</span><span class="p">,</span>
+<a name="gbab-38"></a>	<span class="mi">519994</span><span class="p">,</span><span class="mi">519525</span><span class="p">,</span><span class="mi">519057</span><span class="p">,</span><span class="mi">518588</span><span class="p">,</span><span class="mi">518121</span><span class="p">,</span><span class="mi">517653</span><span class="p">,</span><span class="mi">517186</span><span class="p">,</span><span class="mi">516720</span><span class="p">,</span>
+<a name="gbab-39"></a>	<span class="mi">516253</span><span class="p">,</span><span class="mi">515788</span><span class="p">,</span><span class="mi">515322</span><span class="p">,</span><span class="mi">514858</span><span class="p">,</span><span class="mi">514393</span><span class="p">,</span><span class="mi">513929</span><span class="p">,</span><span class="mi">513465</span><span class="p">,</span><span class="mi">513002</span><span class="p">,</span>
+<a name="gbab-40"></a>	<span class="mi">512539</span><span class="p">,</span><span class="mi">512077</span><span class="p">,</span><span class="mi">511615</span><span class="p">,</span><span class="mi">511154</span><span class="p">,</span><span class="mi">510692</span><span class="p">,</span><span class="mi">510232</span><span class="p">,</span><span class="mi">509771</span><span class="p">,</span><span class="mi">509312</span><span class="p">,</span>
+<a name="gbab-41"></a>	<span class="mi">508852</span><span class="p">,</span><span class="mi">508393</span><span class="p">,</span><span class="mi">507934</span><span class="p">,</span><span class="mi">507476</span><span class="p">,</span><span class="mi">507018</span><span class="p">,</span><span class="mi">506561</span><span class="p">,</span><span class="mi">506104</span><span class="p">,</span><span class="mi">505647</span><span class="p">,</span>
+<a name="gbab-42"></a>	<span class="mi">505191</span><span class="p">,</span><span class="mi">504735</span><span class="p">,</span><span class="mi">504280</span><span class="p">,</span><span class="mi">503825</span><span class="p">,</span><span class="mi">503371</span><span class="p">,</span><span class="mi">502917</span><span class="p">,</span><span class="mi">502463</span><span class="p">,</span><span class="mi">502010</span><span class="p">,</span>
+<a name="gbab-43"></a>	<span class="mi">501557</span><span class="p">,</span><span class="mi">501104</span><span class="p">,</span><span class="mi">500652</span><span class="p">,</span><span class="mi">500201</span><span class="p">,</span><span class="mi">499749</span><span class="p">,</span><span class="mi">499298</span><span class="p">,</span><span class="mi">498848</span><span class="p">,</span><span class="mi">498398</span><span class="p">,</span>
+<a name="gbab-44"></a>	<span class="mi">497948</span><span class="p">,</span><span class="mi">497499</span><span class="p">,</span><span class="mi">497050</span><span class="p">,</span><span class="mi">496602</span><span class="p">,</span><span class="mi">496154</span><span class="p">,</span><span class="mi">495706</span><span class="p">,</span><span class="mi">495259</span><span class="p">,</span><span class="mi">494812</span><span class="p">,</span>
+<a name="gbab-45"></a>	<span class="mi">494366</span><span class="p">,</span><span class="mi">493920</span><span class="p">,</span><span class="mi">493474</span><span class="p">,</span><span class="mi">493029</span><span class="p">,</span><span class="mi">492585</span><span class="p">,</span><span class="mi">492140</span><span class="p">,</span><span class="mi">491696</span><span class="p">,</span><span class="mi">491253</span><span class="p">,</span>
+<a name="gbab-46"></a>	<span class="mi">490809</span><span class="p">,</span><span class="mi">490367</span><span class="p">,</span><span class="mi">489924</span><span class="p">,</span><span class="mi">489482</span><span class="p">,</span><span class="mi">489041</span><span class="p">,</span><span class="mi">488600</span><span class="p">,</span><span class="mi">488159</span><span class="p">,</span><span class="mi">487718</span><span class="p">,</span>
+<a name="gbab-47"></a>	<span class="mi">487278</span><span class="p">,</span><span class="mi">486839</span><span class="p">,</span><span class="mi">486400</span><span class="p">,</span><span class="mi">485961</span><span class="p">,</span><span class="mi">485522</span><span class="p">,</span><span class="mi">485084</span><span class="p">,</span><span class="mi">484647</span><span class="p">,</span><span class="mi">484210</span><span class="p">,</span>
+<a name="gbab-48"></a>	<span class="mi">483773</span><span class="p">,</span><span class="mi">483336</span><span class="p">,</span><span class="mi">482900</span><span class="p">,</span><span class="mi">482465</span><span class="p">,</span><span class="mi">482029</span><span class="p">,</span><span class="mi">481595</span><span class="p">,</span><span class="mi">481160</span><span class="p">,</span><span class="mi">480726</span><span class="p">,</span>
+<a name="gbab-49"></a>	<span class="mi">480292</span><span class="p">,</span><span class="mi">479859</span><span class="p">,</span><span class="mi">479426</span><span class="p">,</span><span class="mi">478994</span><span class="p">,</span><span class="mi">478562</span><span class="p">,</span><span class="mi">478130</span><span class="p">,</span><span class="mi">477699</span><span class="p">,</span><span class="mi">477268</span><span class="p">,</span>
+<a name="gbab-50"></a>	<span class="mi">476837</span><span class="p">,</span><span class="mi">476407</span><span class="p">,</span><span class="mi">475977</span><span class="p">,</span><span class="mi">475548</span><span class="p">,</span><span class="mi">475119</span><span class="p">,</span><span class="mi">474690</span><span class="p">,</span><span class="mi">474262</span><span class="p">,</span><span class="mi">473834</span><span class="p">,</span>
+<a name="gbab-51"></a>	<span class="mi">473407</span><span class="p">,</span><span class="mi">472979</span><span class="p">,</span><span class="mi">472553</span><span class="p">,</span><span class="mi">472126</span><span class="p">,</span><span class="mi">471701</span><span class="p">,</span><span class="mi">471275</span><span class="p">,</span><span class="mi">470850</span><span class="p">,</span><span class="mi">470425</span><span class="p">,</span>
+<a name="gbab-52"></a>	<span class="mi">470001</span><span class="p">,</span><span class="mi">469577</span><span class="p">,</span><span class="mi">469153</span><span class="p">,</span><span class="mi">468730</span><span class="p">,</span><span class="mi">468307</span><span class="p">,</span><span class="mi">467884</span><span class="p">,</span><span class="mi">467462</span><span class="p">,</span><span class="mi">467041</span><span class="p">,</span>
+<a name="gbab-53"></a>	<span class="mi">466619</span><span class="p">,</span><span class="mi">466198</span><span class="p">,</span><span class="mi">465778</span><span class="p">,</span><span class="mi">465358</span><span class="p">,</span><span class="mi">464938</span><span class="p">,</span><span class="mi">464518</span><span class="p">,</span><span class="mi">464099</span><span class="p">,</span><span class="mi">463681</span><span class="p">,</span>
+<a name="gbab-54"></a>	<span class="mi">463262</span><span class="p">,</span><span class="mi">462844</span><span class="p">,</span><span class="mi">462427</span><span class="p">,</span><span class="mi">462010</span><span class="p">,</span><span class="mi">461593</span><span class="p">,</span><span class="mi">461177</span><span class="p">,</span><span class="mi">460760</span><span class="p">,</span><span class="mi">460345</span><span class="p">,</span>
+<a name="gbab-55"></a>	<span class="mi">459930</span><span class="p">,</span><span class="mi">459515</span><span class="p">,</span><span class="mi">459100</span><span class="p">,</span><span class="mi">458686</span><span class="p">,</span><span class="mi">458272</span><span class="p">,</span><span class="mi">457859</span><span class="p">,</span><span class="mi">457446</span><span class="p">,</span><span class="mi">457033</span><span class="p">,</span>
+<a name="gbab-56"></a>	<span class="mi">456621</span><span class="p">,</span><span class="mi">456209</span><span class="p">,</span><span class="mi">455797</span><span class="p">,</span><span class="mi">455386</span><span class="p">,</span><span class="mi">454975</span><span class="p">,</span><span class="mi">454565</span><span class="p">,</span><span class="mi">454155</span><span class="p">,</span><span class="mi">453745</span><span class="p">,</span>
+<a name="gbab-57"></a>	<span class="mi">453336</span><span class="p">,</span><span class="mi">452927</span><span class="p">,</span><span class="mi">452518</span><span class="p">,</span><span class="mi">452110</span><span class="p">,</span><span class="mi">451702</span><span class="p">,</span><span class="mi">451294</span><span class="p">,</span><span class="mi">450887</span><span class="p">,</span><span class="mi">450481</span><span class="p">,</span>
+<a name="gbab-58"></a>	<span class="mi">450074</span><span class="p">,</span><span class="mi">449668</span><span class="p">,</span><span class="mi">449262</span><span class="p">,</span><span class="mi">448857</span><span class="p">,</span><span class="mi">448452</span><span class="p">,</span><span class="mi">448048</span><span class="p">,</span><span class="mi">447644</span><span class="p">,</span><span class="mi">447240</span><span class="p">,</span>
+<a name="gbab-59"></a>	<span class="mi">446836</span><span class="p">,</span><span class="mi">446433</span><span class="p">,</span><span class="mi">446030</span><span class="p">,</span><span class="mi">445628</span><span class="p">,</span><span class="mi">445226</span><span class="p">,</span><span class="mi">444824</span><span class="p">,</span><span class="mi">444423</span><span class="p">,</span><span class="mi">444022</span><span class="p">,</span>
+<a name="gbab-60"></a>	<span class="mi">443622</span><span class="p">,</span><span class="mi">443221</span><span class="p">,</span><span class="mi">442821</span><span class="p">,</span><span class="mi">442422</span><span class="p">,</span><span class="mi">442023</span><span class="p">,</span><span class="mi">441624</span><span class="p">,</span><span class="mi">441226</span><span class="p">,</span><span class="mi">440828</span><span class="p">,</span>
+<a name="gbab-61"></a>	<span class="mi">440430</span><span class="p">,</span><span class="mi">440033</span><span class="p">,</span><span class="mi">439636</span><span class="p">,</span><span class="mi">439239</span><span class="p">,</span><span class="mi">438843</span><span class="p">,</span><span class="mi">438447</span><span class="p">,</span><span class="mi">438051</span><span class="p">,</span><span class="mi">437656</span><span class="p">,</span>
+<a name="gbab-62"></a>	<span class="mi">437261</span><span class="p">,</span><span class="mi">436867</span><span class="p">,</span><span class="mi">436473</span><span class="p">,</span><span class="mi">436079</span><span class="p">,</span><span class="mi">435686</span><span class="p">,</span><span class="mi">435293</span><span class="p">,</span><span class="mi">434900</span><span class="p">,</span><span class="mi">434508</span><span class="p">,</span>
+<a name="gbab-63"></a>	<span class="mi">434116</span><span class="p">,</span><span class="mi">433724</span><span class="p">,</span><span class="mi">433333</span><span class="p">,</span><span class="mi">432942</span><span class="p">,</span><span class="mi">432551</span><span class="p">,</span><span class="mi">432161</span><span class="p">,</span><span class="mi">431771</span><span class="p">,</span><span class="mi">431382</span><span class="p">,</span>
+<a name="gbab-64"></a>	<span class="mi">430992</span><span class="p">,</span><span class="mi">430604</span><span class="p">,</span><span class="mi">430215</span><span class="p">,</span><span class="mi">429827</span><span class="p">,</span><span class="mi">429439</span><span class="p">,</span><span class="mi">429052</span><span class="p">,</span><span class="mi">428665</span><span class="p">,</span><span class="mi">428278</span><span class="p">,</span>
+<a name="gbab-65"></a>	<span class="mi">427892</span><span class="p">,</span><span class="mi">427506</span><span class="p">,</span><span class="mi">427120</span><span class="p">,</span><span class="mi">426735</span><span class="p">,</span><span class="mi">426350</span><span class="p">,</span><span class="mi">425965</span><span class="p">,</span><span class="mi">425581</span><span class="p">,</span><span class="mi">425197</span><span class="p">,</span>
+<a name="gbab-66"></a>	<span class="mi">424813</span><span class="p">,</span><span class="mi">424430</span><span class="p">,</span><span class="mi">424047</span><span class="p">,</span><span class="mi">423665</span><span class="p">,</span><span class="mi">423283</span><span class="p">,</span><span class="mi">422901</span><span class="p">,</span><span class="mi">422519</span><span class="p">,</span><span class="mi">422138</span><span class="p">,</span>
+<a name="gbab-67"></a>	<span class="mi">421757</span><span class="p">,</span><span class="mi">421377</span><span class="p">,</span><span class="mi">420997</span><span class="p">,</span><span class="mi">420617</span><span class="p">,</span><span class="mi">420237</span><span class="p">,</span><span class="mi">419858</span><span class="p">,</span><span class="mi">419479</span><span class="p">,</span><span class="mi">419101</span><span class="p">,</span>
+<a name="gbab-68"></a>	<span class="mi">418723</span><span class="p">,</span><span class="mi">418345</span><span class="p">,</span><span class="mi">417968</span><span class="p">,</span><span class="mi">417591</span><span class="p">,</span><span class="mi">417214</span><span class="p">,</span><span class="mi">416838</span><span class="p">,</span><span class="mi">416462</span><span class="p">,</span><span class="mi">416086</span><span class="p">,</span>
+<a name="gbab-69"></a>	<span class="mi">415711</span><span class="p">,</span><span class="mi">415336</span><span class="p">,</span><span class="mi">414961</span><span class="p">,</span><span class="mi">414586</span><span class="p">,</span><span class="mi">414212</span><span class="p">,</span><span class="mi">413839</span><span class="p">,</span><span class="mi">413465</span><span class="p">,</span><span class="mi">413092</span><span class="p">,</span>
+<a name="gbab-70"></a>	<span class="mi">412720</span><span class="p">,</span><span class="mi">412347</span><span class="p">,</span><span class="mi">411975</span><span class="p">,</span><span class="mi">411604</span><span class="p">,</span><span class="mi">411232</span><span class="p">,</span><span class="mi">410862</span><span class="p">,</span><span class="mi">410491</span><span class="p">,</span><span class="mi">410121</span><span class="p">,</span>
+<a name="gbab-71"></a>	<span class="mi">409751</span><span class="p">,</span><span class="mi">409381</span><span class="p">,</span><span class="mi">409012</span><span class="p">,</span><span class="mi">408643</span><span class="p">,</span><span class="mi">408274</span><span class="p">,</span><span class="mi">407906</span><span class="p">,</span><span class="mi">407538</span><span class="p">,</span><span class="mi">407170</span><span class="p">,</span>
+<a name="gbab-72"></a>	<span class="mi">406803</span><span class="p">,</span><span class="mi">406436</span><span class="p">,</span><span class="mi">406069</span><span class="p">,</span><span class="mi">405703</span><span class="p">,</span><span class="mi">405337</span><span class="p">,</span><span class="mi">404971</span><span class="p">,</span><span class="mi">404606</span><span class="p">,</span><span class="mi">404241</span><span class="p">,</span>
+<a name="gbab-73"></a>	<span class="mi">403876</span><span class="p">,</span><span class="mi">403512</span><span class="p">,</span><span class="mi">403148</span><span class="p">,</span><span class="mi">402784</span><span class="p">,</span><span class="mi">402421</span><span class="p">,</span><span class="mi">402058</span><span class="p">,</span><span class="mi">401695</span><span class="p">,</span><span class="mi">401333</span><span class="p">,</span>
+<a name="gbab-74"></a>	<span class="mi">400970</span><span class="p">,</span><span class="mi">400609</span><span class="p">,</span><span class="mi">400247</span><span class="p">,</span><span class="mi">399886</span><span class="p">,</span><span class="mi">399525</span><span class="p">,</span><span class="mi">399165</span><span class="p">,</span><span class="mi">398805</span><span class="p">,</span><span class="mi">398445</span><span class="p">,</span>
+<a name="gbab-75"></a>	<span class="mi">398086</span><span class="p">,</span><span class="mi">397727</span><span class="p">,</span><span class="mi">397368</span><span class="p">,</span><span class="mi">397009</span><span class="p">,</span><span class="mi">396651</span><span class="p">,</span><span class="mi">396293</span><span class="p">,</span><span class="mi">395936</span><span class="p">,</span><span class="mi">395579</span><span class="p">,</span>
+<a name="gbab-76"></a>	<span class="mi">395222</span><span class="p">,</span><span class="mi">394865</span><span class="p">,</span><span class="mi">394509</span><span class="p">,</span><span class="mi">394153</span><span class="p">,</span><span class="mi">393798</span><span class="p">,</span><span class="mi">393442</span><span class="p">,</span><span class="mi">393087</span><span class="p">,</span><span class="mi">392733</span><span class="p">,</span>
+<a name="gbab-77"></a>	<span class="mi">392378</span><span class="p">,</span><span class="mi">392024</span><span class="p">,</span><span class="mi">391671</span><span class="p">,</span><span class="mi">391317</span><span class="p">,</span><span class="mi">390964</span><span class="p">,</span><span class="mi">390612</span><span class="p">,</span><span class="mi">390259</span><span class="p">,</span><span class="mi">389907</span><span class="p">,</span>
+<a name="gbab-78"></a>	<span class="mi">389556</span><span class="p">,</span><span class="mi">389204</span><span class="p">,</span><span class="mi">388853</span><span class="p">,</span><span class="mi">388502</span><span class="p">,</span><span class="mi">388152</span><span class="p">,</span><span class="mi">387802</span><span class="p">,</span><span class="mi">387452</span><span class="p">,</span><span class="mi">387102</span><span class="p">,</span>
+<a name="gbab-79"></a>	<span class="mi">386753</span><span class="p">,</span><span class="mi">386404</span><span class="p">,</span><span class="mi">386056</span><span class="p">,</span><span class="mi">385707</span><span class="p">,</span><span class="mi">385359</span><span class="p">,</span><span class="mi">385012</span><span class="p">,</span><span class="mi">384664</span><span class="p">,</span><span class="mi">384317</span><span class="p">,</span>
+<a name="gbab-80"></a>	<span class="mi">383971</span><span class="p">,</span><span class="mi">383624</span><span class="p">,</span><span class="mi">383278</span><span class="p">,</span><span class="mi">382932</span><span class="p">,</span><span class="mi">382587</span><span class="p">,</span><span class="mi">382242</span><span class="p">,</span><span class="mi">381897</span><span class="p">,</span><span class="mi">381552</span><span class="p">,</span>
+<a name="gbab-81"></a>	<span class="mi">381208</span><span class="p">,</span><span class="mi">380864</span><span class="p">,</span><span class="mi">380521</span><span class="p">,</span><span class="mi">380177</span><span class="p">,</span><span class="mi">379834</span><span class="p">,</span><span class="mi">379492</span><span class="p">,</span><span class="mi">379149</span><span class="p">,</span><span class="mi">378807</span><span class="p">,</span>
+<a name="gbab-82"></a>	<span class="mi">378466</span><span class="p">,</span><span class="mi">378124</span><span class="p">,</span><span class="mi">377783</span><span class="p">,</span><span class="mi">377442</span><span class="p">,</span><span class="mi">377102</span><span class="p">,</span><span class="mi">376762</span><span class="p">,</span><span class="mi">376422</span><span class="p">,</span><span class="mi">376082</span><span class="p">,</span>
+<a name="gbab-83"></a>	<span class="mi">375743</span><span class="p">,</span><span class="mi">375404</span><span class="p">,</span><span class="mi">375065</span><span class="p">,</span><span class="mi">374727</span><span class="p">,</span><span class="mi">374389</span><span class="p">,</span><span class="mi">374051</span><span class="p">,</span><span class="mi">373714</span><span class="p">,</span><span class="mi">373377</span><span class="p">,</span>
+<a name="gbab-84"></a>	<span class="mi">373040</span><span class="p">,</span><span class="mi">372703</span><span class="p">,</span><span class="mi">372367</span><span class="p">,</span><span class="mi">372031</span><span class="p">,</span><span class="mi">371695</span><span class="p">,</span><span class="mi">371360</span><span class="p">,</span><span class="mi">371025</span><span class="p">,</span><span class="mi">370690</span><span class="p">,</span>
+<a name="gbab-85"></a>	<span class="mi">370356</span><span class="p">,</span><span class="mi">370022</span><span class="p">,</span><span class="mi">369688</span><span class="p">,</span><span class="mi">369355</span><span class="p">,</span><span class="mi">369021</span><span class="p">,</span><span class="mi">368688</span><span class="p">,</span><span class="mi">368356</span><span class="p">,</span><span class="mi">368023</span><span class="p">,</span>
+<a name="gbab-86"></a>	<span class="mi">367691</span><span class="p">,</span><span class="mi">367360</span><span class="p">,</span><span class="mi">367028</span><span class="p">,</span><span class="mi">366697</span><span class="p">,</span><span class="mi">366366</span><span class="p">,</span><span class="mi">366036</span><span class="p">,</span><span class="mi">365706</span><span class="p">,</span><span class="mi">365376</span><span class="p">,</span>
+<a name="gbab-87"></a>	<span class="mi">365046</span><span class="p">,</span><span class="mi">364717</span><span class="p">,</span><span class="mi">364388</span><span class="p">,</span><span class="mi">364059</span><span class="p">,</span><span class="mi">363731</span><span class="p">,</span><span class="mi">363403</span><span class="p">,</span><span class="mi">363075</span><span class="p">,</span><span class="mi">362747</span><span class="p">,</span>
+<a name="gbab-88"></a>	<span class="mi">362420</span><span class="p">,</span><span class="mi">362093</span><span class="p">,</span><span class="mi">361766</span><span class="p">,</span><span class="mi">361440</span><span class="p">,</span><span class="mi">361114</span><span class="p">,</span><span class="mi">360788</span><span class="p">,</span><span class="mi">360463</span><span class="p">,</span><span class="mi">360137</span><span class="p">,</span>
+<a name="gbab-89"></a>	<span class="mi">359813</span><span class="p">,</span><span class="mi">359488</span><span class="p">,</span><span class="mi">359164</span><span class="p">,</span><span class="mi">358840</span><span class="p">,</span><span class="mi">358516</span><span class="p">,</span><span class="mi">358193</span><span class="p">,</span><span class="mi">357869</span><span class="p">,</span><span class="mi">357547</span><span class="p">,</span>
+<a name="gbab-90"></a>	<span class="mi">357224</span><span class="p">,</span><span class="mi">356902</span><span class="p">,</span><span class="mi">356580</span><span class="p">,</span><span class="mi">356258</span><span class="p">,</span><span class="mi">355937</span><span class="p">,</span><span class="mi">355616</span><span class="p">,</span><span class="mi">355295</span><span class="p">,</span><span class="mi">354974</span><span class="p">,</span>
+<a name="gbab-91"></a>	<span class="mi">354654</span><span class="p">,</span><span class="mi">354334</span><span class="p">,</span><span class="mi">354014</span><span class="p">,</span><span class="mi">353695</span><span class="p">,</span><span class="mi">353376</span><span class="p">,</span><span class="mi">353057</span><span class="p">,</span><span class="mi">352739</span><span class="p">,</span><span class="mi">352420</span><span class="p">,</span>
+<a name="gbab-92"></a>	<span class="mi">352103</span><span class="p">,</span><span class="mi">351785</span><span class="p">,</span><span class="mi">351468</span><span class="p">,</span><span class="mi">351150</span><span class="p">,</span><span class="mi">350834</span><span class="p">,</span><span class="mi">350517</span><span class="p">,</span><span class="mi">350201</span><span class="p">,</span><span class="mi">349885</span><span class="p">,</span>
+<a name="gbab-93"></a>	<span class="mi">349569</span><span class="p">,</span><span class="mi">349254</span><span class="p">,</span><span class="mi">348939</span><span class="p">,</span><span class="mi">348624</span><span class="p">,</span><span class="mi">348310</span><span class="p">,</span><span class="mi">347995</span><span class="p">,</span><span class="mi">347682</span><span class="p">,</span><span class="mi">347368</span><span class="p">,</span>
+<a name="gbab-94"></a>	<span class="mi">347055</span><span class="p">,</span><span class="mi">346741</span><span class="p">,</span><span class="mi">346429</span><span class="p">,</span><span class="mi">346116</span><span class="p">,</span><span class="mi">345804</span><span class="p">,</span><span class="mi">345492</span><span class="p">,</span><span class="mi">345180</span><span class="p">,</span><span class="mi">344869</span><span class="p">,</span>
+<a name="gbab-95"></a>	<span class="mi">344558</span><span class="p">,</span><span class="mi">344247</span><span class="p">,</span><span class="mi">343936</span><span class="p">,</span><span class="mi">343626</span><span class="p">,</span><span class="mi">343316</span><span class="p">,</span><span class="mi">343006</span><span class="p">,</span><span class="mi">342697</span><span class="p">,</span><span class="mi">342388</span><span class="p">,</span>
+<a name="gbab-96"></a>	<span class="mi">342079</span><span class="p">,</span><span class="mi">341770</span><span class="p">,</span><span class="mi">341462</span><span class="p">,</span><span class="mi">341154</span><span class="p">,</span><span class="mi">340846</span><span class="p">,</span><span class="mi">340539</span><span class="p">,</span><span class="mi">340231</span><span class="p">,</span><span class="mi">339924</span><span class="p">,</span>
+<a name="gbab-97"></a>	<span class="mi">339618</span><span class="p">,</span><span class="mi">339311</span><span class="p">,</span><span class="mi">339005</span><span class="p">,</span><span class="mi">338700</span><span class="p">,</span><span class="mi">338394</span><span class="p">,</span><span class="mi">338089</span><span class="p">,</span><span class="mi">337784</span><span class="p">,</span><span class="mi">337479</span><span class="p">,</span>
+<a name="gbab-98"></a>	<span class="mi">337175</span><span class="p">,</span><span class="mi">336870</span><span class="p">,</span><span class="mi">336566</span><span class="p">,</span><span class="mi">336263</span><span class="p">,</span><span class="mi">335959</span><span class="p">,</span><span class="mi">335656</span><span class="p">,</span><span class="mi">335354</span><span class="p">,</span><span class="mi">335051</span><span class="p">,</span>
+<a name="gbab-99"></a>	<span class="mi">334749</span><span class="p">,</span><span class="mi">334447</span><span class="p">,</span><span class="mi">334145</span><span class="p">,</span><span class="mi">333844</span><span class="p">,</span><span class="mi">333542</span><span class="p">,</span><span class="mi">333242</span><span class="p">,</span><span class="mi">332941</span><span class="p">,</span><span class="mi">332641</span><span class="p">,</span>
+<a name="gbab-100"></a>	<span class="mi">332341</span><span class="p">,</span><span class="mi">332041</span><span class="p">,</span><span class="mi">331741</span><span class="p">,</span><span class="mi">331442</span><span class="p">,</span><span class="mi">331143</span><span class="p">,</span><span class="mi">330844</span><span class="p">,</span><span class="mi">330546</span><span class="p">,</span><span class="mi">330247</span><span class="p">,</span>
+<a name="gbab-101"></a>	<span class="mi">329950</span><span class="p">,</span><span class="mi">329652</span><span class="p">,</span><span class="mi">329355</span><span class="p">,</span><span class="mi">329057</span><span class="p">,</span><span class="mi">328761</span><span class="p">,</span><span class="mi">328464</span><span class="p">,</span><span class="mi">328168</span><span class="p">,</span><span class="mi">327872</span><span class="p">,</span>
+<a name="gbab-102"></a>	<span class="mi">327576</span><span class="p">,</span><span class="mi">327280</span><span class="p">,</span><span class="mi">326985</span><span class="p">,</span><span class="mi">326690</span><span class="p">,</span><span class="mi">326395</span><span class="p">,</span><span class="mi">326101</span><span class="p">,</span><span class="mi">325807</span><span class="p">,</span><span class="mi">325513</span><span class="p">,</span>
+<a name="gbab-103"></a>	<span class="mi">325219</span><span class="p">,</span><span class="mi">324926</span><span class="p">,</span><span class="mi">324633</span><span class="p">,</span><span class="mi">324340</span><span class="p">,</span><span class="mi">324047</span><span class="p">,</span><span class="mi">323755</span><span class="p">,</span><span class="mi">323463</span><span class="p">,</span><span class="mi">323171</span><span class="p">,</span>
+<a name="gbab-104"></a>	<span class="mi">322879</span><span class="p">,</span><span class="mi">322588</span><span class="p">,</span><span class="mi">322297</span><span class="p">,</span><span class="mi">322006</span><span class="p">,</span><span class="mi">321716</span><span class="p">,</span><span class="mi">321426</span><span class="p">,</span><span class="mi">321136</span><span class="p">,</span><span class="mi">320846</span><span class="p">,</span>
+<a name="gbab-105"></a>	<span class="mi">320557</span><span class="p">,</span><span class="mi">320267</span><span class="p">,</span><span class="mi">319978</span><span class="p">,</span><span class="mi">319690</span><span class="p">,</span><span class="mi">319401</span><span class="p">,</span><span class="mi">319113</span><span class="p">,</span><span class="mi">318825</span><span class="p">,</span><span class="mi">318538</span><span class="p">,</span>
+<a name="gbab-106"></a>	<span class="mi">318250</span><span class="p">,</span><span class="mi">317963</span><span class="p">,</span><span class="mi">317676</span><span class="p">,</span><span class="mi">317390</span><span class="p">,</span><span class="mi">317103</span><span class="p">,</span><span class="mi">316817</span><span class="p">,</span><span class="mi">316532</span><span class="p">,</span><span class="mi">316246</span><span class="p">,</span>
+<a name="gbab-107"></a>	<span class="mi">315961</span><span class="p">,</span><span class="mi">315676</span><span class="p">,</span><span class="mi">315391</span><span class="p">,</span><span class="mi">315106</span><span class="p">,</span><span class="mi">314822</span><span class="p">,</span><span class="mi">314538</span><span class="p">,</span><span class="mi">314254</span><span class="p">,</span><span class="mi">313971</span><span class="p">,</span>
+<a name="gbab-108"></a>	<span class="mi">313688</span><span class="p">,</span><span class="mi">313405</span><span class="p">,</span><span class="mi">313122</span><span class="p">,</span><span class="mi">312839</span><span class="p">,</span><span class="mi">312557</span><span class="p">,</span><span class="mi">312275</span><span class="p">,</span><span class="mi">311994</span><span class="p">,</span><span class="mi">311712</span><span class="p">,</span>
+<a name="gbab-109"></a>	<span class="mi">311431</span><span class="p">,</span><span class="mi">311150</span><span class="p">,</span><span class="mi">310869</span><span class="p">,</span><span class="mi">310589</span><span class="p">,</span><span class="mi">310309</span><span class="p">,</span><span class="mi">310029</span><span class="p">,</span><span class="mi">309749</span><span class="p">,</span><span class="mi">309470</span><span class="p">,</span>
+<a name="gbab-110"></a>	<span class="mi">309190</span><span class="p">,</span><span class="mi">308911</span><span class="p">,</span><span class="mi">308633</span><span class="p">,</span><span class="mi">308354</span><span class="p">,</span><span class="mi">308076</span><span class="p">,</span><span class="mi">307798</span><span class="p">,</span><span class="mi">307521</span><span class="p">,</span><span class="mi">307243</span><span class="p">,</span>
+<a name="gbab-111"></a>	<span class="mi">306966</span><span class="p">,</span><span class="mi">306689</span><span class="p">,</span><span class="mi">306412</span><span class="p">,</span><span class="mi">306136</span><span class="p">,</span><span class="mi">305860</span><span class="p">,</span><span class="mi">305584</span><span class="p">,</span><span class="mi">305308</span><span class="p">,</span><span class="mi">305033</span><span class="p">,</span>
+<a name="gbab-112"></a>	<span class="mi">304758</span><span class="p">,</span><span class="mi">304483</span><span class="p">,</span><span class="mi">304208</span><span class="p">,</span><span class="mi">303934</span><span class="p">,</span><span class="mi">303659</span><span class="p">,</span><span class="mi">303385</span><span class="p">,</span><span class="mi">303112</span><span class="p">,</span><span class="mi">302838</span><span class="p">,</span>
+<a name="gbab-113"></a>	<span class="mi">302565</span><span class="p">,</span><span class="mi">302292</span><span class="p">,</span><span class="mi">302019</span><span class="p">,</span><span class="mi">301747</span><span class="p">,</span><span class="mi">301475</span><span class="p">,</span><span class="mi">301203</span><span class="p">,</span><span class="mi">300931</span><span class="p">,</span><span class="mi">300660</span><span class="p">,</span>
+<a name="gbab-114"></a>	<span class="mi">300388</span><span class="p">,</span><span class="mi">300117</span><span class="p">,</span><span class="mi">299847</span><span class="p">,</span><span class="mi">299576</span><span class="p">,</span><span class="mi">299306</span><span class="p">,</span><span class="mi">299036</span><span class="p">,</span><span class="mi">298766</span><span class="p">,</span><span class="mi">298497</span><span class="p">,</span>
+<a name="gbab-115"></a>	<span class="mi">298227</span><span class="p">,</span><span class="mi">297958</span><span class="p">,</span><span class="mi">297689</span><span class="p">,</span><span class="mi">297421</span><span class="p">,</span><span class="mi">297153</span><span class="p">,</span><span class="mi">296884</span><span class="p">,</span><span class="mi">296617</span><span class="p">,</span><span class="mi">296349</span><span class="p">,</span>
+<a name="gbab-116"></a>	<span class="mi">296082</span><span class="p">,</span><span class="mi">295815</span><span class="p">,</span><span class="mi">295548</span><span class="p">,</span><span class="mi">295281</span><span class="p">,</span><span class="mi">295015</span><span class="p">,</span><span class="mi">294749</span><span class="p">,</span><span class="mi">294483</span><span class="p">,</span><span class="mi">294217</span><span class="p">,</span>
+<a name="gbab-117"></a>	<span class="mi">293952</span><span class="p">,</span><span class="mi">293686</span><span class="p">,</span><span class="mi">293421</span><span class="p">,</span><span class="mi">293157</span><span class="p">,</span><span class="mi">292892</span><span class="p">,</span><span class="mi">292628</span><span class="p">,</span><span class="mi">292364</span><span class="p">,</span><span class="mi">292100</span><span class="p">,</span>
+<a name="gbab-118"></a>	<span class="mi">291837</span><span class="p">,</span><span class="mi">291574</span><span class="p">,</span><span class="mi">291311</span><span class="p">,</span><span class="mi">291048</span><span class="p">,</span><span class="mi">290785</span><span class="p">,</span><span class="mi">290523</span><span class="p">,</span><span class="mi">290261</span><span class="p">,</span><span class="mi">289999</span><span class="p">,</span>
+<a name="gbab-119"></a>	<span class="mi">289737</span><span class="p">,</span><span class="mi">289476</span><span class="p">,</span><span class="mi">289215</span><span class="p">,</span><span class="mi">288954</span><span class="p">,</span><span class="mi">288693</span><span class="p">,</span><span class="mi">288433</span><span class="p">,</span><span class="mi">288173</span><span class="p">,</span><span class="mi">287913</span><span class="p">,</span>
+<a name="gbab-120"></a>	<span class="mi">287653</span><span class="p">,</span><span class="mi">287393</span><span class="p">,</span><span class="mi">287134</span><span class="p">,</span><span class="mi">286875</span><span class="p">,</span><span class="mi">286616</span><span class="p">,</span><span class="mi">286358</span><span class="p">,</span><span class="mi">286099</span><span class="p">,</span><span class="mi">285841</span><span class="p">,</span>
+<a name="gbab-121"></a>	<span class="mi">285583</span><span class="p">,</span><span class="mi">285326</span><span class="p">,</span><span class="mi">285068</span><span class="p">,</span><span class="mi">284811</span><span class="p">,</span><span class="mi">284554</span><span class="p">,</span><span class="mi">284298</span><span class="p">,</span><span class="mi">284041</span><span class="p">,</span><span class="mi">283785</span><span class="p">,</span>
+<a name="gbab-122"></a>	<span class="mi">283529</span><span class="p">,</span><span class="mi">283273</span><span class="p">,</span><span class="mi">283017</span><span class="p">,</span><span class="mi">282762</span><span class="p">,</span><span class="mi">282507</span><span class="p">,</span><span class="mi">282252</span><span class="p">,</span><span class="mi">281998</span><span class="p">,</span><span class="mi">281743</span><span class="p">,</span>
+<a name="gbab-123"></a>	<span class="mi">281489</span><span class="p">,</span><span class="mi">281235</span><span class="p">,</span><span class="mi">280981</span><span class="p">,</span><span class="mi">280728</span><span class="p">,</span><span class="mi">280475</span><span class="p">,</span><span class="mi">280222</span><span class="p">,</span><span class="mi">279969</span><span class="p">,</span><span class="mi">279716</span><span class="p">,</span>
+<a name="gbab-124"></a>	<span class="mi">279464</span><span class="p">,</span><span class="mi">279212</span><span class="p">,</span><span class="mi">278960</span><span class="p">,</span><span class="mi">278708</span><span class="p">,</span><span class="mi">278457</span><span class="p">,</span><span class="mi">278206</span><span class="p">,</span><span class="mi">277955</span><span class="p">,</span><span class="mi">277704</span><span class="p">,</span>
+<a name="gbab-125"></a>	<span class="mi">277453</span><span class="p">,</span><span class="mi">277203</span><span class="p">,</span><span class="mi">276953</span><span class="p">,</span><span class="mi">276703</span><span class="p">,</span><span class="mi">276453</span><span class="p">,</span><span class="mi">276204</span><span class="p">,</span><span class="mi">275955</span><span class="p">,</span><span class="mi">275706</span><span class="p">,</span>
+<a name="gbab-126"></a>	<span class="mi">275457</span><span class="p">,</span><span class="mi">275209</span><span class="p">,</span><span class="mi">274960</span><span class="p">,</span><span class="mi">274712</span><span class="p">,</span><span class="mi">274465</span><span class="p">,</span><span class="mi">274217</span><span class="p">,</span><span class="mi">273970</span><span class="p">,</span><span class="mi">273722</span><span class="p">,</span>
+<a name="gbab-127"></a>	<span class="mi">273476</span><span class="p">,</span><span class="mi">273229</span><span class="p">,</span><span class="mi">272982</span><span class="p">,</span><span class="mi">272736</span><span class="p">,</span><span class="mi">272490</span><span class="p">,</span><span class="mi">272244</span><span class="p">,</span><span class="mi">271999</span><span class="p">,</span><span class="mi">271753</span><span class="p">,</span>
+<a name="gbab-128"></a>	<span class="mi">271508</span><span class="p">,</span><span class="mi">271263</span><span class="p">,</span><span class="mi">271018</span><span class="p">,</span><span class="mi">270774</span><span class="p">,</span><span class="mi">270530</span><span class="p">,</span><span class="mi">270286</span><span class="p">,</span><span class="mi">270042</span><span class="p">,</span><span class="mi">269798</span><span class="p">,</span>
+<a name="gbab-129"></a>	<span class="mi">269555</span><span class="p">,</span><span class="mi">269312</span><span class="p">,</span><span class="mi">269069</span><span class="p">,</span><span class="mi">268826</span><span class="p">,</span><span class="mi">268583</span><span class="p">,</span><span class="mi">268341</span><span class="p">,</span><span class="mi">268099</span><span class="p">,</span><span class="mi">267857</span>
+<a name="gbab-130"></a><span class="p">};</span>
+<a name="gbab-131"></a>
+<a name="gbab-132"></a><span class="kt">uint16_t</span> <span class="n">CPTables</span><span class="o">::</span><span class="n">old_period_table</span><span class="p">[</span><span class="n">OCTAVE</span><span class="o">*</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="p">{</span>
+<a name="gbab-133"></a>
+<a name="gbab-134"></a>        <span class="mh">0x6b00</span><span class="p">,</span> <span class="mh">0x6800</span><span class="p">,</span> <span class="mh">0x6500</span><span class="p">,</span> <span class="mh">0x6220</span><span class="p">,</span> <span class="mh">0x5f50</span><span class="p">,</span> <span class="mh">0x5c80</span><span class="p">,</span>
+<a name="gbab-135"></a>        <span class="mh">0x5a00</span><span class="p">,</span> <span class="mh">0x5740</span><span class="p">,</span> <span class="mh">0x54d0</span><span class="p">,</span> <span class="mh">0x5260</span><span class="p">,</span> <span class="mh">0x5010</span><span class="p">,</span> <span class="mh">0x4dc0</span><span class="p">,</span>
+<a name="gbab-136"></a>        <span class="mh">0x4b90</span><span class="p">,</span> <span class="mh">0x4960</span><span class="p">,</span> <span class="mh">0x4750</span><span class="p">,</span> <span class="mh">0x4540</span><span class="p">,</span> <span class="mh">0x4350</span><span class="p">,</span> <span class="mh">0x4160</span><span class="p">,</span>
+<a name="gbab-137"></a>        <span class="mh">0x3f90</span><span class="p">,</span> <span class="mh">0x3dc0</span><span class="p">,</span> <span class="mh">0x3c10</span><span class="p">,</span> <span class="mh">0x3a40</span><span class="p">,</span> <span class="mh">0x38b0</span><span class="p">,</span> <span class="mh">0x3700</span>
+<a name="gbab-138"></a><span class="p">};</span>
+<a name="gbab-139"></a>
+<a name="gbab-140"></a><span class="cp">#define LOGFAC 2*16</span>
+<a name="gbab-141"></a>
+<a name="gbab-142"></a><span class="kt">uint16_t</span> <span class="n">CPTables</span><span class="o">::</span><span class="n">log_table</span><span class="p">[</span><span class="mi">104</span><span class="p">]</span><span class="o">=</span> <span class="p">{</span>
+<a name="gbab-143"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">907</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">900</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">894</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">887</span><span class="p">,</span>
+<a name="gbab-144"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">881</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">875</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">868</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">862</span><span class="p">,</span>
+<a name="gbab-145"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">856</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">850</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">844</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">838</span><span class="p">,</span>
+<a name="gbab-146"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">832</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">826</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">820</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">814</span><span class="p">,</span>
+<a name="gbab-147"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">808</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">802</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">796</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">791</span><span class="p">,</span>
+<a name="gbab-148"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">785</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">779</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">774</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">768</span><span class="p">,</span>
+<a name="gbab-149"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">762</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">757</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">752</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">746</span><span class="p">,</span>
+<a name="gbab-150"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">741</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">736</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">730</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">725</span><span class="p">,</span>
+<a name="gbab-151"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">720</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">715</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">709</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">704</span><span class="p">,</span>
+<a name="gbab-152"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">699</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">694</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">689</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">684</span><span class="p">,</span>
+<a name="gbab-153"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">678</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">675</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">670</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">665</span><span class="p">,</span>
+<a name="gbab-154"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">660</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">655</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">651</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">646</span><span class="p">,</span>
+<a name="gbab-155"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">640</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">636</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">632</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">628</span><span class="p">,</span>
+<a name="gbab-156"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">623</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">619</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">614</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">610</span><span class="p">,</span>
+<a name="gbab-157"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">604</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">601</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">597</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">592</span><span class="p">,</span>
+<a name="gbab-158"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">588</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">584</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">580</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">575</span><span class="p">,</span>
+<a name="gbab-159"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">570</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">567</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">563</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">559</span><span class="p">,</span>
+<a name="gbab-160"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">555</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">551</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">547</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">543</span><span class="p">,</span>
+<a name="gbab-161"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">538</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">535</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">532</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">528</span><span class="p">,</span>
+<a name="gbab-162"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">524</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">520</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">516</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">513</span><span class="p">,</span>
+<a name="gbab-163"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">508</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">505</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">502</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">498</span><span class="p">,</span>
+<a name="gbab-164"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">494</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">491</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">487</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">484</span><span class="p">,</span>
+<a name="gbab-165"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">480</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">477</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">474</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">470</span><span class="p">,</span>
+<a name="gbab-166"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">467</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">463</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">460</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">457</span><span class="p">,</span>
+<a name="gbab-167"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">453</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">450</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">447</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">443</span><span class="p">,</span>
+<a name="gbab-168"></a>	<span class="n">LOGFAC</span><span class="o">*</span><span class="mi">440</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">437</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">434</span><span class="p">,</span><span class="n">LOGFAC</span><span class="o">*</span><span class="mi">431</span>
+<a name="gbab-169"></a><span class="p">};</span>
+<a name="gbab-170"></a>	
+<a name="gbab-171"></a>
+<a name="gbab-172"></a>
+<a name="gbab-173"></a><span class="kt">int32_t</span> <span class="n">CPTables</span><span class="o">::</span><span class="n">get_linear_period</span><span class="p">(</span><span class="kt">uint16_t</span> <span class="n">note</span><span class="p">,</span><span class="kt">int32_t</span> <span class="n">fine</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-174"></a>
+<a name="gbab-175"></a>	<span class="kt">int32_t</span> <span class="n">t</span><span class="p">;</span>
+<a name="gbab-176"></a>
+<a name="gbab-177"></a>	<span class="n">t</span><span class="o">=</span><span class="p">(</span><span class="mi">24L</span><span class="o">*</span><span class="n">OCTAVE</span><span class="o">-</span><span class="p">(</span><span class="kt">int32_t</span><span class="p">)</span><span class="n">note</span><span class="p">)</span><span class="o">*</span><span class="mi">32L</span><span class="o">-</span><span class="p">(</span><span class="n">fine</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-178"></a>	<span class="k">return</span> <span class="n">t</span><span class="p">;</span>
+<a name="gbab-179"></a><span class="p">}</span>
+<a name="gbab-180"></a>
+<a name="gbab-181"></a><span class="k">static</span> <span class="kt">int</span> <span class="n">s3m_period_table</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">1712</span><span class="p">,</span><span class="mi">1616</span><span class="p">,</span><span class="mi">1524</span><span class="p">,</span><span class="mi">1440</span><span class="p">,</span><span class="mi">1356</span><span class="p">,</span><span class="mi">1280</span><span class="p">,</span><span class="mi">1208</span><span class="p">,</span><span class="mi">1140</span><span class="p">,</span><span class="mi">1076</span><span class="p">,</span><span class="mi">1016</span><span class="p">,</span><span class="mi">960</span><span class="p">,</span><span class="mi">907</span><span class="p">};</span>
+<a name="gbab-182"></a>
+<a name="gbab-183"></a>
+<a name="gbab-184"></a><span class="kt">int32_t</span> <span class="n">CPTables</span><span class="o">::</span><span class="n">get_log_period</span><span class="p">(</span><span class="kt">uint16_t</span> <span class="n">note</span><span class="p">,</span><span class="kt">int32_t</span> <span class="n">p_c5freq</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-185"></a>	
+<a name="gbab-186"></a>	<span class="k">return</span> <span class="p">(</span><span class="mi">8363L</span> <span class="o">*</span> <span class="mi">16</span> <span class="o">*</span> <span class="n">s3m_period_table</span><span class="p">[</span><span class="n">note</span><span class="o">%</span><span class="mi">12</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="n">note</span><span class="o">/</span><span class="mi">12</span><span class="p">))</span> <span class="o">/</span> <span class="n">p_c5freq</span><span class="p">;</span>
+<a name="gbab-187"></a>
+<a name="gbab-188"></a><span class="p">}</span>
+<a name="gbab-189"></a>
+<a name="gbab-190"></a><span class="cm">/*</span>
+<a name="gbab-191"></a><span class="cm">int32_t CPTables::get_log_period(uint16_t note,int32_t p_c5freq)</span>
+<a name="gbab-192"></a><span class="cm">{</span>
+<a name="gbab-193"></a><span class="cm">	uint16_t n,o;</span>
+<a name="gbab-194"></a><span class="cm">	uint16_t p1,p2;</span>
+<a name="gbab-195"></a><span class="cm">	int32_t i;</span>
+<a name="gbab-196"></a>
+<a name="gbab-197"></a><span class="cm">	n=note%(2*OCTAVE);</span>
+<a name="gbab-198"></a><span class="cm">	o=note/(2*OCTAVE);</span>
+<a name="gbab-199"></a><span class="cm">	i=(n&lt;&lt;2); // n*8 + fine/16 </span>
+<a name="gbab-200"></a>
+<a name="gbab-201"></a><span class="cm">	if (i&lt;0)</span>
+<a name="gbab-202"></a><span class="cm">		i=0;</span>
+<a name="gbab-203"></a><span class="cm">	</span>
+<a name="gbab-204"></a><span class="cm">	if (i&gt;102)</span>
+<a name="gbab-205"></a><span class="cm">		i=102;</span>
+<a name="gbab-206"></a><span class="cm">	</span>
+<a name="gbab-207"></a><span class="cm">	</span>
+<a name="gbab-208"></a><span class="cm">	p1=log_table[i];</span>
+<a name="gbab-209"></a><span class="cm">	p2=log_table[i+1];</span>
+<a name="gbab-210"></a>
+<a name="gbab-211"></a>
+<a name="gbab-212"></a><span class="cm">	return (Interpolate(fine&gt;&gt;4,0,15,p1,p2)&gt;&gt;o);</span>
+<a name="gbab-213"></a>
+<a name="gbab-214"></a><span class="cm">} */</span>
+<a name="gbab-215"></a>
+<a name="gbab-216"></a><span class="kt">int32_t</span> <span class="n">CPTables</span><span class="o">::</span><span class="n">get_old_period</span><span class="p">(</span><span class="kt">uint16_t</span> <span class="n">note</span><span class="p">,</span><span class="kt">int32_t</span> <span class="n">speed</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-217"></a>
+<a name="gbab-218"></a>        <span class="kt">uint16_t</span> <span class="n">n</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="n">res</span><span class="p">;</span>
+<a name="gbab-219"></a>
+<a name="gbab-220"></a><span class="c1">//        if (!speed) {</span>
+<a name="gbab-221"></a>
+<a name="gbab-222"></a> <span class="c1">//               return 4242; /* &lt;- prevent divide overflow  */</span>
+<a name="gbab-223"></a>  <span class="c1">//      }</span>
+<a name="gbab-224"></a>
+<a name="gbab-225"></a>        <span class="n">n</span><span class="o">=</span><span class="n">note</span><span class="o">%</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">OCTAVE</span><span class="p">);</span>
+<a name="gbab-226"></a>        <span class="n">o</span><span class="o">=</span><span class="n">note</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">OCTAVE</span><span class="p">);</span>
+<a name="gbab-227"></a>
+<a name="gbab-228"></a>	<span class="n">res</span><span class="o">=</span><span class="p">((</span><span class="mi">8363L</span><span class="o">*</span><span class="p">(</span><span class="kt">int32_t</span><span class="p">)</span><span class="n">old_period_table</span><span class="p">[</span><span class="n">n</span><span class="p">])</span><span class="o">&gt;&gt;</span><span class="n">o</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="n">old_period_table</span><span class="p">[</span><span class="mi">17</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">speed</span><span class="o">&lt;&lt;</span><span class="mi">2</span><span class="p">));</span> <span class="cm">/*/(128-speed)*/</span><span class="p">;</span>
+<a name="gbab-229"></a>
+<a name="gbab-230"></a>        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<a name="gbab-231"></a><span class="p">}</span>
+<a name="gbab-232"></a>
+<a name="gbab-233"></a><span class="kt">int32_t</span> <span class="n">CPTables</span><span class="o">::</span><span class="n">get_linear_frequency</span><span class="p">(</span><span class="kt">int32_t</span> <span class="n">period</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-234"></a>
+<a name="gbab-235"></a>	<span class="kt">int32_t</span> <span class="n">shift_value</span><span class="o">=</span><span class="p">(((</span><span class="kt">int32_t</span><span class="p">)</span><span class="n">period</span><span class="o">/</span><span class="mi">768</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span>
+<a name="gbab-236"></a>        <span class="k">if</span> <span class="p">(</span><span class="n">shift_value</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-237"></a>
+<a name="gbab-238"></a>		<span class="k">return</span> <span class="n">linear_period_to_freq_tab</span><span class="p">[</span><span class="n">period</span><span class="o">%</span><span class="mi">768</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="n">shift_value</span><span class="p">;</span>
+<a name="gbab-239"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-240"></a>		<span class="n">shift_value</span><span class="o">=</span><span class="mi">0</span><span class="o">-</span><span class="n">shift_value</span><span class="p">;</span>
+<a name="gbab-241"></a>		<span class="k">return</span> <span class="n">linear_period_to_freq_tab</span><span class="p">[</span><span class="n">period</span><span class="o">%</span><span class="mi">768</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="n">shift_value</span><span class="p">;</span>
+<a name="gbab-242"></a>	<span class="p">}</span>
+<a name="gbab-243"></a><span class="p">}</span>
+<a name="gbab-244"></a>
+<a name="gbab-245"></a><span class="kt">int32_t</span> <span class="n">CPTables</span><span class="o">::</span><span class="n">get_old_frequency</span><span class="p">(</span><span class="kt">int32_t</span> <span class="n">period</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-246"></a>
+<a name="gbab-247"></a>	<span class="k">return</span> <span class="p">(</span><span class="mi">8363L</span><span class="o">*</span><span class="mi">1712L</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">period</span><span class="o">?</span><span class="nl">period</span><span class="p">:</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-248"></a>
+<a name="gbab-249"></a><span class="p">}</span>
+<a name="gbab-250"></a>
+<a name="gbab-251"></a><span class="n">CPTables</span><span class="o">::</span><span class="n">CPTables</span><span class="p">(){</span>
+<a name="gbab-252"></a><span class="p">}</span>
+<a name="gbab-253"></a><span class="n">CPTables</span><span class="o">::~</span><span class="n">CPTables</span><span class="p">(){</span>
+<a name="gbab-254"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

@@ -1,0 +1,1805 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*  file_dialog.cpp                                                      */</span>
+<a name="gbab-3"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-4"></a><span class="cm">/*                       This file is part of:                           */</span>
+<a name="gbab-5"></a><span class="cm">/*                           GODOT ENGINE                                */</span>
+<a name="gbab-6"></a><span class="cm">/*                    http://www.godotengine.org                         */</span>
+<a name="gbab-7"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-8"></a><span class="cm">/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-10"></a><span class="cm">/* Permission is hereby granted, free of charge, to any person obtaining */</span>
+<a name="gbab-11"></a><span class="cm">/* a copy of this software and associated documentation files (the       */</span>
+<a name="gbab-12"></a><span class="cm">/* &quot;Software&quot;), to deal in the Software without restriction, including   */</span>
+<a name="gbab-13"></a><span class="cm">/* without limitation the rights to use, copy, modify, merge, publish,   */</span>
+<a name="gbab-14"></a><span class="cm">/* distribute, sublicense, and/or sell copies of the Software, and to    */</span>
+<a name="gbab-15"></a><span class="cm">/* permit persons to whom the Software is furnished to do so, subject to */</span>
+<a name="gbab-16"></a><span class="cm">/* the following conditions:                                             */</span>
+<a name="gbab-17"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-18"></a><span class="cm">/* The above copyright notice and this permission notice shall be        */</span>
+<a name="gbab-19"></a><span class="cm">/* included in all copies or substantial portions of the Software.       */</span>
+<a name="gbab-20"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-21"></a><span class="cm">/* THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,       */</span>
+<a name="gbab-22"></a><span class="cm">/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */</span>
+<a name="gbab-23"></a><span class="cm">/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/</span>
+<a name="gbab-24"></a><span class="cm">/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */</span>
+<a name="gbab-25"></a><span class="cm">/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */</span>
+<a name="gbab-26"></a><span class="cm">/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */</span>
+<a name="gbab-27"></a><span class="cm">/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */</span>
+<a name="gbab-28"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-29"></a><span class="cp">#include</span> <span class="cpf">&quot;file_dialog.h&quot;</span><span class="cp"></span>
+<a name="gbab-30"></a><span class="cp">#include</span> <span class="cpf">&quot;scene/gui/label.h&quot;</span><span class="cp"></span>
+<a name="gbab-31"></a><span class="cp">#include</span> <span class="cpf">&quot;print_string.h&quot;</span><span class="cp"></span>
+<a name="gbab-32"></a><span class="cp">#include</span> <span class="cpf">&quot;os/keyboard.h&quot;</span><span class="cp"></span>
+<a name="gbab-33"></a>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a>
+<a name="gbab-36"></a><span class="n">FileDialog</span><span class="o">::</span><span class="n">GetIconFunc</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">get_icon_func</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+<a name="gbab-37"></a><span class="n">FileDialog</span><span class="o">::</span><span class="n">GetIconFunc</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">get_large_icon_func</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+<a name="gbab-38"></a>
+<a name="gbab-39"></a><span class="n">FileDialog</span><span class="o">::</span><span class="n">RegisterFunc</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">register_func</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+<a name="gbab-40"></a><span class="n">FileDialog</span><span class="o">::</span><span class="n">RegisterFunc</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">unregister_func</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a>
+<a name="gbab-43"></a><span class="n">VBoxContainer</span> <span class="o">*</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">get_vbox</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-44"></a>	<span class="k">return</span> <span class="n">vbox</span><span class="p">;</span>
+<a name="gbab-45"></a>
+<a name="gbab-46"></a><span class="p">}</span>
+<a name="gbab-47"></a>
+<a name="gbab-48"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_notification</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_what</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-49"></a>	
+<a name="gbab-50"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">p_what</span><span class="o">==</span><span class="n">NOTIFICATION_ENTER_TREE</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-51"></a>
+<a name="gbab-52"></a>		<span class="n">refresh</span><span class="o">-&gt;</span><span class="n">set_icon</span><span class="p">(</span><span class="n">get_icon</span><span class="p">(</span><span class="s">&quot;reload&quot;</span><span class="p">));</span>
+<a name="gbab-53"></a>	<span class="p">}</span>
+<a name="gbab-54"></a>	
+<a name="gbab-55"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">p_what</span><span class="o">==</span><span class="n">NOTIFICATION_DRAW</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-56"></a>
+<a name="gbab-57"></a>		<span class="c1">//RID ci = get_canvas_item();</span>
+<a name="gbab-58"></a>		<span class="c1">//get_stylebox(&quot;panel&quot;,&quot;PopupMenu&quot;)-&gt;draw(ci,Rect2(Point2(),get_size()));</span>
+<a name="gbab-59"></a>	<span class="p">}</span>	
+<a name="gbab-60"></a>
+<a name="gbab-61"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">p_what</span><span class="o">==</span><span class="n">NOTIFICATION_POPUP_HIDE</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-62"></a>
+<a name="gbab-63"></a>		<span class="n">set_process_unhandled_input</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<a name="gbab-64"></a>	<span class="p">}</span>
+<a name="gbab-65"></a><span class="p">}</span>
+<a name="gbab-66"></a>
+<a name="gbab-67"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_unhandled_input</span><span class="p">(</span><span class="k">const</span> <span class="n">InputEvent</span><span class="o">&amp;</span> <span class="n">p_event</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-68"></a>
+<a name="gbab-69"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">p_event</span><span class="p">.</span><span class="n">type</span><span class="o">==</span><span class="n">InputEvent</span><span class="o">::</span><span class="n">KEY</span> <span class="o">&amp;&amp;</span> <span class="n">is_window_modal_on_top</span><span class="p">())</span> <span class="p">{</span>
+<a name="gbab-70"></a>
+<a name="gbab-71"></a>		<span class="k">const</span> <span class="n">InputEventKey</span> <span class="o">&amp;</span><span class="n">k</span><span class="o">=</span><span class="n">p_event</span><span class="p">.</span><span class="n">key</span><span class="p">;</span>
+<a name="gbab-72"></a>
+<a name="gbab-73"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="n">pressed</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a>			<span class="kt">bool</span> <span class="n">handled</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-76"></a>
+<a name="gbab-77"></a>			<span class="k">switch</span> <span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="n">scancode</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-78"></a>
+<a name="gbab-79"></a>				<span class="k">case</span> <span class="nl">KEY_H</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-80"></a>
+<a name="gbab-81"></a>					<span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="p">.</span><span class="n">mod</span><span class="p">.</span><span class="n">command</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-82"></a>						<span class="n">set_show_hidden_files</span><span class="p">(</span><span class="o">!</span><span class="n">show_hidden_files</span><span class="p">);</span>
+<a name="gbab-83"></a>					<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-84"></a>						<span class="n">handled</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-85"></a>					<span class="p">}</span>
+<a name="gbab-86"></a>
+<a name="gbab-87"></a>				<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-88"></a>				<span class="k">case</span> <span class="nl">KEY_F5</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-89"></a>
+<a name="gbab-90"></a>					<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-91"></a>				<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-92"></a>				<span class="k">default</span><span class="o">:</span> <span class="p">{</span> <span class="n">handled</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+<a name="gbab-93"></a>			<span class="p">}</span>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">handled</span><span class="p">)</span>
+<a name="gbab-96"></a>				<span class="n">accept_event</span><span class="p">();</span>
+<a name="gbab-97"></a>		<span class="p">}</span>
+<a name="gbab-98"></a>	<span class="p">}</span>
+<a name="gbab-99"></a><span class="p">}</span>
+<a name="gbab-100"></a>
+<a name="gbab-101"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">set_enable_multiple_selection</span><span class="p">(</span><span class="kt">bool</span> <span class="n">p_enable</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-102"></a>
+<a name="gbab-103"></a>	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">set_select_mode</span><span class="p">(</span><span class="n">p_enable</span><span class="o">?</span><span class="n">Tree</span><span class="o">::</span><span class="nl">SELECT_MULTI</span> <span class="p">:</span> <span class="n">Tree</span><span class="o">::</span><span class="n">SELECT_SINGLE</span><span class="p">);</span>
+<a name="gbab-104"></a><span class="p">};</span>
+<a name="gbab-105"></a>
+<a name="gbab-106"></a><span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">get_selected_files</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-107"></a>
+<a name="gbab-108"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list</span><span class="p">;</span>
+<a name="gbab-109"></a>
+<a name="gbab-110"></a>	<span class="n">TreeItem</span><span class="o">*</span> <span class="n">item</span> <span class="o">=</span> <span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_root</span><span class="p">();</span>
+<a name="gbab-111"></a>	<span class="k">while</span> <span class="p">(</span> <span class="p">(</span><span class="n">item</span> <span class="o">=</span> <span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_next_selected</span><span class="p">(</span><span class="n">item</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+<a name="gbab-112"></a>
+<a name="gbab-113"></a>		<span class="n">list</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_current_dir</span><span class="p">().</span><span class="n">plus_file</span><span class="p">(</span><span class="n">item</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">(</span><span class="mi">0</span><span class="p">)));</span>
+<a name="gbab-114"></a>	<span class="p">};</span>
+<a name="gbab-115"></a>
+<a name="gbab-116"></a>	<span class="k">return</span> <span class="n">list</span><span class="p">;</span>
+<a name="gbab-117"></a><span class="p">};</span>
+<a name="gbab-118"></a>
+<a name="gbab-119"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">update_dir</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-120"></a>	
+<a name="gbab-121"></a>	<span class="n">dir</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_current_dir</span><span class="p">());</span>
+<a name="gbab-122"></a><span class="p">}</span>
+<a name="gbab-123"></a>
+<a name="gbab-124"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_dir_entered</span><span class="p">(</span><span class="n">String</span> <span class="n">p_dir</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-125"></a>	
+<a name="gbab-126"></a>	
+<a name="gbab-127"></a>	<span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">change_dir</span><span class="p">(</span><span class="n">p_dir</span><span class="p">);</span>
+<a name="gbab-128"></a>	<span class="n">file</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<a name="gbab-129"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-130"></a>	<span class="n">update_dir</span><span class="p">();</span>
+<a name="gbab-131"></a><span class="p">}</span>
+<a name="gbab-132"></a>
+<a name="gbab-133"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_file_entered</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_file</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-134"></a>
+<a name="gbab-135"></a>	<span class="n">_action_pressed</span><span class="p">();</span>	
+<a name="gbab-136"></a><span class="p">}</span>
+<a name="gbab-137"></a>
+<a name="gbab-138"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_save_confirm_pressed</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-139"></a>	<span class="n">String</span> <span class="n">f</span><span class="o">=</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_current_dir</span><span class="p">().</span><span class="n">plus_file</span><span class="p">(</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">());</span>
+<a name="gbab-140"></a>	<span class="n">emit_signal</span><span class="p">(</span><span class="s">&quot;file_selected&quot;</span><span class="p">,</span><span class="n">f</span><span class="p">);</span>
+<a name="gbab-141"></a>	<span class="n">hide</span><span class="p">();</span>		
+<a name="gbab-142"></a><span class="p">}</span>
+<a name="gbab-143"></a>
+<a name="gbab-144"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_post_popup</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-145"></a>
+<a name="gbab-146"></a>	<span class="n">ConfirmationDialog</span><span class="o">::</span><span class="n">_post_popup</span><span class="p">();</span>
+<a name="gbab-147"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">invalidated</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-148"></a>		<span class="n">update_file_list</span><span class="p">();</span>
+<a name="gbab-149"></a>		<span class="n">invalidated</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-150"></a>	<span class="p">}</span>
+<a name="gbab-151"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="o">==</span><span class="n">MODE_SAVE_FILE</span><span class="p">)</span>
+<a name="gbab-152"></a>		<span class="n">file</span><span class="o">-&gt;</span><span class="n">grab_focus</span><span class="p">();</span>
+<a name="gbab-153"></a>	<span class="k">else</span>
+<a name="gbab-154"></a>		<span class="n">tree</span><span class="o">-&gt;</span><span class="n">grab_focus</span><span class="p">();</span>
+<a name="gbab-155"></a>
+<a name="gbab-156"></a>	<span class="n">set_process_unhandled_input</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<a name="gbab-157"></a>
+<a name="gbab-158"></a><span class="p">}</span>
+<a name="gbab-159"></a>
+<a name="gbab-160"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_action_pressed</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-161"></a>	
+<a name="gbab-162"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_FILES</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-163"></a>
+<a name="gbab-164"></a>		<span class="n">TreeItem</span> <span class="o">*</span><span class="n">ti</span><span class="o">=</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_next_selected</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<a name="gbab-165"></a>		<span class="n">String</span> <span class="n">fbase</span><span class="o">=</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_current_dir</span><span class="p">();</span>
+<a name="gbab-166"></a>
+<a name="gbab-167"></a>		<span class="n">DVector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">files</span><span class="p">;</span>
+<a name="gbab-168"></a>		<span class="k">while</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-169"></a>
+<a name="gbab-170"></a>			<span class="n">files</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span> <span class="n">fbase</span><span class="p">.</span><span class="n">plus_file</span><span class="p">(</span><span class="n">ti</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="p">);</span>
+<a name="gbab-171"></a>			<span class="n">ti</span><span class="o">=</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_next_selected</span><span class="p">(</span><span class="n">ti</span><span class="p">);</span>
+<a name="gbab-172"></a>		<span class="p">}</span>
+<a name="gbab-173"></a>
+<a name="gbab-174"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">files</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+<a name="gbab-175"></a>			<span class="n">emit_signal</span><span class="p">(</span><span class="s">&quot;files_selected&quot;</span><span class="p">,</span><span class="n">files</span><span class="p">);</span>
+<a name="gbab-176"></a>			<span class="n">hide</span><span class="p">();</span>
+<a name="gbab-177"></a>		<span class="p">}</span>
+<a name="gbab-178"></a>
+<a name="gbab-179"></a>		<span class="k">return</span><span class="p">;</span>
+<a name="gbab-180"></a>	<span class="p">}</span>
+<a name="gbab-181"></a>
+<a name="gbab-182"></a>	<span class="n">String</span> <span class="n">f</span><span class="o">=</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_current_dir</span><span class="p">().</span><span class="n">plus_file</span><span class="p">(</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">());</span>
+<a name="gbab-183"></a>	                   
+<a name="gbab-184"></a>	<span class="k">if</span> <span class="p">((</span><span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_ANY</span> <span class="o">||</span> <span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_FILE</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">file_exists</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-185"></a>		<span class="n">emit_signal</span><span class="p">(</span><span class="s">&quot;file_selected&quot;</span><span class="p">,</span><span class="n">f</span><span class="p">);</span>
+<a name="gbab-186"></a>		<span class="n">hide</span><span class="p">();</span>
+<a name="gbab-187"></a>	<span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_ANY</span> <span class="o">||</span> <span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_DIR</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-188"></a>
+<a name="gbab-189"></a>
+<a name="gbab-190"></a>		<span class="n">String</span> <span class="n">path</span><span class="o">=</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_current_dir</span><span class="p">();</span>
+<a name="gbab-191"></a>		<span class="cm">/*if (tree-&gt;get_selected()) {</span>
+<a name="gbab-192"></a><span class="cm">			Dictionary d = tree-&gt;get_selected()-&gt;get_metadata(0);</span>
+<a name="gbab-193"></a><span class="cm">			if (d[&quot;dir&quot;]) {</span>
+<a name="gbab-194"></a><span class="cm">				path=path+&quot;/&quot;+String(d[&quot;name&quot;]);</span>
+<a name="gbab-195"></a><span class="cm">			}</span>
+<a name="gbab-196"></a><span class="cm">		}*/</span>
+<a name="gbab-197"></a>		<span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\\</span><span class="s">&quot;</span><span class="p">,</span><span class="s">&quot;/&quot;</span><span class="p">);</span>
+<a name="gbab-198"></a>		<span class="n">emit_signal</span><span class="p">(</span><span class="s">&quot;dir_selected&quot;</span><span class="p">,</span><span class="n">path</span><span class="p">);</span>
+<a name="gbab-199"></a>		<span class="n">hide</span><span class="p">();</span>
+<a name="gbab-200"></a>	<span class="p">}</span>
+<a name="gbab-201"></a>
+<a name="gbab-202"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="o">==</span><span class="n">MODE_SAVE_FILE</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-203"></a>		
+<a name="gbab-204"></a>		<span class="kt">bool</span> <span class="n">valid</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-205"></a>
+<a name="gbab-206"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">filter</span><span class="o">-&gt;</span><span class="n">get_selected</span><span class="p">()</span><span class="o">==</span><span class="n">filter</span><span class="o">-&gt;</span><span class="n">get_item_count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-207"></a>			<span class="n">valid</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span> <span class="c1">//match none</span>
+<a name="gbab-208"></a>		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">filter</span><span class="o">-&gt;</span><span class="n">get_selected</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-209"></a>			<span class="c1">// match all filters</span>
+<a name="gbab-210"></a>			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-211"></a>
+<a name="gbab-212"></a>				<span class="n">String</span> <span class="n">flt</span><span class="o">=</span><span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-213"></a>				<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">flt</span><span class="p">.</span><span class="n">get_slice_count</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-214"></a>
+<a name="gbab-215"></a>					<span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">flt</span><span class="p">.</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="n">j</span><span class="p">).</span><span class="n">strip_edges</span><span class="p">();</span>
+<a name="gbab-216"></a>					<span class="k">if</span> <span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">str</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-217"></a>						<span class="n">valid</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-218"></a>						<span class="k">break</span><span class="p">;</span>
+<a name="gbab-219"></a>					<span class="p">}</span>
+<a name="gbab-220"></a>				<span class="p">}</span>
+<a name="gbab-221"></a>				<span class="k">if</span> <span class="p">(</span><span class="n">valid</span><span class="p">)</span>
+<a name="gbab-222"></a>					<span class="k">break</span><span class="p">;</span>
+<a name="gbab-223"></a>			<span class="p">}</span>
+<a name="gbab-224"></a>		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-225"></a>			<span class="kt">int</span> <span class="n">idx</span><span class="o">=</span><span class="n">filter</span><span class="o">-&gt;</span><span class="n">get_selected</span><span class="p">();</span>
+<a name="gbab-226"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span>
+<a name="gbab-227"></a>				<span class="n">idx</span><span class="o">--</span><span class="p">;</span>
+<a name="gbab-228"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">idx</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">idx</span><span class="o">&lt;</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+<a name="gbab-229"></a>
+<a name="gbab-230"></a>				<span class="n">String</span> <span class="n">flt</span><span class="o">=</span><span class="n">filters</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-231"></a>				<span class="kt">int</span> <span class="n">filterSliceCount</span><span class="o">=</span><span class="n">flt</span><span class="p">.</span><span class="n">get_slice_count</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span>
+<a name="gbab-232"></a>				<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">filterSliceCount</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-233"></a>
+<a name="gbab-234"></a>					<span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="n">flt</span><span class="p">.</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="n">j</span><span class="p">).</span><span class="n">strip_edges</span><span class="p">());</span>
+<a name="gbab-235"></a>					<span class="k">if</span> <span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">str</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-236"></a>						<span class="n">valid</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-237"></a>						<span class="k">break</span><span class="p">;</span>
+<a name="gbab-238"></a>					<span class="p">}</span>
+<a name="gbab-239"></a>				<span class="p">}</span>
+<a name="gbab-240"></a>
+<a name="gbab-241"></a>				<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">valid</span> <span class="o">&amp;&amp;</span> <span class="n">filterSliceCount</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-242"></a>					<span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="p">(</span><span class="n">flt</span><span class="p">.</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">).</span><span class="n">strip_edges</span><span class="p">());</span>
+<a name="gbab-243"></a>					<span class="n">f</span><span class="o">+=</span><span class="n">str</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-244"></a>					<span class="n">file</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">get_file</span><span class="p">());</span>
+<a name="gbab-245"></a>					<span class="n">valid</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-246"></a>				<span class="p">}</span>
+<a name="gbab-247"></a>			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-248"></a>				<span class="n">valid</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-249"></a>			<span class="p">}</span>
+<a name="gbab-250"></a>		<span class="p">}</span>
+<a name="gbab-251"></a>
+<a name="gbab-252"></a>
+<a name="gbab-253"></a>		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">valid</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-254"></a>
+<a name="gbab-255"></a>			<span class="n">exterr</span><span class="o">-&gt;</span><span class="n">popup_centered_minsize</span><span class="p">(</span><span class="n">Size2</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span><span class="mi">80</span><span class="p">));</span>
+<a name="gbab-256"></a>			<span class="k">return</span><span class="p">;</span>
+<a name="gbab-257"></a>
+<a name="gbab-258"></a>		<span class="p">}</span>
+<a name="gbab-259"></a>
+<a name="gbab-260"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">file_exists</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-261"></a>			<span class="n">confirm_save</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;File Exists, Overwrite?&quot;</span><span class="p">));</span>
+<a name="gbab-262"></a>			<span class="n">confirm_save</span><span class="o">-&gt;</span><span class="n">popup_centered</span><span class="p">(</span><span class="n">Size2</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">80</span><span class="p">));</span>
+<a name="gbab-263"></a>		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-264"></a>			
+<a name="gbab-265"></a>
+<a name="gbab-266"></a>			<span class="n">emit_signal</span><span class="p">(</span><span class="s">&quot;file_selected&quot;</span><span class="p">,</span><span class="n">f</span><span class="p">);</span>
+<a name="gbab-267"></a>			<span class="n">hide</span><span class="p">();</span>
+<a name="gbab-268"></a>		<span class="p">}</span>
+<a name="gbab-269"></a>	<span class="p">}</span>
+<a name="gbab-270"></a><span class="p">}</span>
+<a name="gbab-271"></a>
+<a name="gbab-272"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_cancel_pressed</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-273"></a>
+<a name="gbab-274"></a>	<span class="n">file</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<a name="gbab-275"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-276"></a>	<span class="n">hide</span><span class="p">();</span>
+<a name="gbab-277"></a><span class="p">}</span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_tree_selected</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-280"></a>	
+<a name="gbab-281"></a>	<span class="n">TreeItem</span> <span class="o">*</span><span class="n">ti</span><span class="o">=</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_selected</span><span class="p">();</span>
+<a name="gbab-282"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ti</span><span class="p">)</span>
+<a name="gbab-283"></a>		<span class="k">return</span><span class="p">;</span>
+<a name="gbab-284"></a>	<span class="n">Dictionary</span> <span class="n">d</span><span class="o">=</span><span class="n">ti</span><span class="o">-&gt;</span><span class="n">get_metadata</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-285"></a>		
+<a name="gbab-286"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="p">[</span><span class="s">&quot;dir&quot;</span><span class="p">])</span> <span class="p">{</span>
+<a name="gbab-287"></a>		
+<a name="gbab-288"></a>		<span class="n">file</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]);</span>
+<a name="gbab-289"></a>	<span class="p">}</span>
+<a name="gbab-290"></a>		
+<a name="gbab-291"></a><span class="p">}</span>
+<a name="gbab-292"></a>
+<a name="gbab-293"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_tree_dc_selected</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-294"></a>	
+<a name="gbab-295"></a>
+<a name="gbab-296"></a>	<span class="n">TreeItem</span> <span class="o">*</span><span class="n">ti</span><span class="o">=</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_selected</span><span class="p">();</span>
+<a name="gbab-297"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ti</span><span class="p">)</span>
+<a name="gbab-298"></a>		<span class="k">return</span><span class="p">;</span>
+<a name="gbab-299"></a>	
+<a name="gbab-300"></a>	<span class="n">Dictionary</span> <span class="n">d</span><span class="o">=</span><span class="n">ti</span><span class="o">-&gt;</span><span class="n">get_metadata</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-301"></a>
+<a name="gbab-302"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">&quot;dir&quot;</span><span class="p">])</span> <span class="p">{</span>
+<a name="gbab-303"></a>		
+<a name="gbab-304"></a>		<span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">change_dir</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]);</span>
+<a name="gbab-305"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_FILE</span> <span class="o">||</span> <span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_FILES</span> <span class="o">||</span> <span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_DIR</span> <span class="o">||</span> <span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_ANY</span><span class="p">)</span>
+<a name="gbab-306"></a>			<span class="n">file</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<a name="gbab-307"></a>		<span class="n">call_deferred</span><span class="p">(</span><span class="s">&quot;_update_file_list&quot;</span><span class="p">);</span>
+<a name="gbab-308"></a>		<span class="n">call_deferred</span><span class="p">(</span><span class="s">&quot;_update_dir&quot;</span><span class="p">);</span>
+<a name="gbab-309"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-310"></a>		
+<a name="gbab-311"></a>		<span class="n">_action_pressed</span><span class="p">();</span>
+<a name="gbab-312"></a>	<span class="p">}</span>
+<a name="gbab-313"></a><span class="p">}</span>
+<a name="gbab-314"></a>
+<a name="gbab-315"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">update_file_list</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-316"></a>	
+<a name="gbab-317"></a>	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-318"></a>	<span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">list_dir_begin</span><span class="p">();</span>
+<a name="gbab-319"></a>	
+<a name="gbab-320"></a>	<span class="n">TreeItem</span> <span class="o">*</span><span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">-&gt;</span><span class="n">create_item</span><span class="p">();</span>
+<a name="gbab-321"></a>	<span class="n">Ref</span><span class="o">&lt;</span><span class="n">Texture</span><span class="o">&gt;</span> <span class="n">folder</span> <span class="o">=</span> <span class="n">get_icon</span><span class="p">(</span><span class="s">&quot;folder&quot;</span><span class="p">);</span>
+<a name="gbab-322"></a>	<span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">files</span><span class="p">;</span>
+<a name="gbab-323"></a>	<span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">dirs</span><span class="p">;</span>
+<a name="gbab-324"></a>	
+<a name="gbab-325"></a>	<span class="kt">bool</span> <span class="n">isdir</span><span class="p">;</span>
+<a name="gbab-326"></a>	<span class="kt">bool</span> <span class="n">ishidden</span><span class="p">;</span>
+<a name="gbab-327"></a>	<span class="kt">bool</span> <span class="n">show_hidden</span> <span class="o">=</span> <span class="n">show_hidden_files</span><span class="p">;</span>
+<a name="gbab-328"></a>	<span class="n">String</span> <span class="n">item</span><span class="p">;</span>
+<a name="gbab-329"></a>
+<a name="gbab-330"></a>	<span class="k">while</span> <span class="p">((</span><span class="n">item</span><span class="o">=</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_next</span><span class="p">(</span><span class="o">&amp;</span><span class="n">isdir</span><span class="p">))</span><span class="o">!=</span><span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-331"></a>		
+<a name="gbab-332"></a>		<span class="n">ishidden</span> <span class="o">=</span> <span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">current_is_hidden</span><span class="p">();</span>
+<a name="gbab-333"></a>
+<a name="gbab-334"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">show_hidden</span> <span class="o">||</span> <span class="o">!</span><span class="n">ishidden</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-335"></a>		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isdir</span><span class="p">)</span>
+<a name="gbab-336"></a>			<span class="n">files</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">item</span><span class="p">);</span>
+<a name="gbab-337"></a>		<span class="k">else</span>
+<a name="gbab-338"></a>			<span class="n">dirs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">item</span><span class="p">);</span>		
+<a name="gbab-339"></a>	<span class="p">}</span>
+<a name="gbab-340"></a>	<span class="p">}</span>
+<a name="gbab-341"></a>	
+<a name="gbab-342"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">dirs</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;..&quot;</span><span class="p">)</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-343"></a>		<span class="c1">//may happen if lacking permissions</span>
+<a name="gbab-344"></a>		<span class="n">dirs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;..&quot;</span><span class="p">);</span>
+<a name="gbab-345"></a>	<span class="p">}</span>
+<a name="gbab-346"></a>
+<a name="gbab-347"></a>	<span class="n">dirs</span><span class="p">.</span><span class="n">sort_custom</span><span class="o">&lt;</span><span class="n">NoCaseComparator</span><span class="o">&gt;</span><span class="p">();</span>
+<a name="gbab-348"></a>	<span class="n">files</span><span class="p">.</span><span class="n">sort_custom</span><span class="o">&lt;</span><span class="n">NoCaseComparator</span><span class="o">&gt;</span><span class="p">();</span>
+<a name="gbab-349"></a>	
+<a name="gbab-350"></a>	<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">dirs</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+<a name="gbab-351"></a>		
+<a name="gbab-352"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">dirs</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">()</span><span class="o">!=</span><span class="s">&quot;.&quot;</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-353"></a>			<span class="n">TreeItem</span> <span class="o">*</span><span class="n">ti</span><span class="o">=</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">create_item</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<a name="gbab-354"></a>			<span class="n">ti</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">dirs</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">()</span><span class="o">+</span><span class="s">&quot;/&quot;</span><span class="p">);</span>
+<a name="gbab-355"></a>			<span class="n">ti</span><span class="o">-&gt;</span><span class="n">set_icon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">folder</span><span class="p">);</span>
+<a name="gbab-356"></a>			<span class="n">Dictionary</span> <span class="n">d</span><span class="p">;</span>
+<a name="gbab-357"></a>			<span class="n">d</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">dirs</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">();</span>
+<a name="gbab-358"></a>			<span class="n">d</span><span class="p">[</span><span class="s">&quot;dir&quot;</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-359"></a>			<span class="n">ti</span><span class="o">-&gt;</span><span class="n">set_metadata</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">d</span><span class="p">);</span>
+<a name="gbab-360"></a>		<span class="p">}</span>
+<a name="gbab-361"></a>		<span class="n">dirs</span><span class="p">.</span><span class="n">pop_front</span><span class="p">();</span>
+<a name="gbab-362"></a>		
+<a name="gbab-363"></a>	<span class="p">}</span>
+<a name="gbab-364"></a>	
+<a name="gbab-365"></a>	<span class="n">dirs</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-366"></a>	
+<a name="gbab-367"></a>	<span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">patterns</span><span class="p">;</span>
+<a name="gbab-368"></a>	<span class="c1">// build filter</span>
+<a name="gbab-369"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">filter</span><span class="o">-&gt;</span><span class="n">get_selected</span><span class="p">()</span><span class="o">==</span><span class="n">filter</span><span class="o">-&gt;</span><span class="n">get_item_count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-370"></a>		
+<a name="gbab-371"></a>		<span class="c1">// match all </span>
+<a name="gbab-372"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">filter</span><span class="o">-&gt;</span><span class="n">get_selected</span><span class="p">()</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-373"></a>		<span class="c1">// match all filters</span>
+<a name="gbab-374"></a>		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-375"></a>			
+<a name="gbab-376"></a>			<span class="n">String</span> <span class="n">f</span><span class="o">=</span><span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-377"></a>			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">f</span><span class="p">.</span><span class="n">get_slice_count</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-378"></a>				
+<a name="gbab-379"></a>				<span class="n">patterns</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="n">j</span><span class="p">).</span><span class="n">strip_edges</span><span class="p">());</span>
+<a name="gbab-380"></a>			<span class="p">}</span>
+<a name="gbab-381"></a>		<span class="p">}</span>
+<a name="gbab-382"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-383"></a>		<span class="kt">int</span> <span class="n">idx</span><span class="o">=</span><span class="n">filter</span><span class="o">-&gt;</span><span class="n">get_selected</span><span class="p">();</span>
+<a name="gbab-384"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span>
+<a name="gbab-385"></a>			<span class="n">idx</span><span class="o">--</span><span class="p">;</span>
+<a name="gbab-386"></a>		
+<a name="gbab-387"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">idx</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">idx</span><span class="o">&lt;</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+<a name="gbab-388"></a>			
+<a name="gbab-389"></a>			<span class="n">String</span> <span class="n">f</span><span class="o">=</span><span class="n">filters</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-390"></a>			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">f</span><span class="p">.</span><span class="n">get_slice_count</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-391"></a>				
+<a name="gbab-392"></a>				<span class="n">patterns</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="n">j</span><span class="p">).</span><span class="n">strip_edges</span><span class="p">());</span>
+<a name="gbab-393"></a>			<span class="p">}</span>		
+<a name="gbab-394"></a>		<span class="p">}</span>
+<a name="gbab-395"></a>	<span class="p">}</span>
+<a name="gbab-396"></a>
+<a name="gbab-397"></a>
+<a name="gbab-398"></a>	<span class="n">String</span> <span class="n">base_dir</span> <span class="o">=</span> <span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_current_dir</span><span class="p">();</span>
+<a name="gbab-399"></a>		
+<a name="gbab-400"></a>	
+<a name="gbab-401"></a>	<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">files</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+<a name="gbab-402"></a>		
+<a name="gbab-403"></a>		<span class="kt">bool</span> <span class="n">match</span><span class="o">=</span><span class="n">patterns</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+<a name="gbab-404"></a>		
+<a name="gbab-405"></a>		<span class="k">for</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;::</span><span class="n">Element</span> <span class="o">*</span><span class="n">E</span><span class="o">=</span><span class="n">patterns</span><span class="p">.</span><span class="n">front</span><span class="p">();</span><span class="n">E</span><span class="p">;</span><span class="n">E</span><span class="o">=</span><span class="n">E</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">())</span> <span class="p">{</span>
+<a name="gbab-406"></a>			
+<a name="gbab-407"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">files</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">().</span><span class="n">matchn</span><span class="p">(</span><span class="n">E</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">()))</span> <span class="p">{</span>
+<a name="gbab-408"></a>				
+<a name="gbab-409"></a>				<span class="n">match</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-410"></a>				<span class="k">break</span><span class="p">;</span>
+<a name="gbab-411"></a>			<span class="p">}</span>
+<a name="gbab-412"></a>		<span class="p">}</span>
+<a name="gbab-413"></a>		
+<a name="gbab-414"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">match</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-415"></a>			<span class="n">TreeItem</span> <span class="o">*</span><span class="n">ti</span><span class="o">=</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">create_item</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<a name="gbab-416"></a>			<span class="n">ti</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">files</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">());</span>
+<a name="gbab-417"></a>
+<a name="gbab-418"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">get_icon_func</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-419"></a>
+<a name="gbab-420"></a>				<span class="n">Ref</span><span class="o">&lt;</span><span class="n">Texture</span><span class="o">&gt;</span> <span class="n">icon</span> <span class="o">=</span> <span class="n">get_icon_func</span><span class="p">(</span><span class="n">base_dir</span><span class="p">.</span><span class="n">plus_file</span><span class="p">(</span><span class="n">files</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">()));</span>
+<a name="gbab-421"></a>				<span class="n">ti</span><span class="o">-&gt;</span><span class="n">set_icon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">icon</span><span class="p">);</span>
+<a name="gbab-422"></a>			<span class="p">}</span>
+<a name="gbab-423"></a>
+<a name="gbab-424"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_DIR</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-425"></a>				<span class="n">ti</span><span class="o">-&gt;</span><span class="n">set_custom_color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">get_color</span><span class="p">(</span><span class="s">&quot;files_disabled&quot;</span><span class="p">));</span>
+<a name="gbab-426"></a>				<span class="n">ti</span><span class="o">-&gt;</span><span class="n">set_selectable</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">false</span><span class="p">);</span>
+<a name="gbab-427"></a>			<span class="p">}</span>
+<a name="gbab-428"></a>			<span class="n">Dictionary</span> <span class="n">d</span><span class="p">;</span>
+<a name="gbab-429"></a>			<span class="n">d</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">files</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">();</span>
+<a name="gbab-430"></a>			<span class="n">d</span><span class="p">[</span><span class="s">&quot;dir&quot;</span><span class="p">]</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-431"></a>			<span class="n">ti</span><span class="o">-&gt;</span><span class="n">set_metadata</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">d</span><span class="p">);</span>
+<a name="gbab-432"></a>			
+<a name="gbab-433"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">()</span><span class="o">==</span><span class="n">files</span><span class="p">.</span><span class="n">front</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">())</span>
+<a name="gbab-434"></a>				<span class="n">ti</span><span class="o">-&gt;</span><span class="n">select</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-435"></a>		<span class="p">}</span>
+<a name="gbab-436"></a>		
+<a name="gbab-437"></a>		<span class="n">files</span><span class="p">.</span><span class="n">pop_front</span><span class="p">();</span>
+<a name="gbab-438"></a>	<span class="p">}</span>
+<a name="gbab-439"></a>	
+<a name="gbab-440"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_root</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_children</span><span class="p">())</span>
+<a name="gbab-441"></a>		<span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get_children</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">select</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-442"></a>	
+<a name="gbab-443"></a>	<span class="n">files</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-444"></a>	
+<a name="gbab-445"></a><span class="p">}</span>
+<a name="gbab-446"></a>
+<a name="gbab-447"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_filter_selected</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-448"></a>	
+<a name="gbab-449"></a>	<span class="n">update_file_list</span><span class="p">();</span>
+<a name="gbab-450"></a><span class="p">}</span>
+<a name="gbab-451"></a>
+<a name="gbab-452"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">update_filters</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-453"></a>	
+<a name="gbab-454"></a>	<span class="n">filter</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-455"></a>	
+<a name="gbab-456"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-457"></a>		<span class="n">String</span> <span class="n">all_filters</span><span class="p">;</span>
+<a name="gbab-458"></a>
+<a name="gbab-459"></a>		<span class="k">const</span> <span class="kt">int</span> <span class="n">max_filters</span><span class="o">=</span><span class="mi">5</span><span class="p">;</span>
+<a name="gbab-460"></a>		
+<a name="gbab-461"></a>		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">MIN</span><span class="p">(</span> <span class="n">max_filters</span><span class="p">,</span> <span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-462"></a>			<span class="n">String</span> <span class="n">flt</span><span class="o">=</span><span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-463"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+<a name="gbab-464"></a>				<span class="n">all_filters</span><span class="o">+=</span><span class="s">&quot;,&quot;</span><span class="p">;</span>
+<a name="gbab-465"></a>			<span class="n">all_filters</span><span class="o">+=</span><span class="n">flt</span><span class="p">;</span>
+<a name="gbab-466"></a>		<span class="p">}</span>
+<a name="gbab-467"></a>
+<a name="gbab-468"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">max_filters</span><span class="o">&lt;</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+<a name="gbab-469"></a>			<span class="n">all_filters</span><span class="o">+=</span><span class="s">&quot;, ...&quot;</span><span class="p">;</span>
+<a name="gbab-470"></a>		
+<a name="gbab-471"></a>		<span class="n">filter</span><span class="o">-&gt;</span><span class="n">add_item</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;All Recognized&quot;</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; ( &quot;</span><span class="o">+</span><span class="n">all_filters</span><span class="o">+</span><span class="s">&quot; )&quot;</span><span class="p">);</span>
+<a name="gbab-472"></a>	<span class="p">}</span>
+<a name="gbab-473"></a>	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">filters</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-474"></a>		
+<a name="gbab-475"></a>		<span class="n">String</span> <span class="n">flt</span><span class="o">=</span><span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">).</span><span class="n">strip_edges</span><span class="p">();</span>
+<a name="gbab-476"></a>		<span class="n">String</span> <span class="n">desc</span><span class="o">=</span><span class="n">filters</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">).</span><span class="n">strip_edges</span><span class="p">();</span>
+<a name="gbab-477"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">desc</span><span class="p">.</span><span class="n">length</span><span class="p">())</span>
+<a name="gbab-478"></a>			<span class="n">filter</span><span class="o">-&gt;</span><span class="n">add_item</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="n">XL_MESSAGE</span><span class="p">(</span><span class="n">desc</span><span class="p">))</span><span class="o">+</span><span class="s">&quot; ( &quot;</span><span class="o">+</span><span class="n">flt</span><span class="o">+</span><span class="s">&quot; )&quot;</span><span class="p">);</span>
+<a name="gbab-479"></a>		<span class="k">else</span>
+<a name="gbab-480"></a>			<span class="n">filter</span><span class="o">-&gt;</span><span class="n">add_item</span><span class="p">(</span><span class="s">&quot;( &quot;</span><span class="o">+</span><span class="n">flt</span><span class="o">+</span><span class="s">&quot; )&quot;</span><span class="p">);</span>
+<a name="gbab-481"></a>	<span class="p">}</span>
+<a name="gbab-482"></a>	
+<a name="gbab-483"></a>	<span class="n">filter</span><span class="o">-&gt;</span><span class="n">add_item</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;All Files (*)&quot;</span><span class="p">));</span>
+<a name="gbab-484"></a>	
+<a name="gbab-485"></a><span class="p">}</span>
+<a name="gbab-486"></a>
+<a name="gbab-487"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">clear_filters</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-488"></a>	
+<a name="gbab-489"></a>	<span class="n">filters</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-490"></a>	<span class="n">update_filters</span><span class="p">();</span>
+<a name="gbab-491"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-492"></a><span class="p">}</span>
+<a name="gbab-493"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">add_filter</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_filter</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-494"></a>	
+<a name="gbab-495"></a>	<span class="n">filters</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p_filter</span><span class="p">);</span>
+<a name="gbab-496"></a>	<span class="n">update_filters</span><span class="p">();</span>
+<a name="gbab-497"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-498"></a>	
+<a name="gbab-499"></a><span class="p">}</span>
+<a name="gbab-500"></a>
+<a name="gbab-501"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">set_filters</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&amp;</span> <span class="n">p_filters</span><span class="p">){</span>
+<a name="gbab-502"></a>	<span class="n">filters</span><span class="o">=</span><span class="n">p_filters</span><span class="p">;</span>
+<a name="gbab-503"></a>	<span class="n">update_filters</span><span class="p">();</span>
+<a name="gbab-504"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-505"></a><span class="p">}</span>
+<a name="gbab-506"></a>
+<a name="gbab-507"></a><span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">get_filters</span><span class="p">()</span> <span class="k">const</span><span class="p">{</span>
+<a name="gbab-508"></a>	<span class="k">return</span> <span class="n">filters</span><span class="p">;</span>
+<a name="gbab-509"></a><span class="p">}</span>
+<a name="gbab-510"></a>
+<a name="gbab-511"></a><span class="n">String</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">get_current_dir</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-512"></a>	
+<a name="gbab-513"></a>	<span class="k">return</span> <span class="n">dir</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">();</span>	
+<a name="gbab-514"></a><span class="p">}</span>
+<a name="gbab-515"></a><span class="n">String</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">get_current_file</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-516"></a>	
+<a name="gbab-517"></a>	<span class="k">return</span> <span class="n">file</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">();</span>
+<a name="gbab-518"></a><span class="p">}</span>
+<a name="gbab-519"></a><span class="n">String</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">get_current_path</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-520"></a>	
+<a name="gbab-521"></a>	<span class="k">return</span> <span class="n">dir</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">().</span><span class="n">plus_file</span><span class="p">(</span><span class="n">file</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">());</span>
+<a name="gbab-522"></a><span class="p">}</span>
+<a name="gbab-523"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">set_current_dir</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_dir</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-524"></a>	
+<a name="gbab-525"></a>	<span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">change_dir</span><span class="p">(</span><span class="n">p_dir</span><span class="p">);</span>
+<a name="gbab-526"></a>	<span class="n">update_dir</span><span class="p">();</span>
+<a name="gbab-527"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-528"></a>	
+<a name="gbab-529"></a><span class="p">}</span>
+<a name="gbab-530"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">set_current_file</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_file</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-531"></a>	
+<a name="gbab-532"></a>	<span class="n">file</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">p_file</span><span class="p">);</span>
+<a name="gbab-533"></a>	<span class="n">update_dir</span><span class="p">();</span>
+<a name="gbab-534"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-535"></a>	<span class="kt">int</span> <span class="n">lp</span> <span class="o">=</span> <span class="n">p_file</span><span class="p">.</span><span class="n">find_last</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">);</span>
+<a name="gbab-536"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">lp</span><span class="o">!=-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-537"></a>		<span class="n">file</span><span class="o">-&gt;</span><span class="n">select</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">lp</span><span class="p">);</span>
+<a name="gbab-538"></a>		<span class="n">file</span><span class="o">-&gt;</span><span class="n">grab_focus</span><span class="p">();</span>
+<a name="gbab-539"></a>	<span class="p">}</span>
+<a name="gbab-540"></a>
+<a name="gbab-541"></a>	
+<a name="gbab-542"></a><span class="p">}</span>
+<a name="gbab-543"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">set_current_path</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_path</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-544"></a>	
+<a name="gbab-545"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">p_path</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+<a name="gbab-546"></a>		<span class="k">return</span><span class="p">;</span>
+<a name="gbab-547"></a>	<span class="kt">int</span> <span class="n">pos</span><span class="o">=</span><span class="n">MAX</span><span class="p">(</span> <span class="n">p_path</span><span class="p">.</span><span class="n">find_last</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">),</span> <span class="n">p_path</span><span class="p">.</span><span class="n">find_last</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\\</span><span class="s">&quot;</span><span class="p">)</span> <span class="p">);</span>
+<a name="gbab-548"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">pos</span><span class="o">==-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-549"></a>		
+<a name="gbab-550"></a>		<span class="n">set_current_file</span><span class="p">(</span><span class="n">p_path</span><span class="p">);</span>
+<a name="gbab-551"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-552"></a>		
+<a name="gbab-553"></a>		<span class="n">String</span> <span class="n">dir</span><span class="o">=</span><span class="n">p_path</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">pos</span><span class="p">);</span>
+<a name="gbab-554"></a>		<span class="n">String</span> <span class="n">file</span><span class="o">=</span><span class="n">p_path</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">pos</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">p_path</span><span class="p">.</span><span class="n">length</span><span class="p">());</span>
+<a name="gbab-555"></a>		<span class="n">set_current_dir</span><span class="p">(</span><span class="n">dir</span><span class="p">);</span>
+<a name="gbab-556"></a>		<span class="n">set_current_file</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
+<a name="gbab-557"></a>	<span class="p">}</span>
+<a name="gbab-558"></a><span class="p">}</span>
+<a name="gbab-559"></a>
+<a name="gbab-560"></a>
+<a name="gbab-561"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">set_mode</span><span class="p">(</span><span class="n">Mode</span> <span class="n">p_mode</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-562"></a>	
+<a name="gbab-563"></a>	<span class="n">mode</span><span class="o">=</span><span class="n">p_mode</span><span class="p">;</span>
+<a name="gbab-564"></a>	<span class="k">switch</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-565"></a>		
+<a name="gbab-566"></a>		<span class="k">case</span> <span class="nl">MODE_OPEN_FILE</span><span class="p">:</span> <span class="n">get_ok</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Open&quot;</span><span class="p">));</span> <span class="n">set_title</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Open a File&quot;</span><span class="p">));</span> <span class="n">makedir</span><span class="o">-&gt;</span><span class="n">hide</span><span class="p">();</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-567"></a>		<span class="k">case</span> <span class="nl">MODE_OPEN_FILES</span><span class="p">:</span> <span class="n">get_ok</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Open&quot;</span><span class="p">));</span> <span class="n">set_title</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Open File(s)&quot;</span><span class="p">));</span> <span class="n">makedir</span><span class="o">-&gt;</span><span class="n">hide</span><span class="p">();</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-568"></a>		<span class="k">case</span> <span class="nl">MODE_OPEN_DIR</span><span class="p">:</span> <span class="n">get_ok</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Open&quot;</span><span class="p">));</span> <span class="n">set_title</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Open a Directory&quot;</span><span class="p">));</span> <span class="n">makedir</span><span class="o">-&gt;</span><span class="n">show</span><span class="p">();</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-569"></a>		<span class="k">case</span> <span class="nl">MODE_OPEN_ANY</span><span class="p">:</span> <span class="n">get_ok</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Open&quot;</span><span class="p">));</span> <span class="n">set_title</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Open a File or Directory&quot;</span><span class="p">));</span> <span class="n">makedir</span><span class="o">-&gt;</span><span class="n">show</span><span class="p">();</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-570"></a>		<span class="k">case</span> <span class="nl">MODE_SAVE_FILE</span><span class="p">:</span> <span class="n">get_ok</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Save&quot;</span><span class="p">));</span> <span class="n">set_title</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Save a File&quot;</span><span class="p">));</span> <span class="n">makedir</span><span class="o">-&gt;</span><span class="n">show</span><span class="p">();</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-571"></a>	<span class="p">}</span>
+<a name="gbab-572"></a>
+<a name="gbab-573"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="o">==</span><span class="n">MODE_OPEN_FILES</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-574"></a>		<span class="n">tree</span><span class="o">-&gt;</span><span class="n">set_select_mode</span><span class="p">(</span><span class="n">Tree</span><span class="o">::</span><span class="n">SELECT_MULTI</span><span class="p">);</span>
+<a name="gbab-575"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-576"></a>		<span class="n">tree</span><span class="o">-&gt;</span><span class="n">set_select_mode</span><span class="p">(</span><span class="n">Tree</span><span class="o">::</span><span class="n">SELECT_SINGLE</span><span class="p">);</span>
+<a name="gbab-577"></a>
+<a name="gbab-578"></a>	<span class="p">}</span>
+<a name="gbab-579"></a><span class="p">}</span>
+<a name="gbab-580"></a>
+<a name="gbab-581"></a><span class="n">FileDialog</span><span class="o">::</span><span class="n">Mode</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">get_mode</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-582"></a>	
+<a name="gbab-583"></a>	<span class="k">return</span> <span class="n">mode</span><span class="p">;</span>
+<a name="gbab-584"></a><span class="p">}</span>
+<a name="gbab-585"></a>
+<a name="gbab-586"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">set_access</span><span class="p">(</span><span class="n">Access</span> <span class="n">p_access</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-587"></a>
+<a name="gbab-588"></a>	<span class="n">ERR_FAIL_INDEX</span><span class="p">(</span><span class="n">p_access</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+<a name="gbab-589"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">access</span><span class="o">==</span><span class="n">p_access</span><span class="p">)</span>
+<a name="gbab-590"></a>		<span class="k">return</span><span class="p">;</span>
+<a name="gbab-591"></a>	<span class="n">memdelete</span><span class="p">(</span> <span class="n">dir_access</span> <span class="p">);</span>
+<a name="gbab-592"></a>	<span class="k">switch</span><span class="p">(</span><span class="n">p_access</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-593"></a>		<span class="k">case</span> <span class="nl">ACCESS_FILESYSTEM</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-594"></a>
+<a name="gbab-595"></a>			<span class="n">dir_access</span> <span class="o">=</span> <span class="n">DirAccess</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">DirAccess</span><span class="o">::</span><span class="n">ACCESS_FILESYSTEM</span><span class="p">);</span>
+<a name="gbab-596"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-597"></a>		<span class="k">case</span> <span class="nl">ACCESS_RESOURCES</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-598"></a>
+<a name="gbab-599"></a>			<span class="n">dir_access</span> <span class="o">=</span> <span class="n">DirAccess</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">DirAccess</span><span class="o">::</span><span class="n">ACCESS_RESOURCES</span><span class="p">);</span>
+<a name="gbab-600"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-601"></a>		<span class="k">case</span> <span class="nl">ACCESS_USERDATA</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-602"></a>
+<a name="gbab-603"></a>			<span class="n">dir_access</span> <span class="o">=</span> <span class="n">DirAccess</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">DirAccess</span><span class="o">::</span><span class="n">ACCESS_USERDATA</span><span class="p">);</span>
+<a name="gbab-604"></a>		<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-605"></a>	<span class="p">}</span>
+<a name="gbab-606"></a>	<span class="n">access</span><span class="o">=</span><span class="n">p_access</span><span class="p">;</span>
+<a name="gbab-607"></a>	<span class="n">_update_drives</span><span class="p">();</span>
+<a name="gbab-608"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-609"></a>	<span class="n">update_filters</span><span class="p">();</span>
+<a name="gbab-610"></a>	<span class="n">update_dir</span><span class="p">();</span>
+<a name="gbab-611"></a><span class="p">}</span>
+<a name="gbab-612"></a>
+<a name="gbab-613"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">invalidate</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-614"></a>
+<a name="gbab-615"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">is_visible</span><span class="p">())</span> <span class="p">{</span>
+<a name="gbab-616"></a>		<span class="n">update_file_list</span><span class="p">();</span>
+<a name="gbab-617"></a>		<span class="n">invalidated</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-618"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-619"></a>		<span class="n">invalidated</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-620"></a>	<span class="p">}</span>
+<a name="gbab-621"></a>
+<a name="gbab-622"></a><span class="p">}</span>
+<a name="gbab-623"></a>
+<a name="gbab-624"></a><span class="n">FileDialog</span><span class="o">::</span><span class="n">Access</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">get_access</span><span class="p">()</span> <span class="k">const</span><span class="p">{</span>
+<a name="gbab-625"></a>
+<a name="gbab-626"></a>	<span class="k">return</span> <span class="n">access</span><span class="p">;</span>
+<a name="gbab-627"></a><span class="p">}</span>
+<a name="gbab-628"></a>
+<a name="gbab-629"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_make_dir_confirm</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-630"></a>
+<a name="gbab-631"></a>	<span class="n">Error</span> <span class="n">err</span> <span class="o">=</span> <span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">make_dir</span><span class="p">(</span> <span class="n">makedirname</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">()</span> <span class="p">);</span>
+<a name="gbab-632"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">err</span><span class="o">==</span><span class="n">OK</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-633"></a>		<span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">change_dir</span><span class="p">(</span><span class="n">makedirname</span><span class="o">-&gt;</span><span class="n">get_text</span><span class="p">());</span>
+<a name="gbab-634"></a>		<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-635"></a>		<span class="n">update_filters</span><span class="p">();</span>
+<a name="gbab-636"></a>		<span class="n">update_dir</span><span class="p">();</span>
+<a name="gbab-637"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-638"></a>		<span class="n">mkdirerr</span><span class="o">-&gt;</span><span class="n">popup_centered_minsize</span><span class="p">(</span><span class="n">Size2</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span><span class="mi">50</span><span class="p">));</span>
+<a name="gbab-639"></a>	<span class="p">}</span>
+<a name="gbab-640"></a>	<span class="n">makedirname</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span> <span class="c1">// reset label</span>
+<a name="gbab-641"></a><span class="p">}</span>
+<a name="gbab-642"></a>
+<a name="gbab-643"></a>
+<a name="gbab-644"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_make_dir</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-645"></a>
+<a name="gbab-646"></a>	<span class="n">makedialog</span><span class="o">-&gt;</span><span class="n">popup_centered_minsize</span><span class="p">(</span><span class="n">Size2</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span><span class="mi">80</span><span class="p">));</span>
+<a name="gbab-647"></a>	<span class="n">makedirname</span><span class="o">-&gt;</span><span class="n">grab_focus</span><span class="p">();</span>
+<a name="gbab-648"></a>
+<a name="gbab-649"></a><span class="p">}</span>
+<a name="gbab-650"></a>
+<a name="gbab-651"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_select_drive</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_idx</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-652"></a>
+<a name="gbab-653"></a>	<span class="n">String</span> <span class="n">d</span> <span class="o">=</span> <span class="n">drives</span><span class="o">-&gt;</span><span class="n">get_item_text</span><span class="p">(</span><span class="n">p_idx</span><span class="p">);</span>
+<a name="gbab-654"></a>	<span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">change_dir</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<a name="gbab-655"></a>	<span class="n">file</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<a name="gbab-656"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-657"></a>	<span class="n">update_dir</span><span class="p">();</span>
+<a name="gbab-658"></a>
+<a name="gbab-659"></a><span class="p">}</span>
+<a name="gbab-660"></a>
+<a name="gbab-661"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_update_drives</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-662"></a>
+<a name="gbab-663"></a>
+<a name="gbab-664"></a>	<span class="kt">int</span> <span class="n">dc</span> <span class="o">=</span> <span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_drive_count</span><span class="p">();</span>
+<a name="gbab-665"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">dc</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">access</span><span class="o">!=</span><span class="n">ACCESS_FILESYSTEM</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-666"></a>		<span class="n">drives</span><span class="o">-&gt;</span><span class="n">hide</span><span class="p">();</span>
+<a name="gbab-667"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-668"></a>		<span class="n">drives</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-669"></a>		<span class="n">drives</span><span class="o">-&gt;</span><span class="n">show</span><span class="p">();</span>
+<a name="gbab-670"></a>
+<a name="gbab-671"></a>		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_drive_count</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-672"></a>			<span class="n">String</span> <span class="n">d</span> <span class="o">=</span> <span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_drive</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<a name="gbab-673"></a>			<span class="n">drives</span><span class="o">-&gt;</span><span class="n">add_item</span><span class="p">(</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_drive</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<a name="gbab-674"></a>		<span class="p">}</span>
+<a name="gbab-675"></a>
+<a name="gbab-676"></a>		<span class="n">drives</span><span class="o">-&gt;</span><span class="n">select</span><span class="p">(</span><span class="n">dir_access</span><span class="o">-&gt;</span><span class="n">get_current_drive</span><span class="p">());</span>
+<a name="gbab-677"></a>
+<a name="gbab-678"></a>	<span class="p">}</span>
+<a name="gbab-679"></a><span class="p">}</span>
+<a name="gbab-680"></a>
+<a name="gbab-681"></a><span class="kt">bool</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">default_show_hidden_files</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+<a name="gbab-682"></a>
+<a name="gbab-683"></a>
+<a name="gbab-684"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">_bind_methods</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-685"></a>	
+<a name="gbab-686"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_unhandled_input&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_unhandled_input</span><span class="p">);</span>
+<a name="gbab-687"></a>
+<a name="gbab-688"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_tree_selected&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_tree_selected</span><span class="p">);</span>
+<a name="gbab-689"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_tree_db_selected&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_tree_dc_selected</span><span class="p">);</span>
+<a name="gbab-690"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_dir_entered&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_dir_entered</span><span class="p">);</span>
+<a name="gbab-691"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_file_entered&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_file_entered</span><span class="p">);</span>
+<a name="gbab-692"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_action_pressed&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_action_pressed</span><span class="p">);</span>
+<a name="gbab-693"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_cancel_pressed&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_cancel_pressed</span><span class="p">);</span>
+<a name="gbab-694"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_filter_selected&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_filter_selected</span><span class="p">);</span>
+<a name="gbab-695"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_save_confirm_pressed&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_save_confirm_pressed</span><span class="p">);</span>
+<a name="gbab-696"></a>	
+<a name="gbab-697"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;clear_filters&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">clear_filters</span><span class="p">);</span>
+<a name="gbab-698"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;add_filter&quot;</span><span class="p">,</span><span class="s">&quot;filter&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">add_filter</span><span class="p">);</span>
+<a name="gbab-699"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;set_filters&quot;</span><span class="p">,</span><span class="s">&quot;filters&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">set_filters</span><span class="p">);</span>
+<a name="gbab-700"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_filters&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">get_filters</span><span class="p">);</span>
+<a name="gbab-701"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_current_dir&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">get_current_dir</span><span class="p">);</span>
+<a name="gbab-702"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_current_file&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">get_current_file</span><span class="p">);</span>
+<a name="gbab-703"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_current_path&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">get_current_path</span><span class="p">);</span>
+<a name="gbab-704"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;set_current_dir&quot;</span><span class="p">,</span><span class="s">&quot;dir&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">set_current_dir</span><span class="p">);</span>
+<a name="gbab-705"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;set_current_file&quot;</span><span class="p">,</span><span class="s">&quot;file&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">set_current_file</span><span class="p">);</span>
+<a name="gbab-706"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;set_current_path&quot;</span><span class="p">,</span><span class="s">&quot;path&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">set_current_path</span><span class="p">);</span>
+<a name="gbab-707"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;set_mode&quot;</span><span class="p">,</span><span class="s">&quot;mode&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">set_mode</span><span class="p">);</span>
+<a name="gbab-708"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_mode&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">get_mode</span><span class="p">);</span>
+<a name="gbab-709"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_vbox:VBoxContainer&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">get_vbox</span><span class="p">);</span>
+<a name="gbab-710"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;set_access&quot;</span><span class="p">,</span><span class="s">&quot;access&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">set_access</span><span class="p">);</span>
+<a name="gbab-711"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_access&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">get_access</span><span class="p">);</span>
+<a name="gbab-712"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;set_show_hidden_files&quot;</span><span class="p">,</span><span class="s">&quot;show&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">set_show_hidden_files</span><span class="p">);</span>
+<a name="gbab-713"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;is_showing_hidden_files&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">is_showing_hidden_files</span><span class="p">);</span>
+<a name="gbab-714"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_select_drive&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_select_drive</span><span class="p">);</span>
+<a name="gbab-715"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_make_dir&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_make_dir</span><span class="p">);</span>
+<a name="gbab-716"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_make_dir_confirm&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">_make_dir_confirm</span><span class="p">);</span>
+<a name="gbab-717"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_update_file_list&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">update_file_list</span><span class="p">);</span>
+<a name="gbab-718"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_update_dir&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">update_dir</span><span class="p">);</span>
+<a name="gbab-719"></a>
+<a name="gbab-720"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;invalidate&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">FileDialog</span><span class="o">::</span><span class="n">invalidate</span><span class="p">);</span>
+<a name="gbab-721"></a>
+<a name="gbab-722"></a>	<span class="n">ADD_SIGNAL</span><span class="p">(</span><span class="n">MethodInfo</span><span class="p">(</span><span class="s">&quot;file_selected&quot;</span><span class="p">,</span><span class="n">PropertyInfo</span><span class="p">(</span> <span class="n">Variant</span><span class="o">::</span><span class="n">STRING</span><span class="p">,</span><span class="s">&quot;path&quot;</span><span class="p">)));</span>
+<a name="gbab-723"></a>	<span class="n">ADD_SIGNAL</span><span class="p">(</span><span class="n">MethodInfo</span><span class="p">(</span><span class="s">&quot;files_selected&quot;</span><span class="p">,</span><span class="n">PropertyInfo</span><span class="p">(</span> <span class="n">Variant</span><span class="o">::</span><span class="n">STRING_ARRAY</span><span class="p">,</span><span class="s">&quot;paths&quot;</span><span class="p">)));</span>
+<a name="gbab-724"></a>	<span class="n">ADD_SIGNAL</span><span class="p">(</span><span class="n">MethodInfo</span><span class="p">(</span><span class="s">&quot;dir_selected&quot;</span><span class="p">,</span><span class="n">PropertyInfo</span><span class="p">(</span> <span class="n">Variant</span><span class="o">::</span><span class="n">STRING</span><span class="p">,</span><span class="s">&quot;dir&quot;</span><span class="p">)));</span>
+<a name="gbab-725"></a>
+<a name="gbab-726"></a>	<span class="n">BIND_CONSTANT</span><span class="p">(</span> <span class="n">MODE_OPEN_FILE</span> <span class="p">);</span>
+<a name="gbab-727"></a>	<span class="n">BIND_CONSTANT</span><span class="p">(</span> <span class="n">MODE_OPEN_FILES</span> <span class="p">);</span>
+<a name="gbab-728"></a>	<span class="n">BIND_CONSTANT</span><span class="p">(</span> <span class="n">MODE_OPEN_DIR</span> <span class="p">);</span>
+<a name="gbab-729"></a>	<span class="n">BIND_CONSTANT</span><span class="p">(</span> <span class="n">MODE_OPEN_ANY</span> <span class="p">);</span>
+<a name="gbab-730"></a>
+<a name="gbab-731"></a>	<span class="n">BIND_CONSTANT</span><span class="p">(</span> <span class="n">MODE_SAVE_FILE</span> <span class="p">);</span>
+<a name="gbab-732"></a>
+<a name="gbab-733"></a>	<span class="n">BIND_CONSTANT</span><span class="p">(</span> <span class="n">ACCESS_RESOURCES</span> <span class="p">);</span>
+<a name="gbab-734"></a>	<span class="n">BIND_CONSTANT</span><span class="p">(</span> <span class="n">ACCESS_USERDATA</span> <span class="p">);</span>
+<a name="gbab-735"></a>	<span class="n">BIND_CONSTANT</span><span class="p">(</span> <span class="n">ACCESS_FILESYSTEM</span> <span class="p">);</span>
+<a name="gbab-736"></a>
+<a name="gbab-737"></a>	<span class="n">ADD_PROPERTY</span><span class="p">(</span> <span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">INT</span><span class="p">,</span> <span class="s">&quot;mode&quot;</span><span class="p">,</span> <span class="n">PROPERTY_HINT_ENUM</span><span class="p">,</span> <span class="s">&quot;Open one,Open many,Open folder,Open any,Save&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;set_mode&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;get_mode&quot;</span><span class="p">)</span> <span class="p">);</span>
+<a name="gbab-738"></a>	<span class="n">ADD_PROPERTY</span><span class="p">(</span> <span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">INT</span><span class="p">,</span> <span class="s">&quot;access&quot;</span><span class="p">,</span> <span class="n">PROPERTY_HINT_ENUM</span><span class="p">,</span> <span class="s">&quot;Resources,User data,File system&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;set_access&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;get_access&quot;</span><span class="p">)</span> <span class="p">);</span>
+<a name="gbab-739"></a>	<span class="n">ADD_PROPERTY</span><span class="p">(</span> <span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">STRING_ARRAY</span><span class="p">,</span> <span class="s">&quot;filters&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;set_filters&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;get_filters&quot;</span><span class="p">)</span> <span class="p">);</span>
+<a name="gbab-740"></a>	<span class="n">ADD_PROPERTY</span><span class="p">(</span> <span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">BOOL</span><span class="p">,</span> <span class="s">&quot;show_hidden_files&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;set_show_hidden_files&quot;</span><span class="p">),</span><span class="n">_SCS</span><span class="p">(</span><span class="s">&quot;is_showing_hidden_files&quot;</span><span class="p">)</span> <span class="p">);</span>
+<a name="gbab-741"></a>
+<a name="gbab-742"></a><span class="p">}</span>
+<a name="gbab-743"></a>
+<a name="gbab-744"></a>
+<a name="gbab-745"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">set_show_hidden_files</span><span class="p">(</span><span class="kt">bool</span> <span class="n">p_show</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-746"></a>	<span class="n">show_hidden_files</span><span class="o">=</span><span class="n">p_show</span><span class="p">;</span>
+<a name="gbab-747"></a>	<span class="n">invalidate</span><span class="p">();</span>
+<a name="gbab-748"></a><span class="p">}</span>
+<a name="gbab-749"></a>
+<a name="gbab-750"></a><span class="kt">bool</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">is_showing_hidden_files</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-751"></a>	<span class="k">return</span> <span class="n">show_hidden_files</span><span class="p">;</span>
+<a name="gbab-752"></a><span class="p">}</span>
+<a name="gbab-753"></a>
+<a name="gbab-754"></a><span class="kt">void</span> <span class="n">FileDialog</span><span class="o">::</span><span class="n">set_default_show_hidden_files</span><span class="p">(</span><span class="kt">bool</span> <span class="n">p_show</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-755"></a>	<span class="n">default_show_hidden_files</span><span class="o">=</span><span class="n">p_show</span><span class="p">;</span>
+<a name="gbab-756"></a><span class="p">}</span>
+<a name="gbab-757"></a>
+<a name="gbab-758"></a><span class="n">FileDialog</span><span class="o">::</span><span class="n">FileDialog</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-759"></a>	
+<a name="gbab-760"></a>	<span class="n">show_hidden_files</span><span class="o">=</span><span class="n">default_show_hidden_files</span><span class="p">;</span>
+<a name="gbab-761"></a>
+<a name="gbab-762"></a>	<span class="n">VBoxContainer</span> <span class="o">*</span><span class="n">vbc</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">VBoxContainer</span> <span class="p">);</span>
+<a name="gbab-763"></a>	<span class="n">add_child</span><span class="p">(</span><span class="n">vbc</span><span class="p">);</span>
+<a name="gbab-764"></a>	<span class="n">set_child_rect</span><span class="p">(</span><span class="n">vbc</span><span class="p">);</span>
+<a name="gbab-765"></a>
+<a name="gbab-766"></a>	<span class="n">mode</span><span class="o">=</span><span class="n">MODE_SAVE_FILE</span><span class="p">;</span>
+<a name="gbab-767"></a>	<span class="n">set_title</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Save a File&quot;</span><span class="p">));</span>
+<a name="gbab-768"></a>	
+<a name="gbab-769"></a>	<span class="n">dir</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span><span class="n">LineEdit</span><span class="p">);</span>
+<a name="gbab-770"></a>	<span class="n">HBoxContainer</span> <span class="o">*</span><span class="n">pathhb</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">HBoxContainer</span> <span class="p">);</span>
+<a name="gbab-771"></a>	<span class="n">pathhb</span><span class="o">-&gt;</span><span class="n">add_child</span><span class="p">(</span><span class="n">dir</span><span class="p">);</span>
+<a name="gbab-772"></a>	<span class="n">dir</span><span class="o">-&gt;</span><span class="n">set_h_size_flags</span><span class="p">(</span><span class="n">SIZE_EXPAND_FILL</span><span class="p">);</span>
+<a name="gbab-773"></a>
+<a name="gbab-774"></a>	<span class="n">refresh</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">ToolButton</span> <span class="p">);</span>
+<a name="gbab-775"></a>	<span class="n">refresh</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;pressed&quot;</span><span class="p">,</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;_update_file_list&quot;</span><span class="p">);</span>
+<a name="gbab-776"></a>	<span class="n">pathhb</span><span class="o">-&gt;</span><span class="n">add_child</span><span class="p">(</span><span class="n">refresh</span><span class="p">);</span>
+<a name="gbab-777"></a>
+<a name="gbab-778"></a>	<span class="n">drives</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">OptionButton</span> <span class="p">);</span>
+<a name="gbab-779"></a>	<span class="n">pathhb</span><span class="o">-&gt;</span><span class="n">add_child</span><span class="p">(</span><span class="n">drives</span><span class="p">);</span>
+<a name="gbab-780"></a>	<span class="n">drives</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;item_selected&quot;</span><span class="p">,</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;_select_drive&quot;</span><span class="p">);</span>
+<a name="gbab-781"></a>
+<a name="gbab-782"></a>	<span class="n">makedir</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">Button</span> <span class="p">);</span>
+<a name="gbab-783"></a>	<span class="n">makedir</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Create Folder&quot;</span><span class="p">));</span>
+<a name="gbab-784"></a>	<span class="n">makedir</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;pressed&quot;</span><span class="p">,</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;_make_dir&quot;</span><span class="p">);</span>
+<a name="gbab-785"></a>	<span class="n">pathhb</span><span class="o">-&gt;</span><span class="n">add_child</span><span class="p">(</span><span class="n">makedir</span><span class="p">);</span>
+<a name="gbab-786"></a>	
+<a name="gbab-787"></a>	<span class="n">vbc</span><span class="o">-&gt;</span><span class="n">add_margin_child</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Path:&quot;</span><span class="p">),</span><span class="n">pathhb</span><span class="p">);</span>
+<a name="gbab-788"></a>	
+<a name="gbab-789"></a>	<span class="n">tree</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span><span class="n">Tree</span><span class="p">);</span>
+<a name="gbab-790"></a>	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">set_hide_root</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<a name="gbab-791"></a>	<span class="n">vbc</span><span class="o">-&gt;</span><span class="n">add_margin_child</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Directories &amp; Files:&quot;</span><span class="p">),</span><span class="n">tree</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+<a name="gbab-792"></a>	
+<a name="gbab-793"></a>	<span class="n">file</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span><span class="n">LineEdit</span><span class="p">);</span>
+<a name="gbab-794"></a>	<span class="c1">//add_child(file);</span>
+<a name="gbab-795"></a>	<span class="n">vbc</span><span class="o">-&gt;</span><span class="n">add_margin_child</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;File:&quot;</span><span class="p">),</span><span class="n">file</span><span class="p">);</span>
+<a name="gbab-796"></a>	
+<a name="gbab-797"></a>
+<a name="gbab-798"></a>	<span class="n">filter</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">OptionButton</span> <span class="p">);</span>
+<a name="gbab-799"></a>	<span class="c1">//add_child(filter);</span>
+<a name="gbab-800"></a>	<span class="n">vbc</span><span class="o">-&gt;</span><span class="n">add_margin_child</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Filter:&quot;</span><span class="p">),</span><span class="n">filter</span><span class="p">);</span>
+<a name="gbab-801"></a>	<span class="n">filter</span><span class="o">-&gt;</span><span class="n">set_clip_text</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span><span class="c1">//too many extensions overflow it</span>
+<a name="gbab-802"></a>
+<a name="gbab-803"></a>	<span class="n">dir_access</span> <span class="o">=</span> <span class="n">DirAccess</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">DirAccess</span><span class="o">::</span><span class="n">ACCESS_RESOURCES</span><span class="p">);</span>
+<a name="gbab-804"></a>	<span class="n">access</span><span class="o">=</span><span class="n">ACCESS_RESOURCES</span><span class="p">;</span>
+<a name="gbab-805"></a>	<span class="n">_update_drives</span><span class="p">();</span>
+<a name="gbab-806"></a>
+<a name="gbab-807"></a>	
+<a name="gbab-808"></a>	<span class="n">connect</span><span class="p">(</span><span class="s">&quot;confirmed&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span><span class="s">&quot;_action_pressed&quot;</span><span class="p">);</span>
+<a name="gbab-809"></a>	<span class="c1">//cancel-&gt;connect(&quot;pressed&quot;, this,&quot;_cancel_pressed&quot;);</span>
+<a name="gbab-810"></a>	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;cell_selected&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span><span class="s">&quot;_tree_selected&quot;</span><span class="p">,</span><span class="n">varray</span><span class="p">(),</span><span class="n">CONNECT_DEFERRED</span><span class="p">);</span>
+<a name="gbab-811"></a>	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;item_activated&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span><span class="s">&quot;_tree_db_selected&quot;</span><span class="p">,</span><span class="n">varray</span><span class="p">());</span>
+<a name="gbab-812"></a>	<span class="n">dir</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;text_entered&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span><span class="s">&quot;_dir_entered&quot;</span><span class="p">);</span>
+<a name="gbab-813"></a>	<span class="n">file</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;text_entered&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span><span class="s">&quot;_file_entered&quot;</span><span class="p">);</span>
+<a name="gbab-814"></a>	<span class="n">filter</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;item_selected&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span><span class="s">&quot;_filter_selected&quot;</span><span class="p">);</span>
+<a name="gbab-815"></a>
+<a name="gbab-816"></a>	
+<a name="gbab-817"></a>	<span class="n">confirm_save</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">ConfirmationDialog</span> <span class="p">);</span>
+<a name="gbab-818"></a>	<span class="n">confirm_save</span><span class="o">-&gt;</span><span class="n">set_as_toplevel</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<a name="gbab-819"></a>	<span class="n">add_child</span><span class="p">(</span><span class="n">confirm_save</span><span class="p">);</span>
+<a name="gbab-820"></a>
+<a name="gbab-821"></a>	
+<a name="gbab-822"></a>	<span class="n">confirm_save</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;confirmed&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span><span class="s">&quot;_save_confirm_pressed&quot;</span><span class="p">);</span>
+<a name="gbab-823"></a>
+<a name="gbab-824"></a>	<span class="n">makedialog</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">ConfirmationDialog</span> <span class="p">);</span>
+<a name="gbab-825"></a>	<span class="n">makedialog</span><span class="o">-&gt;</span><span class="n">set_title</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Create Folder&quot;</span><span class="p">));</span>
+<a name="gbab-826"></a>	<span class="n">VBoxContainer</span> <span class="o">*</span><span class="n">makevb</span><span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">VBoxContainer</span> <span class="p">);</span>
+<a name="gbab-827"></a>	<span class="n">makedialog</span><span class="o">-&gt;</span><span class="n">add_child</span><span class="p">(</span><span class="n">makevb</span><span class="p">);</span>
+<a name="gbab-828"></a>	<span class="n">makedialog</span><span class="o">-&gt;</span><span class="n">set_child_rect</span><span class="p">(</span><span class="n">makevb</span><span class="p">);</span>
+<a name="gbab-829"></a>	<span class="n">makedirname</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">LineEdit</span> <span class="p">);</span>
+<a name="gbab-830"></a>	<span class="n">makevb</span><span class="o">-&gt;</span><span class="n">add_margin_child</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Name:&quot;</span><span class="p">),</span><span class="n">makedirname</span><span class="p">);</span>
+<a name="gbab-831"></a>	<span class="n">add_child</span><span class="p">(</span><span class="n">makedialog</span><span class="p">);</span>
+<a name="gbab-832"></a>	<span class="n">makedialog</span><span class="o">-&gt;</span><span class="n">register_text_enter</span><span class="p">(</span><span class="n">makedirname</span><span class="p">);</span>
+<a name="gbab-833"></a>	<span class="n">makedialog</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;confirmed&quot;</span><span class="p">,</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;_make_dir_confirm&quot;</span><span class="p">);</span>
+<a name="gbab-834"></a>	<span class="n">mkdirerr</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">AcceptDialog</span> <span class="p">);</span>
+<a name="gbab-835"></a>	<span class="n">mkdirerr</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Could not create folder.&quot;</span><span class="p">));</span>
+<a name="gbab-836"></a>	<span class="n">add_child</span><span class="p">(</span><span class="n">mkdirerr</span><span class="p">);</span>
+<a name="gbab-837"></a>
+<a name="gbab-838"></a>	<span class="n">exterr</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">AcceptDialog</span> <span class="p">);</span>
+<a name="gbab-839"></a>	<span class="n">exterr</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">RTR</span><span class="p">(</span><span class="s">&quot;Must use a valid extension.&quot;</span><span class="p">));</span>
+<a name="gbab-840"></a>	<span class="n">add_child</span><span class="p">(</span><span class="n">exterr</span><span class="p">);</span>
+<a name="gbab-841"></a>
+<a name="gbab-842"></a>
+<a name="gbab-843"></a>	<span class="c1">//update_file_list();</span>
+<a name="gbab-844"></a>	<span class="n">update_filters</span><span class="p">();</span>
+<a name="gbab-845"></a>	<span class="n">update_dir</span><span class="p">();</span>
+<a name="gbab-846"></a>
+<a name="gbab-847"></a>	<span class="n">set_hide_on_ok</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<a name="gbab-848"></a>	<span class="n">vbox</span><span class="o">=</span><span class="n">vbc</span><span class="p">;</span>
+<a name="gbab-849"></a>
+<a name="gbab-850"></a>
+<a name="gbab-851"></a>	<span class="n">invalidated</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+<a name="gbab-852"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">register_func</span><span class="p">)</span>
+<a name="gbab-853"></a>		<span class="n">register_func</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<a name="gbab-854"></a>	
+<a name="gbab-855"></a><span class="p">}</span>
+<a name="gbab-856"></a>
+<a name="gbab-857"></a>
+<a name="gbab-858"></a><span class="n">FileDialog</span><span class="o">::~</span><span class="n">FileDialog</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-859"></a>	
+<a name="gbab-860"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">unregister_func</span><span class="p">)</span>
+<a name="gbab-861"></a>		<span class="n">unregister_func</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<a name="gbab-862"></a>	<span class="n">memdelete</span><span class="p">(</span><span class="n">dir_access</span><span class="p">);</span>
+<a name="gbab-863"></a><span class="p">}</span>
+<a name="gbab-864"></a>
+<a name="gbab-865"></a>
+<a name="gbab-866"></a><span class="kt">void</span> <span class="n">LineEditFileChooser</span><span class="o">::</span><span class="n">_bind_methods</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-867"></a>
+<a name="gbab-868"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_browse&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">LineEditFileChooser</span><span class="o">::</span><span class="n">_browse</span><span class="p">);</span>
+<a name="gbab-869"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;_chosen&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">LineEditFileChooser</span><span class="o">::</span><span class="n">_chosen</span><span class="p">);</span>
+<a name="gbab-870"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_button:Button&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">LineEditFileChooser</span><span class="o">::</span><span class="n">get_button</span><span class="p">);</span>
+<a name="gbab-871"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_line_edit:LineEdit&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">LineEditFileChooser</span><span class="o">::</span><span class="n">get_line_edit</span><span class="p">);</span>
+<a name="gbab-872"></a>	<span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">bind_method</span><span class="p">(</span><span class="n">_MD</span><span class="p">(</span><span class="s">&quot;get_file_dialog:FileDialog&quot;</span><span class="p">),</span><span class="o">&amp;</span><span class="n">LineEditFileChooser</span><span class="o">::</span><span class="n">get_file_dialog</span><span class="p">);</span>
+<a name="gbab-873"></a>
+<a name="gbab-874"></a><span class="p">}</span>
+<a name="gbab-875"></a>
+<a name="gbab-876"></a><span class="kt">void</span> <span class="n">LineEditFileChooser</span><span class="o">::</span><span class="n">_chosen</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_text</span><span class="p">){</span>
+<a name="gbab-877"></a>
+<a name="gbab-878"></a>	<span class="n">line_edit</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="n">p_text</span><span class="p">);</span>
+<a name="gbab-879"></a>	<span class="n">line_edit</span><span class="o">-&gt;</span><span class="n">emit_signal</span><span class="p">(</span><span class="s">&quot;text_entered&quot;</span><span class="p">,</span><span class="n">p_text</span><span class="p">);</span>
+<a name="gbab-880"></a><span class="p">}</span>
+<a name="gbab-881"></a>
+<a name="gbab-882"></a><span class="kt">void</span> <span class="n">LineEditFileChooser</span><span class="o">::</span><span class="n">_browse</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-883"></a>
+<a name="gbab-884"></a>	<span class="n">dialog</span><span class="o">-&gt;</span><span class="n">popup_centered_ratio</span><span class="p">();</span>
+<a name="gbab-885"></a><span class="p">}</span>
+<a name="gbab-886"></a>
+<a name="gbab-887"></a><span class="n">LineEditFileChooser</span><span class="o">::</span><span class="n">LineEditFileChooser</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-888"></a>
+<a name="gbab-889"></a>	<span class="n">line_edit</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">LineEdit</span> <span class="p">);</span>
+<a name="gbab-890"></a>	<span class="n">add_child</span><span class="p">(</span><span class="n">line_edit</span><span class="p">);</span>
+<a name="gbab-891"></a>	<span class="n">line_edit</span><span class="o">-&gt;</span><span class="n">set_h_size_flags</span><span class="p">(</span><span class="n">SIZE_EXPAND_FILL</span><span class="p">);</span>
+<a name="gbab-892"></a>	<span class="n">button</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">Button</span> <span class="p">);</span>
+<a name="gbab-893"></a>	<span class="n">button</span><span class="o">-&gt;</span><span class="n">set_text</span><span class="p">(</span><span class="s">&quot; .. &quot;</span><span class="p">);</span>
+<a name="gbab-894"></a>	<span class="n">add_child</span><span class="p">(</span><span class="n">button</span><span class="p">);</span>
+<a name="gbab-895"></a>	<span class="n">button</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;pressed&quot;</span><span class="p">,</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;_browse&quot;</span><span class="p">);</span>
+<a name="gbab-896"></a>	<span class="n">dialog</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">FileDialog</span><span class="p">);</span>
+<a name="gbab-897"></a>	<span class="n">add_child</span><span class="p">(</span><span class="n">dialog</span><span class="p">);</span>
+<a name="gbab-898"></a>	<span class="n">dialog</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;file_selected&quot;</span><span class="p">,</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;_chosen&quot;</span><span class="p">);</span>
+<a name="gbab-899"></a>	<span class="n">dialog</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;dir_selected&quot;</span><span class="p">,</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;_chosen&quot;</span><span class="p">);</span>
+<a name="gbab-900"></a>	<span class="n">dialog</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;files_selected&quot;</span><span class="p">,</span><span class="k">this</span><span class="p">,</span><span class="s">&quot;_chosen&quot;</span><span class="p">);</span>
+<a name="gbab-901"></a>
+<a name="gbab-902"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

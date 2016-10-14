@@ -1,0 +1,573 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-3"></a><span class="cm">/*  ftlcdfil.h                                                             */</span>
+<a name="gbab-4"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-5"></a><span class="cm">/*    FreeType API for color filtering of subpixel bitmap glyphs           */</span>
+<a name="gbab-6"></a><span class="cm">/*    (specification).                                                     */</span>
+<a name="gbab-7"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-8"></a><span class="cm">/*  Copyright 2006-2016 by                                                 */</span>
+<a name="gbab-9"></a><span class="cm">/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */</span>
+<a name="gbab-10"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-11"></a><span class="cm">/*  This file is part of the FreeType project, and may only be used,       */</span>
+<a name="gbab-12"></a><span class="cm">/*  modified, and distributed under the terms of the FreeType project      */</span>
+<a name="gbab-13"></a><span class="cm">/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */</span>
+<a name="gbab-14"></a><span class="cm">/*  this file you indicate that you have read the license and              */</span>
+<a name="gbab-15"></a><span class="cm">/*  understand and accept it fully.                                        */</span>
+<a name="gbab-16"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-17"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a>
+<a name="gbab-20"></a><span class="cp">#ifndef FTLCDFIL_H_</span>
+<a name="gbab-21"></a><span class="cp">#define FTLCDFIL_H_</span>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="cp">#include</span> <span class="cpf">&lt;ft2build.h&gt;</span><span class="cp"></span>
+<a name="gbab-24"></a><span class="cp">#include</span> <span class="cpf">FT_FREETYPE_H</span><span class="cp"></span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="cp">#ifdef FREETYPE_H</span>
+<a name="gbab-27"></a><span class="cp">#error &quot;freetype.h of FreeType 1 has been loaded!&quot;</span>
+<a name="gbab-28"></a><span class="cp">#error &quot;Please fix the directory search order for header files&quot;</span>
+<a name="gbab-29"></a><span class="cp">#error &quot;so that freetype.h of FreeType 2 is found first.&quot;</span>
+<a name="gbab-30"></a><span class="cp">#endif</span>
+<a name="gbab-31"></a>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a><span class="n">FT_BEGIN_HEADER</span>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a>  <span class="cm">/***************************************************************************</span>
+<a name="gbab-36"></a><span class="cm">   *</span>
+<a name="gbab-37"></a><span class="cm">   * @section:</span>
+<a name="gbab-38"></a><span class="cm">   *   lcd_filtering</span>
+<a name="gbab-39"></a><span class="cm">   *</span>
+<a name="gbab-40"></a><span class="cm">   * @title:</span>
+<a name="gbab-41"></a><span class="cm">   *   LCD Filtering</span>
+<a name="gbab-42"></a><span class="cm">   *</span>
+<a name="gbab-43"></a><span class="cm">   * @abstract:</span>
+<a name="gbab-44"></a><span class="cm">   *   Reduce color fringes of subpixel-rendered bitmaps.</span>
+<a name="gbab-45"></a><span class="cm">   *</span>
+<a name="gbab-46"></a><span class="cm">   * @description:</span>
+<a name="gbab-47"></a><span class="cm">   *   Subpixel rendering exploits the color-striped structure of LCD</span>
+<a name="gbab-48"></a><span class="cm">   *   pixels, increasing the available resolution in the direction of the</span>
+<a name="gbab-49"></a><span class="cm">   *   stripe (usually horizontal RGB) by a factor of~3.  Since these</span>
+<a name="gbab-50"></a><span class="cm">   *   subpixels are color pixels, using them unfiltered creates severe</span>
+<a name="gbab-51"></a><span class="cm">   *   color fringes.  Use the @FT_Library_SetLcdFilter API to specify a</span>
+<a name="gbab-52"></a><span class="cm">   *   low-pass filter, which is then applied to subpixel-rendered bitmaps</span>
+<a name="gbab-53"></a><span class="cm">   *   generated through @FT_Render_Glyph.  The filter sacrifices some of</span>
+<a name="gbab-54"></a><span class="cm">   *   the higher resolution to reduce color fringes, making the glyph image</span>
+<a name="gbab-55"></a><span class="cm">   *   slightly blurrier.  Positional improvements will remain.</span>
+<a name="gbab-56"></a><span class="cm">   *</span>
+<a name="gbab-57"></a><span class="cm">   *   Note that no filter is active by default, and that this function is</span>
+<a name="gbab-58"></a><span class="cm">   *   *not* implemented in default builds of the library.  You need to</span>
+<a name="gbab-59"></a><span class="cm">   *   #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING in your `ftoption.h&#39; file</span>
+<a name="gbab-60"></a><span class="cm">   *   in order to activate it and explicitly call @FT_Library_SetLcdFilter</span>
+<a name="gbab-61"></a><span class="cm">   *   to enable it.</span>
+<a name="gbab-62"></a><span class="cm">   *</span>
+<a name="gbab-63"></a><span class="cm">   *   A filter should have two properties:</span>
+<a name="gbab-64"></a><span class="cm">   *</span>
+<a name="gbab-65"></a><span class="cm">   *   1) It should be normalized, meaning the sum of the 5~components</span>
+<a name="gbab-66"></a><span class="cm">   *      should be 256 (0x100).  It is possible to go above or under this</span>
+<a name="gbab-67"></a><span class="cm">   *      target sum, however: going under means tossing out contrast, going</span>
+<a name="gbab-68"></a><span class="cm">   *      over means invoking clamping and thereby non-linearities that</span>
+<a name="gbab-69"></a><span class="cm">   *      increase contrast somewhat at the expense of greater distortion</span>
+<a name="gbab-70"></a><span class="cm">   *      and color-fringing.  Contrast is better enhanced through stem</span>
+<a name="gbab-71"></a><span class="cm">   *      darkening.</span>
+<a name="gbab-72"></a><span class="cm">   *</span>
+<a name="gbab-73"></a><span class="cm">   *   2) It should be color-balanced, meaning a filter `{~a, b, c, b, a~}&#39;</span>
+<a name="gbab-74"></a><span class="cm">   *      where a~+ b~=~c.  It distributes the computed coverage for one</span>
+<a name="gbab-75"></a><span class="cm">   *      subpixel to all subpixels equally, sacrificing some won resolution</span>
+<a name="gbab-76"></a><span class="cm">   *      but drastically reducing color-fringing.  Positioning improvements</span>
+<a name="gbab-77"></a><span class="cm">   *      remain!  Note that color-fringing can only really be minimized</span>
+<a name="gbab-78"></a><span class="cm">   *      when using a color-balanced filter and alpha-blending the glyph</span>
+<a name="gbab-79"></a><span class="cm">   *      onto a surface in linear space; see @FT_Render_Glyph.</span>
+<a name="gbab-80"></a><span class="cm">   *</span>
+<a name="gbab-81"></a><span class="cm">   *   Regarding the form, a filter can be a `boxy&#39; filter or a `beveled&#39;</span>
+<a name="gbab-82"></a><span class="cm">   *   filter.  Boxy filters are sharper but are less forgiving of non-ideal</span>
+<a name="gbab-83"></a><span class="cm">   *   gamma curves of a screen (viewing angles!), beveled filters are</span>
+<a name="gbab-84"></a><span class="cm">   *   fuzzier but more tolerant.</span>
+<a name="gbab-85"></a><span class="cm">   *</span>
+<a name="gbab-86"></a><span class="cm">   *   Examples:</span>
+<a name="gbab-87"></a><span class="cm">   *</span>
+<a name="gbab-88"></a><span class="cm">   *   - [0x10 0x40 0x70 0x40 0x10] is beveled and neither balanced nor</span>
+<a name="gbab-89"></a><span class="cm">   *     normalized.</span>
+<a name="gbab-90"></a><span class="cm">   *</span>
+<a name="gbab-91"></a><span class="cm">   *   - [0x1A 0x33 0x4D 0x33 0x1A] is beveled and balanced but not</span>
+<a name="gbab-92"></a><span class="cm">   *     normalized.</span>
+<a name="gbab-93"></a><span class="cm">   *</span>
+<a name="gbab-94"></a><span class="cm">   *   - [0x19 0x33 0x66 0x4c 0x19] is beveled and normalized but not</span>
+<a name="gbab-95"></a><span class="cm">   *     balanced.</span>
+<a name="gbab-96"></a><span class="cm">   *</span>
+<a name="gbab-97"></a><span class="cm">   *   - [0x00 0x4c 0x66 0x4c 0x00] is boxily beveled and normalized but not</span>
+<a name="gbab-98"></a><span class="cm">   *     balanced.</span>
+<a name="gbab-99"></a><span class="cm">   *</span>
+<a name="gbab-100"></a><span class="cm">   *   - [0x00 0x55 0x56 0x55 0x00] is boxy, normalized, and almost</span>
+<a name="gbab-101"></a><span class="cm">   *     balanced.</span>
+<a name="gbab-102"></a><span class="cm">   *</span>
+<a name="gbab-103"></a><span class="cm">   *   - [0x08 0x4D 0x56 0x4D 0x08] is beveled, normalized and, almost</span>
+<a name="gbab-104"></a><span class="cm">   *     balanced.</span>
+<a name="gbab-105"></a><span class="cm">   *</span>
+<a name="gbab-106"></a><span class="cm">   *   The filter affects glyph bitmaps rendered through @FT_Render_Glyph,</span>
+<a name="gbab-107"></a><span class="cm">   *   @FT_Load_Glyph, and @FT_Load_Char.  It does _not_ affect the output</span>
+<a name="gbab-108"></a><span class="cm">   *   of @FT_Outline_Render and @FT_Outline_Get_Bitmap.</span>
+<a name="gbab-109"></a><span class="cm">   *</span>
+<a name="gbab-110"></a><span class="cm">   *   If this feature is activated, the dimensions of LCD glyph bitmaps are</span>
+<a name="gbab-111"></a><span class="cm">   *   either wider or taller than the dimensions of the corresponding</span>
+<a name="gbab-112"></a><span class="cm">   *   outline with regard to the pixel grid.  For example, for</span>
+<a name="gbab-113"></a><span class="cm">   *   @FT_RENDER_MODE_LCD, the filter adds 3~subpixels to the left, and</span>
+<a name="gbab-114"></a><span class="cm">   *   3~subpixels to the right.  The bitmap offset values are adjusted</span>
+<a name="gbab-115"></a><span class="cm">   *   accordingly, so clients shouldn&#39;t need to modify their layout and</span>
+<a name="gbab-116"></a><span class="cm">   *   glyph positioning code when enabling the filter.</span>
+<a name="gbab-117"></a><span class="cm">   *</span>
+<a name="gbab-118"></a><span class="cm">   *   It is important to understand that linear alpha blending and gamma</span>
+<a name="gbab-119"></a><span class="cm">   *   correction is critical for correctly rendering glyphs onto surfaces</span>
+<a name="gbab-120"></a><span class="cm">   *   without artifacts and even more critical when subpixel rendering is</span>
+<a name="gbab-121"></a><span class="cm">   *   involved.</span>
+<a name="gbab-122"></a><span class="cm">   *</span>
+<a name="gbab-123"></a><span class="cm">   *   Each of the 3~alpha values (subpixels) is independently used to blend</span>
+<a name="gbab-124"></a><span class="cm">   *   one color channel.  That is, red alpha blends the red channel of the</span>
+<a name="gbab-125"></a><span class="cm">   *   text color with the red channel of the background pixel.  The</span>
+<a name="gbab-126"></a><span class="cm">   *   distribution of density values by the color-balanced filter assumes</span>
+<a name="gbab-127"></a><span class="cm">   *   alpha blending is done in linear space; only then color artifacts</span>
+<a name="gbab-128"></a><span class="cm">   *   cancel out.</span>
+<a name="gbab-129"></a><span class="cm">   */</span>
+<a name="gbab-130"></a>
+<a name="gbab-131"></a>
+<a name="gbab-132"></a>  <span class="cm">/****************************************************************************</span>
+<a name="gbab-133"></a><span class="cm">   *</span>
+<a name="gbab-134"></a><span class="cm">   * @enum:</span>
+<a name="gbab-135"></a><span class="cm">   *   FT_LcdFilter</span>
+<a name="gbab-136"></a><span class="cm">   *</span>
+<a name="gbab-137"></a><span class="cm">   * @description:</span>
+<a name="gbab-138"></a><span class="cm">   *   A list of values to identify various types of LCD filters.</span>
+<a name="gbab-139"></a><span class="cm">   *</span>
+<a name="gbab-140"></a><span class="cm">   * @values:</span>
+<a name="gbab-141"></a><span class="cm">   *   FT_LCD_FILTER_NONE ::</span>
+<a name="gbab-142"></a><span class="cm">   *     Do not perform filtering.  When used with subpixel rendering, this</span>
+<a name="gbab-143"></a><span class="cm">   *     results in sometimes severe color fringes.</span>
+<a name="gbab-144"></a><span class="cm">   *</span>
+<a name="gbab-145"></a><span class="cm">   *   FT_LCD_FILTER_DEFAULT ::</span>
+<a name="gbab-146"></a><span class="cm">   *     The default filter reduces color fringes considerably, at the cost</span>
+<a name="gbab-147"></a><span class="cm">   *     of a slight blurriness in the output.</span>
+<a name="gbab-148"></a><span class="cm">   *</span>
+<a name="gbab-149"></a><span class="cm">   *     It is a beveled, normalized, and color-balanced five-tap filter</span>
+<a name="gbab-150"></a><span class="cm">   *     that is more forgiving to screens with non-ideal gamma curves and</span>
+<a name="gbab-151"></a><span class="cm">   *     viewing angles.  Note that while color-fringing is reduced, it can</span>
+<a name="gbab-152"></a><span class="cm">   *     only be minimized by using linear alpha blending and gamma</span>
+<a name="gbab-153"></a><span class="cm">   *     correction to render glyphs onto surfaces.  The default filter</span>
+<a name="gbab-154"></a><span class="cm">   *     weights are [0x08 0x4D 0x56 0x4D 0x08].</span>
+<a name="gbab-155"></a><span class="cm">   *</span>
+<a name="gbab-156"></a><span class="cm">   *   FT_LCD_FILTER_LIGHT ::</span>
+<a name="gbab-157"></a><span class="cm">   *     The light filter is a variant that is sharper at the cost of</span>
+<a name="gbab-158"></a><span class="cm">   *     slightly more color fringes than the default one.</span>
+<a name="gbab-159"></a><span class="cm">   *</span>
+<a name="gbab-160"></a><span class="cm">   *     It is a boxy, normalized, and color-balanced three-tap filter that</span>
+<a name="gbab-161"></a><span class="cm">   *     is less forgiving to screens with non-ideal gamma curves and</span>
+<a name="gbab-162"></a><span class="cm">   *     viewing angles.  This filter works best when the rendering system</span>
+<a name="gbab-163"></a><span class="cm">   *     uses linear alpha blending and gamma correction to render glyphs</span>
+<a name="gbab-164"></a><span class="cm">   *     onto surfaces.  The light filter weights are</span>
+<a name="gbab-165"></a><span class="cm">   *     [0x00 0x55 0x56 0x55 0x00].</span>
+<a name="gbab-166"></a><span class="cm">   *</span>
+<a name="gbab-167"></a><span class="cm">   *   FT_LCD_FILTER_LEGACY ::</span>
+<a name="gbab-168"></a><span class="cm">   *     This filter corresponds to the original libXft color filter.  It</span>
+<a name="gbab-169"></a><span class="cm">   *     provides high contrast output but can exhibit really bad color</span>
+<a name="gbab-170"></a><span class="cm">   *     fringes if glyphs are not extremely well hinted to the pixel grid.</span>
+<a name="gbab-171"></a><span class="cm">   *     In other words, it only works well if the TrueType bytecode</span>
+<a name="gbab-172"></a><span class="cm">   *     interpreter is enabled *and* high-quality hinted fonts are used.</span>
+<a name="gbab-173"></a><span class="cm">   *</span>
+<a name="gbab-174"></a><span class="cm">   *     This filter is only provided for comparison purposes, and might be</span>
+<a name="gbab-175"></a><span class="cm">   *     disabled or stay unsupported in the future.</span>
+<a name="gbab-176"></a><span class="cm">   *</span>
+<a name="gbab-177"></a><span class="cm">   *   FT_LCD_FILTER_LEGACY1 ::</span>
+<a name="gbab-178"></a><span class="cm">   *     For historical reasons, the FontConfig library returns a different</span>
+<a name="gbab-179"></a><span class="cm">   *     enumeration value for legacy LCD filtering.  To make code work that</span>
+<a name="gbab-180"></a><span class="cm">   *     (incorrectly) forwards FontConfig&#39;s enumeration value to</span>
+<a name="gbab-181"></a><span class="cm">   *     @FT_Library_SetLcdFilter without proper mapping, it is thus easiest</span>
+<a name="gbab-182"></a><span class="cm">   *     to have another enumeration value, which is completely equal to</span>
+<a name="gbab-183"></a><span class="cm">   *     `FT_LCD_FILTER_LEGACY&#39;.</span>
+<a name="gbab-184"></a><span class="cm">   *</span>
+<a name="gbab-185"></a><span class="cm">   * @since:</span>
+<a name="gbab-186"></a><span class="cm">   *   2.3.0 (`FT_LCD_FILTER_LEGACY1&#39; since 2.6.2)</span>
+<a name="gbab-187"></a><span class="cm">   */</span>
+<a name="gbab-188"></a>  <span class="k">typedef</span> <span class="k">enum</span>  <span class="n">FT_LcdFilter_</span>
+<a name="gbab-189"></a>  <span class="p">{</span>
+<a name="gbab-190"></a>    <span class="n">FT_LCD_FILTER_NONE</span>    <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<a name="gbab-191"></a>    <span class="n">FT_LCD_FILTER_DEFAULT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-192"></a>    <span class="n">FT_LCD_FILTER_LIGHT</span>   <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a name="gbab-193"></a>    <span class="n">FT_LCD_FILTER_LEGACY1</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<a name="gbab-194"></a>    <span class="n">FT_LCD_FILTER_LEGACY</span>  <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+<a name="gbab-195"></a>
+<a name="gbab-196"></a>    <span class="n">FT_LCD_FILTER_MAX</span>   <span class="cm">/* do not remove */</span>
+<a name="gbab-197"></a>
+<a name="gbab-198"></a>  <span class="p">}</span> <span class="n">FT_LcdFilter</span><span class="p">;</span>
+<a name="gbab-199"></a>
+<a name="gbab-200"></a>
+<a name="gbab-201"></a>  <span class="cm">/**************************************************************************</span>
+<a name="gbab-202"></a><span class="cm">   *</span>
+<a name="gbab-203"></a><span class="cm">   * @func:</span>
+<a name="gbab-204"></a><span class="cm">   *   FT_Library_SetLcdFilter</span>
+<a name="gbab-205"></a><span class="cm">   *</span>
+<a name="gbab-206"></a><span class="cm">   * @description:</span>
+<a name="gbab-207"></a><span class="cm">   *   This function is used to apply color filtering to LCD decimated</span>
+<a name="gbab-208"></a><span class="cm">   *   bitmaps, like the ones used when calling @FT_Render_Glyph with</span>
+<a name="gbab-209"></a><span class="cm">   *   @FT_RENDER_MODE_LCD or @FT_RENDER_MODE_LCD_V.</span>
+<a name="gbab-210"></a><span class="cm">   *</span>
+<a name="gbab-211"></a><span class="cm">   * @input:</span>
+<a name="gbab-212"></a><span class="cm">   *   library ::</span>
+<a name="gbab-213"></a><span class="cm">   *     A handle to the target library instance.</span>
+<a name="gbab-214"></a><span class="cm">   *</span>
+<a name="gbab-215"></a><span class="cm">   *   filter ::</span>
+<a name="gbab-216"></a><span class="cm">   *     The filter type.</span>
+<a name="gbab-217"></a><span class="cm">   *</span>
+<a name="gbab-218"></a><span class="cm">   *     You can use @FT_LCD_FILTER_NONE here to disable this feature, or</span>
+<a name="gbab-219"></a><span class="cm">   *     @FT_LCD_FILTER_DEFAULT to use a default filter that should work</span>
+<a name="gbab-220"></a><span class="cm">   *     well on most LCD screens.</span>
+<a name="gbab-221"></a><span class="cm">   *</span>
+<a name="gbab-222"></a><span class="cm">   * @return:</span>
+<a name="gbab-223"></a><span class="cm">   *   FreeType error code.  0~means success.</span>
+<a name="gbab-224"></a><span class="cm">   *</span>
+<a name="gbab-225"></a><span class="cm">   * @note:</span>
+<a name="gbab-226"></a><span class="cm">   *   This feature is always disabled by default.  Clients must make an</span>
+<a name="gbab-227"></a><span class="cm">   *   explicit call to this function with a `filter&#39; value other than</span>
+<a name="gbab-228"></a><span class="cm">   *   @FT_LCD_FILTER_NONE in order to enable it.</span>
+<a name="gbab-229"></a><span class="cm">   *</span>
+<a name="gbab-230"></a><span class="cm">   *   Due to *PATENTS* covering subpixel rendering, this function doesn&#39;t</span>
+<a name="gbab-231"></a><span class="cm">   *   do anything except returning `FT_Err_Unimplemented_Feature&#39; if the</span>
+<a name="gbab-232"></a><span class="cm">   *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not</span>
+<a name="gbab-233"></a><span class="cm">   *   defined in your build of the library, which should correspond to all</span>
+<a name="gbab-234"></a><span class="cm">   *   default builds of FreeType.</span>
+<a name="gbab-235"></a><span class="cm">   *</span>
+<a name="gbab-236"></a><span class="cm">   * @since:</span>
+<a name="gbab-237"></a><span class="cm">   *   2.3.0</span>
+<a name="gbab-238"></a><span class="cm">   */</span>
+<a name="gbab-239"></a>  <span class="n">FT_EXPORT</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-240"></a>  <span class="n">FT_Library_SetLcdFilter</span><span class="p">(</span> <span class="n">FT_Library</span>    <span class="n">library</span><span class="p">,</span>
+<a name="gbab-241"></a>                           <span class="n">FT_LcdFilter</span>  <span class="n">filter</span> <span class="p">);</span>
+<a name="gbab-242"></a>
+<a name="gbab-243"></a>
+<a name="gbab-244"></a>  <span class="cm">/**************************************************************************</span>
+<a name="gbab-245"></a><span class="cm">   *</span>
+<a name="gbab-246"></a><span class="cm">   * @func:</span>
+<a name="gbab-247"></a><span class="cm">   *   FT_Library_SetLcdFilterWeights</span>
+<a name="gbab-248"></a><span class="cm">   *</span>
+<a name="gbab-249"></a><span class="cm">   * @description:</span>
+<a name="gbab-250"></a><span class="cm">   *   This function can be used to enable LCD filter with custom weights,</span>
+<a name="gbab-251"></a><span class="cm">   *   instead of using presets in @FT_Library_SetLcdFilter.</span>
+<a name="gbab-252"></a><span class="cm">   *</span>
+<a name="gbab-253"></a><span class="cm">   * @input:</span>
+<a name="gbab-254"></a><span class="cm">   *   library ::</span>
+<a name="gbab-255"></a><span class="cm">   *     A handle to the target library instance.</span>
+<a name="gbab-256"></a><span class="cm">   *</span>
+<a name="gbab-257"></a><span class="cm">   *   weights ::</span>
+<a name="gbab-258"></a><span class="cm">   *     A pointer to an array; the function copies the first five bytes and</span>
+<a name="gbab-259"></a><span class="cm">   *     uses them to specify the filter weights.</span>
+<a name="gbab-260"></a><span class="cm">   *</span>
+<a name="gbab-261"></a><span class="cm">   * @return:</span>
+<a name="gbab-262"></a><span class="cm">   *   FreeType error code.  0~means success.</span>
+<a name="gbab-263"></a><span class="cm">   *</span>
+<a name="gbab-264"></a><span class="cm">   * @note:</span>
+<a name="gbab-265"></a><span class="cm">   *   Due to *PATENTS* covering subpixel rendering, this function doesn&#39;t</span>
+<a name="gbab-266"></a><span class="cm">   *   do anything except returning `FT_Err_Unimplemented_Feature&#39; if the</span>
+<a name="gbab-267"></a><span class="cm">   *   configuration macro FT_CONFIG_OPTION_SUBPIXEL_RENDERING is not</span>
+<a name="gbab-268"></a><span class="cm">   *   defined in your build of the library, which should correspond to all</span>
+<a name="gbab-269"></a><span class="cm">   *   default builds of FreeType.</span>
+<a name="gbab-270"></a><span class="cm">   *</span>
+<a name="gbab-271"></a><span class="cm">   * @since:</span>
+<a name="gbab-272"></a><span class="cm">   *   2.4.0</span>
+<a name="gbab-273"></a><span class="cm">   */</span>
+<a name="gbab-274"></a>  <span class="n">FT_EXPORT</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-275"></a>  <span class="n">FT_Library_SetLcdFilterWeights</span><span class="p">(</span> <span class="n">FT_Library</span>      <span class="n">library</span><span class="p">,</span>
+<a name="gbab-276"></a>                                  <span class="kt">unsigned</span> <span class="kt">char</span>  <span class="o">*</span><span class="n">weights</span> <span class="p">);</span>
+<a name="gbab-277"></a>
+<a name="gbab-278"></a>  <span class="cm">/* */</span>
+<a name="gbab-279"></a>
+<a name="gbab-280"></a>
+<a name="gbab-281"></a><span class="n">FT_END_HEADER</span>
+<a name="gbab-282"></a>
+<a name="gbab-283"></a><span class="cp">#endif </span><span class="cm">/* FTLCDFIL_H_ */</span><span class="cp"></span>
+<a name="gbab-284"></a>
+<a name="gbab-285"></a>
+<a name="gbab-286"></a><span class="cm">/* END */</span>
+</pre></div>
+</td></tr></table>

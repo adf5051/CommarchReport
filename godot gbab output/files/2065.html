@@ -1,0 +1,39 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cp">#pragma once</span>
+<a name="gbab-2"></a>
+<a name="gbab-3"></a><span class="n">namespace</span> <span class="n">Javelin</span> <span class="p">{</span>
+<a name="gbab-4"></a>
+<a name="gbab-5"></a><span class="n">class</span> <span class="n">BitUtility</span> <span class="p">{</span>
+<a name="gbab-6"></a><span class="nl">public</span><span class="p">:</span>
+<a name="gbab-7"></a>    <span class="k">static</span> <span class="kt">bool</span> <span class="n">IsPowerOf2</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-8"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-9"></a>    <span class="p">}</span>
+<a name="gbab-10"></a>
+<a name="gbab-11"></a>    <span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">RotateRight</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">shift</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-12"></a>        <span class="k">if</span> <span class="p">((</span><span class="n">shift</span> <span class="o">&amp;=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-13"></a>            <span class="k">return</span> <span class="n">value</span><span class="p">;</span>
+<a name="gbab-14"></a>        <span class="p">}</span>
+<a name="gbab-15"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="n">shift</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">-</span> <span class="n">shift</span><span class="p">));</span>
+<a name="gbab-16"></a>    <span class="p">}</span>
+<a name="gbab-17"></a><span class="p">};</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

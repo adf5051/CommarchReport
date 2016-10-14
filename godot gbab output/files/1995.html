@@ -1,0 +1,209 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/***********************************************************************</span>
+<a name="gbab-2"></a><span class="cm">Copyright (c) 2006-2011, Skype Limited. All rights reserved.</span>
+<a name="gbab-3"></a><span class="cm">Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-4"></a><span class="cm">modification, are permitted provided that the following conditions</span>
+<a name="gbab-5"></a><span class="cm">are met:</span>
+<a name="gbab-6"></a><span class="cm">- Redistributions of source code must retain the above copyright notice,</span>
+<a name="gbab-7"></a><span class="cm">this list of conditions and the following disclaimer.</span>
+<a name="gbab-8"></a><span class="cm">- Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-9"></a><span class="cm">notice, this list of conditions and the following disclaimer in the</span>
+<a name="gbab-10"></a><span class="cm">documentation and/or other materials provided with the distribution.</span>
+<a name="gbab-11"></a><span class="cm">- Neither the name of Internet Society, IETF or IETF Trust, nor the</span>
+<a name="gbab-12"></a><span class="cm">names of specific contributors, may be used to endorse or promote</span>
+<a name="gbab-13"></a><span class="cm">products derived from this software without specific prior written</span>
+<a name="gbab-14"></a><span class="cm">permission.</span>
+<a name="gbab-15"></a><span class="cm">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<a name="gbab-16"></a><span class="cm">AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<a name="gbab-17"></a><span class="cm">IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<a name="gbab-18"></a><span class="cm">ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE</span>
+<a name="gbab-19"></a><span class="cm">LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<a name="gbab-20"></a><span class="cm">CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<a name="gbab-21"></a><span class="cm">SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<a name="gbab-22"></a><span class="cm">INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<a name="gbab-23"></a><span class="cm">CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<a name="gbab-24"></a><span class="cm">ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<a name="gbab-25"></a><span class="cm">POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-26"></a><span class="cm">***********************************************************************/</span>
+<a name="gbab-27"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/opus_config.h&quot;</span><span class="cp"></span>
+<a name="gbab-28"></a>
+<a name="gbab-29"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/silk/SigProc_FIX.h&quot;</span><span class="cp"></span>
+<a name="gbab-30"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/silk/resampler_private.h&quot;</span><span class="cp"></span>
+<a name="gbab-31"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/celt/stack_alloc.h&quot;</span><span class="cp"></span>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a><span class="k">static</span> <span class="n">OPUS_INLINE</span> <span class="n">opus_int16</span> <span class="o">*</span><span class="nf">silk_resampler_private_IIR_FIR_INTERPOL</span><span class="p">(</span>
+<a name="gbab-34"></a>    <span class="n">opus_int16</span>  <span class="o">*</span><span class="n">out</span><span class="p">,</span>
+<a name="gbab-35"></a>    <span class="n">opus_int16</span>  <span class="o">*</span><span class="n">buf</span><span class="p">,</span>
+<a name="gbab-36"></a>    <span class="n">opus_int32</span>  <span class="n">max_index_Q16</span><span class="p">,</span>
+<a name="gbab-37"></a>    <span class="n">opus_int32</span>  <span class="n">index_increment_Q16</span>
+<a name="gbab-38"></a><span class="p">)</span>
+<a name="gbab-39"></a><span class="p">{</span>
+<a name="gbab-40"></a>    <span class="n">opus_int32</span> <span class="n">index_Q16</span><span class="p">,</span> <span class="n">res_Q15</span><span class="p">;</span>
+<a name="gbab-41"></a>    <span class="n">opus_int16</span> <span class="o">*</span><span class="n">buf_ptr</span><span class="p">;</span>
+<a name="gbab-42"></a>    <span class="n">opus_int32</span> <span class="n">table_index</span><span class="p">;</span>
+<a name="gbab-43"></a>
+<a name="gbab-44"></a>    <span class="cm">/* Interpolate upsampled signal and store in output array */</span>
+<a name="gbab-45"></a>    <span class="k">for</span><span class="p">(</span> <span class="n">index_Q16</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">index_Q16</span> <span class="o">&lt;</span> <span class="n">max_index_Q16</span><span class="p">;</span> <span class="n">index_Q16</span> <span class="o">+=</span> <span class="n">index_increment_Q16</span> <span class="p">)</span> <span class="p">{</span>
+<a name="gbab-46"></a>        <span class="n">table_index</span> <span class="o">=</span> <span class="n">silk_SMULWB</span><span class="p">(</span> <span class="n">index_Q16</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span><span class="p">,</span> <span class="mi">12</span> <span class="p">);</span>
+<a name="gbab-47"></a>        <span class="n">buf_ptr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">buf</span><span class="p">[</span> <span class="n">index_Q16</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span> <span class="p">];</span>
+<a name="gbab-48"></a>
+<a name="gbab-49"></a>        <span class="n">res_Q15</span> <span class="o">=</span> <span class="n">silk_SMULBB</span><span class="p">(</span>          <span class="n">buf_ptr</span><span class="p">[</span> <span class="mi">0</span> <span class="p">],</span> <span class="n">silk_resampler_frac_FIR_12</span><span class="p">[</span>      <span class="n">table_index</span> <span class="p">][</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">);</span>
+<a name="gbab-50"></a>        <span class="n">res_Q15</span> <span class="o">=</span> <span class="n">silk_SMLABB</span><span class="p">(</span> <span class="n">res_Q15</span><span class="p">,</span> <span class="n">buf_ptr</span><span class="p">[</span> <span class="mi">1</span> <span class="p">],</span> <span class="n">silk_resampler_frac_FIR_12</span><span class="p">[</span>      <span class="n">table_index</span> <span class="p">][</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">);</span>
+<a name="gbab-51"></a>        <span class="n">res_Q15</span> <span class="o">=</span> <span class="n">silk_SMLABB</span><span class="p">(</span> <span class="n">res_Q15</span><span class="p">,</span> <span class="n">buf_ptr</span><span class="p">[</span> <span class="mi">2</span> <span class="p">],</span> <span class="n">silk_resampler_frac_FIR_12</span><span class="p">[</span>      <span class="n">table_index</span> <span class="p">][</span> <span class="mi">2</span> <span class="p">]</span> <span class="p">);</span>
+<a name="gbab-52"></a>        <span class="n">res_Q15</span> <span class="o">=</span> <span class="n">silk_SMLABB</span><span class="p">(</span> <span class="n">res_Q15</span><span class="p">,</span> <span class="n">buf_ptr</span><span class="p">[</span> <span class="mi">3</span> <span class="p">],</span> <span class="n">silk_resampler_frac_FIR_12</span><span class="p">[</span>      <span class="n">table_index</span> <span class="p">][</span> <span class="mi">3</span> <span class="p">]</span> <span class="p">);</span>
+<a name="gbab-53"></a>        <span class="n">res_Q15</span> <span class="o">=</span> <span class="n">silk_SMLABB</span><span class="p">(</span> <span class="n">res_Q15</span><span class="p">,</span> <span class="n">buf_ptr</span><span class="p">[</span> <span class="mi">4</span> <span class="p">],</span> <span class="n">silk_resampler_frac_FIR_12</span><span class="p">[</span> <span class="mi">11</span> <span class="o">-</span> <span class="n">table_index</span> <span class="p">][</span> <span class="mi">3</span> <span class="p">]</span> <span class="p">);</span>
+<a name="gbab-54"></a>        <span class="n">res_Q15</span> <span class="o">=</span> <span class="n">silk_SMLABB</span><span class="p">(</span> <span class="n">res_Q15</span><span class="p">,</span> <span class="n">buf_ptr</span><span class="p">[</span> <span class="mi">5</span> <span class="p">],</span> <span class="n">silk_resampler_frac_FIR_12</span><span class="p">[</span> <span class="mi">11</span> <span class="o">-</span> <span class="n">table_index</span> <span class="p">][</span> <span class="mi">2</span> <span class="p">]</span> <span class="p">);</span>
+<a name="gbab-55"></a>        <span class="n">res_Q15</span> <span class="o">=</span> <span class="n">silk_SMLABB</span><span class="p">(</span> <span class="n">res_Q15</span><span class="p">,</span> <span class="n">buf_ptr</span><span class="p">[</span> <span class="mi">6</span> <span class="p">],</span> <span class="n">silk_resampler_frac_FIR_12</span><span class="p">[</span> <span class="mi">11</span> <span class="o">-</span> <span class="n">table_index</span> <span class="p">][</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">);</span>
+<a name="gbab-56"></a>        <span class="n">res_Q15</span> <span class="o">=</span> <span class="n">silk_SMLABB</span><span class="p">(</span> <span class="n">res_Q15</span><span class="p">,</span> <span class="n">buf_ptr</span><span class="p">[</span> <span class="mi">7</span> <span class="p">],</span> <span class="n">silk_resampler_frac_FIR_12</span><span class="p">[</span> <span class="mi">11</span> <span class="o">-</span> <span class="n">table_index</span> <span class="p">][</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">);</span>
+<a name="gbab-57"></a>        <span class="o">*</span><span class="n">out</span><span class="o">++</span> <span class="o">=</span> <span class="p">(</span><span class="n">opus_int16</span><span class="p">)</span><span class="n">silk_SAT16</span><span class="p">(</span> <span class="n">silk_RSHIFT_ROUND</span><span class="p">(</span> <span class="n">res_Q15</span><span class="p">,</span> <span class="mi">15</span> <span class="p">)</span> <span class="p">);</span>
+<a name="gbab-58"></a>    <span class="p">}</span>
+<a name="gbab-59"></a>    <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+<a name="gbab-60"></a><span class="p">}</span>
+<a name="gbab-61"></a><span class="cm">/* Upsample using a combination of allpass-based 2x upsampling and FIR interpolation */</span>
+<a name="gbab-62"></a><span class="kt">void</span> <span class="nf">silk_resampler_private_IIR_FIR</span><span class="p">(</span>
+<a name="gbab-63"></a>    <span class="kt">void</span>                            <span class="o">*</span><span class="n">SS</span><span class="p">,</span>            <span class="cm">/* I/O  Resampler state             */</span>
+<a name="gbab-64"></a>    <span class="n">opus_int16</span>                      <span class="n">out</span><span class="p">[],</span>          <span class="cm">/* O    Output signal               */</span>
+<a name="gbab-65"></a>    <span class="k">const</span> <span class="n">opus_int16</span>                <span class="n">in</span><span class="p">[],</span>           <span class="cm">/* I    Input signal                */</span>
+<a name="gbab-66"></a>    <span class="n">opus_int32</span>                      <span class="n">inLen</span>           <span class="cm">/* I    Number of input samples     */</span>
+<a name="gbab-67"></a><span class="p">)</span>
+<a name="gbab-68"></a><span class="p">{</span>
+<a name="gbab-69"></a>    <span class="n">silk_resampler_state_struct</span> <span class="o">*</span><span class="n">S</span> <span class="o">=</span> <span class="p">(</span><span class="n">silk_resampler_state_struct</span> <span class="o">*</span><span class="p">)</span><span class="n">SS</span><span class="p">;</span>
+<a name="gbab-70"></a>    <span class="n">opus_int32</span> <span class="n">nSamplesIn</span><span class="p">;</span>
+<a name="gbab-71"></a>    <span class="n">opus_int32</span> <span class="n">max_index_Q16</span><span class="p">,</span> <span class="n">index_increment_Q16</span><span class="p">;</span>
+<a name="gbab-72"></a>    <span class="n">VARDECL</span><span class="p">(</span> <span class="n">opus_int16</span><span class="p">,</span> <span class="n">buf</span> <span class="p">);</span>
+<a name="gbab-73"></a>    <span class="n">SAVE_STACK</span><span class="p">;</span>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a>    <span class="n">ALLOC</span><span class="p">(</span> <span class="n">buf</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">S</span><span class="o">-&gt;</span><span class="n">batchSize</span> <span class="o">+</span> <span class="n">RESAMPLER_ORDER_FIR_12</span><span class="p">,</span> <span class="n">opus_int16</span> <span class="p">);</span>
+<a name="gbab-76"></a>
+<a name="gbab-77"></a>    <span class="cm">/* Copy buffered samples to start of buffer */</span>
+<a name="gbab-78"></a>    <span class="n">silk_memcpy</span><span class="p">(</span> <span class="n">buf</span><span class="p">,</span> <span class="n">S</span><span class="o">-&gt;</span><span class="n">sFIR</span><span class="p">.</span><span class="n">i16</span><span class="p">,</span> <span class="n">RESAMPLER_ORDER_FIR_12</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span> <span class="n">opus_int16</span> <span class="p">)</span> <span class="p">);</span>
+<a name="gbab-79"></a>
+<a name="gbab-80"></a>    <span class="cm">/* Iterate over blocks of frameSizeIn input samples */</span>
+<a name="gbab-81"></a>    <span class="n">index_increment_Q16</span> <span class="o">=</span> <span class="n">S</span><span class="o">-&gt;</span><span class="n">invRatio_Q16</span><span class="p">;</span>
+<a name="gbab-82"></a>    <span class="k">while</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">{</span>
+<a name="gbab-83"></a>        <span class="n">nSamplesIn</span> <span class="o">=</span> <span class="n">silk_min</span><span class="p">(</span> <span class="n">inLen</span><span class="p">,</span> <span class="n">S</span><span class="o">-&gt;</span><span class="n">batchSize</span> <span class="p">);</span>
+<a name="gbab-84"></a>
+<a name="gbab-85"></a>        <span class="cm">/* Upsample 2x */</span>
+<a name="gbab-86"></a>        <span class="n">silk_resampler_private_up2_HQ</span><span class="p">(</span> <span class="n">S</span><span class="o">-&gt;</span><span class="n">sIIR</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buf</span><span class="p">[</span> <span class="n">RESAMPLER_ORDER_FIR_12</span> <span class="p">],</span> <span class="n">in</span><span class="p">,</span> <span class="n">nSamplesIn</span> <span class="p">);</span>
+<a name="gbab-87"></a>
+<a name="gbab-88"></a>        <span class="n">max_index_Q16</span> <span class="o">=</span> <span class="n">silk_LSHIFT32</span><span class="p">(</span> <span class="n">nSamplesIn</span><span class="p">,</span> <span class="mi">16</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">);</span>         <span class="cm">/* + 1 because 2x upsampling */</span>
+<a name="gbab-89"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">silk_resampler_private_IIR_FIR_INTERPOL</span><span class="p">(</span> <span class="n">out</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">max_index_Q16</span><span class="p">,</span> <span class="n">index_increment_Q16</span> <span class="p">);</span>
+<a name="gbab-90"></a>        <span class="n">in</span> <span class="o">+=</span> <span class="n">nSamplesIn</span><span class="p">;</span>
+<a name="gbab-91"></a>        <span class="n">inLen</span> <span class="o">-=</span> <span class="n">nSamplesIn</span><span class="p">;</span>
+<a name="gbab-92"></a>
+<a name="gbab-93"></a>        <span class="k">if</span><span class="p">(</span> <span class="n">inLen</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
+<a name="gbab-94"></a>            <span class="cm">/* More iterations to do; copy last part of filtered signal to beginning of buffer */</span>
+<a name="gbab-95"></a>            <span class="n">silk_memcpy</span><span class="p">(</span> <span class="n">buf</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buf</span><span class="p">[</span> <span class="n">nSamplesIn</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="p">],</span> <span class="n">RESAMPLER_ORDER_FIR_12</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span> <span class="n">opus_int16</span> <span class="p">)</span> <span class="p">);</span>
+<a name="gbab-96"></a>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-97"></a>            <span class="k">break</span><span class="p">;</span>
+<a name="gbab-98"></a>        <span class="p">}</span>
+<a name="gbab-99"></a>    <span class="p">}</span>
+<a name="gbab-100"></a>
+<a name="gbab-101"></a>    <span class="cm">/* Copy last part of filtered signal to the state for the next call */</span>
+<a name="gbab-102"></a>    <span class="n">silk_memcpy</span><span class="p">(</span> <span class="n">S</span><span class="o">-&gt;</span><span class="n">sFIR</span><span class="p">.</span><span class="n">i16</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buf</span><span class="p">[</span> <span class="n">nSamplesIn</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="p">],</span> <span class="n">RESAMPLER_ORDER_FIR_12</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span> <span class="n">opus_int16</span> <span class="p">)</span> <span class="p">);</span>
+<a name="gbab-103"></a>    <span class="n">RESTORE_STACK</span><span class="p">;</span>
+<a name="gbab-104"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

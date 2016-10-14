@@ -1,0 +1,1563 @@
+{
+    "name": "celt_lpc_sse.c", 
+    "tot_risk": 12900.0, 
+    "lines": [
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }
+    ], 
+    "tot_orphaned": 0.0, 
+    "author_risks": {
+        "George Marques": {
+            "tot_knowledge": 129000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 12900.0
+        }
+    }, 
+    "tot_knowledge": 129000.0
+}

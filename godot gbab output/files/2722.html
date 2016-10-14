@@ -1,0 +1,17 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="ch">#!/bin/bash</span>
+<a name="gbab-2"></a>
+<a name="gbab-3"></a>jarsigner -digestalg SHA1 -sigalg MD5withRSA -verbose -keystore my-release-key.keystore <span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> reduz
+<a name="gbab-4"></a>
+<a name="gbab-5"></a><span class="nb">echo</span> <span class="s2">&quot;&quot;</span>
+<a name="gbab-6"></a><span class="nb">echo</span> <span class="s2">&quot;&quot;</span>
+<a name="gbab-7"></a><span class="nb">echo</span> <span class="s2">&quot;Checking if APK is verified...&quot;</span>
+<a name="gbab-8"></a>jarsigner -verify <span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> -verbose -certs
+</pre></div>
+</td></tr></table>

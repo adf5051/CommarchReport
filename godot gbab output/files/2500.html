@@ -1,0 +1,1061 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="c1">// Copyright 2011 Google Inc. All Rights Reserved.</span>
+<a name="gbab-2"></a><span class="c1">//</span>
+<a name="gbab-3"></a><span class="c1">// Use of this source code is governed by a BSD-style license</span>
+<a name="gbab-4"></a><span class="c1">// that can be found in the COPYING file in the root of the source</span>
+<a name="gbab-5"></a><span class="c1">// tree. An additional intellectual property rights grant can be found</span>
+<a name="gbab-6"></a><span class="c1">// in the file PATENTS. All contributing project authors may</span>
+<a name="gbab-7"></a><span class="c1">// be found in the AUTHORS file in the root of the source tree.</span>
+<a name="gbab-8"></a><span class="c1">// -----------------------------------------------------------------------------</span>
+<a name="gbab-9"></a><span class="c1">//</span>
+<a name="gbab-10"></a><span class="c1">//  RIFF container manipulation and encoding for WebP images.</span>
+<a name="gbab-11"></a><span class="c1">//</span>
+<a name="gbab-12"></a><span class="c1">// Authors: Urvang (urvang@google.com)</span>
+<a name="gbab-13"></a><span class="c1">//          Vikas (vikasa@google.com)</span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="cp">#ifndef WEBP_WEBP_MUX_H_</span>
+<a name="gbab-16"></a><span class="cp">#define WEBP_WEBP_MUX_H_</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a><span class="cp">#include</span> <span class="cpf">&quot;./mux_types.h&quot;</span><span class="cp"></span>
+<a name="gbab-19"></a>
+<a name="gbab-20"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-21"></a><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<a name="gbab-22"></a><span class="cp">#endif</span>
+<a name="gbab-23"></a>
+<a name="gbab-24"></a><span class="cp">#define WEBP_MUX_ABI_VERSION 0x0106        </span><span class="c1">// MAJOR(8b) + MINOR(8b)</span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-27"></a><span class="c1">// Mux API</span>
+<a name="gbab-28"></a><span class="c1">//</span>
+<a name="gbab-29"></a><span class="c1">// This API allows manipulation of WebP container images containing features</span>
+<a name="gbab-30"></a><span class="c1">// like color profile, metadata, animation and fragmented images.</span>
+<a name="gbab-31"></a><span class="c1">//</span>
+<a name="gbab-32"></a><span class="c1">// Code Example#1: Create a WebPMux object with image data, color profile and</span>
+<a name="gbab-33"></a><span class="c1">// XMP metadata.</span>
+<a name="gbab-34"></a><span class="cm">/*</span>
+<a name="gbab-35"></a><span class="cm">  int copy_data = 0;</span>
+<a name="gbab-36"></a><span class="cm">  WebPMux* mux = WebPMuxNew();</span>
+<a name="gbab-37"></a><span class="cm">  // ... (Prepare image data).</span>
+<a name="gbab-38"></a><span class="cm">  WebPMuxSetImage(mux, &amp;image, copy_data);</span>
+<a name="gbab-39"></a><span class="cm">  // ... (Prepare ICCP color profile data).</span>
+<a name="gbab-40"></a><span class="cm">  WebPMuxSetChunk(mux, &quot;ICCP&quot;, &amp;icc_profile, copy_data);</span>
+<a name="gbab-41"></a><span class="cm">  // ... (Prepare XMP metadata).</span>
+<a name="gbab-42"></a><span class="cm">  WebPMuxSetChunk(mux, &quot;XMP &quot;, &amp;xmp, copy_data);</span>
+<a name="gbab-43"></a><span class="cm">  // Get data from mux in WebP RIFF format.</span>
+<a name="gbab-44"></a><span class="cm">  WebPMuxAssemble(mux, &amp;output_data);</span>
+<a name="gbab-45"></a><span class="cm">  WebPMuxDelete(mux);</span>
+<a name="gbab-46"></a><span class="cm">  // ... (Consume output_data; e.g. write output_data.bytes to file).</span>
+<a name="gbab-47"></a><span class="cm">  WebPDataClear(&amp;output_data);</span>
+<a name="gbab-48"></a><span class="cm">*/</span>
+<a name="gbab-49"></a>
+<a name="gbab-50"></a><span class="c1">// Code Example#2: Get image and color profile data from a WebP file.</span>
+<a name="gbab-51"></a><span class="cm">/*</span>
+<a name="gbab-52"></a><span class="cm">  int copy_data = 0;</span>
+<a name="gbab-53"></a><span class="cm">  // ... (Read data from file).</span>
+<a name="gbab-54"></a><span class="cm">  WebPMux* mux = WebPMuxCreate(&amp;data, copy_data);</span>
+<a name="gbab-55"></a><span class="cm">  WebPMuxGetFrame(mux, 1, &amp;image);</span>
+<a name="gbab-56"></a><span class="cm">  // ... (Consume image; e.g. call WebPDecode() to decode the data).</span>
+<a name="gbab-57"></a><span class="cm">  WebPMuxGetChunk(mux, &quot;ICCP&quot;, &amp;icc_profile);</span>
+<a name="gbab-58"></a><span class="cm">  // ... (Consume icc_data).</span>
+<a name="gbab-59"></a><span class="cm">  WebPMuxDelete(mux);</span>
+<a name="gbab-60"></a><span class="cm">  free(data);</span>
+<a name="gbab-61"></a><span class="cm">*/</span>
+<a name="gbab-62"></a>
+<a name="gbab-63"></a><span class="c1">// Note: forward declaring enumerations is not allowed in (strict) C and C++,</span>
+<a name="gbab-64"></a><span class="c1">// the types are left here for reference.</span>
+<a name="gbab-65"></a><span class="c1">// typedef enum WebPMuxError WebPMuxError;</span>
+<a name="gbab-66"></a><span class="c1">// typedef enum WebPChunkId WebPChunkId;</span>
+<a name="gbab-67"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">WebPMux</span> <span class="n">WebPMux</span><span class="p">;</span>   <span class="c1">// main opaque object.</span>
+<a name="gbab-68"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">WebPMuxFrameInfo</span> <span class="n">WebPMuxFrameInfo</span><span class="p">;</span>
+<a name="gbab-69"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">WebPMuxAnimParams</span> <span class="n">WebPMuxAnimParams</span><span class="p">;</span>
+<a name="gbab-70"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">WebPAnimEncoderOptions</span> <span class="n">WebPAnimEncoderOptions</span><span class="p">;</span>
+<a name="gbab-71"></a>
+<a name="gbab-72"></a><span class="c1">// Error codes</span>
+<a name="gbab-73"></a><span class="k">typedef</span> <span class="k">enum</span> <span class="n">WebPMuxError</span> <span class="p">{</span>
+<a name="gbab-74"></a>  <span class="n">WEBP_MUX_OK</span>                 <span class="o">=</span>  <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-75"></a>  <span class="n">WEBP_MUX_NOT_FOUND</span>          <span class="o">=</span>  <span class="mi">0</span><span class="p">,</span>
+<a name="gbab-76"></a>  <span class="n">WEBP_MUX_INVALID_ARGUMENT</span>   <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+<a name="gbab-77"></a>  <span class="n">WEBP_MUX_BAD_DATA</span>           <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>
+<a name="gbab-78"></a>  <span class="n">WEBP_MUX_MEMORY_ERROR</span>       <span class="o">=</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span>
+<a name="gbab-79"></a>  <span class="n">WEBP_MUX_NOT_ENOUGH_DATA</span>    <span class="o">=</span> <span class="o">-</span><span class="mi">4</span>
+<a name="gbab-80"></a><span class="p">}</span> <span class="n">WebPMuxError</span><span class="p">;</span>
+<a name="gbab-81"></a>
+<a name="gbab-82"></a><span class="c1">// IDs for different types of chunks.</span>
+<a name="gbab-83"></a><span class="k">typedef</span> <span class="k">enum</span> <span class="n">WebPChunkId</span> <span class="p">{</span>
+<a name="gbab-84"></a>  <span class="n">WEBP_CHUNK_VP8X</span><span class="p">,</span>     <span class="c1">// VP8X</span>
+<a name="gbab-85"></a>  <span class="n">WEBP_CHUNK_ICCP</span><span class="p">,</span>     <span class="c1">// ICCP</span>
+<a name="gbab-86"></a>  <span class="n">WEBP_CHUNK_ANIM</span><span class="p">,</span>     <span class="c1">// ANIM</span>
+<a name="gbab-87"></a>  <span class="n">WEBP_CHUNK_ANMF</span><span class="p">,</span>     <span class="c1">// ANMF</span>
+<a name="gbab-88"></a>  <span class="n">WEBP_CHUNK_FRGM</span><span class="p">,</span>     <span class="c1">// FRGM</span>
+<a name="gbab-89"></a>  <span class="n">WEBP_CHUNK_ALPHA</span><span class="p">,</span>    <span class="c1">// ALPH</span>
+<a name="gbab-90"></a>  <span class="n">WEBP_CHUNK_IMAGE</span><span class="p">,</span>    <span class="c1">// VP8/VP8L</span>
+<a name="gbab-91"></a>  <span class="n">WEBP_CHUNK_EXIF</span><span class="p">,</span>     <span class="c1">// EXIF</span>
+<a name="gbab-92"></a>  <span class="n">WEBP_CHUNK_XMP</span><span class="p">,</span>      <span class="c1">// XMP</span>
+<a name="gbab-93"></a>  <span class="n">WEBP_CHUNK_UNKNOWN</span><span class="p">,</span>  <span class="c1">// Other chunks.</span>
+<a name="gbab-94"></a>  <span class="n">WEBP_CHUNK_NIL</span>
+<a name="gbab-95"></a><span class="p">}</span> <span class="n">WebPChunkId</span><span class="p">;</span>
+<a name="gbab-96"></a>
+<a name="gbab-97"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-98"></a>
+<a name="gbab-99"></a><span class="c1">// Returns the version number of the mux library, packed in hexadecimal using</span>
+<a name="gbab-100"></a><span class="c1">// 8bits for each of major/minor/revision. E.g: v2.5.7 is 0x020507.</span>
+<a name="gbab-101"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">WebPGetMuxVersion</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-102"></a>
+<a name="gbab-103"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-104"></a><span class="c1">// Life of a Mux object</span>
+<a name="gbab-105"></a>
+<a name="gbab-106"></a><span class="c1">// Internal, version-checked, entry point</span>
+<a name="gbab-107"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMux</span><span class="o">*</span><span class="p">)</span> <span class="n">WebPNewInternal</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+<a name="gbab-108"></a>
+<a name="gbab-109"></a><span class="c1">// Creates an empty mux object.</span>
+<a name="gbab-110"></a><span class="c1">// Returns:</span>
+<a name="gbab-111"></a><span class="c1">//   A pointer to the newly created empty mux object.</span>
+<a name="gbab-112"></a><span class="c1">//   Or NULL in case of memory error.</span>
+<a name="gbab-113"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">WebPMux</span><span class="o">*</span> <span class="nf">WebPMuxNew</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-114"></a>  <span class="k">return</span> <span class="n">WebPNewInternal</span><span class="p">(</span><span class="n">WEBP_MUX_ABI_VERSION</span><span class="p">);</span>
+<a name="gbab-115"></a><span class="p">}</span>
+<a name="gbab-116"></a>
+<a name="gbab-117"></a><span class="c1">// Deletes the mux object.</span>
+<a name="gbab-118"></a><span class="c1">// Parameters:</span>
+<a name="gbab-119"></a><span class="c1">//   mux - (in/out) object to be deleted</span>
+<a name="gbab-120"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">WebPMuxDelete</span><span class="p">(</span><span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">);</span>
+<a name="gbab-121"></a>
+<a name="gbab-122"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-123"></a><span class="c1">// Mux creation.</span>
+<a name="gbab-124"></a>
+<a name="gbab-125"></a><span class="c1">// Internal, version-checked, entry point</span>
+<a name="gbab-126"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMux</span><span class="o">*</span><span class="p">)</span> <span class="n">WebPMuxCreateInternal</span><span class="p">(</span><span class="k">const</span> <span class="n">WebPData</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-127"></a>
+<a name="gbab-128"></a><span class="c1">// Creates a mux object from raw data given in WebP RIFF format.</span>
+<a name="gbab-129"></a><span class="c1">// Parameters:</span>
+<a name="gbab-130"></a><span class="c1">//   bitstream - (in) the bitstream data in WebP RIFF format</span>
+<a name="gbab-131"></a><span class="c1">//   copy_data - (in) value 1 indicates given data WILL be copied to the mux</span>
+<a name="gbab-132"></a><span class="c1">//               object and value 0 indicates data will NOT be copied.</span>
+<a name="gbab-133"></a><span class="c1">// Returns:</span>
+<a name="gbab-134"></a><span class="c1">//   A pointer to the mux object created from given data - on success.</span>
+<a name="gbab-135"></a><span class="c1">//   NULL - In case of invalid data or memory error.</span>
+<a name="gbab-136"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">WebPMux</span><span class="o">*</span> <span class="nf">WebPMuxCreate</span><span class="p">(</span><span class="k">const</span> <span class="n">WebPData</span><span class="o">*</span> <span class="n">bitstream</span><span class="p">,</span>
+<a name="gbab-137"></a>                                          <span class="kt">int</span> <span class="n">copy_data</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-138"></a>  <span class="k">return</span> <span class="n">WebPMuxCreateInternal</span><span class="p">(</span><span class="n">bitstream</span><span class="p">,</span> <span class="n">copy_data</span><span class="p">,</span> <span class="n">WEBP_MUX_ABI_VERSION</span><span class="p">);</span>
+<a name="gbab-139"></a><span class="p">}</span>
+<a name="gbab-140"></a>
+<a name="gbab-141"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-142"></a><span class="c1">// Non-image chunks.</span>
+<a name="gbab-143"></a>
+<a name="gbab-144"></a><span class="c1">// Note: Only non-image related chunks should be managed through chunk APIs.</span>
+<a name="gbab-145"></a><span class="c1">// (Image related chunks are: &quot;ANMF&quot;, &quot;FRGM&quot;, &quot;VP8 &quot;, &quot;VP8L&quot; and &quot;ALPH&quot;).</span>
+<a name="gbab-146"></a><span class="c1">// To add, get and delete images, use WebPMuxSetImage(), WebPMuxPushFrame(),</span>
+<a name="gbab-147"></a><span class="c1">// WebPMuxGetFrame() and WebPMuxDeleteFrame().</span>
+<a name="gbab-148"></a>
+<a name="gbab-149"></a><span class="c1">// Adds a chunk with id &#39;fourcc&#39; and data &#39;chunk_data&#39; in the mux object.</span>
+<a name="gbab-150"></a><span class="c1">// Any existing chunk(s) with the same id will be removed.</span>
+<a name="gbab-151"></a><span class="c1">// Parameters:</span>
+<a name="gbab-152"></a><span class="c1">//   mux - (in/out) object to which the chunk is to be added</span>
+<a name="gbab-153"></a><span class="c1">//   fourcc - (in) a character array containing the fourcc of the given chunk;</span>
+<a name="gbab-154"></a><span class="c1">//                 e.g., &quot;ICCP&quot;, &quot;XMP &quot;, &quot;EXIF&quot; etc.</span>
+<a name="gbab-155"></a><span class="c1">//   chunk_data - (in) the chunk data to be added</span>
+<a name="gbab-156"></a><span class="c1">//   copy_data - (in) value 1 indicates given data WILL be copied to the mux</span>
+<a name="gbab-157"></a><span class="c1">//               object and value 0 indicates data will NOT be copied.</span>
+<a name="gbab-158"></a><span class="c1">// Returns:</span>
+<a name="gbab-159"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux, fourcc or chunk_data is NULL</span>
+<a name="gbab-160"></a><span class="c1">//                               or if fourcc corresponds to an image chunk.</span>
+<a name="gbab-161"></a><span class="c1">//   WEBP_MUX_MEMORY_ERROR - on memory allocation error.</span>
+<a name="gbab-162"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-163"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxSetChunk</span><span class="p">(</span>
+<a name="gbab-164"></a>    <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="n">fourcc</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="k">const</span> <span class="n">WebPData</span><span class="o">*</span> <span class="n">chunk_data</span><span class="p">,</span>
+<a name="gbab-165"></a>    <span class="kt">int</span> <span class="n">copy_data</span><span class="p">);</span>
+<a name="gbab-166"></a>
+<a name="gbab-167"></a><span class="c1">// Gets a reference to the data of the chunk with id &#39;fourcc&#39; in the mux object.</span>
+<a name="gbab-168"></a><span class="c1">// The caller should NOT free the returned data.</span>
+<a name="gbab-169"></a><span class="c1">// Parameters:</span>
+<a name="gbab-170"></a><span class="c1">//   mux - (in) object from which the chunk data is to be fetched</span>
+<a name="gbab-171"></a><span class="c1">//   fourcc - (in) a character array containing the fourcc of the chunk;</span>
+<a name="gbab-172"></a><span class="c1">//                 e.g., &quot;ICCP&quot;, &quot;XMP &quot;, &quot;EXIF&quot; etc.</span>
+<a name="gbab-173"></a><span class="c1">//   chunk_data - (out) returned chunk data</span>
+<a name="gbab-174"></a><span class="c1">// Returns:</span>
+<a name="gbab-175"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux, fourcc or chunk_data is NULL</span>
+<a name="gbab-176"></a><span class="c1">//                               or if fourcc corresponds to an image chunk.</span>
+<a name="gbab-177"></a><span class="c1">//   WEBP_MUX_NOT_FOUND - If mux does not contain a chunk with the given id.</span>
+<a name="gbab-178"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-179"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxGetChunk</span><span class="p">(</span>
+<a name="gbab-180"></a>    <span class="k">const</span> <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="n">fourcc</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">WebPData</span><span class="o">*</span> <span class="n">chunk_data</span><span class="p">);</span>
+<a name="gbab-181"></a>
+<a name="gbab-182"></a><span class="c1">// Deletes the chunk with the given &#39;fourcc&#39; from the mux object.</span>
+<a name="gbab-183"></a><span class="c1">// Parameters:</span>
+<a name="gbab-184"></a><span class="c1">//   mux - (in/out) object from which the chunk is to be deleted</span>
+<a name="gbab-185"></a><span class="c1">//   fourcc - (in) a character array containing the fourcc of the chunk;</span>
+<a name="gbab-186"></a><span class="c1">//                 e.g., &quot;ICCP&quot;, &quot;XMP &quot;, &quot;EXIF&quot; etc.</span>
+<a name="gbab-187"></a><span class="c1">// Returns:</span>
+<a name="gbab-188"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux or fourcc is NULL</span>
+<a name="gbab-189"></a><span class="c1">//                               or if fourcc corresponds to an image chunk.</span>
+<a name="gbab-190"></a><span class="c1">//   WEBP_MUX_NOT_FOUND - If mux does not contain a chunk with the given fourcc.</span>
+<a name="gbab-191"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-192"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxDeleteChunk</span><span class="p">(</span>
+<a name="gbab-193"></a>    <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="n">fourcc</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span>
+<a name="gbab-194"></a>
+<a name="gbab-195"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-196"></a><span class="c1">// Images.</span>
+<a name="gbab-197"></a>
+<a name="gbab-198"></a><span class="c1">// Encapsulates data about a single frame/fragment.</span>
+<a name="gbab-199"></a><span class="k">struct</span> <span class="n">WebPMuxFrameInfo</span> <span class="p">{</span>
+<a name="gbab-200"></a>  <span class="n">WebPData</span>    <span class="n">bitstream</span><span class="p">;</span>  <span class="c1">// image data: can be a raw VP8/VP8L bitstream</span>
+<a name="gbab-201"></a>                          <span class="c1">// or a single-image WebP file.</span>
+<a name="gbab-202"></a>  <span class="kt">int</span>         <span class="n">x_offset</span><span class="p">;</span>   <span class="c1">// x-offset of the frame.</span>
+<a name="gbab-203"></a>  <span class="kt">int</span>         <span class="n">y_offset</span><span class="p">;</span>   <span class="c1">// y-offset of the frame.</span>
+<a name="gbab-204"></a>  <span class="kt">int</span>         <span class="n">duration</span><span class="p">;</span>   <span class="c1">// duration of the frame (in milliseconds).</span>
+<a name="gbab-205"></a>
+<a name="gbab-206"></a>  <span class="n">WebPChunkId</span> <span class="n">id</span><span class="p">;</span>         <span class="c1">// frame type: should be one of WEBP_CHUNK_ANMF,</span>
+<a name="gbab-207"></a>                          <span class="c1">// WEBP_CHUNK_FRGM or WEBP_CHUNK_IMAGE</span>
+<a name="gbab-208"></a>  <span class="n">WebPMuxAnimDispose</span> <span class="n">dispose_method</span><span class="p">;</span>  <span class="c1">// Disposal method for the frame.</span>
+<a name="gbab-209"></a>  <span class="n">WebPMuxAnimBlend</span>   <span class="n">blend_method</span><span class="p">;</span>    <span class="c1">// Blend operation for the frame.</span>
+<a name="gbab-210"></a>  <span class="kt">uint32_t</span>    <span class="n">pad</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>     <span class="c1">// padding for later use</span>
+<a name="gbab-211"></a><span class="p">};</span>
+<a name="gbab-212"></a>
+<a name="gbab-213"></a><span class="c1">// Sets the (non-animated and non-fragmented) image in the mux object.</span>
+<a name="gbab-214"></a><span class="c1">// Note: Any existing images (including frames/fragments) will be removed.</span>
+<a name="gbab-215"></a><span class="c1">// Parameters:</span>
+<a name="gbab-216"></a><span class="c1">//   mux - (in/out) object in which the image is to be set</span>
+<a name="gbab-217"></a><span class="c1">//   bitstream - (in) can be a raw VP8/VP8L bitstream or a single-image</span>
+<a name="gbab-218"></a><span class="c1">//               WebP file (non-animated and non-fragmented)</span>
+<a name="gbab-219"></a><span class="c1">//   copy_data - (in) value 1 indicates given data WILL be copied to the mux</span>
+<a name="gbab-220"></a><span class="c1">//               object and value 0 indicates data will NOT be copied.</span>
+<a name="gbab-221"></a><span class="c1">// Returns:</span>
+<a name="gbab-222"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux is NULL or bitstream is NULL.</span>
+<a name="gbab-223"></a><span class="c1">//   WEBP_MUX_MEMORY_ERROR - on memory allocation error.</span>
+<a name="gbab-224"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-225"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxSetImage</span><span class="p">(</span>
+<a name="gbab-226"></a>    <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span> <span class="k">const</span> <span class="n">WebPData</span><span class="o">*</span> <span class="n">bitstream</span><span class="p">,</span> <span class="kt">int</span> <span class="n">copy_data</span><span class="p">);</span>
+<a name="gbab-227"></a>
+<a name="gbab-228"></a><span class="c1">// Adds a frame at the end of the mux object.</span>
+<a name="gbab-229"></a><span class="c1">// Notes: (1) frame.id should be one of WEBP_CHUNK_ANMF or WEBP_CHUNK_FRGM</span>
+<a name="gbab-230"></a><span class="c1">//        (2) For setting a non-animated non-fragmented image, use</span>
+<a name="gbab-231"></a><span class="c1">//            WebPMuxSetImage() instead.</span>
+<a name="gbab-232"></a><span class="c1">//        (3) Type of frame being pushed must be same as the frames in mux.</span>
+<a name="gbab-233"></a><span class="c1">//        (4) As WebP only supports even offsets, any odd offset will be snapped</span>
+<a name="gbab-234"></a><span class="c1">//            to an even location using: offset &amp;= ~1</span>
+<a name="gbab-235"></a><span class="c1">// Parameters:</span>
+<a name="gbab-236"></a><span class="c1">//   mux - (in/out) object to which the frame is to be added</span>
+<a name="gbab-237"></a><span class="c1">//   frame - (in) frame data.</span>
+<a name="gbab-238"></a><span class="c1">//   copy_data - (in) value 1 indicates given data WILL be copied to the mux</span>
+<a name="gbab-239"></a><span class="c1">//               object and value 0 indicates data will NOT be copied.</span>
+<a name="gbab-240"></a><span class="c1">// Returns:</span>
+<a name="gbab-241"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux or frame is NULL</span>
+<a name="gbab-242"></a><span class="c1">//                               or if content of &#39;frame&#39; is invalid.</span>
+<a name="gbab-243"></a><span class="c1">//   WEBP_MUX_MEMORY_ERROR - on memory allocation error.</span>
+<a name="gbab-244"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-245"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxPushFrame</span><span class="p">(</span>
+<a name="gbab-246"></a>    <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span> <span class="k">const</span> <span class="n">WebPMuxFrameInfo</span><span class="o">*</span> <span class="n">frame</span><span class="p">,</span> <span class="kt">int</span> <span class="n">copy_data</span><span class="p">);</span>
+<a name="gbab-247"></a>
+<a name="gbab-248"></a><span class="c1">// Gets the nth frame from the mux object.</span>
+<a name="gbab-249"></a><span class="c1">// The content of &#39;frame-&gt;bitstream&#39; is allocated using malloc(), and NOT</span>
+<a name="gbab-250"></a><span class="c1">// owned by the &#39;mux&#39; object. It MUST be deallocated by the caller by calling</span>
+<a name="gbab-251"></a><span class="c1">// WebPDataClear().</span>
+<a name="gbab-252"></a><span class="c1">// nth=0 has a special meaning - last position.</span>
+<a name="gbab-253"></a><span class="c1">// Parameters:</span>
+<a name="gbab-254"></a><span class="c1">//   mux - (in) object from which the info is to be fetched</span>
+<a name="gbab-255"></a><span class="c1">//   nth - (in) index of the frame in the mux object</span>
+<a name="gbab-256"></a><span class="c1">//   frame - (out) data of the returned frame</span>
+<a name="gbab-257"></a><span class="c1">// Returns:</span>
+<a name="gbab-258"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux or frame is NULL.</span>
+<a name="gbab-259"></a><span class="c1">//   WEBP_MUX_NOT_FOUND - if there are less than nth frames in the mux object.</span>
+<a name="gbab-260"></a><span class="c1">//   WEBP_MUX_BAD_DATA - if nth frame chunk in mux is invalid.</span>
+<a name="gbab-261"></a><span class="c1">//   WEBP_MUX_MEMORY_ERROR - on memory allocation error.</span>
+<a name="gbab-262"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-263"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxGetFrame</span><span class="p">(</span>
+<a name="gbab-264"></a>    <span class="k">const</span> <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">nth</span><span class="p">,</span> <span class="n">WebPMuxFrameInfo</span><span class="o">*</span> <span class="n">frame</span><span class="p">);</span>
+<a name="gbab-265"></a>
+<a name="gbab-266"></a><span class="c1">// Deletes a frame from the mux object.</span>
+<a name="gbab-267"></a><span class="c1">// nth=0 has a special meaning - last position.</span>
+<a name="gbab-268"></a><span class="c1">// Parameters:</span>
+<a name="gbab-269"></a><span class="c1">//   mux - (in/out) object from which a frame is to be deleted</span>
+<a name="gbab-270"></a><span class="c1">//   nth - (in) The position from which the frame is to be deleted</span>
+<a name="gbab-271"></a><span class="c1">// Returns:</span>
+<a name="gbab-272"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux is NULL.</span>
+<a name="gbab-273"></a><span class="c1">//   WEBP_MUX_NOT_FOUND - If there are less than nth frames in the mux object</span>
+<a name="gbab-274"></a><span class="c1">//                        before deletion.</span>
+<a name="gbab-275"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-276"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxDeleteFrame</span><span class="p">(</span><span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">nth</span><span class="p">);</span>
+<a name="gbab-277"></a>
+<a name="gbab-278"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-279"></a><span class="c1">// Animation.</span>
+<a name="gbab-280"></a>
+<a name="gbab-281"></a><span class="c1">// Animation parameters.</span>
+<a name="gbab-282"></a><span class="k">struct</span> <span class="n">WebPMuxAnimParams</span> <span class="p">{</span>
+<a name="gbab-283"></a>  <span class="kt">uint32_t</span> <span class="n">bgcolor</span><span class="p">;</span>  <span class="c1">// Background color of the canvas stored (in MSB order) as:</span>
+<a name="gbab-284"></a>                     <span class="c1">// Bits 00 to 07: Alpha.</span>
+<a name="gbab-285"></a>                     <span class="c1">// Bits 08 to 15: Red.</span>
+<a name="gbab-286"></a>                     <span class="c1">// Bits 16 to 23: Green.</span>
+<a name="gbab-287"></a>                     <span class="c1">// Bits 24 to 31: Blue.</span>
+<a name="gbab-288"></a>  <span class="kt">int</span> <span class="n">loop_count</span><span class="p">;</span>    <span class="c1">// Number of times to repeat the animation [0 = infinite].</span>
+<a name="gbab-289"></a><span class="p">};</span>
+<a name="gbab-290"></a>
+<a name="gbab-291"></a><span class="c1">// Sets the animation parameters in the mux object. Any existing ANIM chunks</span>
+<a name="gbab-292"></a><span class="c1">// will be removed.</span>
+<a name="gbab-293"></a><span class="c1">// Parameters:</span>
+<a name="gbab-294"></a><span class="c1">//   mux - (in/out) object in which ANIM chunk is to be set/added</span>
+<a name="gbab-295"></a><span class="c1">//   params - (in) animation parameters.</span>
+<a name="gbab-296"></a><span class="c1">// Returns:</span>
+<a name="gbab-297"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux or params is NULL.</span>
+<a name="gbab-298"></a><span class="c1">//   WEBP_MUX_MEMORY_ERROR - on memory allocation error.</span>
+<a name="gbab-299"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-300"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxSetAnimationParams</span><span class="p">(</span>
+<a name="gbab-301"></a>    <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span> <span class="k">const</span> <span class="n">WebPMuxAnimParams</span><span class="o">*</span> <span class="n">params</span><span class="p">);</span>
+<a name="gbab-302"></a>
+<a name="gbab-303"></a><span class="c1">// Gets the animation parameters from the mux object.</span>
+<a name="gbab-304"></a><span class="c1">// Parameters:</span>
+<a name="gbab-305"></a><span class="c1">//   mux - (in) object from which the animation parameters to be fetched</span>
+<a name="gbab-306"></a><span class="c1">//   params - (out) animation parameters extracted from the ANIM chunk</span>
+<a name="gbab-307"></a><span class="c1">// Returns:</span>
+<a name="gbab-308"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux or params is NULL.</span>
+<a name="gbab-309"></a><span class="c1">//   WEBP_MUX_NOT_FOUND - if ANIM chunk is not present in mux object.</span>
+<a name="gbab-310"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-311"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxGetAnimationParams</span><span class="p">(</span>
+<a name="gbab-312"></a>    <span class="k">const</span> <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span> <span class="n">WebPMuxAnimParams</span><span class="o">*</span> <span class="n">params</span><span class="p">);</span>
+<a name="gbab-313"></a>
+<a name="gbab-314"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-315"></a><span class="c1">// Misc Utilities.</span>
+<a name="gbab-316"></a>
+<a name="gbab-317"></a><span class="c1">// Sets the canvas size for the mux object. The width and height can be</span>
+<a name="gbab-318"></a><span class="c1">// specified explicitly or left as zero (0, 0).</span>
+<a name="gbab-319"></a><span class="c1">// * When width and height are specified explicitly, then this frame bound is</span>
+<a name="gbab-320"></a><span class="c1">//   enforced during subsequent calls to WebPMuxAssemble() and an error is</span>
+<a name="gbab-321"></a><span class="c1">//   reported if any animated frame does not completely fit within the canvas.</span>
+<a name="gbab-322"></a><span class="c1">// * When unspecified (0, 0), the constructed canvas will get the frame bounds</span>
+<a name="gbab-323"></a><span class="c1">//   from the bounding-box over all frames after calling WebPMuxAssemble().</span>
+<a name="gbab-324"></a><span class="c1">// Parameters:</span>
+<a name="gbab-325"></a><span class="c1">//   mux - (in) object to which the canvas size is to be set</span>
+<a name="gbab-326"></a><span class="c1">//   width - (in) canvas width</span>
+<a name="gbab-327"></a><span class="c1">//   height - (in) canvas height</span>
+<a name="gbab-328"></a><span class="c1">// Returns:</span>
+<a name="gbab-329"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux is NULL; or</span>
+<a name="gbab-330"></a><span class="c1">//                               width or height are invalid or out of bounds</span>
+<a name="gbab-331"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-332"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxSetCanvasSize</span><span class="p">(</span><span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span>
+<a name="gbab-333"></a>                                               <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">);</span>
+<a name="gbab-334"></a>
+<a name="gbab-335"></a><span class="c1">// Gets the canvas size from the mux object.</span>
+<a name="gbab-336"></a><span class="c1">// Note: This method assumes that the VP8X chunk, if present, is up-to-date.</span>
+<a name="gbab-337"></a><span class="c1">// That is, the mux object hasn&#39;t been modified since the last call to</span>
+<a name="gbab-338"></a><span class="c1">// WebPMuxAssemble() or WebPMuxCreate().</span>
+<a name="gbab-339"></a><span class="c1">// Parameters:</span>
+<a name="gbab-340"></a><span class="c1">//   mux - (in) object from which the canvas size is to be fetched</span>
+<a name="gbab-341"></a><span class="c1">//   width - (out) canvas width</span>
+<a name="gbab-342"></a><span class="c1">//   height - (out) canvas height</span>
+<a name="gbab-343"></a><span class="c1">// Returns:</span>
+<a name="gbab-344"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux, width or height is NULL.</span>
+<a name="gbab-345"></a><span class="c1">//   WEBP_MUX_BAD_DATA - if VP8X/VP8/VP8L chunk or canvas size is invalid.</span>
+<a name="gbab-346"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-347"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxGetCanvasSize</span><span class="p">(</span><span class="k">const</span> <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span>
+<a name="gbab-348"></a>                                               <span class="kt">int</span><span class="o">*</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">height</span><span class="p">);</span>
+<a name="gbab-349"></a>
+<a name="gbab-350"></a><span class="c1">// Gets the feature flags from the mux object.</span>
+<a name="gbab-351"></a><span class="c1">// Note: This method assumes that the VP8X chunk, if present, is up-to-date.</span>
+<a name="gbab-352"></a><span class="c1">// That is, the mux object hasn&#39;t been modified since the last call to</span>
+<a name="gbab-353"></a><span class="c1">// WebPMuxAssemble() or WebPMuxCreate().</span>
+<a name="gbab-354"></a><span class="c1">// Parameters:</span>
+<a name="gbab-355"></a><span class="c1">//   mux - (in) object from which the features are to be fetched</span>
+<a name="gbab-356"></a><span class="c1">//   flags - (out) the flags specifying which features are present in the</span>
+<a name="gbab-357"></a><span class="c1">//           mux object. This will be an OR of various flag values.</span>
+<a name="gbab-358"></a><span class="c1">//           Enum &#39;WebPFeatureFlags&#39; can be used to test individual flag values.</span>
+<a name="gbab-359"></a><span class="c1">// Returns:</span>
+<a name="gbab-360"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux or flags is NULL.</span>
+<a name="gbab-361"></a><span class="c1">//   WEBP_MUX_BAD_DATA - if VP8X/VP8/VP8L chunk or canvas size is invalid.</span>
+<a name="gbab-362"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-363"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxGetFeatures</span><span class="p">(</span><span class="k">const</span> <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span>
+<a name="gbab-364"></a>                                             <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">flags</span><span class="p">);</span>
+<a name="gbab-365"></a>
+<a name="gbab-366"></a><span class="c1">// Gets number of chunks with the given &#39;id&#39; in the mux object.</span>
+<a name="gbab-367"></a><span class="c1">// Parameters:</span>
+<a name="gbab-368"></a><span class="c1">//   mux - (in) object from which the info is to be fetched</span>
+<a name="gbab-369"></a><span class="c1">//   id - (in) chunk id specifying the type of chunk</span>
+<a name="gbab-370"></a><span class="c1">//   num_elements - (out) number of chunks with the given chunk id</span>
+<a name="gbab-371"></a><span class="c1">// Returns:</span>
+<a name="gbab-372"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux, or num_elements is NULL.</span>
+<a name="gbab-373"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-374"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxNumChunks</span><span class="p">(</span><span class="k">const</span> <span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span>
+<a name="gbab-375"></a>                                           <span class="n">WebPChunkId</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">num_elements</span><span class="p">);</span>
+<a name="gbab-376"></a>
+<a name="gbab-377"></a><span class="c1">// Assembles all chunks in WebP RIFF format and returns in &#39;assembled_data&#39;.</span>
+<a name="gbab-378"></a><span class="c1">// This function also validates the mux object.</span>
+<a name="gbab-379"></a><span class="c1">// Note: The content of &#39;assembled_data&#39; will be ignored and overwritten.</span>
+<a name="gbab-380"></a><span class="c1">// Also, the content of &#39;assembled_data&#39; is allocated using malloc(), and NOT</span>
+<a name="gbab-381"></a><span class="c1">// owned by the &#39;mux&#39; object. It MUST be deallocated by the caller by calling</span>
+<a name="gbab-382"></a><span class="c1">// WebPDataClear(). It&#39;s always safe to call WebPDataClear() upon return,</span>
+<a name="gbab-383"></a><span class="c1">// even in case of error.</span>
+<a name="gbab-384"></a><span class="c1">// Parameters:</span>
+<a name="gbab-385"></a><span class="c1">//   mux - (in/out) object whose chunks are to be assembled</span>
+<a name="gbab-386"></a><span class="c1">//   assembled_data - (out) assembled WebP data</span>
+<a name="gbab-387"></a><span class="c1">// Returns:</span>
+<a name="gbab-388"></a><span class="c1">//   WEBP_MUX_BAD_DATA - if mux object is invalid.</span>
+<a name="gbab-389"></a><span class="c1">//   WEBP_MUX_INVALID_ARGUMENT - if mux or assembled_data is NULL.</span>
+<a name="gbab-390"></a><span class="c1">//   WEBP_MUX_MEMORY_ERROR - on memory allocation error.</span>
+<a name="gbab-391"></a><span class="c1">//   WEBP_MUX_OK - on success.</span>
+<a name="gbab-392"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPMuxError</span><span class="p">)</span> <span class="n">WebPMuxAssemble</span><span class="p">(</span><span class="n">WebPMux</span><span class="o">*</span> <span class="n">mux</span><span class="p">,</span>
+<a name="gbab-393"></a>                                          <span class="n">WebPData</span><span class="o">*</span> <span class="n">assembled_data</span><span class="p">);</span>
+<a name="gbab-394"></a>
+<a name="gbab-395"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-396"></a><span class="c1">// WebPAnimEncoder API</span>
+<a name="gbab-397"></a><span class="c1">//</span>
+<a name="gbab-398"></a><span class="c1">// This API allows encoding (possibly) animated WebP images.</span>
+<a name="gbab-399"></a><span class="c1">//</span>
+<a name="gbab-400"></a><span class="c1">// Code Example:</span>
+<a name="gbab-401"></a><span class="cm">/*</span>
+<a name="gbab-402"></a><span class="cm">  WebPAnimEncoderOptions enc_options;</span>
+<a name="gbab-403"></a><span class="cm">  WebPAnimEncoderOptionsInit(&amp;enc_options);</span>
+<a name="gbab-404"></a><span class="cm">  // Tune &#39;enc_options&#39; as needed.</span>
+<a name="gbab-405"></a><span class="cm">  WebPAnimEncoder* enc = WebPAnimEncoderNew(width, height, &amp;enc_options);</span>
+<a name="gbab-406"></a><span class="cm">  while(&lt;there are more frames&gt;) {</span>
+<a name="gbab-407"></a><span class="cm">    WebPConfig config;</span>
+<a name="gbab-408"></a><span class="cm">    WebPConfigInit(&amp;config);</span>
+<a name="gbab-409"></a><span class="cm">    // Tune &#39;config&#39; as needed.</span>
+<a name="gbab-410"></a><span class="cm">    WebPAnimEncoderAdd(enc, frame, timestamp_ms, &amp;config);</span>
+<a name="gbab-411"></a><span class="cm">}</span>
+<a name="gbab-412"></a><span class="cm">  WebPAnimEncoderAdd(enc, NULL, timestamp_ms, NULL);</span>
+<a name="gbab-413"></a><span class="cm">  WebPAnimEncoderAssemble(enc, webp_data);</span>
+<a name="gbab-414"></a><span class="cm">  WebPAnimEncoderDelete(enc);</span>
+<a name="gbab-415"></a><span class="cm">  // Write the &#39;webp_data&#39; to a file, or re-mux it further.</span>
+<a name="gbab-416"></a><span class="cm">*/</span>
+<a name="gbab-417"></a>
+<a name="gbab-418"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">WebPAnimEncoder</span> <span class="n">WebPAnimEncoder</span><span class="p">;</span>  <span class="c1">// Main opaque object.</span>
+<a name="gbab-419"></a>
+<a name="gbab-420"></a><span class="c1">// Forward declarations. Defined in encode.h.</span>
+<a name="gbab-421"></a><span class="k">struct</span> <span class="n">WebPPicture</span><span class="p">;</span>
+<a name="gbab-422"></a><span class="k">struct</span> <span class="n">WebPConfig</span><span class="p">;</span>
+<a name="gbab-423"></a>
+<a name="gbab-424"></a><span class="c1">// Global options.</span>
+<a name="gbab-425"></a><span class="k">struct</span> <span class="n">WebPAnimEncoderOptions</span> <span class="p">{</span>
+<a name="gbab-426"></a>  <span class="n">WebPMuxAnimParams</span> <span class="n">anim_params</span><span class="p">;</span>  <span class="c1">// Animation parameters.</span>
+<a name="gbab-427"></a>  <span class="kt">int</span> <span class="n">minimize_size</span><span class="p">;</span>    <span class="c1">// If true, minimize the output size (slow). Implicitly</span>
+<a name="gbab-428"></a>                        <span class="c1">// disables key-frame insertion.</span>
+<a name="gbab-429"></a>  <span class="kt">int</span> <span class="n">kmin</span><span class="p">;</span>
+<a name="gbab-430"></a>  <span class="kt">int</span> <span class="n">kmax</span><span class="p">;</span>             <span class="c1">// Minimum and maximum distance between consecutive key</span>
+<a name="gbab-431"></a>                        <span class="c1">// frames in the output. The library may insert some key</span>
+<a name="gbab-432"></a>                        <span class="c1">// frames as needed to satisfy this criteria.</span>
+<a name="gbab-433"></a>                        <span class="c1">// Note that these conditions should hold: kmax &gt; kmin</span>
+<a name="gbab-434"></a>                        <span class="c1">// and kmin &gt;= kmax / 2 + 1. Also, if kmin == 0, then</span>
+<a name="gbab-435"></a>                        <span class="c1">// key-frame insertion is disabled; and if kmax == 0,</span>
+<a name="gbab-436"></a>                        <span class="c1">// then all frames will be key-frames.</span>
+<a name="gbab-437"></a>  <span class="kt">int</span> <span class="n">allow_mixed</span><span class="p">;</span>      <span class="c1">// If true, use mixed compression mode; may choose</span>
+<a name="gbab-438"></a>                        <span class="c1">// either lossy and lossless for each frame.</span>
+<a name="gbab-439"></a>  <span class="kt">int</span> <span class="n">verbose</span><span class="p">;</span>          <span class="c1">// If true, print info and warning messages to stderr.</span>
+<a name="gbab-440"></a>
+<a name="gbab-441"></a>  <span class="kt">uint32_t</span> <span class="n">padding</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>  <span class="c1">// Padding for later use.</span>
+<a name="gbab-442"></a><span class="p">};</span>
+<a name="gbab-443"></a>
+<a name="gbab-444"></a><span class="c1">// Internal, version-checked, entry point.</span>
+<a name="gbab-445"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">WebPAnimEncoderOptionsInitInternal</span><span class="p">(</span>
+<a name="gbab-446"></a>    <span class="n">WebPAnimEncoderOptions</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-447"></a>
+<a name="gbab-448"></a><span class="c1">// Should always be called, to initialize a fresh WebPAnimEncoderOptions</span>
+<a name="gbab-449"></a><span class="c1">// structure before modification. Returns false in case of version mismatch.</span>
+<a name="gbab-450"></a><span class="c1">// WebPAnimEncoderOptionsInit() must have succeeded before using the</span>
+<a name="gbab-451"></a><span class="c1">// &#39;enc_options&#39; object.</span>
+<a name="gbab-452"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="kt">int</span> <span class="nf">WebPAnimEncoderOptionsInit</span><span class="p">(</span>
+<a name="gbab-453"></a>    <span class="n">WebPAnimEncoderOptions</span><span class="o">*</span> <span class="n">enc_options</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-454"></a>  <span class="k">return</span> <span class="n">WebPAnimEncoderOptionsInitInternal</span><span class="p">(</span><span class="n">enc_options</span><span class="p">,</span> <span class="n">WEBP_MUX_ABI_VERSION</span><span class="p">);</span>
+<a name="gbab-455"></a><span class="p">}</span>
+<a name="gbab-456"></a>
+<a name="gbab-457"></a><span class="c1">// Internal, version-checked, entry point.</span>
+<a name="gbab-458"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="n">WebPAnimEncoder</span><span class="o">*</span><span class="p">)</span> <span class="n">WebPAnimEncoderNewInternal</span><span class="p">(</span>
+<a name="gbab-459"></a>    <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="k">const</span> <span class="n">WebPAnimEncoderOptions</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<a name="gbab-460"></a>
+<a name="gbab-461"></a><span class="c1">// Creates and initializes a WebPAnimEncoder object.</span>
+<a name="gbab-462"></a><span class="c1">// Parameters:</span>
+<a name="gbab-463"></a><span class="c1">//   width/height - (in) canvas width and height of the animation.</span>
+<a name="gbab-464"></a><span class="c1">//   enc_options - (in) encoding options; can be passed NULL to pick</span>
+<a name="gbab-465"></a><span class="c1">//                     reasonable defaults.</span>
+<a name="gbab-466"></a><span class="c1">// Returns:</span>
+<a name="gbab-467"></a><span class="c1">//   A pointer to the newly created WebPAnimEncoder object.</span>
+<a name="gbab-468"></a><span class="c1">//   Or NULL in case of memory error.</span>
+<a name="gbab-469"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">WebPAnimEncoder</span><span class="o">*</span> <span class="nf">WebPAnimEncoderNew</span><span class="p">(</span>
+<a name="gbab-470"></a>    <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="k">const</span> <span class="n">WebPAnimEncoderOptions</span><span class="o">*</span> <span class="n">enc_options</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-471"></a>  <span class="k">return</span> <span class="n">WebPAnimEncoderNewInternal</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">enc_options</span><span class="p">,</span>
+<a name="gbab-472"></a>                                    <span class="n">WEBP_MUX_ABI_VERSION</span><span class="p">);</span>
+<a name="gbab-473"></a><span class="p">}</span>
+<a name="gbab-474"></a>
+<a name="gbab-475"></a><span class="c1">// Optimize the given frame for WebP, encode it and add it to the</span>
+<a name="gbab-476"></a><span class="c1">// WebPAnimEncoder object.</span>
+<a name="gbab-477"></a><span class="c1">// The last call to &#39;WebPAnimEncoderAdd&#39; should be with frame = NULL, which</span>
+<a name="gbab-478"></a><span class="c1">// indicates that no more frames are to be added. This call is also used to</span>
+<a name="gbab-479"></a><span class="c1">// determine the duration of the last frame.</span>
+<a name="gbab-480"></a><span class="c1">// Parameters:</span>
+<a name="gbab-481"></a><span class="c1">//   enc - (in/out) object to which the frame is to be added.</span>
+<a name="gbab-482"></a><span class="c1">//   frame - (in/out) frame data in ARGB or YUV(A) format. If it is in YUV(A)</span>
+<a name="gbab-483"></a><span class="c1">//           format, it will be converted to ARGB, which incurs a small loss.</span>
+<a name="gbab-484"></a><span class="c1">//   timestamp_ms - (in) timestamp of this frame in milliseconds.</span>
+<a name="gbab-485"></a><span class="c1">//                       Duration of a frame would be calculated as</span>
+<a name="gbab-486"></a><span class="c1">//                       &quot;timestamp of next frame - timestamp of this frame&quot;.</span>
+<a name="gbab-487"></a><span class="c1">//                       Hence, timestamps should be in non-decreasing order.</span>
+<a name="gbab-488"></a><span class="c1">//   config - (in) encoding options; can be passed NULL to pick</span>
+<a name="gbab-489"></a><span class="c1">//            reasonable defaults.</span>
+<a name="gbab-490"></a><span class="c1">// Returns:</span>
+<a name="gbab-491"></a><span class="c1">//   On error, returns false and frame-&gt;error_code is set appropriately.</span>
+<a name="gbab-492"></a><span class="c1">//   Otherwise, returns true.</span>
+<a name="gbab-493"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">WebPAnimEncoderAdd</span><span class="p">(</span>
+<a name="gbab-494"></a>    <span class="n">WebPAnimEncoder</span><span class="o">*</span> <span class="n">enc</span><span class="p">,</span> <span class="k">struct</span> <span class="n">WebPPicture</span><span class="o">*</span> <span class="n">frame</span><span class="p">,</span> <span class="kt">int</span> <span class="n">timestamp_ms</span><span class="p">,</span>
+<a name="gbab-495"></a>    <span class="k">const</span> <span class="k">struct</span> <span class="n">WebPConfig</span><span class="o">*</span> <span class="n">config</span><span class="p">);</span>
+<a name="gbab-496"></a>
+<a name="gbab-497"></a><span class="c1">// Assemble all frames added so far into a WebP bitstream.</span>
+<a name="gbab-498"></a><span class="c1">// This call should be preceded by  a call to &#39;WebPAnimEncoderAdd&#39; with</span>
+<a name="gbab-499"></a><span class="c1">// frame = NULL; if not, the duration of the last frame will be internally</span>
+<a name="gbab-500"></a><span class="c1">// estimated.</span>
+<a name="gbab-501"></a><span class="c1">// Parameters:</span>
+<a name="gbab-502"></a><span class="c1">//   enc - (in/out) object from which the frames are to be assembled.</span>
+<a name="gbab-503"></a><span class="c1">//   webp_data - (out) generated WebP bitstream.</span>
+<a name="gbab-504"></a><span class="c1">// Returns:</span>
+<a name="gbab-505"></a><span class="c1">//   True on success.</span>
+<a name="gbab-506"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">WebPAnimEncoderAssemble</span><span class="p">(</span><span class="n">WebPAnimEncoder</span><span class="o">*</span> <span class="n">enc</span><span class="p">,</span>
+<a name="gbab-507"></a>                                         <span class="n">WebPData</span><span class="o">*</span> <span class="n">webp_data</span><span class="p">);</span>
+<a name="gbab-508"></a>
+<a name="gbab-509"></a><span class="c1">// Get error string corresponding to the most recent call using &#39;enc&#39;. The</span>
+<a name="gbab-510"></a><span class="c1">// returned string is owned by &#39;enc&#39; and is valid only until the next call to</span>
+<a name="gbab-511"></a><span class="c1">// WebPAnimEncoderAdd() or WebPAnimEncoderAssemble() or WebPAnimEncoderDelete().</span>
+<a name="gbab-512"></a><span class="c1">// Parameters:</span>
+<a name="gbab-513"></a><span class="c1">//   enc - (in/out) object from which the error string is to be fetched.</span>
+<a name="gbab-514"></a><span class="c1">// Returns:</span>
+<a name="gbab-515"></a><span class="c1">//   NULL if &#39;enc&#39; is NULL. Otherwise, returns the error string if the last call</span>
+<a name="gbab-516"></a><span class="c1">//   to &#39;enc&#39; had an error, or an empty string if the last call was a success.</span>
+<a name="gbab-517"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">WebPAnimEncoderGetError</span><span class="p">(</span><span class="n">WebPAnimEncoder</span><span class="o">*</span> <span class="n">enc</span><span class="p">);</span>
+<a name="gbab-518"></a>
+<a name="gbab-519"></a><span class="c1">// Deletes the WebPAnimEncoder object.</span>
+<a name="gbab-520"></a><span class="c1">// Parameters:</span>
+<a name="gbab-521"></a><span class="c1">//   enc - (in/out) object to be deleted</span>
+<a name="gbab-522"></a><span class="n">WEBP_EXTERN</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">WebPAnimEncoderDelete</span><span class="p">(</span><span class="n">WebPAnimEncoder</span><span class="o">*</span> <span class="n">enc</span><span class="p">);</span>
+<a name="gbab-523"></a>
+<a name="gbab-524"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-525"></a>
+<a name="gbab-526"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-527"></a><span class="p">}</span>    <span class="c1">// extern &quot;C&quot;</span>
+<a name="gbab-528"></a><span class="cp">#endif</span>
+<a name="gbab-529"></a>
+<a name="gbab-530"></a><span class="cp">#endif  </span><span class="cm">/* WEBP_WEBP_MUX_H_ */</span><span class="cp"></span>
+</pre></div>
+</td></tr></table>

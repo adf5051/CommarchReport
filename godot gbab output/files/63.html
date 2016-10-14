@@ -1,0 +1,39 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cp">#ifndef HQ2X_H</span>
+<a name="gbab-2"></a><span class="cp">#define HQ2X_H</span>
+<a name="gbab-3"></a>
+<a name="gbab-4"></a><span class="cp">#include</span> <span class="cpf">&quot;typedefs.h&quot;</span><span class="cp"></span>
+<a name="gbab-5"></a>
+<a name="gbab-6"></a>
+<a name="gbab-7"></a><span class="kt">uint32_t</span> <span class="o">*</span><span class="nf">hq2x_resize</span><span class="p">(</span>
+<a name="gbab-8"></a>		<span class="k">const</span> <span class="kt">uint32_t</span> <span class="o">*</span><span class="n">image</span><span class="p">,</span>
+<a name="gbab-9"></a>		<span class="kt">uint32_t</span> <span class="n">width</span><span class="p">,</span>
+<a name="gbab-10"></a>		<span class="kt">uint32_t</span> <span class="n">height</span><span class="p">,</span>
+<a name="gbab-11"></a>		<span class="kt">uint32_t</span> <span class="o">*</span><span class="n">output</span><span class="p">,</span>
+<a name="gbab-12"></a>		<span class="kt">uint32_t</span> <span class="n">trY</span> <span class="o">=</span> <span class="mh">0x30</span><span class="p">,</span>
+<a name="gbab-13"></a>		<span class="kt">uint32_t</span> <span class="n">trU</span> <span class="o">=</span> <span class="mh">0x07</span><span class="p">,</span>
+<a name="gbab-14"></a>		<span class="kt">uint32_t</span> <span class="n">trV</span> <span class="o">=</span> <span class="mh">0x06</span><span class="p">,</span>
+<a name="gbab-15"></a>		<span class="kt">uint32_t</span> <span class="n">trA</span> <span class="o">=</span> <span class="mh">0x50</span><span class="p">,</span>
+<a name="gbab-16"></a>		<span class="kt">bool</span> <span class="n">wrapX</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span>
+<a name="gbab-17"></a>		<span class="kt">bool</span> <span class="n">wrapY</span> <span class="o">=</span> <span class="nb">false</span> <span class="p">);</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#endif </span><span class="c1">// HQ2X_H</span>
+</pre></div>
+</td></tr></table>

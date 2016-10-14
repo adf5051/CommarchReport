@@ -1,0 +1,63 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/********************************************************************</span>
+<a name="gbab-2"></a><span class="cm"> *                                                                  *</span>
+<a name="gbab-3"></a><span class="cm"> * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *</span>
+<a name="gbab-4"></a><span class="cm"> * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *</span>
+<a name="gbab-5"></a><span class="cm"> * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *</span>
+<a name="gbab-6"></a><span class="cm"> * IN &#39;COPYING&#39;. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *</span>
+<a name="gbab-7"></a><span class="cm"> *                                                                  *</span>
+<a name="gbab-8"></a><span class="cm"> * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009                *</span>
+<a name="gbab-9"></a><span class="cm"> * by the Xiph.Org Foundation and contributors http://www.xiph.org/ *</span>
+<a name="gbab-10"></a><span class="cm"> *                                                                  *</span>
+<a name="gbab-11"></a><span class="cm"> ********************************************************************</span>
+<a name="gbab-12"></a>
+<a name="gbab-13"></a><span class="cm">  function:</span>
+<a name="gbab-14"></a><span class="cm">  last mod: $Id: dct.h 16503 2009-08-22 18:14:02Z giles $</span>
+<a name="gbab-15"></a>
+<a name="gbab-16"></a><span class="cm"> ********************************************************************/</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a><span class="cm">/*Definitions shared by the forward and inverse DCT transforms.*/</span>
+<a name="gbab-19"></a><span class="cp">#if !defined(_dct_H)</span>
+<a name="gbab-20"></a><span class="cp"># define _dct_H (1)</span>
+<a name="gbab-21"></a>
+<a name="gbab-22"></a><span class="cm">/*cos(n*pi/16) (resp. sin(m*pi/16)) scaled by 65536.*/</span>
+<a name="gbab-23"></a><span class="cp">#define OC_C1S7 ((ogg_int32_t)64277)</span>
+<a name="gbab-24"></a><span class="cp">#define OC_C2S6 ((ogg_int32_t)60547)</span>
+<a name="gbab-25"></a><span class="cp">#define OC_C3S5 ((ogg_int32_t)54491)</span>
+<a name="gbab-26"></a><span class="cp">#define OC_C4S4 ((ogg_int32_t)46341)</span>
+<a name="gbab-27"></a><span class="cp">#define OC_C5S3 ((ogg_int32_t)36410)</span>
+<a name="gbab-28"></a><span class="cp">#define OC_C6S2 ((ogg_int32_t)25080)</span>
+<a name="gbab-29"></a><span class="cp">#define OC_C7S1 ((ogg_int32_t)12785)</span>
+<a name="gbab-30"></a>
+<a name="gbab-31"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

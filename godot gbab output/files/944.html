@@ -1,0 +1,13 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="ch">#!/bin/sh</span>
+<a name="gbab-2"></a><span class="c1">#</span>
+<a name="gbab-3"></a><span class="c1"># build using pthreads where it&#39;s already built into the system</span>
+<a name="gbab-4"></a><span class="c1">#</span>
+<a name="gbab-5"></a>/bin/rm -f mttest
+<a name="gbab-6"></a>gcc -DPTHREADS -I../../include -g mttest.c -o mttest -L../.. -lssl -lcrypto -lpthread -ldl
+</pre></div>
+</td></tr></table>

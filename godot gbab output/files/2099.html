@@ -1,0 +1,275 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* Copyright (C) 2004 Jean-Marc Valin */</span>
+<a name="gbab-2"></a><span class="cm">/**</span>
+<a name="gbab-3"></a><span class="cm">   @file cb_search_arm4.h</span>
+<a name="gbab-4"></a><span class="cm">   @brief Fixed codebook functions (ARM4 version)</span>
+<a name="gbab-5"></a><span class="cm">*/</span>
+<a name="gbab-6"></a><span class="cm">/*</span>
+<a name="gbab-7"></a><span class="cm">   Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-8"></a><span class="cm">   modification, are permitted provided that the following conditions</span>
+<a name="gbab-9"></a><span class="cm">   are met:</span>
+<a name="gbab-10"></a><span class="cm">   </span>
+<a name="gbab-11"></a><span class="cm">   - Redistributions of source code must retain the above copyright</span>
+<a name="gbab-12"></a><span class="cm">   notice, this list of conditions and the following disclaimer.</span>
+<a name="gbab-13"></a><span class="cm">   </span>
+<a name="gbab-14"></a><span class="cm">   - Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-15"></a><span class="cm">   notice, this list of conditions and the following disclaimer in the</span>
+<a name="gbab-16"></a><span class="cm">   documentation and/or other materials provided with the distribution.</span>
+<a name="gbab-17"></a><span class="cm">   </span>
+<a name="gbab-18"></a><span class="cm">   - Neither the name of the Xiph.org Foundation nor the names of its</span>
+<a name="gbab-19"></a><span class="cm">   contributors may be used to endorse or promote products derived from</span>
+<a name="gbab-20"></a><span class="cm">   this software without specific prior written permission.</span>
+<a name="gbab-21"></a><span class="cm">   </span>
+<a name="gbab-22"></a><span class="cm">   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</span>
+<a name="gbab-23"></a><span class="cm">   ``AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT</span>
+<a name="gbab-24"></a><span class="cm">   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR</span>
+<a name="gbab-25"></a><span class="cm">   A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR</span>
+<a name="gbab-26"></a><span class="cm">   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,</span>
+<a name="gbab-27"></a><span class="cm">   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,</span>
+<a name="gbab-28"></a><span class="cm">   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR</span>
+<a name="gbab-29"></a><span class="cm">   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF</span>
+<a name="gbab-30"></a><span class="cm">   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING</span>
+<a name="gbab-31"></a><span class="cm">   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<a name="gbab-32"></a><span class="cm">   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-33"></a><span class="cm">*/</span>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a><span class="cm">/* This optimization is temporaly disabled until it is fixed to account for the fact </span>
+<a name="gbab-36"></a><span class="cm">   that &quot;r&quot; is now a 16-bit array */</span>
+<a name="gbab-37"></a><span class="cp">#if 0</span><span class="c"></span>
+<a name="gbab-38"></a><span class="c">#define OVERRIDE_COMPUTE_WEIGHTED_CODEBOOK</span>
+<a name="gbab-39"></a><span class="c">static void compute_weighted_codebook(const signed char *shape_cb, const spx_word16_t *r, spx_word16_t *resp, spx_word16_t *resp2, spx_word32_t *E, int shape_cb_size, int subvect_size, char *stack)</span>
+<a name="gbab-40"></a><span class="c">{</span>
+<a name="gbab-41"></a><span class="c">   int i, j, k;</span>
+<a name="gbab-42"></a><span class="c">  //const signed char *shape;</span>
+<a name="gbab-43"></a><span class="c">   for (i=0;i&lt;shape_cb_size;i+=4)</span>
+<a name="gbab-44"></a><span class="c">   {</span>
+<a name="gbab-45"></a>
+<a name="gbab-46"></a><span class="c">      //shape = shape_cb;</span>
+<a name="gbab-47"></a><span class="c">      E[0]=0;</span>
+<a name="gbab-48"></a><span class="c">      E[1]=0;</span>
+<a name="gbab-49"></a><span class="c">      E[2]=0;</span>
+<a name="gbab-50"></a><span class="c">      E[3]=0;</span>
+<a name="gbab-51"></a>
+<a name="gbab-52"></a><span class="c">      /* Compute codeword response using convolution with impulse response */</span>
+<a name="gbab-53"></a><span class="c">      for(j=0;j&lt;subvect_size;j++)</span>
+<a name="gbab-54"></a><span class="c">      {</span>
+<a name="gbab-55"></a><span class="cp">#if 1</span>
+<a name="gbab-56"></a><span class="c">          spx_word16_t *res;</span>
+<a name="gbab-57"></a><span class="c">          res = resp+j;</span>
+<a name="gbab-58"></a><span class="c">          spx_word32_t resj0,resj1,resj2,resj3;</span>
+<a name="gbab-59"></a><span class="c">          spx_word32_t dead1, dead2, dead3, dead4, dead5, dead6, dead7, dead8;</span>
+<a name="gbab-60"></a><span class="c">          __asm__ __volatile__ (</span>
+<a name="gbab-61"></a><span class="c">                &quot;mov %0, #0 \n\t&quot;</span>
+<a name="gbab-62"></a><span class="c">                &quot;mov %1, #0 \n\t&quot;</span>
+<a name="gbab-63"></a><span class="c">                &quot;mov %2, #0 \n\t&quot;</span>
+<a name="gbab-64"></a><span class="c">                &quot;mov %3, #0 \n\t&quot;</span>
+<a name="gbab-65"></a><span class="c">                &quot;.weighted%=: \n\t&quot;</span>
+<a name="gbab-66"></a><span class="c">                &quot;ldrsb %8, [%6] \n\t&quot;</span>
+<a name="gbab-67"></a><span class="c">                &quot;ldr %10, [%5], #-4 \n\t&quot;</span>
+<a name="gbab-68"></a><span class="c">                &quot;mov %9, %6 \n\t&quot;</span>
+<a name="gbab-69"></a><span class="c">                &quot;ldrsb %11, [%9, %7]! \n\t&quot;</span>
+<a name="gbab-70"></a><span class="c">                &quot;mla %0, %10, %8, %0 \n\t&quot;</span>
+<a name="gbab-71"></a><span class="c">                &quot;ldrsb %8, [%9, %7]! \n\t&quot;</span>
+<a name="gbab-72"></a><span class="c">                &quot;mla %1, %10, %11, %1 \n\t&quot;</span>
+<a name="gbab-73"></a><span class="c">                &quot;ldrsb %11, [%9, %7]! \n\t&quot;</span>
+<a name="gbab-74"></a><span class="c">                &quot;mla %2, %10, %8, %2 \n\t&quot;</span>
+<a name="gbab-75"></a><span class="c">                &quot;subs %4, %4, #1 \n\t&quot;</span>
+<a name="gbab-76"></a><span class="c">                &quot;mla %3, %10, %11, %3 \n\t&quot;</span>
+<a name="gbab-77"></a><span class="c">                &quot;add %6, %6, #1 \n\t&quot;</span>
+<a name="gbab-78"></a><span class="c">                &quot;bne .weighted%= \n\t&quot;</span>
+<a name="gbab-79"></a><span class="c">            : &quot;=r&quot; (resj0), &quot;=r&quot; (resj1), &quot;=r&quot; (resj2), &quot;=r&quot; (resj3),</span>
+<a name="gbab-80"></a><span class="c">          &quot;=r&quot; (dead1), &quot;=r&quot; (dead2), &quot;=r&quot; (dead3), &quot;=r&quot; (dead4),</span>
+<a name="gbab-81"></a><span class="c">          &quot;=r&quot; (dead5), &quot;=r&quot; (dead6), &quot;=r&quot; (dead7), &quot;=r&quot; (dead8)</span>
+<a name="gbab-82"></a><span class="c">            : &quot;4&quot; (j+1), &quot;5&quot; (r+j), &quot;6&quot; (shape_cb), &quot;7&quot; (subvect_size)</span>
+<a name="gbab-83"></a><span class="c">            : &quot;cc&quot;, &quot;memory&quot;);</span>
+<a name="gbab-84"></a><span class="cp">#else</span>
+<a name="gbab-85"></a><span class="c">          spx_word16_t *res;</span>
+<a name="gbab-86"></a><span class="c">          res = resp+j;</span>
+<a name="gbab-87"></a><span class="c">          spx_word32_t resj0=0;</span>
+<a name="gbab-88"></a><span class="c">          spx_word32_t resj1=0;</span>
+<a name="gbab-89"></a><span class="c">          spx_word32_t resj2=0;</span>
+<a name="gbab-90"></a><span class="c">          spx_word32_t resj3=0;</span>
+<a name="gbab-91"></a><span class="c">          for (k=0;k&lt;=j;k++)</span>
+<a name="gbab-92"></a><span class="c">          {</span>
+<a name="gbab-93"></a><span class="c">             const signed char *shape=shape_cb+k;</span>
+<a name="gbab-94"></a><span class="c">             resj0 = MAC16_16(resj0,*shape,r[j-k]);</span>
+<a name="gbab-95"></a><span class="c">             shape += subvect_size;</span>
+<a name="gbab-96"></a><span class="c">             resj1 = MAC16_16(resj1,*shape,r[j-k]);</span>
+<a name="gbab-97"></a><span class="c">             shape += subvect_size;</span>
+<a name="gbab-98"></a><span class="c">             resj2 = MAC16_16(resj2,*shape,r[j-k]);</span>
+<a name="gbab-99"></a><span class="c">             shape += subvect_size;</span>
+<a name="gbab-100"></a><span class="c">             resj3 = MAC16_16(resj3,*shape,r[j-k]);</span>
+<a name="gbab-101"></a><span class="c">             shape += subvect_size;</span>
+<a name="gbab-102"></a><span class="c">          }</span>
+<a name="gbab-103"></a><span class="cp">#endif</span>
+<a name="gbab-104"></a>
+<a name="gbab-105"></a><span class="cp">#ifdef FIXED_POINT</span>
+<a name="gbab-106"></a>          <span class="n">resj0</span> <span class="o">=</span> <span class="n">SHR</span><span class="p">(</span><span class="n">resj0</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<a name="gbab-107"></a>          <span class="n">resj1</span> <span class="o">=</span> <span class="n">SHR</span><span class="p">(</span><span class="n">resj1</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<a name="gbab-108"></a>          <span class="n">resj2</span> <span class="o">=</span> <span class="n">SHR</span><span class="p">(</span><span class="n">resj2</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<a name="gbab-109"></a>          <span class="n">resj3</span> <span class="o">=</span> <span class="n">SHR</span><span class="p">(</span><span class="n">resj3</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<a name="gbab-110"></a><span class="cp">#else</span>
+<a name="gbab-111"></a>          <span class="n">resj0</span> <span class="o">*=</span> <span class="mf">0.03125</span><span class="p">;</span>
+<a name="gbab-112"></a>          <span class="n">resj1</span> <span class="o">*=</span> <span class="mf">0.03125</span><span class="p">;</span>
+<a name="gbab-113"></a>          <span class="n">resj2</span> <span class="o">*=</span> <span class="mf">0.03125</span><span class="p">;</span>
+<a name="gbab-114"></a>          <span class="n">resj3</span> <span class="o">*=</span> <span class="mf">0.03125</span><span class="p">;</span>
+<a name="gbab-115"></a><span class="cp">#endif</span>
+<a name="gbab-116"></a>
+<a name="gbab-117"></a>          <span class="cm">/* Compute codeword energy */</span>
+<a name="gbab-118"></a>          <span class="n">E</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">ADD32</span><span class="p">(</span><span class="n">E</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">MULT16_16</span><span class="p">(</span><span class="n">resj0</span><span class="p">,</span><span class="n">resj0</span><span class="p">));</span>
+<a name="gbab-119"></a>          <span class="n">E</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">ADD32</span><span class="p">(</span><span class="n">E</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">MULT16_16</span><span class="p">(</span><span class="n">resj1</span><span class="p">,</span><span class="n">resj1</span><span class="p">));</span>
+<a name="gbab-120"></a>          <span class="n">E</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">ADD32</span><span class="p">(</span><span class="n">E</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">MULT16_16</span><span class="p">(</span><span class="n">resj2</span><span class="p">,</span><span class="n">resj2</span><span class="p">));</span>
+<a name="gbab-121"></a>          <span class="n">E</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="n">ADD32</span><span class="p">(</span><span class="n">E</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">MULT16_16</span><span class="p">(</span><span class="n">resj3</span><span class="p">,</span><span class="n">resj3</span><span class="p">));</span>
+<a name="gbab-122"></a>          <span class="o">*</span><span class="n">res</span> <span class="o">=</span> <span class="n">resj0</span><span class="p">;</span>
+<a name="gbab-123"></a>          <span class="n">res</span> <span class="o">+=</span> <span class="n">subvect_size</span><span class="p">;</span>
+<a name="gbab-124"></a>          <span class="o">*</span><span class="n">res</span> <span class="o">=</span> <span class="n">resj1</span><span class="p">;</span>
+<a name="gbab-125"></a>          <span class="n">res</span> <span class="o">+=</span> <span class="n">subvect_size</span><span class="p">;</span>
+<a name="gbab-126"></a>          <span class="o">*</span><span class="n">res</span> <span class="o">=</span> <span class="n">resj2</span><span class="p">;</span>
+<a name="gbab-127"></a>          <span class="n">res</span> <span class="o">+=</span> <span class="n">subvect_size</span><span class="p">;</span>
+<a name="gbab-128"></a>          <span class="o">*</span><span class="n">res</span> <span class="o">=</span> <span class="n">resj3</span><span class="p">;</span>
+<a name="gbab-129"></a>          <span class="n">res</span> <span class="o">+=</span> <span class="n">subvect_size</span><span class="p">;</span>
+<a name="gbab-130"></a>      <span class="p">}</span>
+<a name="gbab-131"></a>      <span class="n">resp</span> <span class="o">+=</span> <span class="n">subvect_size</span><span class="o">&lt;&lt;</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-132"></a>      <span class="n">shape_cb</span> <span class="o">+=</span> <span class="n">subvect_size</span><span class="o">&lt;&lt;</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-133"></a>      <span class="n">E</span><span class="o">+=</span><span class="mi">4</span><span class="p">;</span>
+<a name="gbab-134"></a>   <span class="p">}</span>
+<a name="gbab-135"></a>
+<a name="gbab-136"></a><span class="p">}</span>
+<a name="gbab-137"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

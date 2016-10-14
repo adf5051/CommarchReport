@@ -1,0 +1,1825 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+905
+906
+907
+908
+909
+910
+911
+912</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*  test_string.cpp                                                      */</span>
+<a name="gbab-3"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-4"></a><span class="cm">/*                       This file is part of:                           */</span>
+<a name="gbab-5"></a><span class="cm">/*                           GODOT ENGINE                                */</span>
+<a name="gbab-6"></a><span class="cm">/*                    http://www.godotengine.org                         */</span>
+<a name="gbab-7"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-8"></a><span class="cm">/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-10"></a><span class="cm">/* Permission is hereby granted, free of charge, to any person obtaining */</span>
+<a name="gbab-11"></a><span class="cm">/* a copy of this software and associated documentation files (the       */</span>
+<a name="gbab-12"></a><span class="cm">/* &quot;Software&quot;), to deal in the Software without restriction, including   */</span>
+<a name="gbab-13"></a><span class="cm">/* without limitation the rights to use, copy, modify, merge, publish,   */</span>
+<a name="gbab-14"></a><span class="cm">/* distribute, sublicense, and/or sell copies of the Software, and to    */</span>
+<a name="gbab-15"></a><span class="cm">/* permit persons to whom the Software is furnished to do so, subject to */</span>
+<a name="gbab-16"></a><span class="cm">/* the following conditions:                                             */</span>
+<a name="gbab-17"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-18"></a><span class="cm">/* The above copyright notice and this permission notice shall be        */</span>
+<a name="gbab-19"></a><span class="cm">/* included in all copies or substantial portions of the Software.       */</span>
+<a name="gbab-20"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-21"></a><span class="cm">/* THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,       */</span>
+<a name="gbab-22"></a><span class="cm">/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */</span>
+<a name="gbab-23"></a><span class="cm">/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/</span>
+<a name="gbab-24"></a><span class="cm">/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */</span>
+<a name="gbab-25"></a><span class="cm">/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */</span>
+<a name="gbab-26"></a><span class="cm">/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */</span>
+<a name="gbab-27"></a><span class="cm">/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */</span>
+<a name="gbab-28"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-29"></a><span class="cp">#include</span> <span class="cpf">&quot;ustring.h&quot;</span><span class="cp"></span>
+<a name="gbab-30"></a><span class="cp">#include</span> <span class="cpf">&lt;wchar.h&gt;</span><span class="cp"></span>
+<a name="gbab-31"></a><span class="c1">//#include &quot;math_funcs.h&quot;</span>
+<a name="gbab-32"></a><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<a name="gbab-33"></a><span class="cp">#include</span> <span class="cpf">&quot;os/os.h&quot;</span><span class="cp"></span>
+<a name="gbab-34"></a><span class="cp">#include</span> <span class="cpf">&quot;drivers/nrex/regex.h&quot;</span><span class="cp"></span>
+<a name="gbab-35"></a>
+<a name="gbab-36"></a><span class="cp">#include</span> <span class="cpf">&quot;test_string.h&quot;</span><span class="cp"></span>
+<a name="gbab-37"></a>
+<a name="gbab-38"></a><span class="k">namespace</span> <span class="n">TestString</span> <span class="p">{</span>
+<a name="gbab-39"></a>
+<a name="gbab-40"></a><span class="kt">bool</span> <span class="n">test_1</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-41"></a>	
+<a name="gbab-42"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 1: Assign from cstr</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-43"></a>	
+<a name="gbab-44"></a>	<span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;Hello&quot;</span><span class="p">;</span>
+<a name="gbab-45"></a>	
+<a name="gbab-46"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Expected: Hello</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-47"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Resulted: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-48"></a>	
+<a name="gbab-49"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">wcscmp</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="s">L&quot;Hello&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-50"></a>	
+<a name="gbab-51"></a><span class="p">}</span>
+<a name="gbab-52"></a>
+<a name="gbab-53"></a><span class="kt">bool</span> <span class="n">test_2</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-54"></a>	
+<a name="gbab-55"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 2: Assign from string (operator=)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-56"></a>	
+<a name="gbab-57"></a>	<span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;Dolly&quot;</span><span class="p">;</span>
+<a name="gbab-58"></a>	<span class="n">String</span> <span class="n">t</span> <span class="o">=</span> <span class="n">s</span><span class="p">;</span>
+<a name="gbab-59"></a>	
+<a name="gbab-60"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Expected: Dolly</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-61"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Resulted: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">t</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-62"></a>	
+<a name="gbab-63"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">wcscmp</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="s">L&quot;Dolly&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-64"></a>		
+<a name="gbab-65"></a><span class="p">}</span>
+<a name="gbab-66"></a>
+<a name="gbab-67"></a><span class="kt">bool</span> <span class="n">test_3</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-68"></a>	
+<a name="gbab-69"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 3: Assign from c-string (copycon)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-70"></a>	
+<a name="gbab-71"></a>	<span class="n">String</span> <span class="nf">s</span><span class="p">(</span><span class="s">&quot;Sheep&quot;</span><span class="p">);</span>
+<a name="gbab-72"></a>	<span class="n">String</span> <span class="nf">t</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<a name="gbab-73"></a>	
+<a name="gbab-74"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Expected: Sheep</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-75"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Resulted: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">t</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-76"></a>	
+<a name="gbab-77"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">wcscmp</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="s">L&quot;Sheep&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-78"></a>		
+<a name="gbab-79"></a><span class="p">}</span>
+<a name="gbab-80"></a>
+<a name="gbab-81"></a><span class="kt">bool</span> <span class="n">test_4</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-82"></a>	
+<a name="gbab-83"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 4: Assign from c-widechar (operator=)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-84"></a>	
+<a name="gbab-85"></a>	<span class="n">String</span> <span class="nf">s</span><span class="p">(</span><span class="s">L&quot;Give me&quot;</span><span class="p">);</span>
+<a name="gbab-86"></a>	
+<a name="gbab-87"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Expected: Give me</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-88"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Resulted: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-89"></a>	
+<a name="gbab-90"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">wcscmp</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="s">L&quot;Give me&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-91"></a>		
+<a name="gbab-92"></a><span class="p">}</span>
+<a name="gbab-93"></a>
+<a name="gbab-94"></a><span class="kt">bool</span> <span class="n">test_5</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-95"></a>	
+<a name="gbab-96"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 5: Assign from c-widechar (copycon)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-97"></a>	
+<a name="gbab-98"></a>	<span class="n">String</span> <span class="nf">s</span><span class="p">(</span><span class="s">L&quot;Wool&quot;</span><span class="p">);</span>
+<a name="gbab-99"></a>	
+<a name="gbab-100"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Expected: Wool</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-101"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Resulted: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-102"></a>	
+<a name="gbab-103"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">wcscmp</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="s">L&quot;Wool&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-104"></a>		
+<a name="gbab-105"></a><span class="p">}</span>
+<a name="gbab-106"></a>
+<a name="gbab-107"></a><span class="kt">bool</span> <span class="n">test_6</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-108"></a>	
+<a name="gbab-109"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 6: comparisons (equal)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-110"></a>	
+<a name="gbab-111"></a>	
+<a name="gbab-112"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Test Compare&quot;</span><span class="p">;</span>
+<a name="gbab-113"></a>	
+<a name="gbab-114"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Comparing to </span><span class="se">\&quot;</span><span class="s">Test Compare</span><span class="se">\&quot;\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-115"></a>	
+<a name="gbab-116"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="p">(</span> <span class="n">s</span><span class="o">==</span><span class="s">&quot;Test Compare&quot;</span> <span class="p">)</span> <span class="p">)</span>
+<a name="gbab-117"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-118"></a>	
+<a name="gbab-119"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="p">(</span> <span class="n">s</span><span class="o">==</span><span class="s">L&quot;Test Compare&quot;</span> <span class="p">)</span> <span class="p">)</span>
+<a name="gbab-120"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-121"></a>	
+<a name="gbab-122"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="p">(</span> <span class="n">s</span><span class="o">==</span><span class="n">String</span><span class="p">(</span><span class="s">&quot;Test Compare&quot;</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+<a name="gbab-123"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-124"></a>	
+<a name="gbab-125"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-126"></a>		
+<a name="gbab-127"></a><span class="p">}</span>
+<a name="gbab-128"></a>
+<a name="gbab-129"></a><span class="kt">bool</span> <span class="n">test_7</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-130"></a>	
+<a name="gbab-131"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 7: comparisons (unequal)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-132"></a>	
+<a name="gbab-133"></a>	
+<a name="gbab-134"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Test Compare&quot;</span><span class="p">;</span>
+<a name="gbab-135"></a>	
+<a name="gbab-136"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Comparing to </span><span class="se">\&quot;</span><span class="s">Test Compare</span><span class="se">\&quot;\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-137"></a>	
+<a name="gbab-138"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="p">(</span> <span class="n">s</span><span class="o">!=</span><span class="s">&quot;Peanut&quot;</span> <span class="p">)</span> <span class="p">)</span>
+<a name="gbab-139"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-140"></a>	
+<a name="gbab-141"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="p">(</span> <span class="n">s</span><span class="o">!=</span><span class="s">L&quot;Coconut&quot;</span> <span class="p">)</span> <span class="p">)</span>
+<a name="gbab-142"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-143"></a>	
+<a name="gbab-144"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="p">(</span> <span class="n">s</span><span class="o">!=</span><span class="n">String</span><span class="p">(</span><span class="s">&quot;Butter&quot;</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+<a name="gbab-145"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-146"></a>	
+<a name="gbab-147"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-148"></a>		
+<a name="gbab-149"></a><span class="p">}</span>
+<a name="gbab-150"></a>
+<a name="gbab-151"></a><span class="kt">bool</span> <span class="n">test_8</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-152"></a>	
+<a name="gbab-153"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 8: comparisons (operator&lt;)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-154"></a>	
+<a name="gbab-155"></a>	
+<a name="gbab-156"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Bees&quot;</span><span class="p">;</span>
+<a name="gbab-157"></a>	
+<a name="gbab-158"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Comparing to </span><span class="se">\&quot;</span><span class="s">Bees</span><span class="se">\&quot;\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-159"></a>	
+<a name="gbab-160"></a>	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;</span> <span class="s">&quot;Elephant&quot;</span><span class="p">)</span>  <span class="p">)</span>
+<a name="gbab-161"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-162"></a>	
+<a name="gbab-163"></a>	<span class="k">if</span> <span class="p">(</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="s">L&quot;Amber&quot;</span>  <span class="p">)</span>
+<a name="gbab-164"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-165"></a>	
+<a name="gbab-166"></a>	<span class="k">if</span> <span class="p">(</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;Beatrix&quot;</span><span class="p">)</span> <span class="p">)</span>
+<a name="gbab-167"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-168"></a>	
+<a name="gbab-169"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-170"></a>		
+<a name="gbab-171"></a><span class="p">}</span>
+<a name="gbab-172"></a>
+<a name="gbab-173"></a><span class="kt">bool</span> <span class="n">test_9</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-174"></a>	
+<a name="gbab-175"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 9: Concatenation</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-176"></a>	
+<a name="gbab-177"></a>	
+<a name="gbab-178"></a>	<span class="n">String</span> <span class="n">s</span><span class="p">;</span>
+<a name="gbab-179"></a>	
+<a name="gbab-180"></a>	<span class="n">s</span><span class="o">+=</span><span class="s">&quot;Have&quot;</span><span class="p">;</span>
+<a name="gbab-181"></a>	<span class="n">s</span><span class="o">+=</span><span class="sc">&#39; &#39;</span><span class="p">;</span>
+<a name="gbab-182"></a>	<span class="n">s</span><span class="o">+=</span><span class="sc">&#39;a&#39;</span><span class="p">;</span>
+<a name="gbab-183"></a>	<span class="n">s</span><span class="o">+=</span><span class="n">String</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">);</span>
+<a name="gbab-184"></a>	<span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="s">L&quot;Nice&quot;</span><span class="p">;</span>
+<a name="gbab-185"></a>	<span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+<a name="gbab-186"></a>	<span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;Day&quot;</span><span class="p">);</span>
+<a name="gbab-187"></a>	
+<a name="gbab-188"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Comparing to </span><span class="se">\&quot;</span><span class="s">Have a Nice Day</span><span class="se">\&quot;\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-189"></a>	
+<a name="gbab-190"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="s">&quot;Have a Nice Day&quot;</span><span class="p">);</span>
+<a name="gbab-191"></a>		
+<a name="gbab-192"></a><span class="p">}</span>
+<a name="gbab-193"></a>
+<a name="gbab-194"></a><span class="kt">bool</span> <span class="n">test_10</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-195"></a>	
+<a name="gbab-196"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 10: Misc funcs (size/length/empty/etc)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-197"></a>	
+<a name="gbab-198"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">).</span><span class="n">empty</span><span class="p">())</span>
+<a name="gbab-199"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-200"></a>	
+<a name="gbab-201"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="s">&quot;Mellon&quot;</span><span class="p">).</span><span class="n">size</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">7</span><span class="p">)</span>
+<a name="gbab-202"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-203"></a>
+<a name="gbab-204"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="s">&quot;Oranges&quot;</span><span class="p">).</span><span class="n">length</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">7</span><span class="p">)</span>
+<a name="gbab-205"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-206"></a>	
+<a name="gbab-207"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-208"></a>		
+<a name="gbab-209"></a><span class="p">}</span>
+<a name="gbab-210"></a>
+<a name="gbab-211"></a>
+<a name="gbab-212"></a><span class="kt">bool</span> <span class="n">test_11</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-213"></a>	
+<a name="gbab-214"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 11: Operator[]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-215"></a>	
+<a name="gbab-216"></a>	<span class="n">String</span> <span class="n">a</span><span class="o">=</span><span class="s">&quot;Kugar Sane&quot;</span><span class="p">;</span>
+<a name="gbab-217"></a>	
+<a name="gbab-218"></a>	<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="sc">&#39;S&#39;</span><span class="p">;</span>
+<a name="gbab-219"></a>	<span class="n">a</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="sc">&#39;C&#39;</span><span class="p">;</span>
+<a name="gbab-220"></a>	
+<a name="gbab-221"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="s">&quot;Sugar Cane&quot;</span><span class="p">)</span>
+<a name="gbab-222"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-223"></a>	
+<a name="gbab-224"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">!=</span><span class="sc">&#39;u&#39;</span><span class="p">)</span>
+<a name="gbab-225"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-226"></a>	
+<a name="gbab-227"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-228"></a>		
+<a name="gbab-229"></a><span class="p">}</span>
+<a name="gbab-230"></a>
+<a name="gbab-231"></a><span class="kt">bool</span> <span class="n">test_12</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-232"></a>	
+<a name="gbab-233"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 12: case functions</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-234"></a>	
+<a name="gbab-235"></a>	
+<a name="gbab-236"></a>	<span class="n">String</span> <span class="n">a</span><span class="o">=</span><span class="s">&quot;MoMoNgA&quot;</span><span class="p">;</span>
+<a name="gbab-237"></a>	
+<a name="gbab-238"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">to_upper</span><span class="p">()</span> <span class="o">!=</span> <span class="s">&quot;MOMONGA&quot;</span><span class="p">)</span>
+<a name="gbab-239"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-240"></a>	
+<a name="gbab-241"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">nocasecmp_to</span><span class="p">(</span><span class="s">&quot;momonga&quot;</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span>
+<a name="gbab-242"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-243"></a>	
+<a name="gbab-244"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-245"></a>		
+<a name="gbab-246"></a><span class="p">}</span>
+<a name="gbab-247"></a>
+<a name="gbab-248"></a><span class="kt">bool</span> <span class="n">test_13</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-249"></a>	
+<a name="gbab-250"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 13: UTF8</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-251"></a>	
+<a name="gbab-252"></a>	<span class="cm">/* how can i embed UTF in here? */</span>
+<a name="gbab-253"></a>	
+<a name="gbab-254"></a>	<span class="k">static</span> <span class="k">const</span> <span class="n">CharType</span> <span class="n">ustr</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mh">0x304A</span> <span class="p">,</span> <span class="mh">0x360F</span><span class="p">,</span> <span class="mh">0x3088</span><span class="p">,</span> <span class="mh">0x3046</span><span class="p">,</span> <span class="mi">0</span> <span class="p">};</span>
+<a name="gbab-255"></a><span class="c1">//	static const wchar_t ustr[] = { &#39;P&#39;, 0xCE, &#39;p&#39;,0xD3, 0 };</span>
+<a name="gbab-256"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="n">ustr</span><span class="p">;</span>
+<a name="gbab-257"></a>	
+<a name="gbab-258"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Unicode: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">ustr</span><span class="p">);</span>
+<a name="gbab-259"></a>	<span class="n">s</span><span class="p">.</span><span class="n">parse_utf8</span><span class="p">(</span> <span class="n">s</span><span class="p">.</span><span class="n">utf8</span><span class="p">().</span><span class="n">get_data</span><span class="p">()</span> <span class="p">);</span>
+<a name="gbab-260"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Convert/Parse UTF8: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-261"></a>	
+<a name="gbab-262"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">s</span><span class="o">==</span><span class="n">ustr</span><span class="p">);</span>
+<a name="gbab-263"></a>		
+<a name="gbab-264"></a><span class="p">}</span>
+<a name="gbab-265"></a>
+<a name="gbab-266"></a><span class="kt">bool</span> <span class="n">test_14</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-267"></a>	
+<a name="gbab-268"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 14: ASCII</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-269"></a>	
+<a name="gbab-270"></a>	<span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="s">L&quot;Primero Leche&quot;</span><span class="p">;</span>
+<a name="gbab-271"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Ascii: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">ascii</span><span class="p">().</span><span class="n">get_data</span><span class="p">());</span>
+<a name="gbab-272"></a>	
+<a name="gbab-273"></a>	<span class="n">String</span> <span class="n">t</span><span class="o">=</span><span class="n">s</span><span class="p">.</span><span class="n">ascii</span><span class="p">().</span><span class="n">get_data</span><span class="p">();</span>
+<a name="gbab-274"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">s</span><span class="o">==</span><span class="n">t</span><span class="p">);</span>
+<a name="gbab-275"></a>		
+<a name="gbab-276"></a><span class="p">}</span>
+<a name="gbab-277"></a>
+<a name="gbab-278"></a><span class="kt">bool</span> <span class="n">test_15</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-279"></a>	
+<a name="gbab-280"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 15: substr</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-281"></a>	
+<a name="gbab-282"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Killer Baby&quot;</span><span class="p">;</span>
+<a name="gbab-283"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">substr(3,4) of </span><span class="se">\&quot;</span><span class="s">%ls</span><span class="se">\&quot;</span><span class="s"> is </span><span class="se">\&quot;</span><span class="s">%ls</span><span class="se">\&quot;\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="n">s</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">).</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-284"></a>	
+<a name="gbab-285"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">==</span><span class="s">&quot;ler &quot;</span><span class="p">);</span>
+<a name="gbab-286"></a>		
+<a name="gbab-287"></a><span class="p">}</span>
+<a name="gbab-288"></a>
+<a name="gbab-289"></a><span class="kt">bool</span> <span class="n">test_16</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-290"></a>	
+<a name="gbab-291"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 16: find</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-292"></a>	
+<a name="gbab-293"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Pretty Woman&quot;</span><span class="p">;</span>
+<a name="gbab-294"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">String: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-295"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t\&quot;</span><span class="s">tty</span><span class="se">\&quot;</span><span class="s"> is at %i pos.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;tty&quot;</span><span class="p">));</span>
+<a name="gbab-296"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t\&quot;</span><span class="s">Revenge of the Monster Truck</span><span class="se">\&quot;</span><span class="s"> is at %i pos.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;Revenge of the Monster Truck&quot;</span><span class="p">));</span>
+<a name="gbab-297"></a>	
+<a name="gbab-298"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;tty&quot;</span><span class="p">)</span><span class="o">!=</span><span class="mi">3</span><span class="p">)</span>
+<a name="gbab-299"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-300"></a>	
+<a name="gbab-301"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;Revenge of the Monster Truck&quot;</span><span class="p">)</span><span class="o">!=-</span><span class="mi">1</span><span class="p">)</span>
+<a name="gbab-302"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-303"></a>	
+<a name="gbab-304"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-305"></a>		
+<a name="gbab-306"></a><span class="p">}</span>
+<a name="gbab-307"></a>
+<a name="gbab-308"></a><span class="kt">bool</span> <span class="n">test_17</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-309"></a>	
+<a name="gbab-310"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 17: find no case</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-311"></a>	
+<a name="gbab-312"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Pretty Whale&quot;</span><span class="p">;</span>
+<a name="gbab-313"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">String: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-314"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t\&quot;</span><span class="s">WHA</span><span class="se">\&quot;</span><span class="s"> is at %i pos.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">findn</span><span class="p">(</span><span class="s">&quot;WHA&quot;</span><span class="p">));</span>
+<a name="gbab-315"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t\&quot;</span><span class="s">Revenge of the Monster SawFish</span><span class="se">\&quot;</span><span class="s"> is at %i pos.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">findn</span><span class="p">(</span><span class="s">&quot;Revenge of the Monster Truck&quot;</span><span class="p">));</span>
+<a name="gbab-316"></a>	
+<a name="gbab-317"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">findn</span><span class="p">(</span><span class="s">&quot;WHA&quot;</span><span class="p">)</span><span class="o">!=</span><span class="mi">7</span><span class="p">)</span>
+<a name="gbab-318"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-319"></a>	
+<a name="gbab-320"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">findn</span><span class="p">(</span><span class="s">&quot;Revenge of the Monster SawFish&quot;</span><span class="p">)</span><span class="o">!=-</span><span class="mi">1</span><span class="p">)</span>
+<a name="gbab-321"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-322"></a>	
+<a name="gbab-323"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-324"></a>		
+<a name="gbab-325"></a><span class="p">}</span>
+<a name="gbab-326"></a>
+<a name="gbab-327"></a><span class="kt">bool</span> <span class="n">test_18</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-328"></a>	
+<a name="gbab-329"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 18: find no case</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-330"></a>	
+<a name="gbab-331"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Pretty Whale&quot;</span><span class="p">;</span>
+<a name="gbab-332"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">String: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-333"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t\&quot;</span><span class="s">WHA</span><span class="se">\&quot;</span><span class="s"> is at %i pos.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">findn</span><span class="p">(</span><span class="s">&quot;WHA&quot;</span><span class="p">));</span>
+<a name="gbab-334"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t\&quot;</span><span class="s">Revenge of the Monster SawFish</span><span class="se">\&quot;</span><span class="s"> is at %i pos.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">findn</span><span class="p">(</span><span class="s">&quot;Revenge of the Monster Truck&quot;</span><span class="p">));</span>
+<a name="gbab-335"></a>	
+<a name="gbab-336"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">findn</span><span class="p">(</span><span class="s">&quot;WHA&quot;</span><span class="p">)</span><span class="o">!=</span><span class="mi">7</span><span class="p">)</span>
+<a name="gbab-337"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-338"></a>	
+<a name="gbab-339"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">findn</span><span class="p">(</span><span class="s">&quot;Revenge of the Monster SawFish&quot;</span><span class="p">)</span><span class="o">!=-</span><span class="mi">1</span><span class="p">)</span>
+<a name="gbab-340"></a>		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-341"></a>	
+<a name="gbab-342"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-343"></a>		
+<a name="gbab-344"></a><span class="p">}</span>
+<a name="gbab-345"></a>
+<a name="gbab-346"></a><span class="kt">bool</span> <span class="n">test_19</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-347"></a>	
+<a name="gbab-348"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 19: Search &amp; replace</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-349"></a>	
+<a name="gbab-350"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Happy Birthday, Anna!&quot;</span><span class="p">;</span>
+<a name="gbab-351"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">String: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-352"></a>	
+<a name="gbab-353"></a>	<span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;Birthday&quot;</span><span class="p">,</span><span class="s">&quot;Halloween&quot;</span><span class="p">);</span>
+<a name="gbab-354"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Replaced Birthday/Halloween: %ls.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-355"></a>	
+<a name="gbab-356"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">s</span><span class="o">==</span><span class="s">&quot;Happy Halloween, Anna!&quot;</span><span class="p">);</span>
+<a name="gbab-357"></a>		
+<a name="gbab-358"></a><span class="p">}</span>
+<a name="gbab-359"></a>
+<a name="gbab-360"></a><span class="kt">bool</span> <span class="n">test_20</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-361"></a>	
+<a name="gbab-362"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 20: Insertion</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-363"></a>	
+<a name="gbab-364"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Who is Frederic?&quot;</span><span class="p">;</span>
+<a name="gbab-365"></a>	
+<a name="gbab-366"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">String: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-367"></a>	<span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span> <span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;?&quot;</span><span class="p">),</span><span class="s">&quot; Chopin&quot;</span> <span class="p">);</span>
+<a name="gbab-368"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Inserted Chopin: %ls.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-369"></a>	
+<a name="gbab-370"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">s</span><span class="o">==</span><span class="s">&quot;Who is Frederic Chopin?&quot;</span><span class="p">);</span>
+<a name="gbab-371"></a>		
+<a name="gbab-372"></a><span class="p">}</span>
+<a name="gbab-373"></a>
+<a name="gbab-374"></a><span class="kt">bool</span> <span class="n">test_21</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-375"></a>	
+<a name="gbab-376"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 21: Number -&gt; String</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-377"></a>	
+<a name="gbab-378"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Pi is %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="mf">33.141593</span><span class="p">);</span>
+<a name="gbab-379"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Pi String is %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">String</span><span class="o">::</span><span class="n">num</span><span class="p">(</span><span class="mf">3.141593</span><span class="p">).</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-380"></a>	
+<a name="gbab-381"></a>	<span class="k">return</span> <span class="n">String</span><span class="o">::</span><span class="n">num</span><span class="p">(</span><span class="mf">3.141593</span><span class="p">)</span><span class="o">==</span><span class="s">&quot;3.141593&quot;</span><span class="p">;</span>
+<a name="gbab-382"></a>		
+<a name="gbab-383"></a><span class="p">}</span>
+<a name="gbab-384"></a>
+<a name="gbab-385"></a><span class="kt">bool</span> <span class="n">test_22</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-386"></a>	
+<a name="gbab-387"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 22: String -&gt; Int</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-388"></a>	
+<a name="gbab-389"></a>	<span class="k">static</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">nums</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="p">{</span> <span class="s">&quot;1237461283&quot;</span><span class="p">,</span> <span class="s">&quot;- 22&quot;</span><span class="p">,</span> <span class="s">&quot;0&quot;</span><span class="p">,</span> <span class="s">&quot; - 1123412&quot;</span> <span class="p">};</span>
+<a name="gbab-390"></a>	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">num</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="p">{</span> <span class="mi">1237461283</span><span class="p">,</span> <span class="o">-</span><span class="mi">22</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="o">-</span><span class="mi">1123412</span> <span class="p">};</span>
+<a name="gbab-391"></a>	
+<a name="gbab-392"></a>	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-393"></a>		<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">String: </span><span class="se">\&quot;</span><span class="s">%s</span><span class="se">\&quot;</span><span class="s"> as Int is %i</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">String</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]).</span><span class="n">to_int</span><span class="p">());</span>
+<a name="gbab-394"></a>		
+<a name="gbab-395"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]).</span><span class="n">to_int</span><span class="p">()</span><span class="o">!=</span><span class="n">num</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<a name="gbab-396"></a>			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-397"></a>	<span class="p">}</span>
+<a name="gbab-398"></a>	
+<a name="gbab-399"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-400"></a>		
+<a name="gbab-401"></a><span class="p">}</span>
+<a name="gbab-402"></a>
+<a name="gbab-403"></a><span class="kt">bool</span> <span class="n">test_23</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-404"></a>	
+<a name="gbab-405"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 23: String -&gt; Float</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-406"></a>	
+<a name="gbab-407"></a>	<span class="k">static</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">nums</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="p">{</span> <span class="s">&quot;-12348298412.2&quot;</span><span class="p">,</span> <span class="s">&quot;0.05&quot;</span><span class="p">,</span> <span class="s">&quot;2.0002&quot;</span><span class="p">,</span> <span class="s">&quot; -0.0001&quot;</span> <span class="p">};</span>
+<a name="gbab-408"></a>	<span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">num</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="p">{</span> <span class="o">-</span><span class="mf">12348298412.2</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">2.0002</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0001</span> <span class="p">};</span>
+<a name="gbab-409"></a>	
+<a name="gbab-410"></a>	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-411"></a>		<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">String: </span><span class="se">\&quot;</span><span class="s">%s</span><span class="se">\&quot;</span><span class="s"> as Float is %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">String</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]).</span><span class="n">to_double</span><span class="p">());</span>
+<a name="gbab-412"></a>		
+<a name="gbab-413"></a>		<span class="k">if</span> <span class="p">(</span> <span class="n">ABS</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]).</span><span class="n">to_double</span><span class="p">()</span><span class="o">-</span><span class="n">num</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">&gt;</span><span class="mf">0.00001</span><span class="p">)</span>
+<a name="gbab-414"></a>			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-415"></a>	<span class="p">}</span>
+<a name="gbab-416"></a>	
+<a name="gbab-417"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-418"></a>		
+<a name="gbab-419"></a><span class="p">}</span>
+<a name="gbab-420"></a>
+<a name="gbab-421"></a>
+<a name="gbab-422"></a><span class="kt">bool</span> <span class="n">test_24</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-423"></a>	
+<a name="gbab-424"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 24: Slicing</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-425"></a>	
+<a name="gbab-426"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Mars,Jupiter,Saturn,Uranus&quot;</span><span class="p">;</span>
+<a name="gbab-427"></a>	
+<a name="gbab-428"></a>	<span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="n">slices</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;Mars&quot;</span><span class="p">,</span><span class="s">&quot;Jupiter&quot;</span><span class="p">,</span><span class="s">&quot;Saturn&quot;</span><span class="p">,</span><span class="s">&quot;Uranus&quot;</span><span class="p">};</span>
+<a name="gbab-429"></a>	
+<a name="gbab-430"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Slicing </span><span class="se">\&quot;</span><span class="s">%ls</span><span class="se">\&quot;</span><span class="s"> by </span><span class="se">\&quot;</span><span class="s">%s</span><span class="se">\&quot;</span><span class="s">..</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="s">&quot;,&quot;</span><span class="p">);</span>
+<a name="gbab-431"></a>	
+<a name="gbab-432"></a>	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">s</span><span class="p">.</span><span class="n">get_slice_count</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-433"></a>		
+<a name="gbab-434"></a>		<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t\t</span><span class="s">%i- %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">).</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-435"></a>		
+<a name="gbab-436"></a>		
+<a name="gbab-437"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">get_slice</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">)</span><span class="o">!=</span><span class="n">slices</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<a name="gbab-438"></a>			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-439"></a>	<span class="p">}</span>
+<a name="gbab-440"></a>	
+<a name="gbab-441"></a>	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-442"></a>		
+<a name="gbab-443"></a><span class="p">}</span>
+<a name="gbab-444"></a>
+<a name="gbab-445"></a><span class="kt">bool</span> <span class="n">test_25</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-446"></a>	
+<a name="gbab-447"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 25: Erasing</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-448"></a>	
+<a name="gbab-449"></a>	<span class="n">String</span> <span class="n">s</span><span class="o">=</span><span class="s">&quot;Josephine is such a cute girl!&quot;</span><span class="p">;</span>
+<a name="gbab-450"></a>	
+<a name="gbab-451"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">String: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-452"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Removing </span><span class="se">\&quot;</span><span class="s">cute</span><span class="se">\&quot;\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-453"></a>	
+<a name="gbab-454"></a>	<span class="n">s</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;cute &quot;</span><span class="p">),</span><span class="n">String</span><span class="p">(</span><span class="s">&quot;cute &quot;</span><span class="p">).</span><span class="n">length</span><span class="p">());</span>
+<a name="gbab-455"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">Result: %ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-456"></a>	
+<a name="gbab-457"></a>	
+<a name="gbab-458"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">s</span><span class="o">==</span><span class="s">&quot;Josephine is such a girl!&quot;</span><span class="p">);</span>
+<a name="gbab-459"></a>		
+<a name="gbab-460"></a><span class="p">}</span>
+<a name="gbab-461"></a>
+<a name="gbab-462"></a><span class="kt">bool</span> <span class="n">test_26</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-463"></a>
+<a name="gbab-464"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 26: RegEx</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-465"></a>	<span class="n">RegEx</span> <span class="nf">regexp</span><span class="p">(</span><span class="s">&quot;(.*)</span><span class="o">:</span><span class="p">(.</span><span class="o">*</span><span class="p">)</span><span class="s">&quot;)</span><span class="p">;</span>
+<a name="gbab-466"></a>
+<a name="gbab-467"></a>	<span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="n">regexp</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;name:password&quot;</span><span class="p">);</span>
+<a name="gbab-468"></a>	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">match: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">res</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span><span class="o">?</span><span class="s">&quot;true&quot;</span><span class="o">:</span><span class="s">&quot;false&quot;</span><span class="p">);</span>
+<a name="gbab-469"></a>
+<a name="gbab-470"></a>	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">%i captures:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">regexp</span><span class="p">.</span><span class="n">get_capture_count</span><span class="p">());</span>
+<a name="gbab-471"></a>	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">regexp</span><span class="p">.</span><span class="n">get_capture_count</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<a name="gbab-472"></a>	<span class="p">{</span>
+<a name="gbab-473"></a>		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%ls</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">regexp</span><span class="p">.</span><span class="n">get_capture</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">c_str</span><span class="p">());</span>
+<a name="gbab-474"></a>	<span class="p">}</span>
+<a name="gbab-475"></a>	<span class="k">return</span> <span class="p">(</span><span class="n">res</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">);</span>
+<a name="gbab-476"></a><span class="p">};</span>
+<a name="gbab-477"></a>
+<a name="gbab-478"></a><span class="k">struct</span> <span class="n">test_27_data</span> <span class="p">{</span>
+<a name="gbab-479"></a>	<span class="kt">char</span> <span class="k">const</span> <span class="o">*</span> <span class="n">data</span><span class="p">;</span>
+<a name="gbab-480"></a>	<span class="kt">char</span> <span class="k">const</span> <span class="o">*</span> <span class="n">begin</span><span class="p">;</span>
+<a name="gbab-481"></a>	<span class="kt">bool</span> <span class="n">expected</span><span class="p">;</span>
+<a name="gbab-482"></a><span class="p">};</span>
+<a name="gbab-483"></a>
+<a name="gbab-484"></a><span class="kt">bool</span> <span class="nf">test_27</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-485"></a>
+<a name="gbab-486"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 27: begins_with</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-487"></a>	<span class="n">test_27_data</span> <span class="n">tc</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-488"></a>		<span class="p">{</span><span class="s">&quot;res://foobar&quot;</span><span class="p">,</span> <span class="s">&quot;res://&quot;</span><span class="p">,</span> <span class="nb">true</span><span class="p">},</span>
+<a name="gbab-489"></a>		<span class="p">{</span><span class="s">&quot;res&quot;</span><span class="p">,</span> <span class="s">&quot;res://&quot;</span><span class="p">,</span> <span class="nb">false</span><span class="p">},</span>
+<a name="gbab-490"></a>		<span class="p">{</span><span class="s">&quot;abc&quot;</span><span class="p">,</span> <span class="s">&quot;abc&quot;</span><span class="p">,</span> <span class="nb">true</span><span class="p">}</span>
+<a name="gbab-491"></a>	<span class="p">};</span>
+<a name="gbab-492"></a>	<span class="kt">size_t</span> <span class="n">count</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">tc</span><span class="p">)</span> <span class="o">/</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<a name="gbab-493"></a>	<span class="kt">bool</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-494"></a>	<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">state</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-495"></a>		<span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">tc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">;</span>
+<a name="gbab-496"></a>		<span class="n">state</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">begins_with</span><span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">begin</span><span class="p">)</span> <span class="o">==</span> <span class="n">tc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">expected</span><span class="p">;</span>
+<a name="gbab-497"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-498"></a>			<span class="n">String</span> <span class="n">sb</span> <span class="o">=</span> <span class="n">tc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">begin</span><span class="p">;</span>
+<a name="gbab-499"></a>			<span class="n">state</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">begins_with</span><span class="p">(</span><span class="n">sb</span><span class="p">)</span> <span class="o">==</span> <span class="n">tc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">expected</span><span class="p">;</span>
+<a name="gbab-500"></a>		<span class="p">}</span>
+<a name="gbab-501"></a>		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-502"></a>			<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\t</span><span class="s"> Failure on:</span><span class="se">\n\t\t</span><span class="s">string: &quot;</span><span class="p">,</span> <span class="n">tc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n\t\t</span><span class="s">begin: &quot;</span><span class="p">,</span> <span class="n">tc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">begin</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n\t\t</span><span class="s">expected: &quot;</span><span class="p">,</span> <span class="n">tc</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">expected</span> <span class="o">?</span> <span class="s">&quot;true&quot;</span> <span class="o">:</span> <span class="s">&quot;false&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-503"></a>			<span class="k">break</span><span class="p">;</span>
+<a name="gbab-504"></a>		<span class="p">}</span>
+<a name="gbab-505"></a>	<span class="p">};</span>
+<a name="gbab-506"></a>	<span class="k">return</span> <span class="n">state</span><span class="p">;</span>
+<a name="gbab-507"></a><span class="p">};</span>
+<a name="gbab-508"></a>
+<a name="gbab-509"></a>
+<a name="gbab-510"></a><span class="kt">bool</span> <span class="nf">test_28</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-511"></a>
+<a name="gbab-512"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Test 28: sprintf</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-513"></a>
+<a name="gbab-514"></a>	<span class="kt">bool</span> <span class="n">success</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<a name="gbab-515"></a>	<span class="kt">char</span> <span class="n">output_format</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">Test:</span><span class="se">\t</span><span class="s">%ls =&gt; %ls (%s)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<a name="gbab-516"></a>	<span class="n">String</span> <span class="n">format</span><span class="p">,</span> <span class="n">output</span><span class="p">;</span>
+<a name="gbab-517"></a>	<span class="n">Array</span> <span class="n">args</span><span class="p">;</span>
+<a name="gbab-518"></a>	<span class="kt">bool</span> <span class="n">error</span><span class="p">;</span>
+<a name="gbab-519"></a>	
+<a name="gbab-520"></a>	<span class="c1">// %%</span>
+<a name="gbab-521"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %% frog&quot;</span><span class="p">;</span>
+<a name="gbab-522"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-523"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-524"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish % frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-525"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-526"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-527"></a>
+<a name="gbab-528"></a>	<span class="c1">//////// INTS</span>
+<a name="gbab-529"></a>
+<a name="gbab-530"></a>	<span class="c1">// Int</span>
+<a name="gbab-531"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %d frog&quot;</span><span class="p">;</span>
+<a name="gbab-532"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-533"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<a name="gbab-534"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-535"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 5 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-536"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-537"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-538"></a>
+<a name="gbab-539"></a>	<span class="c1">// Int left padded with zeroes.</span>
+<a name="gbab-540"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %05d frog&quot;</span><span class="p">;</span>
+<a name="gbab-541"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-542"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<a name="gbab-543"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-544"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 00005 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-545"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-546"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-547"></a>
+<a name="gbab-548"></a>	<span class="c1">// Int left padded with spaces.</span>
+<a name="gbab-549"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %5d frog&quot;</span><span class="p">;</span>
+<a name="gbab-550"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-551"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<a name="gbab-552"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-553"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish     5 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-554"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-555"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-556"></a>
+<a name="gbab-557"></a>	<span class="c1">// Int right padded with spaces.</span>
+<a name="gbab-558"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %-5d frog&quot;</span><span class="p">;</span>
+<a name="gbab-559"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-560"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<a name="gbab-561"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-562"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 5     frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-563"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-564"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-565"></a>
+<a name="gbab-566"></a>	<span class="c1">// Int with sign (positive).</span>
+<a name="gbab-567"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %+d frog&quot;</span><span class="p">;</span>
+<a name="gbab-568"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-569"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<a name="gbab-570"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-571"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish +5 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-572"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-573"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-574"></a>
+<a name="gbab-575"></a>	<span class="c1">// Negative int.</span>
+<a name="gbab-576"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %d frog&quot;</span><span class="p">;</span>
+<a name="gbab-577"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-578"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">);</span>
+<a name="gbab-579"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-580"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish -5 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-581"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-582"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-583"></a>
+<a name="gbab-584"></a>	<span class="c1">// Hex (lower)</span>
+<a name="gbab-585"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %x frog&quot;</span><span class="p">;</span>
+<a name="gbab-586"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-587"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">45</span><span class="p">);</span>
+<a name="gbab-588"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-589"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 2d frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-590"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-591"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-592"></a>
+<a name="gbab-593"></a>	<span class="c1">// Hex (upper)</span>
+<a name="gbab-594"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %X frog&quot;</span><span class="p">;</span>
+<a name="gbab-595"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-596"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">45</span><span class="p">);</span>
+<a name="gbab-597"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-598"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 2D frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-599"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-600"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-601"></a>
+<a name="gbab-602"></a>	<span class="c1">// Octal</span>
+<a name="gbab-603"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %o frog&quot;</span><span class="p">;</span>
+<a name="gbab-604"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-605"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">99</span><span class="p">);</span>
+<a name="gbab-606"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-607"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 143 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-608"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-609"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-610"></a>
+<a name="gbab-611"></a>	<span class="c1">////// REALS</span>
+<a name="gbab-612"></a>
+<a name="gbab-613"></a>	<span class="c1">// Real</span>
+<a name="gbab-614"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %f frog&quot;</span><span class="p">;</span>
+<a name="gbab-615"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-616"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-617"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-618"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 99.990000 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-619"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-620"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-621"></a>
+<a name="gbab-622"></a>	<span class="c1">// Real left-padded</span>
+<a name="gbab-623"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %11f frog&quot;</span><span class="p">;</span>
+<a name="gbab-624"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-625"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-626"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-627"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish   99.990000 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-628"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-629"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-630"></a>
+<a name="gbab-631"></a>	<span class="c1">// Real right-padded</span>
+<a name="gbab-632"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %-11f frog&quot;</span><span class="p">;</span>
+<a name="gbab-633"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-634"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-635"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-636"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 99.990000   frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-637"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-638"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-639"></a>
+<a name="gbab-640"></a>	<span class="c1">// Real given int.</span>
+<a name="gbab-641"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %f frog&quot;</span><span class="p">;</span>
+<a name="gbab-642"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-643"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">99</span><span class="p">);</span>
+<a name="gbab-644"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-645"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 99.000000 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-646"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-647"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-648"></a>
+<a name="gbab-649"></a>	<span class="c1">// Real with sign (positive).</span>
+<a name="gbab-650"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %+f frog&quot;</span><span class="p">;</span>
+<a name="gbab-651"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-652"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-653"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-654"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish +99.990000 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-655"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-656"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-657"></a>
+<a name="gbab-658"></a>	<span class="c1">// Real with 1 decimals.</span>
+<a name="gbab-659"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %.1f frog&quot;</span><span class="p">;</span>
+<a name="gbab-660"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-661"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-662"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-663"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 100.0 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-664"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-665"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-666"></a>
+<a name="gbab-667"></a>	<span class="c1">// Real with 12 decimals.</span>
+<a name="gbab-668"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %.12f frog&quot;</span><span class="p">;</span>
+<a name="gbab-669"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-670"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-671"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-672"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 99.990000000000 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-673"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-674"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-675"></a>
+<a name="gbab-676"></a>	<span class="c1">// Real with no decimals.</span>
+<a name="gbab-677"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %.f frog&quot;</span><span class="p">;</span>
+<a name="gbab-678"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-679"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-680"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-681"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish 100 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-682"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-683"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-684"></a>
+<a name="gbab-685"></a>	<span class="c1">/////// Strings.</span>
+<a name="gbab-686"></a>
+<a name="gbab-687"></a>	<span class="c1">// String</span>
+<a name="gbab-688"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %s frog&quot;</span><span class="p">;</span>
+<a name="gbab-689"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-690"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;cheese&quot;</span><span class="p">);</span>
+<a name="gbab-691"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-692"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish cheese frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-693"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-694"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-695"></a>
+<a name="gbab-696"></a>	<span class="c1">// String left-padded</span>
+<a name="gbab-697"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %10s frog&quot;</span><span class="p">;</span>
+<a name="gbab-698"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-699"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;cheese&quot;</span><span class="p">);</span>
+<a name="gbab-700"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-701"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish     cheese frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-702"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-703"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-704"></a>
+<a name="gbab-705"></a>	<span class="c1">// String right-padded</span>
+<a name="gbab-706"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %-10s frog&quot;</span><span class="p">;</span>
+<a name="gbab-707"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-708"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;cheese&quot;</span><span class="p">);</span>
+<a name="gbab-709"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-710"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish cheese     frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-711"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-712"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-713"></a>
+<a name="gbab-714"></a>	<span class="c1">///// Characters</span>
+<a name="gbab-715"></a>
+<a name="gbab-716"></a>	<span class="c1">// Character as string.</span>
+<a name="gbab-717"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %c frog&quot;</span><span class="p">;</span>
+<a name="gbab-718"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-719"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">);</span>
+<a name="gbab-720"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-721"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish A frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-722"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-723"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-724"></a>
+<a name="gbab-725"></a>	<span class="c1">// Character as int.</span>
+<a name="gbab-726"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %c frog&quot;</span><span class="p">;</span>
+<a name="gbab-727"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-728"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">65</span><span class="p">);</span>
+<a name="gbab-729"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-730"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish A frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-731"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-732"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-733"></a>
+<a name="gbab-734"></a>	<span class="c1">///// Dynamic width</span>
+<a name="gbab-735"></a>
+<a name="gbab-736"></a>	<span class="c1">// String dynamic width</span>
+<a name="gbab-737"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %*s frog&quot;</span><span class="p">;</span>
+<a name="gbab-738"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-739"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<a name="gbab-740"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;cheese&quot;</span><span class="p">);</span>
+<a name="gbab-741"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-742"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish     cheese frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-743"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-744"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-745"></a>
+<a name="gbab-746"></a>	<span class="c1">// Int dynamic width</span>
+<a name="gbab-747"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %*d frog&quot;</span><span class="p">;</span>
+<a name="gbab-748"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-749"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<a name="gbab-750"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">99</span><span class="p">);</span>
+<a name="gbab-751"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-752"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish         99 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-753"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-754"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-755"></a>
+<a name="gbab-756"></a>	<span class="c1">// Float dynamic width</span>
+<a name="gbab-757"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %*.*f frog&quot;</span><span class="p">;</span>
+<a name="gbab-758"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-759"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<a name="gbab-760"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<a name="gbab-761"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-762"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-763"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="n">String</span><span class="p">(</span><span class="s">&quot;fish     99.990 frog&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-764"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-765"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-766"></a>
+<a name="gbab-767"></a>	<span class="c1">///// Errors</span>
+<a name="gbab-768"></a>
+<a name="gbab-769"></a>	<span class="c1">// More formats than arguments.</span>
+<a name="gbab-770"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %s %s frog&quot;</span><span class="p">;</span>
+<a name="gbab-771"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-772"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;cheese&quot;</span><span class="p">);</span>
+<a name="gbab-773"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-774"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="s">&quot;not enough arguments for format string&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">error</span><span class="p">);</span>
+<a name="gbab-775"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-776"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-777"></a>
+<a name="gbab-778"></a>	<span class="c1">// More arguments than formats.</span>
+<a name="gbab-779"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %s frog&quot;</span><span class="p">;</span>
+<a name="gbab-780"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-781"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<a name="gbab-782"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;cheese&quot;</span><span class="p">);</span>
+<a name="gbab-783"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-784"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="s">&quot;not all arguments converted during string formatting&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">error</span><span class="p">);</span>
+<a name="gbab-785"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-786"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-787"></a>
+<a name="gbab-788"></a>	<span class="c1">// Incomplete format.</span>
+<a name="gbab-789"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %10&quot;</span><span class="p">;</span>
+<a name="gbab-790"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-791"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;cheese&quot;</span><span class="p">);</span>
+<a name="gbab-792"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-793"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="s">&quot;incomplete format&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">error</span><span class="p">);</span>
+<a name="gbab-794"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-795"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-796"></a>
+<a name="gbab-797"></a>	<span class="c1">// Bad character in format string</span>
+<a name="gbab-798"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %&amp;f frog&quot;</span><span class="p">;</span>
+<a name="gbab-799"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-800"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;cheese&quot;</span><span class="p">);</span>
+<a name="gbab-801"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-802"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="s">&quot;unsupported format character&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">error</span><span class="p">);</span>
+<a name="gbab-803"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-804"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-805"></a>
+<a name="gbab-806"></a>	<span class="c1">// Too many decimals.</span>
+<a name="gbab-807"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %2.2.2f frog&quot;</span><span class="p">;</span>
+<a name="gbab-808"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-809"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-810"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-811"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="s">&quot;too many decimal points in format&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">error</span><span class="p">);</span>
+<a name="gbab-812"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-813"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-814"></a>
+<a name="gbab-815"></a>	<span class="c1">// * not a number</span>
+<a name="gbab-816"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %*f frog&quot;</span><span class="p">;</span>
+<a name="gbab-817"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-818"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;cheese&quot;</span><span class="p">);</span>
+<a name="gbab-819"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mf">99.99</span><span class="p">);</span>
+<a name="gbab-820"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-821"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="s">&quot;* wants number&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">error</span><span class="p">);</span>
+<a name="gbab-822"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-823"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-824"></a>
+<a name="gbab-825"></a>	<span class="c1">// Character too long.</span>
+<a name="gbab-826"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %c frog&quot;</span><span class="p">;</span>
+<a name="gbab-827"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-828"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;sc&quot;</span><span class="p">);</span>
+<a name="gbab-829"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-830"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="s">&quot;%c requires number or single-character string&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">error</span><span class="p">);</span>
+<a name="gbab-831"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span><span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-832"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-833"></a>
+<a name="gbab-834"></a>	<span class="c1">// Character bad type.</span>
+<a name="gbab-835"></a>	<span class="n">format</span> <span class="o">=</span> <span class="s">&quot;fish %c frog&quot;</span><span class="p">;</span>
+<a name="gbab-836"></a>	<span class="n">args</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<a name="gbab-837"></a>	<span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">Array</span><span class="p">());</span>
+<a name="gbab-838"></a>	<span class="n">output</span> <span class="o">=</span> <span class="n">format</span><span class="p">.</span><span class="n">sprintf</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">);</span>
+<a name="gbab-839"></a>	<span class="n">success</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">==</span> <span class="s">&quot;%c requires number or single-character string&quot;</span> <span class="o">&amp;&amp;</span> <span class="n">error</span><span class="p">);</span>
+<a name="gbab-840"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="n">output_format</span> <span class="p">,</span> <span class="n">format</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">output</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">success</span> <span class="o">?</span> <span class="s">&quot;OK&quot;</span> <span class="o">:</span> <span class="s">&quot;FAIL&quot;</span><span class="p">);</span>
+<a name="gbab-841"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="n">state</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<a name="gbab-842"></a>
+<a name="gbab-843"></a>	<span class="k">return</span> <span class="n">state</span><span class="p">;</span>
+<a name="gbab-844"></a><span class="p">}</span>
+<a name="gbab-845"></a>
+<a name="gbab-846"></a><span class="k">typedef</span> <span class="nf">bool</span> <span class="p">(</span><span class="o">*</span><span class="n">TestFunc</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-847"></a>
+<a name="gbab-848"></a><span class="n">TestFunc</span> <span class="n">test_funcs</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-849"></a>	
+<a name="gbab-850"></a>	<span class="n">test_1</span><span class="p">,</span>
+<a name="gbab-851"></a>	<span class="n">test_2</span><span class="p">,</span>
+<a name="gbab-852"></a>	<span class="n">test_3</span><span class="p">,</span>
+<a name="gbab-853"></a>	<span class="n">test_4</span><span class="p">,</span>
+<a name="gbab-854"></a>	<span class="n">test_5</span><span class="p">,</span>
+<a name="gbab-855"></a>	<span class="n">test_6</span><span class="p">,</span>
+<a name="gbab-856"></a>	<span class="n">test_7</span><span class="p">,</span>
+<a name="gbab-857"></a>	<span class="n">test_8</span><span class="p">,</span>
+<a name="gbab-858"></a>	<span class="n">test_9</span><span class="p">,</span>
+<a name="gbab-859"></a>	<span class="n">test_10</span><span class="p">,</span>
+<a name="gbab-860"></a>	<span class="n">test_11</span><span class="p">,</span>
+<a name="gbab-861"></a>	<span class="n">test_12</span><span class="p">,</span>
+<a name="gbab-862"></a>	<span class="n">test_13</span><span class="p">,</span>
+<a name="gbab-863"></a>	<span class="n">test_14</span><span class="p">,</span>
+<a name="gbab-864"></a>	<span class="n">test_15</span><span class="p">,</span>
+<a name="gbab-865"></a>	<span class="n">test_16</span><span class="p">,</span>
+<a name="gbab-866"></a>	<span class="n">test_17</span><span class="p">,</span>
+<a name="gbab-867"></a>	<span class="n">test_18</span><span class="p">,</span>
+<a name="gbab-868"></a>	<span class="n">test_19</span><span class="p">,</span>
+<a name="gbab-869"></a>	<span class="n">test_20</span><span class="p">,</span>
+<a name="gbab-870"></a>	<span class="n">test_21</span><span class="p">,</span>
+<a name="gbab-871"></a>	<span class="n">test_22</span><span class="p">,</span>
+<a name="gbab-872"></a>	<span class="n">test_23</span><span class="p">,</span>
+<a name="gbab-873"></a>	<span class="n">test_24</span><span class="p">,</span>
+<a name="gbab-874"></a>	<span class="n">test_25</span><span class="p">,</span>
+<a name="gbab-875"></a>	<span class="n">test_26</span><span class="p">,</span>
+<a name="gbab-876"></a>	<span class="n">test_27</span><span class="p">,</span>
+<a name="gbab-877"></a>	<span class="n">test_28</span><span class="p">,</span>
+<a name="gbab-878"></a>	<span class="mi">0</span>
+<a name="gbab-879"></a>	
+<a name="gbab-880"></a><span class="p">};</span>
+<a name="gbab-881"></a>
+<a name="gbab-882"></a><span class="n">MainLoop</span><span class="o">*</span> <span class="nf">test</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-883"></a>	
+<a name="gbab-884"></a>	<span class="cm">/** A character length != wchar_t may be forced, so the tests wont work */</span>
+<a name="gbab-885"></a>	
+<a name="gbab-886"></a>	<span class="n">ERR_FAIL_COND_V</span><span class="p">(</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">CharType</span><span class="p">)</span> <span class="o">!=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">wchar_t</span><span class="p">),</span> <span class="nb">NULL</span> <span class="p">);</span>
+<a name="gbab-887"></a>	
+<a name="gbab-888"></a>	<span class="kt">int</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-889"></a>	<span class="kt">int</span> <span class="n">passed</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-890"></a>	
+<a name="gbab-891"></a>	<span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-892"></a>		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">test_funcs</span><span class="p">[</span><span class="n">count</span><span class="p">])</span>
+<a name="gbab-893"></a>			<span class="k">break</span><span class="p">;</span>
+<a name="gbab-894"></a>		<span class="kt">bool</span> <span class="n">pass</span><span class="o">=</span><span class="n">test_funcs</span><span class="p">[</span><span class="n">count</span><span class="p">]();</span>
+<a name="gbab-895"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">pass</span><span class="p">)</span>
+<a name="gbab-896"></a>			<span class="n">passed</span><span class="o">++</span><span class="p">;</span>
+<a name="gbab-897"></a>		<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">pass</span><span class="o">?</span><span class="s">&quot;PASS&quot;</span><span class="o">:</span><span class="s">&quot;FAILED&quot;</span><span class="p">);</span>
+<a name="gbab-898"></a>		
+<a name="gbab-899"></a>		<span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<a name="gbab-900"></a>	<span class="p">}</span>
+<a name="gbab-901"></a>	
+<a name="gbab-902"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-903"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;*************</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-904"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;***TOTALS!***</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-905"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;*************</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a name="gbab-906"></a>	
+<a name="gbab-907"></a>	<span class="n">OS</span><span class="o">::</span><span class="n">get_singleton</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Passed %i of %i tests</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">passed</span><span class="p">,</span> <span class="n">count</span><span class="p">);</span>
+<a name="gbab-908"></a>	
+<a name="gbab-909"></a>	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<a name="gbab-910"></a><span class="p">}</span>
+<a name="gbab-911"></a>
+<a name="gbab-912"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

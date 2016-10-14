@@ -1,0 +1,639 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="c1">// Copyright 2011 Google Inc. All Rights Reserved.</span>
+<a name="gbab-2"></a><span class="c1">//</span>
+<a name="gbab-3"></a><span class="c1">// Use of this source code is governed by a BSD-style license</span>
+<a name="gbab-4"></a><span class="c1">// that can be found in the COPYING file in the root of the source</span>
+<a name="gbab-5"></a><span class="c1">// tree. An additional intellectual property rights grant can be found</span>
+<a name="gbab-6"></a><span class="c1">// in the file PATENTS. All contributing project authors may</span>
+<a name="gbab-7"></a><span class="c1">// be found in the AUTHORS file in the root of the source tree.</span>
+<a name="gbab-8"></a><span class="c1">// -----------------------------------------------------------------------------</span>
+<a name="gbab-9"></a><span class="c1">//</span>
+<a name="gbab-10"></a><span class="c1">// Bit writing and boolean coder</span>
+<a name="gbab-11"></a><span class="c1">//</span>
+<a name="gbab-12"></a><span class="c1">// Author: Skal (pascal.massimino@gmail.com)</span>
+<a name="gbab-13"></a><span class="c1">//         Vikas Arora (vikaas.arora@gmail.com)</span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
+<a name="gbab-16"></a><span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;   // for memcpy()</span><span class="cp"></span>
+<a name="gbab-17"></a><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#include</span> <span class="cpf">&quot;./bit_writer.h&quot;</span><span class="cp"></span>
+<a name="gbab-20"></a><span class="cp">#include</span> <span class="cpf">&quot;./endian_inl.h&quot;</span><span class="cp"></span>
+<a name="gbab-21"></a><span class="cp">#include</span> <span class="cpf">&quot;./utils.h&quot;</span><span class="cp"></span>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-24"></a><span class="c1">// VP8BitWriter</span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">BitWriterResize</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">extra_size</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-27"></a>  <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">new_buf</span><span class="p">;</span>
+<a name="gbab-28"></a>  <span class="kt">size_t</span> <span class="n">new_size</span><span class="p">;</span>
+<a name="gbab-29"></a>  <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">needed_size_64b</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">pos_</span> <span class="o">+</span> <span class="n">extra_size</span><span class="p">;</span>
+<a name="gbab-30"></a>  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">needed_size</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">needed_size_64b</span><span class="p">;</span>
+<a name="gbab-31"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">needed_size_64b</span> <span class="o">!=</span> <span class="n">needed_size</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-32"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">error_</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-33"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-34"></a>  <span class="p">}</span>
+<a name="gbab-35"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">needed_size</span> <span class="o">&lt;=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">max_pos_</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-36"></a>  <span class="c1">// If the following line wraps over 32bit, the test just after will catch it.</span>
+<a name="gbab-37"></a>  <span class="n">new_size</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">max_pos_</span><span class="p">;</span>
+<a name="gbab-38"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">new_size</span> <span class="o">&lt;</span> <span class="n">needed_size</span><span class="p">)</span> <span class="n">new_size</span> <span class="o">=</span> <span class="n">needed_size</span><span class="p">;</span>
+<a name="gbab-39"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">new_size</span> <span class="o">&lt;</span> <span class="mi">1024</span><span class="p">)</span> <span class="n">new_size</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">;</span>
+<a name="gbab-40"></a>  <span class="n">new_buf</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">WebPSafeMalloc</span><span class="p">(</span><span class="mi">1ULL</span><span class="p">,</span> <span class="n">new_size</span><span class="p">);</span>
+<a name="gbab-41"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">new_buf</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-42"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">error_</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-43"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-44"></a>  <span class="p">}</span>
+<a name="gbab-45"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">pos_</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-46"></a>    <span class="n">assert</span><span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">);</span>
+<a name="gbab-47"></a>    <span class="n">memcpy</span><span class="p">(</span><span class="n">new_buf</span><span class="p">,</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">,</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">pos_</span><span class="p">);</span>
+<a name="gbab-48"></a>  <span class="p">}</span>
+<a name="gbab-49"></a>  <span class="n">WebPSafeFree</span><span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">);</span>
+<a name="gbab-50"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span> <span class="o">=</span> <span class="n">new_buf</span><span class="p">;</span>
+<a name="gbab-51"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">max_pos_</span> <span class="o">=</span> <span class="n">new_size</span><span class="p">;</span>
+<a name="gbab-52"></a>  <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-53"></a><span class="p">}</span>
+<a name="gbab-54"></a>
+<a name="gbab-55"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">Flush</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-56"></a>  <span class="k">const</span> <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span><span class="p">;</span>
+<a name="gbab-57"></a>  <span class="k">const</span> <span class="kt">int32_t</span> <span class="n">bits</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">value_</span> <span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+<a name="gbab-58"></a>  <span class="n">assert</span><span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">);</span>
+<a name="gbab-59"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">value_</span> <span class="o">-=</span> <span class="n">bits</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">;</span>
+<a name="gbab-60"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span> <span class="o">-=</span> <span class="mi">8</span><span class="p">;</span>
+<a name="gbab-61"></a>  <span class="k">if</span> <span class="p">((</span><span class="n">bits</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">)</span> <span class="o">!=</span> <span class="mh">0xff</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-62"></a>    <span class="kt">size_t</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">pos_</span><span class="p">;</span>
+<a name="gbab-63"></a>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">BitWriterResize</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">run_</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-64"></a>      <span class="k">return</span><span class="p">;</span>
+<a name="gbab-65"></a>    <span class="p">}</span>
+<a name="gbab-66"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">bits</span> <span class="o">&amp;</span> <span class="mh">0x100</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// overflow -&gt; propagate carry over pending 0xff&#39;s</span>
+<a name="gbab-67"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">pos</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">[</span><span class="n">pos</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+<a name="gbab-68"></a>    <span class="p">}</span>
+<a name="gbab-69"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">run_</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-70"></a>      <span class="k">const</span> <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">bits</span> <span class="o">&amp;</span> <span class="mh">0x100</span><span class="p">)</span> <span class="o">?</span> <span class="mh">0x00</span> <span class="o">:</span> <span class="mh">0xff</span><span class="p">;</span>
+<a name="gbab-71"></a>      <span class="k">for</span> <span class="p">(;</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">run_</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">run_</span><span class="p">)</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">[</span><span class="n">pos</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+<a name="gbab-72"></a>    <span class="p">}</span>
+<a name="gbab-73"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">[</span><span class="n">pos</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">bits</span><span class="p">;</span>
+<a name="gbab-74"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">pos_</span> <span class="o">=</span> <span class="n">pos</span><span class="p">;</span>
+<a name="gbab-75"></a>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-76"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">run_</span><span class="o">++</span><span class="p">;</span>   <span class="c1">// delay writing of bytes 0xff, pending eventual carry.</span>
+<a name="gbab-77"></a>  <span class="p">}</span>
+<a name="gbab-78"></a><span class="p">}</span>
+<a name="gbab-79"></a>
+<a name="gbab-80"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-81"></a><span class="c1">// renormalization</span>
+<a name="gbab-82"></a>
+<a name="gbab-83"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">kNorm</span><span class="p">[</span><span class="mi">128</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1">// renorm_sizes[i] = 8 - log2(i)</span>
+<a name="gbab-84"></a>     <span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span>
+<a name="gbab-85"></a>  <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+<a name="gbab-86"></a>  <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
+<a name="gbab-87"></a>  <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
+<a name="gbab-88"></a>  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-89"></a>  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-90"></a>  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-91"></a>  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-92"></a>  <span class="mi">0</span>
+<a name="gbab-93"></a><span class="p">};</span>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a><span class="c1">// range = ((range + 1) &lt;&lt; kVP8Log2Range[range]) - 1</span>
+<a name="gbab-96"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">kNewRange</span><span class="p">[</span><span class="mi">128</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-97"></a>  <span class="mi">127</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">191</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">159</span><span class="p">,</span> <span class="mi">191</span><span class="p">,</span> <span class="mi">223</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">143</span><span class="p">,</span> <span class="mi">159</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">191</span><span class="p">,</span> <span class="mi">207</span><span class="p">,</span> <span class="mi">223</span><span class="p">,</span> <span class="mi">239</span><span class="p">,</span>
+<a name="gbab-98"></a>  <span class="mi">127</span><span class="p">,</span> <span class="mi">135</span><span class="p">,</span> <span class="mi">143</span><span class="p">,</span> <span class="mi">151</span><span class="p">,</span> <span class="mi">159</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">183</span><span class="p">,</span> <span class="mi">191</span><span class="p">,</span> <span class="mi">199</span><span class="p">,</span> <span class="mi">207</span><span class="p">,</span> <span class="mi">215</span><span class="p">,</span> <span class="mi">223</span><span class="p">,</span> <span class="mi">231</span><span class="p">,</span> <span class="mi">239</span><span class="p">,</span>
+<a name="gbab-99"></a>  <span class="mi">247</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">131</span><span class="p">,</span> <span class="mi">135</span><span class="p">,</span> <span class="mi">139</span><span class="p">,</span> <span class="mi">143</span><span class="p">,</span> <span class="mi">147</span><span class="p">,</span> <span class="mi">151</span><span class="p">,</span> <span class="mi">155</span><span class="p">,</span> <span class="mi">159</span><span class="p">,</span> <span class="mi">163</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">171</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">179</span><span class="p">,</span>
+<a name="gbab-100"></a>  <span class="mi">183</span><span class="p">,</span> <span class="mi">187</span><span class="p">,</span> <span class="mi">191</span><span class="p">,</span> <span class="mi">195</span><span class="p">,</span> <span class="mi">199</span><span class="p">,</span> <span class="mi">203</span><span class="p">,</span> <span class="mi">207</span><span class="p">,</span> <span class="mi">211</span><span class="p">,</span> <span class="mi">215</span><span class="p">,</span> <span class="mi">219</span><span class="p">,</span> <span class="mi">223</span><span class="p">,</span> <span class="mi">227</span><span class="p">,</span> <span class="mi">231</span><span class="p">,</span> <span class="mi">235</span><span class="p">,</span> <span class="mi">239</span><span class="p">,</span>
+<a name="gbab-101"></a>  <span class="mi">243</span><span class="p">,</span> <span class="mi">247</span><span class="p">,</span> <span class="mi">251</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span> <span class="mi">129</span><span class="p">,</span> <span class="mi">131</span><span class="p">,</span> <span class="mi">133</span><span class="p">,</span> <span class="mi">135</span><span class="p">,</span> <span class="mi">137</span><span class="p">,</span> <span class="mi">139</span><span class="p">,</span> <span class="mi">141</span><span class="p">,</span> <span class="mi">143</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">147</span><span class="p">,</span> <span class="mi">149</span><span class="p">,</span>
+<a name="gbab-102"></a>  <span class="mi">151</span><span class="p">,</span> <span class="mi">153</span><span class="p">,</span> <span class="mi">155</span><span class="p">,</span> <span class="mi">157</span><span class="p">,</span> <span class="mi">159</span><span class="p">,</span> <span class="mi">161</span><span class="p">,</span> <span class="mi">163</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">167</span><span class="p">,</span> <span class="mi">169</span><span class="p">,</span> <span class="mi">171</span><span class="p">,</span> <span class="mi">173</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">177</span><span class="p">,</span> <span class="mi">179</span><span class="p">,</span>
+<a name="gbab-103"></a>  <span class="mi">181</span><span class="p">,</span> <span class="mi">183</span><span class="p">,</span> <span class="mi">185</span><span class="p">,</span> <span class="mi">187</span><span class="p">,</span> <span class="mi">189</span><span class="p">,</span> <span class="mi">191</span><span class="p">,</span> <span class="mi">193</span><span class="p">,</span> <span class="mi">195</span><span class="p">,</span> <span class="mi">197</span><span class="p">,</span> <span class="mi">199</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">203</span><span class="p">,</span> <span class="mi">205</span><span class="p">,</span> <span class="mi">207</span><span class="p">,</span> <span class="mi">209</span><span class="p">,</span>
+<a name="gbab-104"></a>  <span class="mi">211</span><span class="p">,</span> <span class="mi">213</span><span class="p">,</span> <span class="mi">215</span><span class="p">,</span> <span class="mi">217</span><span class="p">,</span> <span class="mi">219</span><span class="p">,</span> <span class="mi">221</span><span class="p">,</span> <span class="mi">223</span><span class="p">,</span> <span class="mi">225</span><span class="p">,</span> <span class="mi">227</span><span class="p">,</span> <span class="mi">229</span><span class="p">,</span> <span class="mi">231</span><span class="p">,</span> <span class="mi">233</span><span class="p">,</span> <span class="mi">235</span><span class="p">,</span> <span class="mi">237</span><span class="p">,</span> <span class="mi">239</span><span class="p">,</span>
+<a name="gbab-105"></a>  <span class="mi">241</span><span class="p">,</span> <span class="mi">243</span><span class="p">,</span> <span class="mi">245</span><span class="p">,</span> <span class="mi">247</span><span class="p">,</span> <span class="mi">249</span><span class="p">,</span> <span class="mi">251</span><span class="p">,</span> <span class="mi">253</span><span class="p">,</span> <span class="mi">127</span>
+<a name="gbab-106"></a><span class="p">};</span>
+<a name="gbab-107"></a>
+<a name="gbab-108"></a><span class="kt">int</span> <span class="nf">VP8PutBit</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bit</span><span class="p">,</span> <span class="kt">int</span> <span class="n">prob</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-109"></a>  <span class="k">const</span> <span class="kt">int</span> <span class="n">split</span> <span class="o">=</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">*</span> <span class="n">prob</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">;</span>
+<a name="gbab-110"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-111"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">value_</span> <span class="o">+=</span> <span class="n">split</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-112"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">-=</span> <span class="n">split</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-113"></a>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-114"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">=</span> <span class="n">split</span><span class="p">;</span>
+<a name="gbab-115"></a>  <span class="p">}</span>
+<a name="gbab-116"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">&lt;</span> <span class="mi">127</span><span class="p">)</span> <span class="p">{</span>   <span class="c1">// emit &#39;shift&#39; bits out and renormalize</span>
+<a name="gbab-117"></a>    <span class="k">const</span> <span class="kt">int</span> <span class="n">shift</span> <span class="o">=</span> <span class="n">kNorm</span><span class="p">[</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span><span class="p">];</span>
+<a name="gbab-118"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">=</span> <span class="n">kNewRange</span><span class="p">[</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span><span class="p">];</span>
+<a name="gbab-119"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">value_</span> <span class="o">&lt;&lt;=</span> <span class="n">shift</span><span class="p">;</span>
+<a name="gbab-120"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span> <span class="o">+=</span> <span class="n">shift</span><span class="p">;</span>
+<a name="gbab-121"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">Flush</span><span class="p">(</span><span class="n">bw</span><span class="p">);</span>
+<a name="gbab-122"></a>  <span class="p">}</span>
+<a name="gbab-123"></a>  <span class="k">return</span> <span class="n">bit</span><span class="p">;</span>
+<a name="gbab-124"></a><span class="p">}</span>
+<a name="gbab-125"></a>
+<a name="gbab-126"></a><span class="kt">int</span> <span class="nf">VP8PutBitUniform</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bit</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-127"></a>  <span class="k">const</span> <span class="kt">int</span> <span class="n">split</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-128"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-129"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">value_</span> <span class="o">+=</span> <span class="n">split</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-130"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">-=</span> <span class="n">split</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-131"></a>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-132"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">=</span> <span class="n">split</span><span class="p">;</span>
+<a name="gbab-133"></a>  <span class="p">}</span>
+<a name="gbab-134"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">&lt;</span> <span class="mi">127</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-135"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span> <span class="o">=</span> <span class="n">kNewRange</span><span class="p">[</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span><span class="p">];</span>
+<a name="gbab-136"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">value_</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-137"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-138"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">Flush</span><span class="p">(</span><span class="n">bw</span><span class="p">);</span>
+<a name="gbab-139"></a>  <span class="p">}</span>
+<a name="gbab-140"></a>  <span class="k">return</span> <span class="n">bit</span><span class="p">;</span>
+<a name="gbab-141"></a><span class="p">}</span>
+<a name="gbab-142"></a>
+<a name="gbab-143"></a><span class="kt">void</span> <span class="nf">VP8PutBits</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nb_bits</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-144"></a>  <span class="kt">uint32_t</span> <span class="n">mask</span><span class="p">;</span>
+<a name="gbab-145"></a>  <span class="n">assert</span><span class="p">(</span><span class="n">nb_bits</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">nb_bits</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">);</span>
+<a name="gbab-146"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">mask</span> <span class="o">=</span> <span class="mi">1u</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">nb_bits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span> <span class="n">mask</span><span class="p">;</span> <span class="n">mask</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">)</span>
+<a name="gbab-147"></a>    <span class="n">VP8PutBitUniform</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="n">value</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">);</span>
+<a name="gbab-148"></a><span class="p">}</span>
+<a name="gbab-149"></a>
+<a name="gbab-150"></a><span class="kt">void</span> <span class="nf">VP8PutSignedBits</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span> <span class="kt">int</span> <span class="n">value</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nb_bits</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-151"></a>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">VP8PutBitUniform</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span>
+<a name="gbab-152"></a>    <span class="k">return</span><span class="p">;</span>
+<a name="gbab-153"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-154"></a>    <span class="n">VP8PutBits</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="p">((</span><span class="o">-</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_bits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-155"></a>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-156"></a>    <span class="n">VP8PutBits</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_bits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+<a name="gbab-157"></a>  <span class="p">}</span>
+<a name="gbab-158"></a><span class="p">}</span>
+<a name="gbab-159"></a>
+<a name="gbab-160"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-161"></a>
+<a name="gbab-162"></a><span class="kt">int</span> <span class="nf">VP8BitWriterInit</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">expected_size</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-163"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">range_</span>   <span class="o">=</span> <span class="mi">255</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-164"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">value_</span>   <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-165"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">run_</span>     <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-166"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span> <span class="o">=</span> <span class="o">-</span><span class="mi">8</span><span class="p">;</span>
+<a name="gbab-167"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">pos_</span>     <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-168"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">max_pos_</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-169"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">error_</span>   <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-170"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span>     <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<a name="gbab-171"></a>  <span class="k">return</span> <span class="p">(</span><span class="n">expected_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="n">BitWriterResize</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="n">expected_size</span><span class="p">)</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-172"></a><span class="p">}</span>
+<a name="gbab-173"></a>
+<a name="gbab-174"></a><span class="kt">uint8_t</span><span class="o">*</span> <span class="nf">VP8BitWriterFinish</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-175"></a>  <span class="n">VP8PutBits</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span> <span class="o">-</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span><span class="p">);</span>
+<a name="gbab-176"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>   <span class="c1">// pad with zeroes</span>
+<a name="gbab-177"></a>  <span class="n">Flush</span><span class="p">(</span><span class="n">bw</span><span class="p">);</span>
+<a name="gbab-178"></a>  <span class="k">return</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">;</span>
+<a name="gbab-179"></a><span class="p">}</span>
+<a name="gbab-180"></a>
+<a name="gbab-181"></a><span class="kt">int</span> <span class="nf">VP8BitWriterAppend</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span>
+<a name="gbab-182"></a>                       <span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-183"></a>  <span class="n">assert</span><span class="p">(</span><span class="n">data</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">);</span>
+<a name="gbab-184"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">nb_bits_</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">8</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>   <span class="c1">// Flush() must have been called</span>
+<a name="gbab-185"></a>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">BitWriterResize</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-186"></a>  <span class="n">memcpy</span><span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span> <span class="o">+</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">pos_</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+<a name="gbab-187"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">pos_</span> <span class="o">+=</span> <span class="n">size</span><span class="p">;</span>
+<a name="gbab-188"></a>  <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-189"></a><span class="p">}</span>
+<a name="gbab-190"></a>
+<a name="gbab-191"></a><span class="kt">void</span> <span class="nf">VP8BitWriterWipeOut</span><span class="p">(</span><span class="n">VP8BitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-192"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">bw</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-193"></a>    <span class="n">WebPSafeFree</span><span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">);</span>
+<a name="gbab-194"></a>    <span class="n">memset</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">bw</span><span class="p">));</span>
+<a name="gbab-195"></a>  <span class="p">}</span>
+<a name="gbab-196"></a><span class="p">}</span>
+<a name="gbab-197"></a>
+<a name="gbab-198"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-199"></a><span class="c1">// VP8LBitWriter</span>
+<a name="gbab-200"></a>
+<a name="gbab-201"></a><span class="c1">// This is the minimum amount of size the memory buffer is guaranteed to grow</span>
+<a name="gbab-202"></a><span class="c1">// when extra space is needed.</span>
+<a name="gbab-203"></a><span class="cp">#define MIN_EXTRA_SIZE  (32768ULL)</span>
+<a name="gbab-204"></a>
+<a name="gbab-205"></a><span class="c1">// Returns 1 on success.</span>
+<a name="gbab-206"></a><span class="k">static</span> <span class="kt">int</span> <span class="nf">VP8LBitWriterResize</span><span class="p">(</span><span class="n">VP8LBitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">extra_size</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-207"></a>  <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">allocated_buf</span><span class="p">;</span>
+<a name="gbab-208"></a>  <span class="kt">size_t</span> <span class="n">allocated_size</span><span class="p">;</span>
+<a name="gbab-209"></a>  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">max_bytes</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">end_</span> <span class="o">-</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">;</span>
+<a name="gbab-210"></a>  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">current_size</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">-</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">;</span>
+<a name="gbab-211"></a>  <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">size_required_64b</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span><span class="n">current_size</span> <span class="o">+</span> <span class="n">extra_size</span><span class="p">;</span>
+<a name="gbab-212"></a>  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">size_required</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">size_required_64b</span><span class="p">;</span>
+<a name="gbab-213"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">size_required</span> <span class="o">!=</span> <span class="n">size_required_64b</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-214"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">error_</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-215"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-216"></a>  <span class="p">}</span>
+<a name="gbab-217"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">max_bytes</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">size_required</span> <span class="o">&lt;=</span> <span class="n">max_bytes</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-218"></a>  <span class="n">allocated_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">max_bytes</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-219"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">allocated_size</span> <span class="o">&lt;</span> <span class="n">size_required</span><span class="p">)</span> <span class="n">allocated_size</span> <span class="o">=</span> <span class="n">size_required</span><span class="p">;</span>
+<a name="gbab-220"></a>  <span class="c1">// make allocated size multiple of 1k</span>
+<a name="gbab-221"></a>  <span class="n">allocated_size</span> <span class="o">=</span> <span class="p">(((</span><span class="n">allocated_size</span> <span class="o">&gt;&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">10</span><span class="p">);</span>
+<a name="gbab-222"></a>  <span class="n">allocated_buf</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">WebPSafeMalloc</span><span class="p">(</span><span class="mi">1ULL</span><span class="p">,</span> <span class="n">allocated_size</span><span class="p">);</span>
+<a name="gbab-223"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">allocated_buf</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-224"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">error_</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-225"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-226"></a>  <span class="p">}</span>
+<a name="gbab-227"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">current_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-228"></a>  <span class="n">memcpy</span><span class="p">(</span><span class="n">allocated_buf</span><span class="p">,</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">,</span> <span class="n">current_size</span><span class="p">);</span>
+<a name="gbab-229"></a>  <span class="p">}</span>
+<a name="gbab-230"></a>  <span class="n">WebPSafeFree</span><span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">);</span>
+<a name="gbab-231"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span> <span class="o">=</span> <span class="n">allocated_buf</span><span class="p">;</span>
+<a name="gbab-232"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span> <span class="o">+</span> <span class="n">current_size</span><span class="p">;</span>
+<a name="gbab-233"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">end_</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span> <span class="o">+</span> <span class="n">allocated_size</span><span class="p">;</span>
+<a name="gbab-234"></a>  <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-235"></a><span class="p">}</span>
+<a name="gbab-236"></a>
+<a name="gbab-237"></a><span class="kt">int</span> <span class="nf">VP8LBitWriterInit</span><span class="p">(</span><span class="n">VP8LBitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">expected_size</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-238"></a>  <span class="n">memset</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">bw</span><span class="p">));</span>
+<a name="gbab-239"></a>  <span class="k">return</span> <span class="n">VP8LBitWriterResize</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="n">expected_size</span><span class="p">);</span>
+<a name="gbab-240"></a><span class="p">}</span>
+<a name="gbab-241"></a>
+<a name="gbab-242"></a><span class="kt">void</span> <span class="nf">VP8LBitWriterWipeOut</span><span class="p">(</span><span class="n">VP8LBitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-243"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">bw</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-244"></a>    <span class="n">WebPSafeFree</span><span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">);</span>
+<a name="gbab-245"></a>    <span class="n">memset</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">bw</span><span class="p">));</span>
+<a name="gbab-246"></a>  <span class="p">}</span>
+<a name="gbab-247"></a><span class="p">}</span>
+<a name="gbab-248"></a>
+<a name="gbab-249"></a><span class="kt">void</span> <span class="nf">VP8LPutBitsFlushBits</span><span class="p">(</span><span class="n">VP8LBitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-250"></a>  <span class="c1">// If needed, make some room by flushing some bits out.</span>
+<a name="gbab-251"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">+</span> <span class="n">VP8L_WRITER_BYTES</span> <span class="o">&gt;</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">end_</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-252"></a>    <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">extra_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">end_</span> <span class="o">-</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">)</span> <span class="o">+</span> <span class="n">MIN_EXTRA_SIZE</span><span class="p">;</span>
+<a name="gbab-253"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">extra_size</span> <span class="o">!=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">extra_size</span> <span class="o">||</span>
+<a name="gbab-254"></a>        <span class="o">!</span><span class="n">VP8LBitWriterResize</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">extra_size</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-255"></a>      <span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">;</span>
+<a name="gbab-256"></a>      <span class="n">bw</span><span class="o">-&gt;</span><span class="n">error_</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-257"></a>      <span class="k">return</span><span class="p">;</span>
+<a name="gbab-258"></a>  <span class="p">}</span>
+<a name="gbab-259"></a>      <span class="p">}</span>
+<a name="gbab-260"></a>  <span class="o">*</span><span class="p">(</span><span class="n">vp8l_wtype_t</span><span class="o">*</span><span class="p">)</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">=</span> <span class="p">(</span><span class="n">vp8l_wtype_t</span><span class="p">)</span><span class="n">WSWAP</span><span class="p">((</span><span class="n">vp8l_wtype_t</span><span class="p">)</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">bits_</span><span class="p">);</span>
+<a name="gbab-261"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">+=</span> <span class="n">VP8L_WRITER_BYTES</span><span class="p">;</span>
+<a name="gbab-262"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">bits_</span> <span class="o">&gt;&gt;=</span> <span class="n">VP8L_WRITER_BITS</span><span class="p">;</span>
+<a name="gbab-263"></a>  <span class="n">bw</span><span class="o">-&gt;</span><span class="n">used_</span> <span class="o">-=</span> <span class="n">VP8L_WRITER_BITS</span><span class="p">;</span>
+<a name="gbab-264"></a>    <span class="p">}</span>
+<a name="gbab-265"></a>
+<a name="gbab-266"></a><span class="kt">void</span> <span class="nf">VP8LPutBitsInternal</span><span class="p">(</span><span class="n">VP8LBitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">bits</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n_bits</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-267"></a>  <span class="n">assert</span><span class="p">(</span><span class="n">n_bits</span> <span class="o">&lt;=</span> <span class="mi">32</span><span class="p">);</span>
+<a name="gbab-268"></a>  <span class="c1">// That&#39;s the max we can handle:</span>
+<a name="gbab-269"></a>  <span class="n">assert</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">vp8l_wtype_t</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">);</span>
+<a name="gbab-270"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">n_bits</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-271"></a>    <span class="n">vp8l_atype_t</span> <span class="n">lbits</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">bits_</span><span class="p">;</span>
+<a name="gbab-272"></a>    <span class="kt">int</span> <span class="n">used</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">used_</span><span class="p">;</span>
+<a name="gbab-273"></a>    <span class="c1">// Special case of overflow handling for 32bit accumulator (2-steps flush).</span>
+<a name="gbab-274"></a><span class="cp">#if VP8L_WRITER_BITS == 16</span>
+<a name="gbab-275"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">used</span> <span class="o">+</span> <span class="n">n_bits</span> <span class="o">&gt;=</span> <span class="n">VP8L_WRITER_MAX_BITS</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-276"></a>      <span class="c1">// Fill up all the VP8L_WRITER_MAX_BITS so it can be flushed out below.</span>
+<a name="gbab-277"></a>      <span class="k">const</span> <span class="kt">int</span> <span class="n">shift</span> <span class="o">=</span> <span class="n">VP8L_WRITER_MAX_BITS</span> <span class="o">-</span> <span class="n">used</span><span class="p">;</span>
+<a name="gbab-278"></a>      <span class="n">lbits</span> <span class="o">|=</span> <span class="p">(</span><span class="n">vp8l_atype_t</span><span class="p">)</span><span class="n">bits</span> <span class="o">&lt;&lt;</span> <span class="n">used</span><span class="p">;</span>
+<a name="gbab-279"></a>      <span class="n">used</span> <span class="o">=</span> <span class="n">VP8L_WRITER_MAX_BITS</span><span class="p">;</span>
+<a name="gbab-280"></a>      <span class="n">n_bits</span> <span class="o">-=</span> <span class="n">shift</span><span class="p">;</span>
+<a name="gbab-281"></a>      <span class="n">bits</span> <span class="o">&gt;&gt;=</span> <span class="n">shift</span><span class="p">;</span>
+<a name="gbab-282"></a>      <span class="n">assert</span><span class="p">(</span><span class="n">n_bits</span> <span class="o">&lt;=</span> <span class="n">VP8L_WRITER_MAX_BITS</span><span class="p">);</span>
+<a name="gbab-283"></a>  <span class="p">}</span>
+<a name="gbab-284"></a><span class="cp">#endif</span>
+<a name="gbab-285"></a>    <span class="c1">// If needed, make some room by flushing some bits out.</span>
+<a name="gbab-286"></a>    <span class="k">while</span> <span class="p">(</span><span class="n">used</span> <span class="o">&gt;=</span> <span class="n">VP8L_WRITER_BITS</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-287"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">+</span> <span class="n">VP8L_WRITER_BYTES</span> <span class="o">&gt;</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">end_</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-288"></a>        <span class="k">const</span> <span class="kt">uint64_t</span> <span class="n">extra_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">end_</span> <span class="o">-</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">)</span> <span class="o">+</span> <span class="n">MIN_EXTRA_SIZE</span><span class="p">;</span>
+<a name="gbab-289"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">extra_size</span> <span class="o">!=</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">extra_size</span> <span class="o">||</span>
+<a name="gbab-290"></a>        <span class="o">!</span><span class="n">VP8LBitWriterResize</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">extra_size</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-291"></a>          <span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">=</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">;</span>
+<a name="gbab-292"></a>      <span class="n">bw</span><span class="o">-&gt;</span><span class="n">error_</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="gbab-293"></a>          <span class="k">return</span><span class="p">;</span>
+<a name="gbab-294"></a>    <span class="p">}</span>
+<a name="gbab-295"></a>  <span class="p">}</span>
+<a name="gbab-296"></a>      <span class="o">*</span><span class="p">(</span><span class="n">vp8l_wtype_t</span><span class="o">*</span><span class="p">)</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">=</span> <span class="p">(</span><span class="n">vp8l_wtype_t</span><span class="p">)</span><span class="n">WSWAP</span><span class="p">((</span><span class="n">vp8l_wtype_t</span><span class="p">)</span><span class="n">lbits</span><span class="p">);</span>
+<a name="gbab-297"></a>      <span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span> <span class="o">+=</span> <span class="n">VP8L_WRITER_BYTES</span><span class="p">;</span>
+<a name="gbab-298"></a>      <span class="n">lbits</span> <span class="o">&gt;&gt;=</span> <span class="n">VP8L_WRITER_BITS</span><span class="p">;</span>
+<a name="gbab-299"></a>      <span class="n">used</span> <span class="o">-=</span> <span class="n">VP8L_WRITER_BITS</span><span class="p">;</span>
+<a name="gbab-300"></a>    <span class="p">}</span>
+<a name="gbab-301"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">bits_</span> <span class="o">=</span> <span class="n">lbits</span> <span class="o">|</span> <span class="p">((</span><span class="n">vp8l_atype_t</span><span class="p">)</span><span class="n">bits</span> <span class="o">&lt;&lt;</span> <span class="n">used</span><span class="p">);</span>
+<a name="gbab-302"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">used_</span> <span class="o">=</span> <span class="n">used</span> <span class="o">+</span> <span class="n">n_bits</span><span class="p">;</span>
+<a name="gbab-303"></a>  <span class="p">}</span>
+<a name="gbab-304"></a><span class="p">}</span>
+<a name="gbab-305"></a>
+<a name="gbab-306"></a><span class="kt">uint8_t</span><span class="o">*</span> <span class="nf">VP8LBitWriterFinish</span><span class="p">(</span><span class="n">VP8LBitWriter</span><span class="o">*</span> <span class="k">const</span> <span class="n">bw</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-307"></a>  <span class="c1">// flush leftover bits</span>
+<a name="gbab-308"></a>  <span class="k">if</span> <span class="p">(</span><span class="n">VP8LBitWriterResize</span><span class="p">(</span><span class="n">bw</span><span class="p">,</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">used_</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-309"></a>    <span class="k">while</span> <span class="p">(</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">used_</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-310"></a>      <span class="o">*</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">cur_</span><span class="o">++</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uint8_t</span><span class="p">)</span><span class="n">bw</span><span class="o">-&gt;</span><span class="n">bits_</span><span class="p">;</span>
+<a name="gbab-311"></a>      <span class="n">bw</span><span class="o">-&gt;</span><span class="n">bits_</span> <span class="o">&gt;&gt;=</span> <span class="mi">8</span><span class="p">;</span>
+<a name="gbab-312"></a>      <span class="n">bw</span><span class="o">-&gt;</span><span class="n">used_</span> <span class="o">-=</span> <span class="mi">8</span><span class="p">;</span>
+<a name="gbab-313"></a>    <span class="p">}</span>
+<a name="gbab-314"></a>    <span class="n">bw</span><span class="o">-&gt;</span><span class="n">used_</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<a name="gbab-315"></a>  <span class="p">}</span>
+<a name="gbab-316"></a>  <span class="k">return</span> <span class="n">bw</span><span class="o">-&gt;</span><span class="n">buf_</span><span class="p">;</span>
+<a name="gbab-317"></a><span class="p">}</span>
+<a name="gbab-318"></a>
+<a name="gbab-319"></a><span class="c1">//------------------------------------------------------------------------------</span>
+</pre></div>
+</td></tr></table>

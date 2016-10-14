@@ -1,0 +1,2795 @@
+{
+    "name": "ifaddrs_android.cpp", 
+    "tot_risk": 22929.0, 
+    "lines": [
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Mario Schlack": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Mario Schlack": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "Mario Schlack": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "Juan Linietsky\nMario Schlack": {
+                    "tot_knowledge": 900.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 9.000000000000002
+                }
+            }, 
+            "tot_knowledge": 1100.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 29.0
+        }, 
+        {
+            "author_risks": {
+                "Mario Schlack": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Mario Schlack": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Mario Schlack": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Mario Schlack": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Mario Schlack": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Mario Schlack": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Mario Schlack": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }
+    ], 
+    "tot_orphaned": 0.0, 
+    "author_risks": {
+        "Juan Linietsky": {
+            "tot_knowledge": 220100.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 22010.0
+        }, 
+        "Mario Schlack": {
+            "tot_knowledge": 9100.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 910.0
+        }, 
+        "Juan Linietsky\nMario Schlack": {
+            "tot_knowledge": 900.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 9.000000000000002
+        }
+    }, 
+    "tot_knowledge": 230100.0
+}

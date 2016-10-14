@@ -1,0 +1,875 @@
+{
+    "name": "celt_lpc_sse.h", 
+    "tot_risk": 6048.454545454545, 
+    "lines": [
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 110.0
+                }
+            }, 
+            "tot_knowledge": 1100.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 110.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 110.0
+                }
+            }, 
+            "tot_knowledge": 1100.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 110.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "George Marques": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "George Marques\nJuan Linietsky": {
+                    "tot_knowledge": 900.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 9.000000000000002
+                }
+            }, 
+            "tot_knowledge": 1100.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 29.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "George Marques": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "George Marques\nJuan Linietsky": {
+                    "tot_knowledge": 900.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 9.000000000000002
+                }
+            }, 
+            "tot_knowledge": 1100.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 29.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "George Marques": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "George Marques\nJuan Linietsky": {
+                    "tot_knowledge": 900.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 9.000000000000002
+                }
+            }, 
+            "tot_knowledge": 1100.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 29.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "George Marques": {
+                    "tot_knowledge": 100.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 10.0
+                }, 
+                "George Marques\nJuan Linietsky": {
+                    "tot_knowledge": 900.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 9.000000000000002
+                }
+            }, 
+            "tot_knowledge": 1100.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 29.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 4.545454545454543, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 0.45454545454545436
+                }, 
+                "George Marques": {
+                    "tot_knowledge": 300.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 30.0
+                }, 
+                "George Marques\nJuan Linietsky": {
+                    "tot_knowledge": 995.4545454545455, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 9.954545454545457
+                }
+            }, 
+            "tot_knowledge": 1300.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 40.40909090909091
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 18.181818181818173, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 1.8181818181818175
+                }, 
+                "George Marques": {
+                    "tot_knowledge": 200.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 20.0
+                }, 
+                "George Marques\nJuan Linietsky": {
+                    "tot_knowledge": 981.8181818181819, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 9.81818181818182
+                }
+            }, 
+            "tot_knowledge": 1200.0000000000002, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 31.636363636363637
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "George Marques": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 1000.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 100.0
+                }
+            }, 
+            "tot_knowledge": 1000.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 100.0
+        }, 
+        {
+            "author_risks": {
+                "Juan Linietsky": {
+                    "tot_knowledge": 4.545454545454543, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 0.45454545454545436
+                }, 
+                "George Marques": {
+                    "tot_knowledge": 300.0, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 30.0
+                }, 
+                "George Marques\nJuan Linietsky": {
+                    "tot_knowledge": 995.4545454545455, 
+                    "tot_orphaned": 0.0, 
+                    "tot_risk": 9.954545454545457
+                }
+            }, 
+            "tot_knowledge": 1300.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 40.40909090909091
+        }
+    ], 
+    "tot_orphaned": 0.0, 
+    "author_risks": {
+        "Juan Linietsky": {
+            "tot_knowledge": 23427.27272727273, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 2342.727272727273
+        }, 
+        "George Marques": {
+            "tot_knowledge": 36400.0, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 3640.0
+        }, 
+        "George Marques\nJuan Linietsky": {
+            "tot_knowledge": 6572.727272727274, 
+            "tot_orphaned": 0.0, 
+            "tot_risk": 65.72727272727275
+        }
+    }, 
+    "tot_knowledge": 66400.0
+}

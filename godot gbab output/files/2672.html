@@ -1,0 +1,127 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*</span>
+<a name="gbab-2"></a><span class="cm"> * Copyright (C) 2010 The Android Open Source Project</span>
+<a name="gbab-3"></a><span class="cm"> *</span>
+<a name="gbab-4"></a><span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<a name="gbab-5"></a><span class="cm"> * you may not use this file except in compliance with the License.</span>
+<a name="gbab-6"></a><span class="cm"> * You may obtain a copy of the License at</span>
+<a name="gbab-7"></a><span class="cm"> *</span>
+<a name="gbab-8"></a><span class="cm"> *      http://www.apache.org/licenses/LICENSE-2.0</span>
+<a name="gbab-9"></a><span class="cm"> *</span>
+<a name="gbab-10"></a><span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
+<a name="gbab-11"></a><span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<a name="gbab-12"></a><span class="cm"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<a name="gbab-13"></a><span class="cm"> * See the License for the specific language governing permissions and</span>
+<a name="gbab-14"></a><span class="cm"> * limitations under the License.</span>
+<a name="gbab-15"></a><span class="cm"> */</span>
+<a name="gbab-16"></a>
+<a name="gbab-17"></a><span class="kn">package</span> <span class="nn">com.google.android.vending.licensing</span><span class="o">;</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cm">/**</span>
+<a name="gbab-20"></a><span class="cm"> * Non-caching policy. All requests will be sent to the licensing service,</span>
+<a name="gbab-21"></a><span class="cm"> * and no local caching is performed.</span>
+<a name="gbab-22"></a><span class="cm"> * &lt;p&gt;</span>
+<a name="gbab-23"></a><span class="cm"> * Using a non-caching policy ensures that there is no local preference data</span>
+<a name="gbab-24"></a><span class="cm"> * for malicious users to tamper with. As a side effect, applications</span>
+<a name="gbab-25"></a><span class="cm"> * will not be permitted to run while offline. Developers should carefully</span>
+<a name="gbab-26"></a><span class="cm"> * weigh the risks of using this Policy over one which implements caching,</span>
+<a name="gbab-27"></a><span class="cm"> * such as ServerManagedPolicy.</span>
+<a name="gbab-28"></a><span class="cm"> * &lt;p&gt;</span>
+<a name="gbab-29"></a><span class="cm"> * Access to the application is only allowed if a LICESNED response is.</span>
+<a name="gbab-30"></a><span class="cm"> * received. All other responses (including RETRY) will deny access.</span>
+<a name="gbab-31"></a><span class="cm"> */</span>
+<a name="gbab-32"></a><span class="kd">public</span> <span class="kd">class</span> <span class="nc">StrictPolicy</span> <span class="kd">implements</span> <span class="n">Policy</span> <span class="o">{</span>
+<a name="gbab-33"></a>
+<a name="gbab-34"></a>    <span class="kd">private</span> <span class="kt">int</span> <span class="n">mLastResponse</span><span class="o">;</span>
+<a name="gbab-35"></a>
+<a name="gbab-36"></a>    <span class="kd">public</span> <span class="nf">StrictPolicy</span><span class="o">()</span> <span class="o">{</span>
+<a name="gbab-37"></a>        <span class="c1">// Set default policy. This will force the application to check the policy on launch.</span>
+<a name="gbab-38"></a>        <span class="n">mLastResponse</span> <span class="o">=</span> <span class="n">Policy</span><span class="o">.</span><span class="na">RETRY</span><span class="o">;</span>
+<a name="gbab-39"></a>    <span class="o">}</span>
+<a name="gbab-40"></a>
+<a name="gbab-41"></a>    <span class="cm">/**</span>
+<a name="gbab-42"></a><span class="cm">     * Process a new response from the license server. Since we aren&#39;t</span>
+<a name="gbab-43"></a><span class="cm">     * performing any caching, this equates to reading the LicenseResponse.</span>
+<a name="gbab-44"></a><span class="cm">     * Any ResponseData provided is ignored.</span>
+<a name="gbab-45"></a><span class="cm">     *</span>
+<a name="gbab-46"></a><span class="cm">     * @param response the result from validating the server response</span>
+<a name="gbab-47"></a><span class="cm">     * @param rawData the raw server response data</span>
+<a name="gbab-48"></a><span class="cm">     */</span>
+<a name="gbab-49"></a>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">processServerResponse</span><span class="o">(</span><span class="kt">int</span> <span class="n">response</span><span class="o">,</span> <span class="n">ResponseData</span> <span class="n">rawData</span><span class="o">)</span> <span class="o">{</span>
+<a name="gbab-50"></a>        <span class="n">mLastResponse</span> <span class="o">=</span> <span class="n">response</span><span class="o">;</span>
+<a name="gbab-51"></a>    <span class="o">}</span>
+<a name="gbab-52"></a>
+<a name="gbab-53"></a>    <span class="cm">/**</span>
+<a name="gbab-54"></a><span class="cm">     * {@inheritDoc}</span>
+<a name="gbab-55"></a><span class="cm">     *</span>
+<a name="gbab-56"></a><span class="cm">     * This implementation allows access if and only if a LICENSED response</span>
+<a name="gbab-57"></a><span class="cm">     * was received the last time the server was contacted.</span>
+<a name="gbab-58"></a><span class="cm">     */</span>
+<a name="gbab-59"></a>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">allowAccess</span><span class="o">()</span> <span class="o">{</span>
+<a name="gbab-60"></a>        <span class="k">return</span> <span class="o">(</span><span class="n">mLastResponse</span> <span class="o">==</span> <span class="n">Policy</span><span class="o">.</span><span class="na">LICENSED</span><span class="o">);</span>
+<a name="gbab-61"></a>    <span class="o">}</span>
+<a name="gbab-62"></a>
+<a name="gbab-63"></a><span class="o">}</span>
+</pre></div>
+</td></tr></table>

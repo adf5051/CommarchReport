@@ -1,0 +1,709 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* crypto/asn1/asn1_err.c */</span>
+<a name="gbab-2"></a><span class="cm">/* ====================================================================</span>
+<a name="gbab-3"></a><span class="cm"> * Copyright (c) 1999-2014 The OpenSSL Project.  All rights reserved.</span>
+<a name="gbab-4"></a><span class="cm"> *</span>
+<a name="gbab-5"></a><span class="cm"> * Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-6"></a><span class="cm"> * modification, are permitted provided that the following conditions</span>
+<a name="gbab-7"></a><span class="cm"> * are met:</span>
+<a name="gbab-8"></a><span class="cm"> *</span>
+<a name="gbab-9"></a><span class="cm"> * 1. Redistributions of source code must retain the above copyright</span>
+<a name="gbab-10"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer. </span>
+<a name="gbab-11"></a><span class="cm"> *</span>
+<a name="gbab-12"></a><span class="cm"> * 2. Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-13"></a><span class="cm"> *    notice, this list of conditions and the following disclaimer in</span>
+<a name="gbab-14"></a><span class="cm"> *    the documentation and/or other materials provided with the</span>
+<a name="gbab-15"></a><span class="cm"> *    distribution.</span>
+<a name="gbab-16"></a><span class="cm"> *</span>
+<a name="gbab-17"></a><span class="cm"> * 3. All advertising materials mentioning features or use of this</span>
+<a name="gbab-18"></a><span class="cm"> *    software must display the following acknowledgment:</span>
+<a name="gbab-19"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-20"></a><span class="cm"> *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)&quot;</span>
+<a name="gbab-21"></a><span class="cm"> *</span>
+<a name="gbab-22"></a><span class="cm"> * 4. The names &quot;OpenSSL Toolkit&quot; and &quot;OpenSSL Project&quot; must not be used to</span>
+<a name="gbab-23"></a><span class="cm"> *    endorse or promote products derived from this software without</span>
+<a name="gbab-24"></a><span class="cm"> *    prior written permission. For written permission, please contact</span>
+<a name="gbab-25"></a><span class="cm"> *    openssl-core@OpenSSL.org.</span>
+<a name="gbab-26"></a><span class="cm"> *</span>
+<a name="gbab-27"></a><span class="cm"> * 5. Products derived from this software may not be called &quot;OpenSSL&quot;</span>
+<a name="gbab-28"></a><span class="cm"> *    nor may &quot;OpenSSL&quot; appear in their names without prior written</span>
+<a name="gbab-29"></a><span class="cm"> *    permission of the OpenSSL Project.</span>
+<a name="gbab-30"></a><span class="cm"> *</span>
+<a name="gbab-31"></a><span class="cm"> * 6. Redistributions of any form whatsoever must retain the following</span>
+<a name="gbab-32"></a><span class="cm"> *    acknowledgment:</span>
+<a name="gbab-33"></a><span class="cm"> *    &quot;This product includes software developed by the OpenSSL Project</span>
+<a name="gbab-34"></a><span class="cm"> *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)&quot;</span>
+<a name="gbab-35"></a><span class="cm"> *</span>
+<a name="gbab-36"></a><span class="cm"> * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS&#39;&#39; AND ANY</span>
+<a name="gbab-37"></a><span class="cm"> * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<a name="gbab-38"></a><span class="cm"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR</span>
+<a name="gbab-39"></a><span class="cm"> * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR</span>
+<a name="gbab-40"></a><span class="cm"> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<a name="gbab-41"></a><span class="cm"> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT</span>
+<a name="gbab-42"></a><span class="cm"> * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<a name="gbab-43"></a><span class="cm"> * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)</span>
+<a name="gbab-44"></a><span class="cm"> * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,</span>
+<a name="gbab-45"></a><span class="cm"> * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<a name="gbab-46"></a><span class="cm"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED</span>
+<a name="gbab-47"></a><span class="cm"> * OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-48"></a><span class="cm"> * ====================================================================</span>
+<a name="gbab-49"></a><span class="cm"> *</span>
+<a name="gbab-50"></a><span class="cm"> * This product includes cryptographic software written by Eric Young</span>
+<a name="gbab-51"></a><span class="cm"> * (eay@cryptsoft.com).  This product includes software written by Tim</span>
+<a name="gbab-52"></a><span class="cm"> * Hudson (tjh@cryptsoft.com).</span>
+<a name="gbab-53"></a><span class="cm"> *</span>
+<a name="gbab-54"></a><span class="cm"> */</span>
+<a name="gbab-55"></a>
+<a name="gbab-56"></a><span class="cm">/*</span>
+<a name="gbab-57"></a><span class="cm"> * NOTE: this file was auto generated by the mkerr.pl script: any changes</span>
+<a name="gbab-58"></a><span class="cm"> * made to it will be overwritten when the script next updates this file,</span>
+<a name="gbab-59"></a><span class="cm"> * only reason strings will be preserved.</span>
+<a name="gbab-60"></a><span class="cm"> */</span>
+<a name="gbab-61"></a>
+<a name="gbab-62"></a><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<a name="gbab-63"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/err.h&gt;</span><span class="cp"></span>
+<a name="gbab-64"></a><span class="cp">#include</span> <span class="cpf">&lt;openssl/asn1.h&gt;</span><span class="cp"></span>
+<a name="gbab-65"></a>
+<a name="gbab-66"></a><span class="cm">/* BEGIN ERROR CODES */</span>
+<a name="gbab-67"></a><span class="cp">#ifndef OPENSSL_NO_ERR</span>
+<a name="gbab-68"></a>
+<a name="gbab-69"></a><span class="cp">#define ERR_FUNC(func) ERR_PACK(ERR_LIB_ASN1,func,0)</span>
+<a name="gbab-70"></a><span class="cp">#define ERR_REASON(reason) ERR_PACK(ERR_LIB_ASN1,0,reason)</span>
+<a name="gbab-71"></a>
+<a name="gbab-72"></a><span class="k">static</span> <span class="n">ERR_STRING_DATA</span> <span class="n">ASN1_str_functs</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-73"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_A2D_ASN1_OBJECT</span><span class="p">),</span>	<span class="s">&quot;a2d_ASN1_OBJECT&quot;</span><span class="p">},</span>
+<a name="gbab-74"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_A2I_ASN1_ENUMERATED</span><span class="p">),</span>	<span class="s">&quot;a2i_ASN1_ENUMERATED&quot;</span><span class="p">},</span>
+<a name="gbab-75"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_A2I_ASN1_INTEGER</span><span class="p">),</span>	<span class="s">&quot;a2i_ASN1_INTEGER&quot;</span><span class="p">},</span>
+<a name="gbab-76"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_A2I_ASN1_STRING</span><span class="p">),</span>	<span class="s">&quot;a2i_ASN1_STRING&quot;</span><span class="p">},</span>
+<a name="gbab-77"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_APPEND_EXP</span><span class="p">),</span>	<span class="s">&quot;APPEND_EXP&quot;</span><span class="p">},</span>
+<a name="gbab-78"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_BIT_STRING_SET_BIT</span><span class="p">),</span>	<span class="s">&quot;ASN1_BIT_STRING_set_bit&quot;</span><span class="p">},</span>
+<a name="gbab-79"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_CB</span><span class="p">),</span>	<span class="s">&quot;ASN1_CB&quot;</span><span class="p">},</span>
+<a name="gbab-80"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_CHECK_TLEN</span><span class="p">),</span>	<span class="s">&quot;ASN1_CHECK_TLEN&quot;</span><span class="p">},</span>
+<a name="gbab-81"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_COLLATE_PRIMITIVE</span><span class="p">),</span>	<span class="s">&quot;ASN1_COLLATE_PRIMITIVE&quot;</span><span class="p">},</span>
+<a name="gbab-82"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_COLLECT</span><span class="p">),</span>	<span class="s">&quot;ASN1_COLLECT&quot;</span><span class="p">},</span>
+<a name="gbab-83"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_D2I_EX_PRIMITIVE</span><span class="p">),</span>	<span class="s">&quot;ASN1_D2I_EX_PRIMITIVE&quot;</span><span class="p">},</span>
+<a name="gbab-84"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_D2I_FP</span><span class="p">),</span>	<span class="s">&quot;ASN1_d2i_fp&quot;</span><span class="p">},</span>
+<a name="gbab-85"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_D2I_READ_BIO</span><span class="p">),</span>	<span class="s">&quot;ASN1_D2I_READ_BIO&quot;</span><span class="p">},</span>
+<a name="gbab-86"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_DIGEST</span><span class="p">),</span>	<span class="s">&quot;ASN1_digest&quot;</span><span class="p">},</span>
+<a name="gbab-87"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_DO_ADB</span><span class="p">),</span>	<span class="s">&quot;ASN1_DO_ADB&quot;</span><span class="p">},</span>
+<a name="gbab-88"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_DUP</span><span class="p">),</span>	<span class="s">&quot;ASN1_dup&quot;</span><span class="p">},</span>
+<a name="gbab-89"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ENUMERATED_SET</span><span class="p">),</span>	<span class="s">&quot;ASN1_ENUMERATED_set&quot;</span><span class="p">},</span>
+<a name="gbab-90"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ENUMERATED_TO_BN</span><span class="p">),</span>	<span class="s">&quot;ASN1_ENUMERATED_to_BN&quot;</span><span class="p">},</span>
+<a name="gbab-91"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_EX_C2I</span><span class="p">),</span>	<span class="s">&quot;ASN1_EX_C2I&quot;</span><span class="p">},</span>
+<a name="gbab-92"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_FIND_END</span><span class="p">),</span>	<span class="s">&quot;ASN1_FIND_END&quot;</span><span class="p">},</span>
+<a name="gbab-93"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_GENERALIZEDTIME_ADJ</span><span class="p">),</span>	<span class="s">&quot;ASN1_GENERALIZEDTIME_adj&quot;</span><span class="p">},</span>
+<a name="gbab-94"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_GENERALIZEDTIME_SET</span><span class="p">),</span>	<span class="s">&quot;ASN1_GENERALIZEDTIME_set&quot;</span><span class="p">},</span>
+<a name="gbab-95"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_GENERATE_V3</span><span class="p">),</span>	<span class="s">&quot;ASN1_generate_v3&quot;</span><span class="p">},</span>
+<a name="gbab-96"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_GET_OBJECT</span><span class="p">),</span>	<span class="s">&quot;ASN1_get_object&quot;</span><span class="p">},</span>
+<a name="gbab-97"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_HEADER_NEW</span><span class="p">),</span>	<span class="s">&quot;ASN1_HEADER_NEW&quot;</span><span class="p">},</span>
+<a name="gbab-98"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_I2D_BIO</span><span class="p">),</span>	<span class="s">&quot;ASN1_i2d_bio&quot;</span><span class="p">},</span>
+<a name="gbab-99"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_I2D_FP</span><span class="p">),</span>	<span class="s">&quot;ASN1_i2d_fp&quot;</span><span class="p">},</span>
+<a name="gbab-100"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_INTEGER_SET</span><span class="p">),</span>	<span class="s">&quot;ASN1_INTEGER_set&quot;</span><span class="p">},</span>
+<a name="gbab-101"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_INTEGER_TO_BN</span><span class="p">),</span>	<span class="s">&quot;ASN1_INTEGER_to_BN&quot;</span><span class="p">},</span>
+<a name="gbab-102"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_D2I_FP</span><span class="p">),</span>	<span class="s">&quot;ASN1_item_d2i_fp&quot;</span><span class="p">},</span>
+<a name="gbab-103"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_DUP</span><span class="p">),</span>	<span class="s">&quot;ASN1_item_dup&quot;</span><span class="p">},</span>
+<a name="gbab-104"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_EX_COMBINE_NEW</span><span class="p">),</span>	<span class="s">&quot;ASN1_ITEM_EX_COMBINE_NEW&quot;</span><span class="p">},</span>
+<a name="gbab-105"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_EX_D2I</span><span class="p">),</span>	<span class="s">&quot;ASN1_ITEM_EX_D2I&quot;</span><span class="p">},</span>
+<a name="gbab-106"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_I2D_BIO</span><span class="p">),</span>	<span class="s">&quot;ASN1_item_i2d_bio&quot;</span><span class="p">},</span>
+<a name="gbab-107"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_I2D_FP</span><span class="p">),</span>	<span class="s">&quot;ASN1_item_i2d_fp&quot;</span><span class="p">},</span>
+<a name="gbab-108"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_PACK</span><span class="p">),</span>	<span class="s">&quot;ASN1_item_pack&quot;</span><span class="p">},</span>
+<a name="gbab-109"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_SIGN</span><span class="p">),</span>	<span class="s">&quot;ASN1_item_sign&quot;</span><span class="p">},</span>
+<a name="gbab-110"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_SIGN_CTX</span><span class="p">),</span>	<span class="s">&quot;ASN1_item_sign_ctx&quot;</span><span class="p">},</span>
+<a name="gbab-111"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_UNPACK</span><span class="p">),</span>	<span class="s">&quot;ASN1_item_unpack&quot;</span><span class="p">},</span>
+<a name="gbab-112"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_ITEM_VERIFY</span><span class="p">),</span>	<span class="s">&quot;ASN1_item_verify&quot;</span><span class="p">},</span>
+<a name="gbab-113"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_MBSTRING_NCOPY</span><span class="p">),</span>	<span class="s">&quot;ASN1_mbstring_ncopy&quot;</span><span class="p">},</span>
+<a name="gbab-114"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_OBJECT_NEW</span><span class="p">),</span>	<span class="s">&quot;ASN1_OBJECT_new&quot;</span><span class="p">},</span>
+<a name="gbab-115"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_OUTPUT_DATA</span><span class="p">),</span>	<span class="s">&quot;ASN1_OUTPUT_DATA&quot;</span><span class="p">},</span>
+<a name="gbab-116"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_PACK_STRING</span><span class="p">),</span>	<span class="s">&quot;ASN1_pack_string&quot;</span><span class="p">},</span>
+<a name="gbab-117"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_PCTX_NEW</span><span class="p">),</span>	<span class="s">&quot;ASN1_PCTX_new&quot;</span><span class="p">},</span>
+<a name="gbab-118"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_PKCS5_PBE_SET</span><span class="p">),</span>	<span class="s">&quot;ASN1_PKCS5_PBE_SET&quot;</span><span class="p">},</span>
+<a name="gbab-119"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_SEQ_PACK</span><span class="p">),</span>	<span class="s">&quot;ASN1_seq_pack&quot;</span><span class="p">},</span>
+<a name="gbab-120"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_SEQ_UNPACK</span><span class="p">),</span>	<span class="s">&quot;ASN1_seq_unpack&quot;</span><span class="p">},</span>
+<a name="gbab-121"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_SIGN</span><span class="p">),</span>	<span class="s">&quot;ASN1_sign&quot;</span><span class="p">},</span>
+<a name="gbab-122"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_STR2TYPE</span><span class="p">),</span>	<span class="s">&quot;ASN1_STR2TYPE&quot;</span><span class="p">},</span>
+<a name="gbab-123"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_STRING_SET</span><span class="p">),</span>	<span class="s">&quot;ASN1_STRING_set&quot;</span><span class="p">},</span>
+<a name="gbab-124"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_STRING_TABLE_ADD</span><span class="p">),</span>	<span class="s">&quot;ASN1_STRING_TABLE_add&quot;</span><span class="p">},</span>
+<a name="gbab-125"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_STRING_TYPE_NEW</span><span class="p">),</span>	<span class="s">&quot;ASN1_STRING_type_new&quot;</span><span class="p">},</span>
+<a name="gbab-126"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_TEMPLATE_EX_D2I</span><span class="p">),</span>	<span class="s">&quot;ASN1_TEMPLATE_EX_D2I&quot;</span><span class="p">},</span>
+<a name="gbab-127"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_TEMPLATE_NEW</span><span class="p">),</span>	<span class="s">&quot;ASN1_TEMPLATE_NEW&quot;</span><span class="p">},</span>
+<a name="gbab-128"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_TEMPLATE_NOEXP_D2I</span><span class="p">),</span>	<span class="s">&quot;ASN1_TEMPLATE_NOEXP_D2I&quot;</span><span class="p">},</span>
+<a name="gbab-129"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_TIME_ADJ</span><span class="p">),</span>	<span class="s">&quot;ASN1_TIME_adj&quot;</span><span class="p">},</span>
+<a name="gbab-130"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_TIME_SET</span><span class="p">),</span>	<span class="s">&quot;ASN1_TIME_set&quot;</span><span class="p">},</span>
+<a name="gbab-131"></a>    <span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_TYPE_GET_INT_OCTETSTRING</span><span class="p">),</span>
+<a name="gbab-132"></a>     <span class="s">&quot;ASN1_TYPE_get_int_octetstring&quot;</span><span class="p">},</span>
+<a name="gbab-133"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_TYPE_GET_OCTETSTRING</span><span class="p">),</span>	<span class="s">&quot;ASN1_TYPE_get_octetstring&quot;</span><span class="p">},</span>
+<a name="gbab-134"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_UNPACK_STRING</span><span class="p">),</span>	<span class="s">&quot;ASN1_unpack_string&quot;</span><span class="p">},</span>
+<a name="gbab-135"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_UTCTIME_ADJ</span><span class="p">),</span>	<span class="s">&quot;ASN1_UTCTIME_adj&quot;</span><span class="p">},</span>
+<a name="gbab-136"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_UTCTIME_SET</span><span class="p">),</span>	<span class="s">&quot;ASN1_UTCTIME_set&quot;</span><span class="p">},</span>
+<a name="gbab-137"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_ASN1_VERIFY</span><span class="p">),</span>	<span class="s">&quot;ASN1_verify&quot;</span><span class="p">},</span>
+<a name="gbab-138"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_B64_READ_ASN1</span><span class="p">),</span>	<span class="s">&quot;B64_READ_ASN1&quot;</span><span class="p">},</span>
+<a name="gbab-139"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_B64_WRITE_ASN1</span><span class="p">),</span>	<span class="s">&quot;B64_WRITE_ASN1&quot;</span><span class="p">},</span>
+<a name="gbab-140"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_BIO_NEW_NDEF</span><span class="p">),</span>	<span class="s">&quot;BIO_new_NDEF&quot;</span><span class="p">},</span>
+<a name="gbab-141"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_BITSTR_CB</span><span class="p">),</span>	<span class="s">&quot;BITSTR_CB&quot;</span><span class="p">},</span>
+<a name="gbab-142"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_BN_TO_ASN1_ENUMERATED</span><span class="p">),</span>	<span class="s">&quot;BN_to_ASN1_ENUMERATED&quot;</span><span class="p">},</span>
+<a name="gbab-143"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_BN_TO_ASN1_INTEGER</span><span class="p">),</span>	<span class="s">&quot;BN_to_ASN1_INTEGER&quot;</span><span class="p">},</span>
+<a name="gbab-144"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_C2I_ASN1_BIT_STRING</span><span class="p">),</span>	<span class="s">&quot;c2i_ASN1_BIT_STRING&quot;</span><span class="p">},</span>
+<a name="gbab-145"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_C2I_ASN1_INTEGER</span><span class="p">),</span>	<span class="s">&quot;c2i_ASN1_INTEGER&quot;</span><span class="p">},</span>
+<a name="gbab-146"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_C2I_ASN1_OBJECT</span><span class="p">),</span>	<span class="s">&quot;c2i_ASN1_OBJECT&quot;</span><span class="p">},</span>
+<a name="gbab-147"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_COLLECT_DATA</span><span class="p">),</span>	<span class="s">&quot;COLLECT_DATA&quot;</span><span class="p">},</span>
+<a name="gbab-148"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_BIT_STRING</span><span class="p">),</span>	<span class="s">&quot;D2I_ASN1_BIT_STRING&quot;</span><span class="p">},</span>
+<a name="gbab-149"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_BOOLEAN</span><span class="p">),</span>	<span class="s">&quot;d2i_ASN1_BOOLEAN&quot;</span><span class="p">},</span>
+<a name="gbab-150"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_BYTES</span><span class="p">),</span>	<span class="s">&quot;d2i_ASN1_bytes&quot;</span><span class="p">},</span>
+<a name="gbab-151"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_GENERALIZEDTIME</span><span class="p">),</span>	<span class="s">&quot;D2I_ASN1_GENERALIZEDTIME&quot;</span><span class="p">},</span>
+<a name="gbab-152"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_HEADER</span><span class="p">),</span>	<span class="s">&quot;D2I_ASN1_HEADER&quot;</span><span class="p">},</span>
+<a name="gbab-153"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_INTEGER</span><span class="p">),</span>	<span class="s">&quot;D2I_ASN1_INTEGER&quot;</span><span class="p">},</span>
+<a name="gbab-154"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_OBJECT</span><span class="p">),</span>	<span class="s">&quot;d2i_ASN1_OBJECT&quot;</span><span class="p">},</span>
+<a name="gbab-155"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_SET</span><span class="p">),</span>	<span class="s">&quot;d2i_ASN1_SET&quot;</span><span class="p">},</span>
+<a name="gbab-156"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_TYPE_BYTES</span><span class="p">),</span>	<span class="s">&quot;d2i_ASN1_type_bytes&quot;</span><span class="p">},</span>
+<a name="gbab-157"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_UINTEGER</span><span class="p">),</span>	<span class="s">&quot;d2i_ASN1_UINTEGER&quot;</span><span class="p">},</span>
+<a name="gbab-158"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_ASN1_UTCTIME</span><span class="p">),</span>	<span class="s">&quot;D2I_ASN1_UTCTIME&quot;</span><span class="p">},</span>
+<a name="gbab-159"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_AUTOPRIVATEKEY</span><span class="p">),</span>	<span class="s">&quot;d2i_AutoPrivateKey&quot;</span><span class="p">},</span>
+<a name="gbab-160"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_NETSCAPE_RSA</span><span class="p">),</span>	<span class="s">&quot;d2i_Netscape_RSA&quot;</span><span class="p">},</span>
+<a name="gbab-161"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_NETSCAPE_RSA_2</span><span class="p">),</span>	<span class="s">&quot;D2I_NETSCAPE_RSA_2&quot;</span><span class="p">},</span>
+<a name="gbab-162"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_PRIVATEKEY</span><span class="p">),</span>	<span class="s">&quot;d2i_PrivateKey&quot;</span><span class="p">},</span>
+<a name="gbab-163"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_PUBLICKEY</span><span class="p">),</span>	<span class="s">&quot;d2i_PublicKey&quot;</span><span class="p">},</span>
+<a name="gbab-164"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_RSA_NET</span><span class="p">),</span>	<span class="s">&quot;d2i_RSA_NET&quot;</span><span class="p">},</span>
+<a name="gbab-165"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_RSA_NET_2</span><span class="p">),</span>	<span class="s">&quot;D2I_RSA_NET_2&quot;</span><span class="p">},</span>
+<a name="gbab-166"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_X509</span><span class="p">),</span>	<span class="s">&quot;D2I_X509&quot;</span><span class="p">},</span>
+<a name="gbab-167"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_X509_CINF</span><span class="p">),</span>	<span class="s">&quot;D2I_X509_CINF&quot;</span><span class="p">},</span>
+<a name="gbab-168"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_D2I_X509_PKEY</span><span class="p">),</span>	<span class="s">&quot;d2i_X509_PKEY&quot;</span><span class="p">},</span>
+<a name="gbab-169"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_I2D_ASN1_BIO_STREAM</span><span class="p">),</span>	<span class="s">&quot;i2d_ASN1_bio_stream&quot;</span><span class="p">},</span>
+<a name="gbab-170"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_I2D_ASN1_SET</span><span class="p">),</span>	<span class="s">&quot;i2d_ASN1_SET&quot;</span><span class="p">},</span>
+<a name="gbab-171"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_I2D_ASN1_TIME</span><span class="p">),</span>	<span class="s">&quot;I2D_ASN1_TIME&quot;</span><span class="p">},</span>
+<a name="gbab-172"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_I2D_DSA_PUBKEY</span><span class="p">),</span>	<span class="s">&quot;i2d_DSA_PUBKEY&quot;</span><span class="p">},</span>
+<a name="gbab-173"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_I2D_EC_PUBKEY</span><span class="p">),</span>	<span class="s">&quot;i2d_EC_PUBKEY&quot;</span><span class="p">},</span>
+<a name="gbab-174"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_I2D_PRIVATEKEY</span><span class="p">),</span>	<span class="s">&quot;i2d_PrivateKey&quot;</span><span class="p">},</span>
+<a name="gbab-175"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_I2D_PUBLICKEY</span><span class="p">),</span>	<span class="s">&quot;i2d_PublicKey&quot;</span><span class="p">},</span>
+<a name="gbab-176"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_I2D_RSA_NET</span><span class="p">),</span>	<span class="s">&quot;i2d_RSA_NET&quot;</span><span class="p">},</span>
+<a name="gbab-177"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_I2D_RSA_PUBKEY</span><span class="p">),</span>	<span class="s">&quot;i2d_RSA_PUBKEY&quot;</span><span class="p">},</span>
+<a name="gbab-178"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_LONG_C2I</span><span class="p">),</span>	<span class="s">&quot;LONG_C2I&quot;</span><span class="p">},</span>
+<a name="gbab-179"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_OID_MODULE_INIT</span><span class="p">),</span>	<span class="s">&quot;OID_MODULE_INIT&quot;</span><span class="p">},</span>
+<a name="gbab-180"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_PARSE_TAGGING</span><span class="p">),</span>	<span class="s">&quot;PARSE_TAGGING&quot;</span><span class="p">},</span>
+<a name="gbab-181"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_PKCS5_PBE2_SET_IV</span><span class="p">),</span>	<span class="s">&quot;PKCS5_pbe2_set_iv&quot;</span><span class="p">},</span>
+<a name="gbab-182"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_PKCS5_PBE_SET</span><span class="p">),</span>	<span class="s">&quot;PKCS5_pbe_set&quot;</span><span class="p">},</span>
+<a name="gbab-183"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_PKCS5_PBE_SET0_ALGOR</span><span class="p">),</span>	<span class="s">&quot;PKCS5_pbe_set0_algor&quot;</span><span class="p">},</span>
+<a name="gbab-184"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_PKCS5_PBKDF2_SET</span><span class="p">),</span>	<span class="s">&quot;PKCS5_pbkdf2_set&quot;</span><span class="p">},</span>
+<a name="gbab-185"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_SMIME_READ_ASN1</span><span class="p">),</span>	<span class="s">&quot;SMIME_read_ASN1&quot;</span><span class="p">},</span>
+<a name="gbab-186"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_SMIME_TEXT</span><span class="p">),</span>	<span class="s">&quot;SMIME_text&quot;</span><span class="p">},</span>
+<a name="gbab-187"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_X509_CINF_NEW</span><span class="p">),</span>	<span class="s">&quot;X509_CINF_NEW&quot;</span><span class="p">},</span>
+<a name="gbab-188"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_X509_CRL_ADD0_REVOKED</span><span class="p">),</span>	<span class="s">&quot;X509_CRL_add0_revoked&quot;</span><span class="p">},</span>
+<a name="gbab-189"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_X509_INFO_NEW</span><span class="p">),</span>	<span class="s">&quot;X509_INFO_new&quot;</span><span class="p">},</span>
+<a name="gbab-190"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_X509_NAME_ENCODE</span><span class="p">),</span>	<span class="s">&quot;X509_NAME_ENCODE&quot;</span><span class="p">},</span>
+<a name="gbab-191"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_X509_NAME_EX_D2I</span><span class="p">),</span>	<span class="s">&quot;X509_NAME_EX_D2I&quot;</span><span class="p">},</span>
+<a name="gbab-192"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_X509_NAME_EX_NEW</span><span class="p">),</span>	<span class="s">&quot;X509_NAME_EX_NEW&quot;</span><span class="p">},</span>
+<a name="gbab-193"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_X509_NEW</span><span class="p">),</span>	<span class="s">&quot;X509_NEW&quot;</span><span class="p">},</span>
+<a name="gbab-194"></a><span class="p">{</span><span class="n">ERR_FUNC</span><span class="p">(</span><span class="n">ASN1_F_X509_PKEY_NEW</span><span class="p">),</span>	<span class="s">&quot;X509_PKEY_new&quot;</span><span class="p">},</span>
+<a name="gbab-195"></a><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">}</span>
+<a name="gbab-196"></a>	<span class="p">};</span>
+<a name="gbab-197"></a>
+<a name="gbab-198"></a><span class="k">static</span> <span class="n">ERR_STRING_DATA</span> <span class="n">ASN1_str_reasons</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-199"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ADDING_OBJECT</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;adding object&quot;</span><span class="p">},</span>
+<a name="gbab-200"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ASN1_PARSE_ERROR</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;asn1 parse error&quot;</span><span class="p">},</span>
+<a name="gbab-201"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ASN1_SIG_PARSE_ERROR</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;asn1 sig parse error&quot;</span><span class="p">},</span>
+<a name="gbab-202"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_AUX_ERROR</span><span class="p">)</span>            <span class="p">,</span><span class="s">&quot;aux error&quot;</span><span class="p">},</span>
+<a name="gbab-203"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_BAD_CLASS</span><span class="p">)</span>            <span class="p">,</span><span class="s">&quot;bad class&quot;</span><span class="p">},</span>
+<a name="gbab-204"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_BAD_OBJECT_HEADER</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;bad object header&quot;</span><span class="p">},</span>
+<a name="gbab-205"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_BAD_PASSWORD_READ</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;bad password read&quot;</span><span class="p">},</span>
+<a name="gbab-206"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_BAD_TAG</span><span class="p">)</span>              <span class="p">,</span><span class="s">&quot;bad tag&quot;</span><span class="p">},</span>
+<a name="gbab-207"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_BMPSTRING_IS_WRONG_LENGTH</span><span class="p">),</span>
+<a name="gbab-208"></a>     <span class="s">&quot;bmpstring is wrong length&quot;</span><span class="p">},</span>
+<a name="gbab-209"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_BN_LIB</span><span class="p">)</span>               <span class="p">,</span><span class="s">&quot;bn lib&quot;</span><span class="p">},</span>
+<a name="gbab-210"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_BOOLEAN_IS_WRONG_LENGTH</span><span class="p">),</span><span class="s">&quot;boolean is wrong length&quot;</span><span class="p">},</span>
+<a name="gbab-211"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_BUFFER_TOO_SMALL</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;buffer too small&quot;</span><span class="p">},</span>
+<a name="gbab-212"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_CIPHER_HAS_NO_OBJECT_IDENTIFIER</span><span class="p">),</span>
+<a name="gbab-213"></a>     <span class="s">&quot;cipher has no object identifier&quot;</span><span class="p">},</span>
+<a name="gbab-214"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_CONTEXT_NOT_INITIALISED</span><span class="p">),</span><span class="s">&quot;context not initialised&quot;</span><span class="p">},</span>
+<a name="gbab-215"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_DATA_IS_WRONG</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;data is wrong&quot;</span><span class="p">},</span>
+<a name="gbab-216"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_DECODE_ERROR</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;decode error&quot;</span><span class="p">},</span>
+<a name="gbab-217"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_DECODING_ERROR</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;decoding error&quot;</span><span class="p">},</span>
+<a name="gbab-218"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_DEPTH_EXCEEDED</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;depth exceeded&quot;</span><span class="p">},</span>
+<a name="gbab-219"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_DIGEST_AND_KEY_TYPE_NOT_SUPPORTED</span><span class="p">),</span>
+<a name="gbab-220"></a>     <span class="s">&quot;digest and key type not supported&quot;</span><span class="p">},</span>
+<a name="gbab-221"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ENCODE_ERROR</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;encode error&quot;</span><span class="p">},</span>
+<a name="gbab-222"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ERROR_GETTING_TIME</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;error getting time&quot;</span><span class="p">},</span>
+<a name="gbab-223"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ERROR_LOADING_SECTION</span><span class="p">),</span><span class="s">&quot;error loading section&quot;</span><span class="p">},</span>
+<a name="gbab-224"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ERROR_PARSING_SET_ELEMENT</span><span class="p">),</span>
+<a name="gbab-225"></a>     <span class="s">&quot;error parsing set element&quot;</span><span class="p">},</span>
+<a name="gbab-226"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ERROR_SETTING_CIPHER_PARAMS</span><span class="p">),</span>
+<a name="gbab-227"></a>     <span class="s">&quot;error setting cipher params&quot;</span><span class="p">},</span>
+<a name="gbab-228"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_EXPECTING_AN_INTEGER</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;expecting an integer&quot;</span><span class="p">},</span>
+<a name="gbab-229"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_EXPECTING_AN_OBJECT</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;expecting an object&quot;</span><span class="p">},</span>
+<a name="gbab-230"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_EXPECTING_A_BOOLEAN</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;expecting a boolean&quot;</span><span class="p">},</span>
+<a name="gbab-231"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_EXPECTING_A_TIME</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;expecting a time&quot;</span><span class="p">},</span>
+<a name="gbab-232"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_EXPLICIT_LENGTH_MISMATCH</span><span class="p">),</span><span class="s">&quot;explicit length mismatch&quot;</span><span class="p">},</span>
+<a name="gbab-233"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_EXPLICIT_TAG_NOT_CONSTRUCTED</span><span class="p">),</span>
+<a name="gbab-234"></a>     <span class="s">&quot;explicit tag not constructed&quot;</span><span class="p">},</span>
+<a name="gbab-235"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_FIELD_MISSING</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;field missing&quot;</span><span class="p">},</span>
+<a name="gbab-236"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_FIRST_NUM_TOO_LARGE</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;first num too large&quot;</span><span class="p">},</span>
+<a name="gbab-237"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_HEADER_TOO_LONG</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;header too long&quot;</span><span class="p">},</span>
+<a name="gbab-238"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_BITSTRING_FORMAT</span><span class="p">),</span><span class="s">&quot;illegal bitstring format&quot;</span><span class="p">},</span>
+<a name="gbab-239"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_BOOLEAN</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;illegal boolean&quot;</span><span class="p">},</span>
+<a name="gbab-240"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_CHARACTERS</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;illegal characters&quot;</span><span class="p">},</span>
+<a name="gbab-241"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_FORMAT</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;illegal format&quot;</span><span class="p">},</span>
+<a name="gbab-242"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_HEX</span><span class="p">)</span>          <span class="p">,</span><span class="s">&quot;illegal hex&quot;</span><span class="p">},</span>
+<a name="gbab-243"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_IMPLICIT_TAG</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;illegal implicit tag&quot;</span><span class="p">},</span>
+<a name="gbab-244"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_INTEGER</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;illegal integer&quot;</span><span class="p">},</span>
+<a name="gbab-245"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_NESTED_TAGGING</span><span class="p">),</span><span class="s">&quot;illegal nested tagging&quot;</span><span class="p">},</span>
+<a name="gbab-246"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_NULL</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;illegal null&quot;</span><span class="p">},</span>
+<a name="gbab-247"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_NULL_VALUE</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;illegal null value&quot;</span><span class="p">},</span>
+<a name="gbab-248"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_OBJECT</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;illegal object&quot;</span><span class="p">},</span>
+<a name="gbab-249"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_OPTIONAL_ANY</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;illegal optional any&quot;</span><span class="p">},</span>
+<a name="gbab-250"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_OPTIONS_ON_ITEM_TEMPLATE</span><span class="p">),</span>
+<a name="gbab-251"></a>     <span class="s">&quot;illegal options on item template&quot;</span><span class="p">},</span>
+<a name="gbab-252"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_TAGGED_ANY</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;illegal tagged any&quot;</span><span class="p">},</span>
+<a name="gbab-253"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ILLEGAL_TIME_VALUE</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;illegal time value&quot;</span><span class="p">},</span>
+<a name="gbab-254"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INTEGER_NOT_ASCII_FORMAT</span><span class="p">),</span><span class="s">&quot;integer not ascii format&quot;</span><span class="p">},</span>
+<a name="gbab-255"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INTEGER_TOO_LARGE_FOR_LONG</span><span class="p">),</span>
+<a name="gbab-256"></a>     <span class="s">&quot;integer too large for long&quot;</span><span class="p">},</span>
+<a name="gbab-257"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_BIT_STRING_BITS_LEFT</span><span class="p">),</span>
+<a name="gbab-258"></a>     <span class="s">&quot;invalid bit string bits left&quot;</span><span class="p">},</span>
+<a name="gbab-259"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_BMPSTRING_LENGTH</span><span class="p">),</span><span class="s">&quot;invalid bmpstring length&quot;</span><span class="p">},</span>
+<a name="gbab-260"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_DIGIT</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;invalid digit&quot;</span><span class="p">},</span>
+<a name="gbab-261"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_MIME_TYPE</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;invalid mime type&quot;</span><span class="p">},</span>
+<a name="gbab-262"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_MODIFIER</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;invalid modifier&quot;</span><span class="p">},</span>
+<a name="gbab-263"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_NUMBER</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;invalid number&quot;</span><span class="p">},</span>
+<a name="gbab-264"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_OBJECT_ENCODING</span><span class="p">),</span><span class="s">&quot;invalid object encoding&quot;</span><span class="p">},</span>
+<a name="gbab-265"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_SEPARATOR</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;invalid separator&quot;</span><span class="p">},</span>
+<a name="gbab-266"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_TIME_FORMAT</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;invalid time format&quot;</span><span class="p">},</span>
+<a name="gbab-267"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_UNIVERSALSTRING_LENGTH</span><span class="p">),</span>
+<a name="gbab-268"></a>     <span class="s">&quot;invalid universalstring length&quot;</span><span class="p">},</span>
+<a name="gbab-269"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_INVALID_UTF8STRING</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;invalid utf8string&quot;</span><span class="p">},</span>
+<a name="gbab-270"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_IV_TOO_LARGE</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;iv too large&quot;</span><span class="p">},</span>
+<a name="gbab-271"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_LENGTH_ERROR</span><span class="p">)</span>         <span class="p">,</span><span class="s">&quot;length error&quot;</span><span class="p">},</span>
+<a name="gbab-272"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_LIST_ERROR</span><span class="p">)</span>           <span class="p">,</span><span class="s">&quot;list error&quot;</span><span class="p">},</span>
+<a name="gbab-273"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_MIME_NO_CONTENT_TYPE</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;mime no content type&quot;</span><span class="p">},</span>
+<a name="gbab-274"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_MIME_PARSE_ERROR</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;mime parse error&quot;</span><span class="p">},</span>
+<a name="gbab-275"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_MIME_SIG_PARSE_ERROR</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;mime sig parse error&quot;</span><span class="p">},</span>
+<a name="gbab-276"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_MISSING_EOC</span><span class="p">)</span>          <span class="p">,</span><span class="s">&quot;missing eoc&quot;</span><span class="p">},</span>
+<a name="gbab-277"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_MISSING_SECOND_NUMBER</span><span class="p">),</span><span class="s">&quot;missing second number&quot;</span><span class="p">},</span>
+<a name="gbab-278"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_MISSING_VALUE</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;missing value&quot;</span><span class="p">},</span>
+<a name="gbab-279"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_MSTRING_NOT_UNIVERSAL</span><span class="p">),</span><span class="s">&quot;mstring not universal&quot;</span><span class="p">},</span>
+<a name="gbab-280"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_MSTRING_WRONG_TAG</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;mstring wrong tag&quot;</span><span class="p">},</span>
+<a name="gbab-281"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NESTED_ASN1_STRING</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;nested asn1 string&quot;</span><span class="p">},</span>
+<a name="gbab-282"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NON_HEX_CHARACTERS</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;non hex characters&quot;</span><span class="p">},</span>
+<a name="gbab-283"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NOT_ASCII_FORMAT</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;not ascii format&quot;</span><span class="p">},</span>
+<a name="gbab-284"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NOT_ENOUGH_DATA</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;not enough data&quot;</span><span class="p">},</span>
+<a name="gbab-285"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NO_CONTENT_TYPE</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;no content type&quot;</span><span class="p">},</span>
+<a name="gbab-286"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NO_DEFAULT_DIGEST</span><span class="p">)</span>    <span class="p">,</span><span class="s">&quot;no default digest&quot;</span><span class="p">},</span>
+<a name="gbab-287"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NO_MATCHING_CHOICE_TYPE</span><span class="p">),</span><span class="s">&quot;no matching choice type&quot;</span><span class="p">},</span>
+<a name="gbab-288"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NO_MULTIPART_BODY_FAILURE</span><span class="p">),</span>
+<a name="gbab-289"></a>     <span class="s">&quot;no multipart body failure&quot;</span><span class="p">},</span>
+<a name="gbab-290"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NO_MULTIPART_BOUNDARY</span><span class="p">),</span><span class="s">&quot;no multipart boundary&quot;</span><span class="p">},</span>
+<a name="gbab-291"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NO_SIG_CONTENT_TYPE</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;no sig content type&quot;</span><span class="p">},</span>
+<a name="gbab-292"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_NULL_IS_WRONG_LENGTH</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;null is wrong length&quot;</span><span class="p">},</span>
+<a name="gbab-293"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_OBJECT_NOT_ASCII_FORMAT</span><span class="p">),</span><span class="s">&quot;object not ascii format&quot;</span><span class="p">},</span>
+<a name="gbab-294"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_ODD_NUMBER_OF_CHARS</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;odd number of chars&quot;</span><span class="p">},</span>
+<a name="gbab-295"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_PRIVATE_KEY_HEADER_MISSING</span><span class="p">),</span>
+<a name="gbab-296"></a>     <span class="s">&quot;private key header missing&quot;</span><span class="p">},</span>
+<a name="gbab-297"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_SECOND_NUMBER_TOO_LARGE</span><span class="p">),</span><span class="s">&quot;second number too large&quot;</span><span class="p">},</span>
+<a name="gbab-298"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_SEQUENCE_LENGTH_MISMATCH</span><span class="p">),</span><span class="s">&quot;sequence length mismatch&quot;</span><span class="p">},</span>
+<a name="gbab-299"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_SEQUENCE_NOT_CONSTRUCTED</span><span class="p">),</span><span class="s">&quot;sequence not constructed&quot;</span><span class="p">},</span>
+<a name="gbab-300"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_SEQUENCE_OR_SET_NEEDS_CONFIG</span><span class="p">),</span>
+<a name="gbab-301"></a>     <span class="s">&quot;sequence or set needs config&quot;</span><span class="p">},</span>
+<a name="gbab-302"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_SHORT_LINE</span><span class="p">)</span>           <span class="p">,</span><span class="s">&quot;short line&quot;</span><span class="p">},</span>
+<a name="gbab-303"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_SIG_INVALID_MIME_TYPE</span><span class="p">),</span><span class="s">&quot;sig invalid mime type&quot;</span><span class="p">},</span>
+<a name="gbab-304"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_STREAMING_NOT_SUPPORTED</span><span class="p">),</span><span class="s">&quot;streaming not supported&quot;</span><span class="p">},</span>
+<a name="gbab-305"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_STRING_TOO_LONG</span><span class="p">)</span>      <span class="p">,</span><span class="s">&quot;string too long&quot;</span><span class="p">},</span>
+<a name="gbab-306"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_STRING_TOO_SHORT</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;string too short&quot;</span><span class="p">},</span>
+<a name="gbab-307"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_TAG_VALUE_TOO_HIGH</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;tag value too high&quot;</span><span class="p">},</span>
+<a name="gbab-308"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_THE_ASN1_OBJECT_IDENTIFIER_IS_NOT_KNOWN_FOR_THIS_MD</span><span class="p">),</span>
+<a name="gbab-309"></a>     <span class="s">&quot;the asn1 object identifier is not known for this md&quot;</span><span class="p">},</span>
+<a name="gbab-310"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_TIME_NOT_ASCII_FORMAT</span><span class="p">),</span><span class="s">&quot;time not ascii format&quot;</span><span class="p">},</span>
+<a name="gbab-311"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_TOO_LONG</span><span class="p">)</span>             <span class="p">,</span><span class="s">&quot;too long&quot;</span><span class="p">},</span>
+<a name="gbab-312"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_TYPE_NOT_CONSTRUCTED</span><span class="p">)</span> <span class="p">,</span><span class="s">&quot;type not constructed&quot;</span><span class="p">},</span>
+<a name="gbab-313"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_TYPE_NOT_PRIMITIVE</span><span class="p">),</span> <span class="s">&quot;type not primitive&quot;</span><span class="p">},</span>
+<a name="gbab-314"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNABLE_TO_DECODE_RSA_KEY</span><span class="p">),</span><span class="s">&quot;unable to decode rsa key&quot;</span><span class="p">},</span>
+<a name="gbab-315"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNABLE_TO_DECODE_RSA_PRIVATE_KEY</span><span class="p">),</span>
+<a name="gbab-316"></a>     <span class="s">&quot;unable to decode rsa private key&quot;</span><span class="p">},</span>
+<a name="gbab-317"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNEXPECTED_EOC</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;unexpected eoc&quot;</span><span class="p">},</span>
+<a name="gbab-318"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNIVERSALSTRING_IS_WRONG_LENGTH</span><span class="p">),</span>
+<a name="gbab-319"></a>     <span class="s">&quot;universalstring is wrong length&quot;</span><span class="p">},</span>
+<a name="gbab-320"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNKNOWN_FORMAT</span><span class="p">)</span>       <span class="p">,</span><span class="s">&quot;unknown format&quot;</span><span class="p">},</span>
+<a name="gbab-321"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNKNOWN_MESSAGE_DIGEST_ALGORITHM</span><span class="p">),</span>
+<a name="gbab-322"></a>     <span class="s">&quot;unknown message digest algorithm&quot;</span><span class="p">},</span>
+<a name="gbab-323"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNKNOWN_OBJECT_TYPE</span><span class="p">)</span>  <span class="p">,</span><span class="s">&quot;unknown object type&quot;</span><span class="p">},</span>
+<a name="gbab-324"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNKNOWN_PUBLIC_KEY_TYPE</span><span class="p">),</span><span class="s">&quot;unknown public key type&quot;</span><span class="p">},</span>
+<a name="gbab-325"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNKNOWN_SIGNATURE_ALGORITHM</span><span class="p">),</span>
+<a name="gbab-326"></a>     <span class="s">&quot;unknown signature algorithm&quot;</span><span class="p">},</span>
+<a name="gbab-327"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNKNOWN_TAG</span><span class="p">)</span>          <span class="p">,</span><span class="s">&quot;unknown tag&quot;</span><span class="p">},</span>
+<a name="gbab-328"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNKOWN_FORMAT</span><span class="p">)</span>        <span class="p">,</span><span class="s">&quot;unknown format&quot;</span><span class="p">},</span>
+<a name="gbab-329"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNSUPPORTED_ANY_DEFINED_BY_TYPE</span><span class="p">),</span>
+<a name="gbab-330"></a>     <span class="s">&quot;unsupported any defined by type&quot;</span><span class="p">},</span>
+<a name="gbab-331"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNSUPPORTED_CIPHER</span><span class="p">)</span>   <span class="p">,</span><span class="s">&quot;unsupported cipher&quot;</span><span class="p">},</span>
+<a name="gbab-332"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNSUPPORTED_ENCRYPTION_ALGORITHM</span><span class="p">),</span>
+<a name="gbab-333"></a>     <span class="s">&quot;unsupported encryption algorithm&quot;</span><span class="p">},</span>
+<a name="gbab-334"></a>    <span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNSUPPORTED_PUBLIC_KEY_TYPE</span><span class="p">),</span>
+<a name="gbab-335"></a>     <span class="s">&quot;unsupported public key type&quot;</span><span class="p">},</span>
+<a name="gbab-336"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_UNSUPPORTED_TYPE</span><span class="p">)</span>     <span class="p">,</span><span class="s">&quot;unsupported type&quot;</span><span class="p">},</span>
+<a name="gbab-337"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_WRONG_PUBLIC_KEY_TYPE</span><span class="p">),</span><span class="s">&quot;wrong public key type&quot;</span><span class="p">},</span>
+<a name="gbab-338"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_WRONG_TAG</span><span class="p">)</span>            <span class="p">,</span><span class="s">&quot;wrong tag&quot;</span><span class="p">},</span>
+<a name="gbab-339"></a><span class="p">{</span><span class="n">ERR_REASON</span><span class="p">(</span><span class="n">ASN1_R_WRONG_TYPE</span><span class="p">)</span>           <span class="p">,</span><span class="s">&quot;wrong type&quot;</span><span class="p">},</span>
+<a name="gbab-340"></a><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="nb">NULL</span><span class="p">}</span>
+<a name="gbab-341"></a>	<span class="p">};</span>
+<a name="gbab-342"></a>
+<a name="gbab-343"></a><span class="cp">#endif</span>
+<a name="gbab-344"></a>
+<a name="gbab-345"></a><span class="kt">void</span> <span class="nf">ERR_load_ASN1_strings</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<a name="gbab-346"></a>	<span class="p">{</span>
+<a name="gbab-347"></a><span class="cp">#ifndef OPENSSL_NO_ERR</span>
+<a name="gbab-348"></a>
+<a name="gbab-349"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">ERR_func_error_string</span><span class="p">(</span><span class="n">ASN1_str_functs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">error</span><span class="p">)</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-350"></a>		<span class="n">ERR_load_strings</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ASN1_str_functs</span><span class="p">);</span>
+<a name="gbab-351"></a>		<span class="n">ERR_load_strings</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ASN1_str_reasons</span><span class="p">);</span>
+<a name="gbab-352"></a>		<span class="p">}</span>
+<a name="gbab-353"></a><span class="cp">#endif</span>
+<a name="gbab-354"></a>	<span class="p">}</span>
+</pre></div>
+</td></tr></table>

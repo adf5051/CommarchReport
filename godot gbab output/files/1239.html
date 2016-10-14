@@ -1,0 +1,971 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*  texture_loader_dds.cpp                                               */</span>
+<a name="gbab-3"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-4"></a><span class="cm">/*                       This file is part of:                           */</span>
+<a name="gbab-5"></a><span class="cm">/*                           GODOT ENGINE                                */</span>
+<a name="gbab-6"></a><span class="cm">/*                    http://www.godotengine.org                         */</span>
+<a name="gbab-7"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-8"></a><span class="cm">/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-10"></a><span class="cm">/* Permission is hereby granted, free of charge, to any person obtaining */</span>
+<a name="gbab-11"></a><span class="cm">/* a copy of this software and associated documentation files (the       */</span>
+<a name="gbab-12"></a><span class="cm">/* &quot;Software&quot;), to deal in the Software without restriction, including   */</span>
+<a name="gbab-13"></a><span class="cm">/* without limitation the rights to use, copy, modify, merge, publish,   */</span>
+<a name="gbab-14"></a><span class="cm">/* distribute, sublicense, and/or sell copies of the Software, and to    */</span>
+<a name="gbab-15"></a><span class="cm">/* permit persons to whom the Software is furnished to do so, subject to */</span>
+<a name="gbab-16"></a><span class="cm">/* the following conditions:                                             */</span>
+<a name="gbab-17"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-18"></a><span class="cm">/* The above copyright notice and this permission notice shall be        */</span>
+<a name="gbab-19"></a><span class="cm">/* included in all copies or substantial portions of the Software.       */</span>
+<a name="gbab-20"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-21"></a><span class="cm">/* THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,       */</span>
+<a name="gbab-22"></a><span class="cm">/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */</span>
+<a name="gbab-23"></a><span class="cm">/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/</span>
+<a name="gbab-24"></a><span class="cm">/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */</span>
+<a name="gbab-25"></a><span class="cm">/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */</span>
+<a name="gbab-26"></a><span class="cm">/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */</span>
+<a name="gbab-27"></a><span class="cm">/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */</span>
+<a name="gbab-28"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-29"></a><span class="cp">#include</span> <span class="cpf">&quot;texture_loader_dds.h&quot;</span><span class="cp"></span>
+<a name="gbab-30"></a><span class="cp">#include</span> <span class="cpf">&quot;os/file_access.h&quot;</span><span class="cp"></span>
+<a name="gbab-31"></a>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a><span class="k">enum</span> <span class="p">{</span>
+<a name="gbab-34"></a>	<span class="n">DDS_MAGIC</span><span class="o">=</span><span class="mh">0x20534444</span><span class="p">,</span>
+<a name="gbab-35"></a>	<span class="n">DDSD_CAPS</span><span class="o">=</span><span class="mh">0x00000001</span><span class="p">,</span>
+<a name="gbab-36"></a>	<span class="n">DDSD_PIXELFORMAT</span><span class="o">=</span><span class="mh">0x00001000</span><span class="p">,</span>
+<a name="gbab-37"></a>	<span class="n">DDSD_PITCH</span><span class="o">=</span><span class="mh">0x00000008</span><span class="p">,</span>
+<a name="gbab-38"></a>	<span class="n">DDSD_LINEARSIZE</span><span class="o">=</span><span class="mh">0x00080000</span><span class="p">,</span>
+<a name="gbab-39"></a>	<span class="n">DDSD_MIPMAPCOUNT</span><span class="o">=</span><span class="mh">0x00020000</span><span class="p">,</span>
+<a name="gbab-40"></a>	<span class="n">DDPF_FOURCC</span><span class="o">=</span><span class="mh">0x00000004</span><span class="p">,</span>
+<a name="gbab-41"></a>	<span class="n">DDPF_ALPHAPIXELS</span><span class="o">=</span><span class="mh">0x00000001</span><span class="p">,</span>
+<a name="gbab-42"></a>	<span class="n">DDPF_INDEXED</span><span class="o">=</span><span class="mh">0x00000020</span><span class="p">,</span>
+<a name="gbab-43"></a>	<span class="n">DDPF_RGB</span><span class="o">=</span><span class="mh">0x00000040</span><span class="p">,</span>
+<a name="gbab-44"></a><span class="p">};</span>
+<a name="gbab-45"></a>
+<a name="gbab-46"></a><span class="k">enum</span> <span class="n">DDSFormat</span> <span class="p">{</span>
+<a name="gbab-47"></a>
+<a name="gbab-48"></a>	<span class="n">DDS_DXT1</span><span class="p">,</span>
+<a name="gbab-49"></a>	<span class="n">DDS_DXT3</span><span class="p">,</span>
+<a name="gbab-50"></a>	<span class="n">DDS_DXT5</span><span class="p">,</span>
+<a name="gbab-51"></a>	<span class="n">DDS_ATI1</span><span class="p">,</span>
+<a name="gbab-52"></a>	<span class="n">DDS_ATI2</span><span class="p">,</span>
+<a name="gbab-53"></a>	<span class="n">DDS_BGRA8</span><span class="p">,</span>
+<a name="gbab-54"></a>	<span class="n">DDS_BGR8</span><span class="p">,</span>
+<a name="gbab-55"></a>	<span class="n">DDS_RGBA8</span><span class="p">,</span> <span class="c1">//flipped in dds</span>
+<a name="gbab-56"></a>	<span class="n">DDS_RGB8</span><span class="p">,</span> <span class="c1">//flipped in dds</span>
+<a name="gbab-57"></a>	<span class="n">DDS_BGR5A1</span><span class="p">,</span>
+<a name="gbab-58"></a>	<span class="n">DDS_BGR565</span><span class="p">,</span>
+<a name="gbab-59"></a>	<span class="n">DDS_BGR10A2</span><span class="p">,</span>
+<a name="gbab-60"></a>	<span class="n">DDS_INDEXED</span><span class="p">,</span>
+<a name="gbab-61"></a>	<span class="n">DDS_LUMINANCE</span><span class="p">,</span>
+<a name="gbab-62"></a>	<span class="n">DDS_LUMINANCE_ALPHA</span><span class="p">,</span>
+<a name="gbab-63"></a>	<span class="n">DDS_MAX</span>
+<a name="gbab-64"></a><span class="p">};</span>
+<a name="gbab-65"></a>
+<a name="gbab-66"></a><span class="k">struct</span> <span class="n">DDSFormatInfo</span> <span class="p">{</span>
+<a name="gbab-67"></a>	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+<a name="gbab-68"></a>	<span class="kt">bool</span> <span class="n">compressed</span><span class="p">;</span>
+<a name="gbab-69"></a>	<span class="kt">bool</span> <span class="n">palette</span><span class="p">;</span>
+<a name="gbab-70"></a>	<span class="kt">uint32_t</span> <span class="n">divisor</span><span class="p">;</span>
+<a name="gbab-71"></a>	<span class="kt">uint32_t</span> <span class="n">block_size</span><span class="p">;</span>
+<a name="gbab-72"></a>	<span class="n">Image</span><span class="o">::</span><span class="n">Format</span> <span class="n">format</span><span class="p">;</span>
+<a name="gbab-73"></a><span class="p">};</span>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a>
+<a name="gbab-76"></a><span class="k">static</span> <span class="k">const</span> <span class="n">DDSFormatInfo</span> <span class="n">dds_format_info</span><span class="p">[</span><span class="n">DDS_MAX</span><span class="p">]</span><span class="o">=</span><span class="p">{</span>
+<a name="gbab-77"></a>	<span class="p">{</span><span class="s">&quot;DXT1&quot;</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_BC1</span><span class="p">},</span>
+<a name="gbab-78"></a>	<span class="p">{</span><span class="s">&quot;DXT3&quot;</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_BC2</span><span class="p">},</span>
+<a name="gbab-79"></a>	<span class="p">{</span><span class="s">&quot;DXT5&quot;</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_BC3</span><span class="p">},</span>
+<a name="gbab-80"></a>	<span class="p">{</span><span class="s">&quot;ATI1&quot;</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_BC4</span><span class="p">},</span>
+<a name="gbab-81"></a>	<span class="p">{</span><span class="s">&quot;ATI2&quot;</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_BC5</span><span class="p">},</span>
+<a name="gbab-82"></a>	<span class="p">{</span><span class="s">&quot;BGRA8&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_RGBA</span><span class="p">},</span>
+<a name="gbab-83"></a>	<span class="p">{</span><span class="s">&quot;BGR8&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_RGB</span><span class="p">},</span>
+<a name="gbab-84"></a>	<span class="p">{</span><span class="s">&quot;RGBA8&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_RGBA</span><span class="p">},</span>
+<a name="gbab-85"></a>	<span class="p">{</span><span class="s">&quot;RGB8&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_RGB</span><span class="p">},</span>
+<a name="gbab-86"></a>	<span class="p">{</span><span class="s">&quot;BGR5A1&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_RGBA</span><span class="p">},</span>
+<a name="gbab-87"></a>	<span class="p">{</span><span class="s">&quot;BGR565&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_RGB</span><span class="p">},</span>
+<a name="gbab-88"></a>	<span class="p">{</span><span class="s">&quot;BGR10A2&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_RGBA</span><span class="p">},</span>
+<a name="gbab-89"></a>	<span class="p">{</span><span class="s">&quot;INDEXED&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_INDEXED</span><span class="p">},</span>
+<a name="gbab-90"></a>	<span class="p">{</span><span class="s">&quot;GRAYSCALE&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_GRAYSCALE</span><span class="p">},</span>
+<a name="gbab-91"></a>	<span class="p">{</span><span class="s">&quot;GRAYSCALE_ALPHA&quot;</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="nb">false</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">Image</span><span class="o">::</span><span class="n">FORMAT_GRAYSCALE_ALPHA</span><span class="p">}</span>
+<a name="gbab-92"></a><span class="p">};</span>
+<a name="gbab-93"></a>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a><span class="n">RES</span> <span class="n">ResourceFormatDDS</span><span class="o">::</span><span class="n">load</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">p_path</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_original_path</span><span class="p">,</span> <span class="n">Error</span> <span class="o">*</span><span class="n">r_error</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-96"></a>
+<a name="gbab-97"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">r_error</span><span class="p">)</span>
+<a name="gbab-98"></a>		<span class="o">*</span><span class="n">r_error</span><span class="o">=</span><span class="n">ERR_CANT_OPEN</span><span class="p">;</span>
+<a name="gbab-99"></a>
+<a name="gbab-100"></a>	<span class="n">Error</span> <span class="n">err</span><span class="p">;</span>
+<a name="gbab-101"></a>	<span class="n">FileAccess</span> <span class="o">*</span><span class="n">f</span> <span class="o">=</span> <span class="n">FileAccess</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="n">p_path</span><span class="p">,</span><span class="n">FileAccess</span><span class="o">::</span><span class="n">READ</span><span class="p">,</span><span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
+<a name="gbab-102"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">f</span><span class="p">)</span>
+<a name="gbab-103"></a>		<span class="k">return</span> <span class="n">RES</span><span class="p">();</span>
+<a name="gbab-104"></a>
+<a name="gbab-105"></a>	<span class="n">FileAccessRef</span> <span class="nf">fref</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<a name="gbab-106"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">r_error</span><span class="p">)</span>
+<a name="gbab-107"></a>		<span class="o">*</span><span class="n">r_error</span><span class="o">=</span><span class="n">ERR_FILE_CORRUPT</span><span class="p">;</span>
+<a name="gbab-108"></a>
+<a name="gbab-109"></a>	<span class="n">ERR_EXPLAIN</span><span class="p">(</span><span class="s">&quot;Unable to open DDS texture file: &quot;</span><span class="o">+</span><span class="n">p_path</span><span class="p">);</span>
+<a name="gbab-110"></a>	<span class="n">ERR_FAIL_COND_V</span><span class="p">(</span><span class="n">err</span><span class="o">!=</span><span class="n">OK</span><span class="p">,</span><span class="n">RES</span><span class="p">());</span>
+<a name="gbab-111"></a>
+<a name="gbab-112"></a>	<span class="kt">uint32_t</span> <span class="n">magic</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-113"></a>	<span class="kt">uint32_t</span> <span class="n">hsize</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-114"></a>	<span class="kt">uint32_t</span> <span class="n">flags</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-115"></a>	<span class="kt">uint32_t</span> <span class="n">width</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-116"></a>	<span class="kt">uint32_t</span> <span class="n">height</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-117"></a>	<span class="kt">uint32_t</span> <span class="n">pitch</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-118"></a>	<span class="kt">uint32_t</span> <span class="n">depth</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-119"></a>	<span class="kt">uint32_t</span> <span class="n">mipmaps</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-120"></a>
+<a name="gbab-121"></a>	<span class="c1">//skip 11</span>
+<a name="gbab-122"></a>	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">11</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<a name="gbab-123"></a>		<span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-124"></a>
+<a name="gbab-125"></a>	<span class="c1">//validate</span>
+<a name="gbab-126"></a>
+<a name="gbab-127"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">magic</span><span class="o">!=</span><span class="n">DDS_MAGIC</span> <span class="o">||</span> <span class="n">hsize</span><span class="o">!=</span><span class="mi">124</span> <span class="o">||</span> <span class="o">!</span><span class="p">(</span><span class="n">flags</span><span class="o">&amp;</span><span class="n">DDSD_PIXELFORMAT</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="p">(</span><span class="n">flags</span><span class="o">&amp;</span><span class="n">DDSD_CAPS</span><span class="p">))</span> <span class="p">{</span>
+<a name="gbab-128"></a>
+<a name="gbab-129"></a>		<span class="n">ERR_EXPLAIN</span><span class="p">(</span><span class="s">&quot;Invalid or Unsupported DDS texture file: &quot;</span><span class="o">+</span><span class="n">p_path</span><span class="p">);</span>
+<a name="gbab-130"></a>		<span class="n">ERR_FAIL_V</span><span class="p">(</span><span class="n">RES</span><span class="p">());</span>
+<a name="gbab-131"></a>	<span class="p">}</span>
+<a name="gbab-132"></a>
+<a name="gbab-133"></a>
+<a name="gbab-134"></a>	<span class="kt">uint32_t</span> <span class="n">format_size</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-135"></a>	<span class="kt">uint32_t</span> <span class="n">format_flags</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-136"></a>	<span class="kt">uint32_t</span> <span class="n">format_fourcc</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-137"></a>	<span class="kt">uint32_t</span> <span class="n">format_rgb_bits</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-138"></a>	<span class="kt">uint32_t</span> <span class="n">format_red_mask</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-139"></a>	<span class="kt">uint32_t</span> <span class="n">format_green_mask</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-140"></a>	<span class="kt">uint32_t</span> <span class="n">format_blue_mask</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-141"></a>	<span class="kt">uint32_t</span> <span class="n">format_alpha_mask</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-142"></a>
+<a name="gbab-143"></a>	<span class="kt">uint32_t</span> <span class="n">caps_1</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-144"></a>	<span class="kt">uint32_t</span> <span class="n">caps_2</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-145"></a>	<span class="kt">uint32_t</span> <span class="n">caps_ddsx</span> <span class="o">=</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-146"></a>
+<a name="gbab-147"></a>	<span class="c1">//reserved skip</span>
+<a name="gbab-148"></a>	<span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-149"></a>	<span class="n">f</span><span class="o">-&gt;</span><span class="n">get_32</span><span class="p">();</span>
+<a name="gbab-150"></a>
+<a name="gbab-151"></a>	<span class="cm">/*print_line(&quot;DDS width: &quot;+itos(width));</span>
+<a name="gbab-152"></a><span class="cm">	print_line(&quot;DDS height: &quot;+itos(height));</span>
+<a name="gbab-153"></a><span class="cm">	print_line(&quot;DDS mipmaps: &quot;+itos(mipmaps));*/</span>
+<a name="gbab-154"></a>
+<a name="gbab-155"></a>	<span class="c1">//printf(&quot;fourcc: %x fflags: %x, rgbbits: %x, fsize: %x\n&quot;,format_fourcc,format_flags,format_rgb_bits,format_size);</span>
+<a name="gbab-156"></a>	<span class="c1">//printf(&quot;rmask: %x gmask: %x, bmask: %x, amask: %x\n&quot;,format_red_mask,format_green_mask,format_blue_mask,format_alpha_mask);</span>
+<a name="gbab-157"></a>
+<a name="gbab-158"></a>	<span class="c1">//must avoid this later</span>
+<a name="gbab-159"></a>	<span class="k">while</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">get_pos</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">128</span><span class="p">)</span>
+<a name="gbab-160"></a>		<span class="n">f</span><span class="o">-&gt;</span><span class="n">get_8</span><span class="p">();</span>
+<a name="gbab-161"></a>
+<a name="gbab-162"></a>
+<a name="gbab-163"></a>	<span class="n">DDSFormat</span> <span class="n">dds_format</span><span class="p">;</span>
+<a name="gbab-164"></a>
+<a name="gbab-165"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_FOURCC</span> <span class="o">&amp;&amp;</span> <span class="n">format_fourcc</span><span class="o">==</span><span class="mh">0x31545844</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//&#39;1TXD&#39;</span>
+<a name="gbab-166"></a>
+<a name="gbab-167"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_DXT1</span><span class="p">;</span>
+<a name="gbab-168"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_FOURCC</span> <span class="o">&amp;&amp;</span> <span class="n">format_fourcc</span><span class="o">==</span><span class="mh">0x33545844</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//&#39;3TXD&#39;</span>
+<a name="gbab-169"></a>
+<a name="gbab-170"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_DXT3</span><span class="p">;</span>
+<a name="gbab-171"></a>
+<a name="gbab-172"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_FOURCC</span> <span class="o">&amp;&amp;</span> <span class="n">format_fourcc</span><span class="o">==</span><span class="mh">0x35545844</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//&#39;5TXD&#39;</span>
+<a name="gbab-173"></a>
+<a name="gbab-174"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_DXT5</span><span class="p">;</span>
+<a name="gbab-175"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_FOURCC</span> <span class="o">&amp;&amp;</span> <span class="n">format_fourcc</span><span class="o">==</span><span class="mh">0x31495441</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//&#39;1ITA&#39;</span>
+<a name="gbab-176"></a>
+<a name="gbab-177"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_ATI1</span><span class="p">;</span>
+<a name="gbab-178"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_FOURCC</span> <span class="o">&amp;&amp;</span> <span class="n">format_fourcc</span><span class="o">==</span><span class="mh">0x32495441</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//&#39;2ITA&#39;</span>
+<a name="gbab-179"></a>
+<a name="gbab-180"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_ATI2</span><span class="p">;</span>
+<a name="gbab-181"></a>
+<a name="gbab-182"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_RGB</span> <span class="o">&amp;&amp;</span> <span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_ALPHAPIXELS</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">32</span> <span class="o">&amp;&amp;</span> <span class="n">format_red_mask</span><span class="o">==</span><span class="mh">0xff0000</span> <span class="o">&amp;&amp;</span> <span class="n">format_green_mask</span><span class="o">==</span><span class="mh">0xff00</span> <span class="o">&amp;&amp;</span> <span class="n">format_blue_mask</span><span class="o">==</span><span class="mh">0xff</span> <span class="o">&amp;&amp;</span> <span class="n">format_alpha_mask</span><span class="o">==</span><span class="mh">0xff000000</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-183"></a>
+<a name="gbab-184"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_BGRA8</span><span class="p">;</span>
+<a name="gbab-185"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_RGB</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_ALPHAPIXELS</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">24</span> <span class="o">&amp;&amp;</span> <span class="n">format_red_mask</span><span class="o">==</span><span class="mh">0xff0000</span> <span class="o">&amp;&amp;</span> <span class="n">format_green_mask</span><span class="o">==</span><span class="mh">0xff00</span> <span class="o">&amp;&amp;</span> <span class="n">format_blue_mask</span><span class="o">==</span><span class="mh">0xff</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-186"></a>
+<a name="gbab-187"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_BGR8</span><span class="p">;</span>
+<a name="gbab-188"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_RGB</span> <span class="o">&amp;&amp;</span> <span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_ALPHAPIXELS</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">32</span> <span class="o">&amp;&amp;</span> <span class="n">format_red_mask</span><span class="o">==</span><span class="mh">0xff</span> <span class="o">&amp;&amp;</span> <span class="n">format_green_mask</span><span class="o">==</span><span class="mh">0xff00</span> <span class="o">&amp;&amp;</span> <span class="n">format_blue_mask</span><span class="o">==</span><span class="mh">0xff0000</span> <span class="o">&amp;&amp;</span> <span class="n">format_alpha_mask</span><span class="o">==</span><span class="mh">0xff000000</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-189"></a>
+<a name="gbab-190"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_RGBA8</span><span class="p">;</span>
+<a name="gbab-191"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_RGB</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_ALPHAPIXELS</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">24</span> <span class="o">&amp;&amp;</span> <span class="n">format_red_mask</span><span class="o">==</span><span class="mh">0xff</span> <span class="o">&amp;&amp;</span> <span class="n">format_green_mask</span><span class="o">==</span><span class="mh">0xff00</span> <span class="o">&amp;&amp;</span> <span class="n">format_blue_mask</span><span class="o">==</span><span class="mh">0xff0000</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-192"></a>
+<a name="gbab-193"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_RGB8</span><span class="p">;</span>
+<a name="gbab-194"></a>
+<a name="gbab-195"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_RGB</span> <span class="o">&amp;&amp;</span> <span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_ALPHAPIXELS</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">16</span> <span class="o">&amp;&amp;</span> <span class="n">format_red_mask</span><span class="o">==</span><span class="mh">0x00007c00</span> <span class="o">&amp;&amp;</span> <span class="n">format_green_mask</span><span class="o">==</span><span class="mh">0x000003e0</span> <span class="o">&amp;&amp;</span> <span class="n">format_blue_mask</span><span class="o">==</span><span class="mh">0x0000001f</span> <span class="o">&amp;&amp;</span> <span class="n">format_alpha_mask</span><span class="o">==</span><span class="mh">0x00008000</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-196"></a>
+<a name="gbab-197"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_BGR5A1</span><span class="p">;</span>
+<a name="gbab-198"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_RGB</span> <span class="o">&amp;&amp;</span> <span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_ALPHAPIXELS</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">32</span> <span class="o">&amp;&amp;</span> <span class="n">format_red_mask</span><span class="o">==</span><span class="mh">0x3ff00000</span> <span class="o">&amp;&amp;</span> <span class="n">format_green_mask</span><span class="o">==</span><span class="mh">0xffc00</span> <span class="o">&amp;&amp;</span> <span class="n">format_blue_mask</span><span class="o">==</span><span class="mh">0x3ff</span> <span class="o">&amp;&amp;</span> <span class="n">format_alpha_mask</span><span class="o">==</span><span class="mh">0xc0000000</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-199"></a>
+<a name="gbab-200"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_BGR10A2</span><span class="p">;</span>
+<a name="gbab-201"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_RGB</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_ALPHAPIXELS</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">16</span> <span class="o">&amp;&amp;</span> <span class="n">format_red_mask</span><span class="o">==</span><span class="mh">0x0000f800</span> <span class="o">&amp;&amp;</span> <span class="n">format_green_mask</span><span class="o">==</span><span class="mh">0x000007e0</span> <span class="o">&amp;&amp;</span> <span class="n">format_blue_mask</span><span class="o">==</span><span class="mh">0x0000001f</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-202"></a>
+<a name="gbab-203"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_BGR565</span><span class="p">;</span>
+<a name="gbab-204"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_ALPHAPIXELS</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">8</span> <span class="o">&amp;&amp;</span> <span class="n">format_red_mask</span><span class="o">==</span><span class="mh">0xff</span> <span class="o">&amp;&amp;</span> <span class="n">format_green_mask</span><span class="o">==</span><span class="mh">0xff</span> <span class="o">&amp;&amp;</span> <span class="n">format_blue_mask</span><span class="o">==</span><span class="mh">0xff</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-205"></a>
+<a name="gbab-206"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_LUMINANCE</span><span class="p">;</span>
+<a name="gbab-207"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">((</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_ALPHAPIXELS</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">16</span> <span class="o">&amp;&amp;</span> <span class="n">format_red_mask</span><span class="o">==</span><span class="mh">0xff</span> <span class="o">&amp;&amp;</span> <span class="n">format_green_mask</span><span class="o">==</span><span class="mh">0xff</span> <span class="o">&amp;&amp;</span> <span class="n">format_blue_mask</span><span class="o">==</span><span class="mh">0xff</span> <span class="o">&amp;&amp;</span> <span class="n">format_alpha_mask</span><span class="o">==</span><span class="mh">0xff00</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-208"></a>
+<a name="gbab-209"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_LUMINANCE_ALPHA</span><span class="p">;</span>
+<a name="gbab-210"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">format_flags</span><span class="o">&amp;</span><span class="n">DDPF_INDEXED</span> <span class="o">&amp;&amp;</span> <span class="n">format_rgb_bits</span><span class="o">==</span><span class="mi">8</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-211"></a>
+<a name="gbab-212"></a>		<span class="n">dds_format</span><span class="o">=</span><span class="n">DDS_BGR565</span><span class="p">;</span>
+<a name="gbab-213"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-214"></a>
+<a name="gbab-215"></a>		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;unrecognized fourcc %x format_flags: %x - rgbbits %i - red_mask %x green mask %x blue mask %x alpha mask %x</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">format_fourcc</span><span class="p">,</span><span class="n">format_flags</span><span class="p">,</span><span class="n">format_rgb_bits</span><span class="p">,</span><span class="n">format_red_mask</span><span class="p">,</span><span class="n">format_green_mask</span><span class="p">,</span><span class="n">format_blue_mask</span><span class="p">,</span><span class="n">format_alpha_mask</span><span class="p">);</span>
+<a name="gbab-216"></a>		<span class="n">ERR_EXPLAIN</span><span class="p">(</span><span class="s">&quot;Unrecognized or Unsupported color layout in DDS: &quot;</span><span class="o">+</span><span class="n">p_path</span><span class="p">);</span>
+<a name="gbab-217"></a>
+<a name="gbab-218"></a>		<span class="n">ERR_FAIL_V</span><span class="p">(</span><span class="n">RES</span><span class="p">());</span>
+<a name="gbab-219"></a>
+<a name="gbab-220"></a>	<span class="p">}</span>
+<a name="gbab-221"></a>
+<a name="gbab-222"></a>	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">flags</span><span class="o">&amp;</span><span class="n">DDSD_MIPMAPCOUNT</span><span class="p">))</span>
+<a name="gbab-223"></a>		<span class="n">mipmaps</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+<a name="gbab-224"></a>
+<a name="gbab-225"></a><span class="c1">//	print_line(&quot;found format: &quot;+String(dds_format_info[dds_format].name));</span>
+<a name="gbab-226"></a>
+<a name="gbab-227"></a>	<span class="n">DVector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span> <span class="n">src_data</span><span class="p">;</span>
+<a name="gbab-228"></a>
+<a name="gbab-229"></a>	<span class="k">const</span> <span class="n">DDSFormatInfo</span> <span class="o">&amp;</span><span class="n">info</span><span class="o">=</span><span class="n">dds_format_info</span><span class="p">[</span><span class="n">dds_format</span><span class="p">];</span>
+<a name="gbab-230"></a>	<span class="kt">uint32_t</span> <span class="n">w</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+<a name="gbab-231"></a>	<span class="kt">uint32_t</span> <span class="n">h</span> <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
+<a name="gbab-232"></a>
+<a name="gbab-233"></a>
+<a name="gbab-234"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">info</span><span class="p">.</span><span class="n">compressed</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-235"></a>		<span class="c1">//compressed bc</span>
+<a name="gbab-236"></a>
+<a name="gbab-237"></a>		<span class="kt">uint32_t</span> <span class="n">size</span> <span class="o">=</span> <span class="n">MAX</span><span class="p">(</span> <span class="n">info</span><span class="p">.</span><span class="n">divisor</span><span class="p">,</span> <span class="n">w</span> <span class="p">)</span><span class="o">/</span><span class="n">info</span><span class="p">.</span><span class="n">divisor</span> <span class="o">*</span> <span class="n">MAX</span><span class="p">(</span> <span class="n">info</span><span class="p">.</span><span class="n">divisor</span><span class="p">,</span> <span class="n">h</span> <span class="p">)</span><span class="o">/</span><span class="n">info</span><span class="p">.</span><span class="n">divisor</span> <span class="o">*</span> <span class="n">info</span><span class="p">.</span><span class="n">block_size</span><span class="p">;</span>
+<a name="gbab-238"></a>		<span class="n">ERR_FAIL_COND_V</span><span class="p">(</span> <span class="n">size</span><span class="o">!=</span><span class="n">pitch</span><span class="p">,</span> <span class="n">RES</span><span class="p">()</span> <span class="p">);</span>
+<a name="gbab-239"></a>		<span class="n">ERR_FAIL_COND_V</span><span class="p">(</span> <span class="o">!</span><span class="p">(</span><span class="n">flags</span><span class="o">&amp;</span><span class="n">DDSD_LINEARSIZE</span><span class="p">),</span> <span class="n">RES</span><span class="p">()</span> <span class="p">);</span>
+<a name="gbab-240"></a>
+<a name="gbab-241"></a>		<span class="k">for</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">mipmaps</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-242"></a>
+<a name="gbab-243"></a>			<span class="n">w</span><span class="o">=</span><span class="n">MAX</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">w</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-244"></a>			<span class="n">h</span><span class="o">=</span><span class="n">MAX</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">h</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-245"></a>			<span class="kt">uint32_t</span> <span class="n">bsize</span> <span class="o">=</span> <span class="n">MAX</span><span class="p">(</span> <span class="n">info</span><span class="p">.</span><span class="n">divisor</span><span class="p">,</span> <span class="n">w</span> <span class="p">)</span><span class="o">/</span><span class="n">info</span><span class="p">.</span><span class="n">divisor</span> <span class="o">*</span> <span class="n">MAX</span><span class="p">(</span> <span class="n">info</span><span class="p">.</span><span class="n">divisor</span><span class="p">,</span> <span class="n">h</span> <span class="p">)</span><span class="o">/</span><span class="n">info</span><span class="p">.</span><span class="n">divisor</span> <span class="o">*</span> <span class="n">info</span><span class="p">.</span><span class="n">block_size</span><span class="p">;</span>
+<a name="gbab-246"></a>			<span class="c1">//printf(&quot;%i x %i - block: %i\n&quot;,w,h,bsize);</span>
+<a name="gbab-247"></a>			<span class="n">size</span><span class="o">+=</span> <span class="n">bsize</span><span class="p">;</span>
+<a name="gbab-248"></a>		<span class="p">}</span>
+<a name="gbab-249"></a>
+<a name="gbab-250"></a>		<span class="n">src_data</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+<a name="gbab-251"></a>		<span class="n">DVector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;::</span><span class="n">Write</span> <span class="n">wb</span> <span class="o">=</span> <span class="n">src_data</span><span class="p">.</span><span class="n">write</span><span class="p">();</span>
+<a name="gbab-252"></a>		<span class="n">f</span><span class="o">-&gt;</span><span class="n">get_buffer</span><span class="p">(</span><span class="n">wb</span><span class="p">.</span><span class="n">ptr</span><span class="p">(),</span><span class="n">size</span><span class="p">);</span>
+<a name="gbab-253"></a>		<span class="n">wb</span><span class="o">=</span><span class="n">DVector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;::</span><span class="n">Write</span><span class="p">();</span>
+<a name="gbab-254"></a>
+<a name="gbab-255"></a>	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">info</span><span class="p">.</span><span class="n">palette</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-256"></a>
+<a name="gbab-257"></a>		<span class="c1">//indexed</span>
+<a name="gbab-258"></a>		<span class="n">ERR_FAIL_COND_V</span><span class="p">(</span> <span class="o">!</span><span class="p">(</span><span class="n">flags</span><span class="o">&amp;</span><span class="n">DDSD_PITCH</span><span class="p">),</span> <span class="n">RES</span><span class="p">());</span>
+<a name="gbab-259"></a>		<span class="n">ERR_FAIL_COND_V</span><span class="p">(</span> <span class="n">format_rgb_bits</span><span class="o">!=</span><span class="mi">8</span><span class="p">,</span> <span class="n">RES</span><span class="p">()</span> <span class="p">);</span>
+<a name="gbab-260"></a>
+<a name="gbab-261"></a>		<span class="kt">uint32_t</span> <span class="n">size</span> <span class="o">=</span> <span class="n">pitch</span><span class="o">*</span><span class="n">height</span><span class="p">;</span>
+<a name="gbab-262"></a>		<span class="n">ERR_FAIL_COND_V</span><span class="p">(</span> <span class="n">size</span> <span class="o">!=</span> <span class="n">width</span><span class="o">*</span><span class="n">height</span> <span class="o">*</span> <span class="n">info</span><span class="p">.</span><span class="n">block_size</span><span class="p">,</span> <span class="n">RES</span><span class="p">());</span>
+<a name="gbab-263"></a>
+<a name="gbab-264"></a>		<span class="kt">uint8_t</span> <span class="n">pallete</span><span class="p">[</span><span class="mi">256</span><span class="o">*</span><span class="mi">4</span><span class="p">];</span>
+<a name="gbab-265"></a>		<span class="n">f</span><span class="o">-&gt;</span><span class="n">get_buffer</span><span class="p">(</span><span class="n">pallete</span><span class="p">,</span><span class="mi">256</span><span class="o">*</span><span class="mi">4</span><span class="p">);</span>
+<a name="gbab-266"></a>
+<a name="gbab-267"></a>		<span class="kt">int</span> <span class="n">colsize</span><span class="o">=</span><span class="mi">3</span><span class="p">;</span>
+<a name="gbab-268"></a>		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">256</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-269"></a>
+<a name="gbab-270"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">pallete</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">4</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">255</span><span class="p">)</span>
+<a name="gbab-271"></a>				<span class="n">colsize</span><span class="o">=</span><span class="mi">4</span><span class="p">;</span>
+<a name="gbab-272"></a>		<span class="p">}</span>
+<a name="gbab-273"></a>
+<a name="gbab-274"></a>		<span class="kt">int</span> <span class="n">w</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+<a name="gbab-275"></a>		<span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
+<a name="gbab-276"></a>
+<a name="gbab-277"></a>		<span class="k">for</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">mipmaps</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a>			<span class="n">w</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
+<a name="gbab-280"></a>			<span class="n">h</span><span class="o">=</span><span class="p">(</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
+<a name="gbab-281"></a>			<span class="n">size</span><span class="o">+=</span> <span class="n">w</span><span class="o">*</span><span class="n">h</span><span class="o">*</span><span class="n">info</span><span class="p">.</span><span class="n">block_size</span><span class="p">;</span>
+<a name="gbab-282"></a>		<span class="p">}</span>
+<a name="gbab-283"></a>
+<a name="gbab-284"></a>		<span class="n">src_data</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span> <span class="o">+</span> <span class="mi">256</span><span class="o">*</span><span class="n">colsize</span> <span class="p">);</span>
+<a name="gbab-285"></a>		<span class="n">DVector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;::</span><span class="n">Write</span> <span class="n">wb</span> <span class="o">=</span> <span class="n">src_data</span><span class="p">.</span><span class="n">write</span><span class="p">();</span>
+<a name="gbab-286"></a>		<span class="n">f</span><span class="o">-&gt;</span><span class="n">get_buffer</span><span class="p">(</span><span class="n">wb</span><span class="p">.</span><span class="n">ptr</span><span class="p">(),</span><span class="n">size</span><span class="p">);</span>
+<a name="gbab-287"></a>
+<a name="gbab-288"></a>		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">256</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-289"></a>
+<a name="gbab-290"></a>			<span class="kt">int</span> <span class="n">dst_ofs</span> <span class="o">=</span> <span class="n">size</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">colsize</span><span class="p">;</span>
+<a name="gbab-291"></a>			<span class="kt">int</span> <span class="n">src_ofs</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mi">4</span><span class="p">;</span>
+<a name="gbab-292"></a>			<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">pallete</span><span class="p">[</span><span class="n">src_ofs</span><span class="o">+</span><span class="mi">2</span><span class="p">];</span>
+<a name="gbab-293"></a>			<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">pallete</span><span class="p">[</span><span class="n">src_ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<a name="gbab-294"></a>			<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">pallete</span><span class="p">[</span><span class="n">src_ofs</span><span class="o">+</span><span class="mi">0</span><span class="p">];</span>
+<a name="gbab-295"></a>			<span class="k">if</span> <span class="p">(</span><span class="n">colsize</span><span class="o">==</span><span class="mi">4</span><span class="p">)</span>
+<a name="gbab-296"></a>				<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="n">pallete</span><span class="p">[</span><span class="n">src_ofs</span><span class="o">+</span><span class="mi">3</span><span class="p">];</span>
+<a name="gbab-297"></a>		<span class="p">}</span>
+<a name="gbab-298"></a>
+<a name="gbab-299"></a>
+<a name="gbab-300"></a>		<span class="n">wb</span><span class="o">=</span><span class="n">DVector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;::</span><span class="n">Write</span><span class="p">();</span>
+<a name="gbab-301"></a>	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="gbab-302"></a>		<span class="c1">//uncompressed generic...</span>
+<a name="gbab-303"></a>
+<a name="gbab-304"></a>		<span class="kt">uint32_t</span> <span class="n">size</span> <span class="o">=</span> <span class="n">width</span><span class="o">*</span><span class="n">height</span><span class="o">*</span><span class="n">info</span><span class="p">.</span><span class="n">block_size</span><span class="p">;</span>
+<a name="gbab-305"></a>
+<a name="gbab-306"></a>
+<a name="gbab-307"></a>		<span class="k">for</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">mipmaps</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-308"></a>
+<a name="gbab-309"></a>			<span class="n">w</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
+<a name="gbab-310"></a>			<span class="n">h</span><span class="o">=</span><span class="p">(</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
+<a name="gbab-311"></a>			<span class="n">size</span><span class="o">+=</span> <span class="n">w</span><span class="o">*</span><span class="n">h</span><span class="o">*</span><span class="n">info</span><span class="p">.</span><span class="n">block_size</span><span class="p">;</span>
+<a name="gbab-312"></a>		<span class="p">}</span>
+<a name="gbab-313"></a>
+<a name="gbab-314"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">dds_format</span><span class="o">==</span><span class="n">DDS_BGR565</span><span class="p">)</span>
+<a name="gbab-315"></a>			<span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="o">*</span><span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-316"></a>		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">dds_format</span><span class="o">==</span><span class="n">DDS_BGR5A1</span><span class="p">)</span>
+<a name="gbab-317"></a>			<span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-318"></a>
+<a name="gbab-319"></a>		<span class="n">src_data</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+<a name="gbab-320"></a>		<span class="n">DVector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;::</span><span class="n">Write</span> <span class="n">wb</span> <span class="o">=</span> <span class="n">src_data</span><span class="p">.</span><span class="n">write</span><span class="p">();</span>
+<a name="gbab-321"></a>		<span class="n">f</span><span class="o">-&gt;</span><span class="n">get_buffer</span><span class="p">(</span><span class="n">wb</span><span class="p">.</span><span class="n">ptr</span><span class="p">(),</span><span class="n">size</span><span class="p">);</span>
+<a name="gbab-322"></a>
+<a name="gbab-323"></a>
+<a name="gbab-324"></a>		<span class="k">switch</span><span class="p">(</span><span class="n">dds_format</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-325"></a>
+<a name="gbab-326"></a>			<span class="k">case</span> <span class="nl">DDS_BGR5A1</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-327"></a>
+<a name="gbab-328"></a>				<span class="c1">// TO RGBA</span>
+<a name="gbab-329"></a>				<span class="kt">int</span> <span class="n">colcount</span> <span class="o">=</span> <span class="n">size</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
+<a name="gbab-330"></a>
+<a name="gbab-331"></a>				<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">colcount</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-332"></a>
+<a name="gbab-333"></a>					<span class="kt">int</span> <span class="n">src_ofs</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-334"></a>					<span class="kt">int</span> <span class="n">dst_ofs</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mi">4</span><span class="p">;</span>
+<a name="gbab-335"></a>
+<a name="gbab-336"></a>					<span class="kt">uint8_t</span> <span class="n">a</span><span class="o">=</span><span class="n">wb</span><span class="p">[</span><span class="n">src_ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">&amp;</span><span class="mh">0x80</span><span class="p">;</span>
+<a name="gbab-337"></a>					<span class="kt">uint8_t</span> <span class="n">b</span><span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="n">src_ofs</span><span class="p">]</span><span class="o">&amp;</span><span class="mh">0x1F</span><span class="p">;</span>
+<a name="gbab-338"></a>					<span class="kt">uint8_t</span> <span class="n">g</span><span class="o">=</span> <span class="p">(</span><span class="n">wb</span><span class="p">[</span><span class="n">src_ofs</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">wb</span><span class="p">[</span><span class="n">src_ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">&amp;</span><span class="mh">0x3</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="mi">3</span><span class="p">);</span>
+<a name="gbab-339"></a>					<span class="kt">uint8_t</span> <span class="n">r</span><span class="o">=</span> <span class="p">(</span><span class="n">wb</span><span class="p">[</span><span class="n">src_ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1F</span><span class="p">;</span>
+<a name="gbab-340"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">r</span><span class="o">&lt;&lt;</span><span class="mi">3</span><span class="p">;</span>
+<a name="gbab-341"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">g</span><span class="o">&lt;&lt;</span><span class="mi">3</span><span class="p">;</span>
+<a name="gbab-342"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">b</span><span class="o">&lt;&lt;</span><span class="mi">3</span><span class="p">;</span>
+<a name="gbab-343"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="n">a</span><span class="o">?</span><span class="mi">255</span><span class="o">:</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-344"></a>				<span class="p">}</span>
+<a name="gbab-345"></a>			<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-346"></a>			<span class="k">case</span> <span class="nl">DDS_BGR565</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-347"></a>
+<a name="gbab-348"></a>				<span class="kt">int</span> <span class="n">colcount</span> <span class="o">=</span> <span class="n">size</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span>
+<a name="gbab-349"></a>
+<a name="gbab-350"></a>				<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">colcount</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-351"></a>
+<a name="gbab-352"></a>					<span class="kt">int</span> <span class="n">src_ofs</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-353"></a>					<span class="kt">int</span> <span class="n">dst_ofs</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mi">3</span><span class="p">;</span>
+<a name="gbab-354"></a>
+<a name="gbab-355"></a>					<span class="kt">uint8_t</span> <span class="n">b</span><span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="n">src_ofs</span><span class="p">]</span><span class="o">&amp;</span><span class="mh">0x1F</span><span class="p">;</span>
+<a name="gbab-356"></a>					<span class="kt">uint8_t</span> <span class="n">g</span><span class="o">=</span> <span class="p">(</span><span class="n">wb</span><span class="p">[</span><span class="n">src_ofs</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">wb</span><span class="p">[</span><span class="n">src_ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">&amp;</span><span class="mh">0x7</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="mi">3</span><span class="p">);</span>
+<a name="gbab-357"></a>					<span class="kt">uint8_t</span> <span class="n">r</span><span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="n">src_ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">;</span>
+<a name="gbab-358"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">r</span><span class="o">&lt;&lt;</span><span class="mi">3</span><span class="p">;</span>
+<a name="gbab-359"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">g</span><span class="o">&lt;&lt;</span><span class="mi">2</span><span class="p">;</span>
+<a name="gbab-360"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">dst_ofs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">b</span><span class="o">&lt;&lt;</span><span class="mi">3</span><span class="p">;</span><span class="c1">//b&lt;&lt;3;</span>
+<a name="gbab-361"></a>
+<a name="gbab-362"></a>				<span class="p">}</span>
+<a name="gbab-363"></a>
+<a name="gbab-364"></a>			<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-365"></a>			<span class="k">case</span> <span class="nl">DDS_BGR10A2</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-366"></a>
+<a name="gbab-367"></a>				<span class="c1">// TO RGBA</span>
+<a name="gbab-368"></a>				<span class="kt">int</span> <span class="n">colcount</span> <span class="o">=</span> <span class="n">size</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
+<a name="gbab-369"></a>
+<a name="gbab-370"></a>				<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">colcount</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-371"></a>
+<a name="gbab-372"></a>					<span class="kt">int</span> <span class="n">ofs</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mi">4</span><span class="p">;</span>
+<a name="gbab-373"></a>
+<a name="gbab-374"></a>					<span class="kt">uint32_t</span> <span class="n">w32</span> <span class="o">=</span> <span class="kt">uint32_t</span><span class="p">(</span><span class="n">wb</span><span class="p">[</span><span class="n">ofs</span><span class="o">+</span><span class="mi">0</span><span class="p">])</span> <span class="o">|</span> <span class="p">(</span><span class="kt">uint32_t</span><span class="p">(</span><span class="n">wb</span><span class="p">[</span><span class="n">ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">&lt;&lt;</span><span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="kt">uint32_t</span><span class="p">(</span><span class="n">wb</span><span class="p">[</span><span class="n">ofs</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span><span class="o">&lt;&lt;</span><span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="kt">uint32_t</span><span class="p">(</span><span class="n">wb</span><span class="p">[</span><span class="n">ofs</span><span class="o">+</span><span class="mi">3</span><span class="p">])</span><span class="o">&lt;&lt;</span><span class="mi">24</span><span class="p">);</span>
+<a name="gbab-375"></a>
+<a name="gbab-376"></a>					<span class="kt">uint8_t</span> <span class="n">a</span><span class="o">=</span> <span class="p">(</span><span class="n">w32</span><span class="o">&amp;</span><span class="mh">0xc0000000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">;</span>
+<a name="gbab-377"></a>					<span class="kt">uint8_t</span> <span class="n">r</span><span class="o">=</span> <span class="p">(</span><span class="n">w32</span><span class="o">&amp;</span><span class="mh">0x3ff00000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">22</span><span class="p">;</span>
+<a name="gbab-378"></a>					<span class="kt">uint8_t</span> <span class="n">g</span><span class="o">=</span> <span class="p">(</span><span class="n">w32</span><span class="o">&amp;</span><span class="mh">0xffc00</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">12</span><span class="p">;</span>
+<a name="gbab-379"></a>					<span class="kt">uint8_t</span> <span class="n">b</span><span class="o">=</span> <span class="p">(</span><span class="n">w32</span><span class="o">&amp;</span><span class="mh">0x3ff</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span>
+<a name="gbab-380"></a>
+<a name="gbab-381"></a>
+<a name="gbab-382"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">ofs</span><span class="o">+</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">r</span><span class="p">;</span>
+<a name="gbab-383"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">ofs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">g</span><span class="p">;</span>
+<a name="gbab-384"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">ofs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">b</span><span class="p">;</span>
+<a name="gbab-385"></a>					<span class="n">wb</span><span class="p">[</span><span class="n">ofs</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="n">a</span><span class="o">==</span><span class="mh">0xc0</span> <span class="o">?</span> <span class="mi">255</span> <span class="o">:</span> <span class="n">a</span><span class="p">;</span> <span class="c1">//0xc0 should be opaque</span>
+<a name="gbab-386"></a>
+<a name="gbab-387"></a>				<span class="p">}</span>
+<a name="gbab-388"></a>			<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-389"></a>			<span class="k">case</span> <span class="nl">DDS_BGRA8</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-390"></a>
+<a name="gbab-391"></a>				<span class="kt">int</span> <span class="n">colcount</span> <span class="o">=</span> <span class="n">size</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
+<a name="gbab-392"></a>
+<a name="gbab-393"></a>				<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">colcount</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-394"></a>
+<a name="gbab-395"></a>					<span class="n">SWAP</span><span class="p">(</span> <span class="n">wb</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">4</span><span class="o">+</span><span class="mi">0</span><span class="p">],</span><span class="n">wb</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">4</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="p">);</span>
+<a name="gbab-396"></a>				<span class="p">}</span>
+<a name="gbab-397"></a>
+<a name="gbab-398"></a>			<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-399"></a>			<span class="k">case</span> <span class="nl">DDS_BGR8</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-400"></a>
+<a name="gbab-401"></a>				<span class="kt">int</span> <span class="n">colcount</span> <span class="o">=</span> <span class="n">size</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span>
+<a name="gbab-402"></a>
+<a name="gbab-403"></a>				<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">colcount</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-404"></a>
+<a name="gbab-405"></a>					<span class="n">SWAP</span><span class="p">(</span> <span class="n">wb</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">0</span><span class="p">],</span><span class="n">wb</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="p">);</span>
+<a name="gbab-406"></a>				<span class="p">}</span>
+<a name="gbab-407"></a>			<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-408"></a>			<span class="k">case</span> <span class="nl">DDS_RGBA8</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-409"></a>
+<a name="gbab-410"></a>					<span class="cm">/* do nothing either</span>
+<a name="gbab-411"></a><span class="cm">				int colcount = size/4;</span>
+<a name="gbab-412"></a>
+<a name="gbab-413"></a><span class="cm">				for(int i=0;i&lt;colcount;i++) {</span>
+<a name="gbab-414"></a>
+<a name="gbab-415"></a><span class="cm">					uint8_t r = wb[i*4+1];</span>
+<a name="gbab-416"></a><span class="cm">					uint8_t g = wb[i*4+2];</span>
+<a name="gbab-417"></a><span class="cm">					uint8_t b = wb[i*4+3];</span>
+<a name="gbab-418"></a><span class="cm">					uint8_t a = wb[i*4+0];</span>
+<a name="gbab-419"></a>
+<a name="gbab-420"></a><span class="cm">					wb[i*4+0]=r;</span>
+<a name="gbab-421"></a><span class="cm">					wb[i*4+1]=g;</span>
+<a name="gbab-422"></a><span class="cm">					wb[i*4+2]=b;</span>
+<a name="gbab-423"></a><span class="cm">					wb[i*4+3]=a;</span>
+<a name="gbab-424"></a><span class="cm">				}</span>
+<a name="gbab-425"></a><span class="cm">				*/</span>
+<a name="gbab-426"></a>			<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-427"></a>			<span class="k">case</span> <span class="nl">DDS_RGB8</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-428"></a>
+<a name="gbab-429"></a>				<span class="c1">// do nothing</span>
+<a name="gbab-430"></a>				<span class="cm">/*</span>
+<a name="gbab-431"></a><span class="cm">				int colcount = size/3;</span>
+<a name="gbab-432"></a>
+<a name="gbab-433"></a><span class="cm">				for(int i=0;i&lt;colcount;i++) {</span>
+<a name="gbab-434"></a>
+<a name="gbab-435"></a><span class="cm">					SWAP( wb[i*3+0],wb[i*3+2] );</span>
+<a name="gbab-436"></a><span class="cm">				}*/</span>
+<a name="gbab-437"></a>			<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-438"></a>			<span class="k">case</span> <span class="nl">DDS_LUMINANCE</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-439"></a>
+<a name="gbab-440"></a>				<span class="c1">// do nothing i guess?</span>
+<a name="gbab-441"></a>
+<a name="gbab-442"></a>			<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-443"></a>			<span class="k">case</span> <span class="nl">DDS_LUMINANCE_ALPHA</span><span class="p">:</span> <span class="p">{</span>
+<a name="gbab-444"></a>
+<a name="gbab-445"></a>				<span class="c1">// do nothing i guess?</span>
+<a name="gbab-446"></a>
+<a name="gbab-447"></a>			<span class="p">}</span> <span class="k">break</span><span class="p">;</span>
+<a name="gbab-448"></a>
+<a name="gbab-449"></a>			<span class="k">default</span><span class="o">:</span> <span class="p">{}</span>
+<a name="gbab-450"></a>
+<a name="gbab-451"></a>		<span class="p">}</span>
+<a name="gbab-452"></a>
+<a name="gbab-453"></a>		<span class="n">wb</span><span class="o">=</span><span class="n">DVector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;::</span><span class="n">Write</span><span class="p">();</span>
+<a name="gbab-454"></a>	<span class="p">}</span>
+<a name="gbab-455"></a>
+<a name="gbab-456"></a>
+<a name="gbab-457"></a>	<span class="n">Image</span> <span class="n">img</span><span class="p">(</span><span class="n">width</span><span class="p">,</span><span class="n">height</span><span class="p">,</span><span class="n">mipmaps</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">info</span><span class="p">.</span><span class="n">format</span><span class="p">,</span><span class="n">src_data</span><span class="p">);</span>
+<a name="gbab-458"></a>
+<a name="gbab-459"></a>	<span class="n">Ref</span><span class="o">&lt;</span><span class="n">ImageTexture</span><span class="o">&gt;</span> <span class="n">texture</span> <span class="o">=</span> <span class="n">memnew</span><span class="p">(</span> <span class="n">ImageTexture</span> <span class="p">);</span>
+<a name="gbab-460"></a>	<span class="n">texture</span><span class="o">-&gt;</span><span class="n">create_from_image</span><span class="p">(</span><span class="n">img</span><span class="p">);</span>
+<a name="gbab-461"></a>
+<a name="gbab-462"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">r_error</span><span class="p">)</span>
+<a name="gbab-463"></a>		<span class="o">*</span><span class="n">r_error</span><span class="o">=</span><span class="n">OK</span><span class="p">;</span>
+<a name="gbab-464"></a>
+<a name="gbab-465"></a>
+<a name="gbab-466"></a>	<span class="k">return</span> <span class="n">texture</span><span class="p">;</span>
+<a name="gbab-467"></a>
+<a name="gbab-468"></a><span class="p">}</span>
+<a name="gbab-469"></a>
+<a name="gbab-470"></a><span class="kt">void</span> <span class="n">ResourceFormatDDS</span><span class="o">::</span><span class="n">get_recognized_extensions</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">p_extensions</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-471"></a>
+<a name="gbab-472"></a>	<span class="n">p_extensions</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;dds&quot;</span><span class="p">);</span>
+<a name="gbab-473"></a><span class="p">}</span>
+<a name="gbab-474"></a>
+<a name="gbab-475"></a><span class="kt">bool</span> <span class="n">ResourceFormatDDS</span><span class="o">::</span><span class="n">handles_type</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_type</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-476"></a>
+<a name="gbab-477"></a>	<span class="k">return</span> <span class="n">ObjectTypeDB</span><span class="o">::</span><span class="n">is_type</span><span class="p">(</span><span class="n">p_type</span><span class="p">,</span><span class="s">&quot;Texture&quot;</span><span class="p">);</span>
+<a name="gbab-478"></a><span class="p">}</span>
+<a name="gbab-479"></a>
+<a name="gbab-480"></a><span class="n">String</span> <span class="n">ResourceFormatDDS</span><span class="o">::</span><span class="n">get_resource_type</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">p_path</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-481"></a>
+<a name="gbab-482"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">p_path</span><span class="p">.</span><span class="n">extension</span><span class="p">().</span><span class="n">to_lower</span><span class="p">()</span><span class="o">==</span><span class="s">&quot;dds&quot;</span><span class="p">)</span>
+<a name="gbab-483"></a>		<span class="k">return</span> <span class="s">&quot;ImageTexture&quot;</span><span class="p">;</span>
+<a name="gbab-484"></a>	<span class="k">return</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+<a name="gbab-485"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

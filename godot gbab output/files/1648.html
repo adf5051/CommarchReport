@@ -1,0 +1,843 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-3"></a><span class="cm">/*  ttobjs.h                                                               */</span>
+<a name="gbab-4"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-5"></a><span class="cm">/*    Objects manager (specification).                                     */</span>
+<a name="gbab-6"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-7"></a><span class="cm">/*  Copyright 1996-2016 by                                                 */</span>
+<a name="gbab-8"></a><span class="cm">/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-10"></a><span class="cm">/*  This file is part of the FreeType project, and may only be used,       */</span>
+<a name="gbab-11"></a><span class="cm">/*  modified, and distributed under the terms of the FreeType project      */</span>
+<a name="gbab-12"></a><span class="cm">/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */</span>
+<a name="gbab-13"></a><span class="cm">/*  this file you indicate that you have read the license and              */</span>
+<a name="gbab-14"></a><span class="cm">/*  understand and accept it fully.                                        */</span>
+<a name="gbab-15"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-16"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#ifndef TTOBJS_H_</span>
+<a name="gbab-20"></a><span class="cp">#define TTOBJS_H_</span>
+<a name="gbab-21"></a>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="cp">#include</span> <span class="cpf">&lt;ft2build.h&gt;</span><span class="cp"></span>
+<a name="gbab-24"></a><span class="cp">#include</span> <span class="cpf">FT_INTERNAL_OBJECTS_H</span><span class="cp"></span>
+<a name="gbab-25"></a><span class="cp">#include</span> <span class="cpf">FT_INTERNAL_TRUETYPE_TYPES_H</span><span class="cp"></span>
+<a name="gbab-26"></a>
+<a name="gbab-27"></a>
+<a name="gbab-28"></a><span class="n">FT_BEGIN_HEADER</span>
+<a name="gbab-29"></a>
+<a name="gbab-30"></a>
+<a name="gbab-31"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-32"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-33"></a>  <span class="cm">/* &lt;Type&gt;                                                                */</span>
+<a name="gbab-34"></a>  <span class="cm">/*    TT_Driver                                                          */</span>
+<a name="gbab-35"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-36"></a>  <span class="cm">/* &lt;Description&gt;                                                         */</span>
+<a name="gbab-37"></a>  <span class="cm">/*    A handle to a TrueType driver object.                              */</span>
+<a name="gbab-38"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-39"></a>  <span class="k">typedef</span> <span class="k">struct</span> <span class="n">TT_DriverRec_</span><span class="o">*</span>  <span class="n">TT_Driver</span><span class="p">;</span>
+<a name="gbab-40"></a>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-43"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-44"></a>  <span class="cm">/* &lt;Type&gt;                                                                */</span>
+<a name="gbab-45"></a>  <span class="cm">/*    TT_GlyphSlot                                                       */</span>
+<a name="gbab-46"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-47"></a>  <span class="cm">/* &lt;Description&gt;                                                         */</span>
+<a name="gbab-48"></a>  <span class="cm">/*    A handle to a TrueType glyph slot object.                          */</span>
+<a name="gbab-49"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-50"></a>  <span class="cm">/* &lt;Note&gt;                                                                */</span>
+<a name="gbab-51"></a>  <span class="cm">/*    This is a direct typedef of FT_GlyphSlot, as there is nothing      */</span>
+<a name="gbab-52"></a>  <span class="cm">/*    specific about the TrueType glyph slot.                            */</span>
+<a name="gbab-53"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-54"></a>  <span class="k">typedef</span> <span class="n">FT_GlyphSlot</span>  <span class="n">TT_GlyphSlot</span><span class="p">;</span>
+<a name="gbab-55"></a>
+<a name="gbab-56"></a>
+<a name="gbab-57"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-58"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-59"></a>  <span class="cm">/* &lt;Struct&gt;                                                              */</span>
+<a name="gbab-60"></a>  <span class="cm">/*    TT_GraphicsState                                                   */</span>
+<a name="gbab-61"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-62"></a>  <span class="cm">/* &lt;Description&gt;                                                         */</span>
+<a name="gbab-63"></a>  <span class="cm">/*    The TrueType graphics state used during bytecode interpretation.   */</span>
+<a name="gbab-64"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-65"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">TT_GraphicsState_</span>
+<a name="gbab-66"></a>  <span class="p">{</span>
+<a name="gbab-67"></a>    <span class="n">FT_UShort</span>      <span class="n">rp0</span><span class="p">;</span>
+<a name="gbab-68"></a>    <span class="n">FT_UShort</span>      <span class="n">rp1</span><span class="p">;</span>
+<a name="gbab-69"></a>    <span class="n">FT_UShort</span>      <span class="n">rp2</span><span class="p">;</span>
+<a name="gbab-70"></a>
+<a name="gbab-71"></a>    <span class="n">FT_UnitVector</span>  <span class="n">dualVector</span><span class="p">;</span>
+<a name="gbab-72"></a>    <span class="n">FT_UnitVector</span>  <span class="n">projVector</span><span class="p">;</span>
+<a name="gbab-73"></a>    <span class="n">FT_UnitVector</span>  <span class="n">freeVector</span><span class="p">;</span>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a>    <span class="n">FT_Long</span>        <span class="n">loop</span><span class="p">;</span>
+<a name="gbab-76"></a>    <span class="n">FT_F26Dot6</span>     <span class="n">minimum_distance</span><span class="p">;</span>
+<a name="gbab-77"></a>    <span class="n">FT_Int</span>         <span class="n">round_state</span><span class="p">;</span>
+<a name="gbab-78"></a>
+<a name="gbab-79"></a>    <span class="n">FT_Bool</span>        <span class="n">auto_flip</span><span class="p">;</span>
+<a name="gbab-80"></a>    <span class="n">FT_F26Dot6</span>     <span class="n">control_value_cutin</span><span class="p">;</span>
+<a name="gbab-81"></a>    <span class="n">FT_F26Dot6</span>     <span class="n">single_width_cutin</span><span class="p">;</span>
+<a name="gbab-82"></a>    <span class="n">FT_F26Dot6</span>     <span class="n">single_width_value</span><span class="p">;</span>
+<a name="gbab-83"></a>    <span class="n">FT_UShort</span>      <span class="n">delta_base</span><span class="p">;</span>
+<a name="gbab-84"></a>    <span class="n">FT_UShort</span>      <span class="n">delta_shift</span><span class="p">;</span>
+<a name="gbab-85"></a>
+<a name="gbab-86"></a>    <span class="n">FT_Byte</span>        <span class="n">instruct_control</span><span class="p">;</span>
+<a name="gbab-87"></a>    <span class="cm">/* According to Greg Hitchcock from Microsoft, the `scan_control&#39;     */</span>
+<a name="gbab-88"></a>    <span class="cm">/* variable as documented in the TrueType specification is a 32-bit   */</span>
+<a name="gbab-89"></a>    <span class="cm">/* integer; the high-word part holds the SCANTYPE value, the low-word */</span>
+<a name="gbab-90"></a>    <span class="cm">/* part the SCANCTRL value.  We separate it into two fields.          */</span>
+<a name="gbab-91"></a>    <span class="n">FT_Bool</span>        <span class="n">scan_control</span><span class="p">;</span>
+<a name="gbab-92"></a>    <span class="n">FT_Int</span>         <span class="n">scan_type</span><span class="p">;</span>
+<a name="gbab-93"></a>
+<a name="gbab-94"></a>    <span class="n">FT_UShort</span>      <span class="n">gep0</span><span class="p">;</span>
+<a name="gbab-95"></a>    <span class="n">FT_UShort</span>      <span class="n">gep1</span><span class="p">;</span>
+<a name="gbab-96"></a>    <span class="n">FT_UShort</span>      <span class="n">gep2</span><span class="p">;</span>
+<a name="gbab-97"></a>
+<a name="gbab-98"></a>  <span class="p">}</span> <span class="n">TT_GraphicsState</span><span class="p">;</span>
+<a name="gbab-99"></a>
+<a name="gbab-100"></a>
+<a name="gbab-101"></a><span class="cp">#ifdef TT_USE_BYTECODE_INTERPRETER</span>
+<a name="gbab-102"></a>
+<a name="gbab-103"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span>
+<a name="gbab-104"></a>  <span class="n">tt_glyphzone_done</span><span class="p">(</span> <span class="n">TT_GlyphZone</span>  <span class="n">zone</span> <span class="p">);</span>
+<a name="gbab-105"></a>
+<a name="gbab-106"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-107"></a>  <span class="n">tt_glyphzone_new</span><span class="p">(</span> <span class="n">FT_Memory</span>     <span class="n">memory</span><span class="p">,</span>
+<a name="gbab-108"></a>                    <span class="n">FT_UShort</span>     <span class="n">maxPoints</span><span class="p">,</span>
+<a name="gbab-109"></a>                    <span class="n">FT_Short</span>      <span class="n">maxContours</span><span class="p">,</span>
+<a name="gbab-110"></a>                    <span class="n">TT_GlyphZone</span>  <span class="n">zone</span> <span class="p">);</span>
+<a name="gbab-111"></a>
+<a name="gbab-112"></a><span class="cp">#endif </span><span class="cm">/* TT_USE_BYTECODE_INTERPRETER */</span><span class="cp"></span>
+<a name="gbab-113"></a>
+<a name="gbab-114"></a>
+<a name="gbab-115"></a>
+<a name="gbab-116"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-117"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-118"></a>  <span class="cm">/*  EXECUTION SUBTABLES                                                  */</span>
+<a name="gbab-119"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-120"></a>  <span class="cm">/*  These sub-tables relate to instruction execution.                    */</span>
+<a name="gbab-121"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-122"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-123"></a>
+<a name="gbab-124"></a>
+<a name="gbab-125"></a><span class="cp">#define TT_MAX_CODE_RANGES  3</span>
+<a name="gbab-126"></a>
+<a name="gbab-127"></a>
+<a name="gbab-128"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-129"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-130"></a>  <span class="cm">/* There can only be 3 active code ranges at once:                       */</span>
+<a name="gbab-131"></a>  <span class="cm">/*   - the Font Program                                                  */</span>
+<a name="gbab-132"></a>  <span class="cm">/*   - the CVT Program                                                   */</span>
+<a name="gbab-133"></a>  <span class="cm">/*   - a glyph&#39;s instructions set                                        */</span>
+<a name="gbab-134"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-135"></a>  <span class="k">typedef</span> <span class="k">enum</span>  <span class="n">TT_CodeRange_Tag_</span>
+<a name="gbab-136"></a>  <span class="p">{</span>
+<a name="gbab-137"></a>    <span class="n">tt_coderange_none</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<a name="gbab-138"></a>    <span class="n">tt_coderange_font</span><span class="p">,</span>
+<a name="gbab-139"></a>    <span class="n">tt_coderange_cvt</span><span class="p">,</span>
+<a name="gbab-140"></a>    <span class="n">tt_coderange_glyph</span>
+<a name="gbab-141"></a>
+<a name="gbab-142"></a>  <span class="p">}</span> <span class="n">TT_CodeRange_Tag</span><span class="p">;</span>
+<a name="gbab-143"></a>
+<a name="gbab-144"></a>
+<a name="gbab-145"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">TT_CodeRange_</span>
+<a name="gbab-146"></a>  <span class="p">{</span>
+<a name="gbab-147"></a>    <span class="n">FT_Byte</span><span class="o">*</span>  <span class="n">base</span><span class="p">;</span>
+<a name="gbab-148"></a>    <span class="n">FT_Long</span>   <span class="n">size</span><span class="p">;</span>
+<a name="gbab-149"></a>
+<a name="gbab-150"></a>  <span class="p">}</span> <span class="n">TT_CodeRange</span><span class="p">;</span>
+<a name="gbab-151"></a>
+<a name="gbab-152"></a>  <span class="k">typedef</span> <span class="n">TT_CodeRange</span>  <span class="n">TT_CodeRangeTable</span><span class="p">[</span><span class="n">TT_MAX_CODE_RANGES</span><span class="p">];</span>
+<a name="gbab-153"></a>
+<a name="gbab-154"></a>
+<a name="gbab-155"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-156"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-157"></a>  <span class="cm">/* Defines a function/instruction definition record.                     */</span>
+<a name="gbab-158"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-159"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">TT_DefRecord_</span>
+<a name="gbab-160"></a>  <span class="p">{</span>
+<a name="gbab-161"></a>    <span class="n">FT_Int</span>    <span class="n">range</span><span class="p">;</span>          <span class="cm">/* in which code range is it located?     */</span>
+<a name="gbab-162"></a>    <span class="n">FT_Long</span>   <span class="n">start</span><span class="p">;</span>          <span class="cm">/* where does it start?                   */</span>
+<a name="gbab-163"></a>    <span class="n">FT_Long</span>   <span class="n">end</span><span class="p">;</span>            <span class="cm">/* where does it end?                     */</span>
+<a name="gbab-164"></a>    <span class="n">FT_UInt</span>   <span class="n">opc</span><span class="p">;</span>            <span class="cm">/* function #, or instruction code        */</span>
+<a name="gbab-165"></a>    <span class="n">FT_Bool</span>   <span class="n">active</span><span class="p">;</span>         <span class="cm">/* is it active?                          */</span>
+<a name="gbab-166"></a>    <span class="n">FT_Bool</span>   <span class="n">inline_delta</span><span class="p">;</span>   <span class="cm">/* is function that defines inline delta? */</span>
+<a name="gbab-167"></a>    <span class="n">FT_ULong</span>  <span class="n">sph_fdef_flags</span><span class="p">;</span> <span class="cm">/* flags to identify special functions    */</span>
+<a name="gbab-168"></a>
+<a name="gbab-169"></a>  <span class="p">}</span> <span class="n">TT_DefRecord</span><span class="p">,</span> <span class="o">*</span><span class="n">TT_DefArray</span><span class="p">;</span>
+<a name="gbab-170"></a>
+<a name="gbab-171"></a>
+<a name="gbab-172"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-173"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-174"></a>  <span class="cm">/* Subglyph transformation record.                                       */</span>
+<a name="gbab-175"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-176"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">TT_Transform_</span>
+<a name="gbab-177"></a>  <span class="p">{</span>
+<a name="gbab-178"></a>    <span class="n">FT_Fixed</span>    <span class="n">xx</span><span class="p">,</span> <span class="n">xy</span><span class="p">;</span>     <span class="cm">/* transformation matrix coefficients */</span>
+<a name="gbab-179"></a>    <span class="n">FT_Fixed</span>    <span class="n">yx</span><span class="p">,</span> <span class="n">yy</span><span class="p">;</span>
+<a name="gbab-180"></a>    <span class="n">FT_F26Dot6</span>  <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">;</span>     <span class="cm">/* offsets                            */</span>
+<a name="gbab-181"></a>
+<a name="gbab-182"></a>  <span class="p">}</span> <span class="n">TT_Transform</span><span class="p">;</span>
+<a name="gbab-183"></a>
+<a name="gbab-184"></a>
+<a name="gbab-185"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-186"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-187"></a>  <span class="cm">/* A note regarding non-squared pixels:                                  */</span>
+<a name="gbab-188"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-189"></a>  <span class="cm">/* (This text will probably go into some docs at some time; for now, it  */</span>
+<a name="gbab-190"></a>  <span class="cm">/* is kept here to explain some definitions in the TT_Size_Metrics       */</span>
+<a name="gbab-191"></a>  <span class="cm">/* record).                                                              */</span>
+<a name="gbab-192"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-193"></a>  <span class="cm">/* The CVT is a one-dimensional array containing values that control     */</span>
+<a name="gbab-194"></a>  <span class="cm">/* certain important characteristics in a font, like the height of all   */</span>
+<a name="gbab-195"></a>  <span class="cm">/* capitals, all lowercase letter, default spacing or stem width/height. */</span>
+<a name="gbab-196"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-197"></a>  <span class="cm">/* These values are found in FUnits in the font file, and must be scaled */</span>
+<a name="gbab-198"></a>  <span class="cm">/* to pixel coordinates before being used by the CVT and glyph programs. */</span>
+<a name="gbab-199"></a>  <span class="cm">/* Unfortunately, when using distinct x and y resolutions (or distinct x */</span>
+<a name="gbab-200"></a>  <span class="cm">/* and y pointsizes), there are two possible scalings.                   */</span>
+<a name="gbab-201"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-202"></a>  <span class="cm">/* A first try was to implement a `lazy&#39; scheme where all values were    */</span>
+<a name="gbab-203"></a>  <span class="cm">/* scaled when first used.  However, while some values are always used   */</span>
+<a name="gbab-204"></a>  <span class="cm">/* in the same direction, some others are used under many different      */</span>
+<a name="gbab-205"></a>  <span class="cm">/* circumstances and orientations.                                       */</span>
+<a name="gbab-206"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-207"></a>  <span class="cm">/* I have found a simpler way to do the same, and it even seems to work  */</span>
+<a name="gbab-208"></a>  <span class="cm">/* in most of the cases:                                                 */</span>
+<a name="gbab-209"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-210"></a>  <span class="cm">/* - All CVT values are scaled to the maximum ppem size.                 */</span>
+<a name="gbab-211"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-212"></a>  <span class="cm">/* - When performing a read or write in the CVT, a ratio factor is used  */</span>
+<a name="gbab-213"></a>  <span class="cm">/*   to perform adequate scaling.  Example:                              */</span>
+<a name="gbab-214"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-215"></a>  <span class="cm">/*     x_ppem = 14                                                       */</span>
+<a name="gbab-216"></a>  <span class="cm">/*     y_ppem = 10                                                       */</span>
+<a name="gbab-217"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-218"></a>  <span class="cm">/*   We choose ppem = x_ppem = 14 as the CVT scaling size.  All cvt      */</span>
+<a name="gbab-219"></a>  <span class="cm">/*   entries are scaled to it.                                           */</span>
+<a name="gbab-220"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-221"></a>  <span class="cm">/*     x_ratio = 1.0                                                     */</span>
+<a name="gbab-222"></a>  <span class="cm">/*     y_ratio = y_ppem/ppem (&lt; 1.0)                                     */</span>
+<a name="gbab-223"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-224"></a>  <span class="cm">/*   We compute the current ratio like:                                  */</span>
+<a name="gbab-225"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-226"></a>  <span class="cm">/*   - If projVector is horizontal,                                      */</span>
+<a name="gbab-227"></a>  <span class="cm">/*       ratio = x_ratio = 1.0                                           */</span>
+<a name="gbab-228"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-229"></a>  <span class="cm">/*   - if projVector is vertical,                                        */</span>
+<a name="gbab-230"></a>  <span class="cm">/*       ratio = y_ratio                                                 */</span>
+<a name="gbab-231"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-232"></a>  <span class="cm">/*   - else,                                                             */</span>
+<a name="gbab-233"></a>  <span class="cm">/*       ratio = sqrt( (proj.x * x_ratio) ^ 2 + (proj.y * y_ratio) ^ 2 ) */</span>
+<a name="gbab-234"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-235"></a>  <span class="cm">/*   Reading a cvt value returns                                         */</span>
+<a name="gbab-236"></a>  <span class="cm">/*     ratio * cvt[index]                                                */</span>
+<a name="gbab-237"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-238"></a>  <span class="cm">/*   Writing a cvt value in pixels:                                      */</span>
+<a name="gbab-239"></a>  <span class="cm">/*     cvt[index] / ratio                                                */</span>
+<a name="gbab-240"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-241"></a>  <span class="cm">/*   The current ppem is simply                                          */</span>
+<a name="gbab-242"></a>  <span class="cm">/*     ratio * ppem                                                      */</span>
+<a name="gbab-243"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-244"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-245"></a>
+<a name="gbab-246"></a>
+<a name="gbab-247"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-248"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-249"></a>  <span class="cm">/* Metrics used by the TrueType size and context objects.                */</span>
+<a name="gbab-250"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-251"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">TT_Size_Metrics_</span>
+<a name="gbab-252"></a>  <span class="p">{</span>
+<a name="gbab-253"></a>    <span class="cm">/* for non-square pixels */</span>
+<a name="gbab-254"></a>    <span class="n">FT_Long</span>     <span class="n">x_ratio</span><span class="p">;</span>
+<a name="gbab-255"></a>    <span class="n">FT_Long</span>     <span class="n">y_ratio</span><span class="p">;</span>
+<a name="gbab-256"></a>
+<a name="gbab-257"></a>    <span class="n">FT_UShort</span>   <span class="n">ppem</span><span class="p">;</span>               <span class="cm">/* maximum ppem size              */</span>
+<a name="gbab-258"></a>    <span class="n">FT_Long</span>     <span class="n">ratio</span><span class="p">;</span>              <span class="cm">/* current ratio                  */</span>
+<a name="gbab-259"></a>    <span class="n">FT_Fixed</span>    <span class="n">scale</span><span class="p">;</span>
+<a name="gbab-260"></a>
+<a name="gbab-261"></a>    <span class="n">FT_F26Dot6</span>  <span class="n">compensations</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>   <span class="cm">/* device-specific compensations  */</span>
+<a name="gbab-262"></a>
+<a name="gbab-263"></a>    <span class="n">FT_Bool</span>     <span class="n">valid</span><span class="p">;</span>
+<a name="gbab-264"></a>
+<a name="gbab-265"></a>    <span class="n">FT_Bool</span>     <span class="n">rotated</span><span class="p">;</span>            <span class="cm">/* `is the glyph rotated?&#39;-flag   */</span>
+<a name="gbab-266"></a>    <span class="n">FT_Bool</span>     <span class="n">stretched</span><span class="p">;</span>          <span class="cm">/* `is the glyph stretched?&#39;-flag */</span>
+<a name="gbab-267"></a>
+<a name="gbab-268"></a>  <span class="p">}</span> <span class="n">TT_Size_Metrics</span><span class="p">;</span>
+<a name="gbab-269"></a>
+<a name="gbab-270"></a>
+<a name="gbab-271"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-272"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-273"></a>  <span class="cm">/* TrueType size class.                                                  */</span>
+<a name="gbab-274"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-275"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">TT_SizeRec_</span>
+<a name="gbab-276"></a>  <span class="p">{</span>
+<a name="gbab-277"></a>    <span class="n">FT_SizeRec</span>         <span class="n">root</span><span class="p">;</span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a>    <span class="cm">/* we have our own copy of metrics so that we can modify */</span>
+<a name="gbab-280"></a>    <span class="cm">/* it without affecting auto-hinting (when used)         */</span>
+<a name="gbab-281"></a>    <span class="n">FT_Size_Metrics</span>    <span class="n">metrics</span><span class="p">;</span>
+<a name="gbab-282"></a>
+<a name="gbab-283"></a>    <span class="n">TT_Size_Metrics</span>    <span class="n">ttmetrics</span><span class="p">;</span>
+<a name="gbab-284"></a>
+<a name="gbab-285"></a>    <span class="n">FT_ULong</span>           <span class="n">strike_index</span><span class="p">;</span>      <span class="cm">/* 0xFFFFFFFF to indicate invalid */</span>
+<a name="gbab-286"></a>
+<a name="gbab-287"></a><span class="cp">#ifdef TT_USE_BYTECODE_INTERPRETER</span>
+<a name="gbab-288"></a>
+<a name="gbab-289"></a>    <span class="n">FT_UInt</span>            <span class="n">num_function_defs</span><span class="p">;</span> <span class="cm">/* number of function definitions */</span>
+<a name="gbab-290"></a>    <span class="n">FT_UInt</span>            <span class="n">max_function_defs</span><span class="p">;</span>
+<a name="gbab-291"></a>    <span class="n">TT_DefArray</span>        <span class="n">function_defs</span><span class="p">;</span>     <span class="cm">/* table of function definitions  */</span>
+<a name="gbab-292"></a>
+<a name="gbab-293"></a>    <span class="n">FT_UInt</span>            <span class="n">num_instruction_defs</span><span class="p">;</span>  <span class="cm">/* number of ins. definitions */</span>
+<a name="gbab-294"></a>    <span class="n">FT_UInt</span>            <span class="n">max_instruction_defs</span><span class="p">;</span>
+<a name="gbab-295"></a>    <span class="n">TT_DefArray</span>        <span class="n">instruction_defs</span><span class="p">;</span>      <span class="cm">/* table of ins. definitions  */</span>
+<a name="gbab-296"></a>
+<a name="gbab-297"></a>    <span class="n">FT_UInt</span>            <span class="n">max_func</span><span class="p">;</span>
+<a name="gbab-298"></a>    <span class="n">FT_UInt</span>            <span class="n">max_ins</span><span class="p">;</span>
+<a name="gbab-299"></a>
+<a name="gbab-300"></a>    <span class="n">TT_CodeRangeTable</span>  <span class="n">codeRangeTable</span><span class="p">;</span>
+<a name="gbab-301"></a>
+<a name="gbab-302"></a>    <span class="n">TT_GraphicsState</span>   <span class="n">GS</span><span class="p">;</span>
+<a name="gbab-303"></a>
+<a name="gbab-304"></a>    <span class="n">FT_ULong</span>           <span class="n">cvt_size</span><span class="p">;</span>      <span class="cm">/* the scaled control value table */</span>
+<a name="gbab-305"></a>    <span class="n">FT_Long</span><span class="o">*</span>           <span class="n">cvt</span><span class="p">;</span>
+<a name="gbab-306"></a>
+<a name="gbab-307"></a>    <span class="n">FT_UShort</span>          <span class="n">storage_size</span><span class="p">;</span> <span class="cm">/* The storage area is now part of */</span>
+<a name="gbab-308"></a>    <span class="n">FT_Long</span><span class="o">*</span>           <span class="n">storage</span><span class="p">;</span>      <span class="cm">/* the instance                    */</span>
+<a name="gbab-309"></a>
+<a name="gbab-310"></a>    <span class="n">TT_GlyphZoneRec</span>    <span class="n">twilight</span><span class="p">;</span>     <span class="cm">/* The instance&#39;s twilight zone    */</span>
+<a name="gbab-311"></a>
+<a name="gbab-312"></a>    <span class="n">TT_ExecContext</span>     <span class="n">context</span><span class="p">;</span>
+<a name="gbab-313"></a>
+<a name="gbab-314"></a>    <span class="cm">/* if negative, `fpgm&#39; (resp. `prep&#39;), wasn&#39;t executed yet; */</span>
+<a name="gbab-315"></a>    <span class="cm">/* otherwise it is the returned error code                  */</span>
+<a name="gbab-316"></a>    <span class="n">FT_Error</span>           <span class="n">bytecode_ready</span><span class="p">;</span>
+<a name="gbab-317"></a>    <span class="n">FT_Error</span>           <span class="n">cvt_ready</span><span class="p">;</span>
+<a name="gbab-318"></a>
+<a name="gbab-319"></a><span class="cp">#endif </span><span class="cm">/* TT_USE_BYTECODE_INTERPRETER */</span><span class="cp"></span>
+<a name="gbab-320"></a>
+<a name="gbab-321"></a>  <span class="p">}</span> <span class="n">TT_SizeRec</span><span class="p">;</span>
+<a name="gbab-322"></a>
+<a name="gbab-323"></a>
+<a name="gbab-324"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-325"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-326"></a>  <span class="cm">/* TrueType driver class.                                                */</span>
+<a name="gbab-327"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-328"></a>  <span class="k">typedef</span> <span class="k">struct</span>  <span class="n">TT_DriverRec_</span>
+<a name="gbab-329"></a>  <span class="p">{</span>
+<a name="gbab-330"></a>    <span class="n">FT_DriverRec</span>  <span class="n">root</span><span class="p">;</span>
+<a name="gbab-331"></a>
+<a name="gbab-332"></a>    <span class="n">TT_GlyphZoneRec</span>  <span class="n">zone</span><span class="p">;</span>     <span class="cm">/* glyph loader points zone */</span>
+<a name="gbab-333"></a>
+<a name="gbab-334"></a>    <span class="n">FT_UInt</span>  <span class="n">interpreter_version</span><span class="p">;</span>
+<a name="gbab-335"></a>
+<a name="gbab-336"></a>  <span class="p">}</span> <span class="n">TT_DriverRec</span><span class="p">;</span>
+<a name="gbab-337"></a>
+<a name="gbab-338"></a>
+<a name="gbab-339"></a>  <span class="cm">/* Note: All of the functions below (except tt_size_reset()) are used    */</span>
+<a name="gbab-340"></a>  <span class="cm">/* as function pointers in a FT_Driver_ClassRec.  Therefore their        */</span>
+<a name="gbab-341"></a>  <span class="cm">/* parameters are of types FT_Face, FT_Size, etc., rather than TT_Face,  */</span>
+<a name="gbab-342"></a>  <span class="cm">/* TT_Size, etc., so that the compiler can confirm that the types and    */</span>
+<a name="gbab-343"></a>  <span class="cm">/* number of parameters are correct.  In all cases the FT_xxx types are  */</span>
+<a name="gbab-344"></a>  <span class="cm">/* cast to their TT_xxx counterparts inside the functions since FreeType */</span>
+<a name="gbab-345"></a>  <span class="cm">/* will always use the TT driver to create them.                         */</span>
+<a name="gbab-346"></a>
+<a name="gbab-347"></a>
+<a name="gbab-348"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-349"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-350"></a>  <span class="cm">/* Face functions                                                        */</span>
+<a name="gbab-351"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-352"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-353"></a>  <span class="n">tt_face_init</span><span class="p">(</span> <span class="n">FT_Stream</span>      <span class="n">stream</span><span class="p">,</span>
+<a name="gbab-354"></a>                <span class="n">FT_Face</span>        <span class="n">ttface</span><span class="p">,</span>      <span class="cm">/* TT_Face */</span>
+<a name="gbab-355"></a>                <span class="n">FT_Int</span>         <span class="n">face_index</span><span class="p">,</span>
+<a name="gbab-356"></a>                <span class="n">FT_Int</span>         <span class="n">num_params</span><span class="p">,</span>
+<a name="gbab-357"></a>                <span class="n">FT_Parameter</span><span class="o">*</span>  <span class="n">params</span> <span class="p">);</span>
+<a name="gbab-358"></a>
+<a name="gbab-359"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span>
+<a name="gbab-360"></a>  <span class="n">tt_face_done</span><span class="p">(</span> <span class="n">FT_Face</span>  <span class="n">ttface</span> <span class="p">);</span>          <span class="cm">/* TT_Face */</span>
+<a name="gbab-361"></a>
+<a name="gbab-362"></a>
+<a name="gbab-363"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-364"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-365"></a>  <span class="cm">/* Size functions                                                        */</span>
+<a name="gbab-366"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-367"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-368"></a>  <span class="n">tt_size_init</span><span class="p">(</span> <span class="n">FT_Size</span>  <span class="n">ttsize</span> <span class="p">);</span>          <span class="cm">/* TT_Size */</span>
+<a name="gbab-369"></a>
+<a name="gbab-370"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span>
+<a name="gbab-371"></a>  <span class="n">tt_size_done</span><span class="p">(</span> <span class="n">FT_Size</span>  <span class="n">ttsize</span> <span class="p">);</span>          <span class="cm">/* TT_Size */</span>
+<a name="gbab-372"></a>
+<a name="gbab-373"></a><span class="cp">#ifdef TT_USE_BYTECODE_INTERPRETER</span>
+<a name="gbab-374"></a>
+<a name="gbab-375"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-376"></a>  <span class="n">tt_size_run_fpgm</span><span class="p">(</span> <span class="n">TT_Size</span>  <span class="n">size</span><span class="p">,</span>
+<a name="gbab-377"></a>                    <span class="n">FT_Bool</span>  <span class="n">pedantic</span> <span class="p">);</span>
+<a name="gbab-378"></a>
+<a name="gbab-379"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-380"></a>  <span class="n">tt_size_run_prep</span><span class="p">(</span> <span class="n">TT_Size</span>  <span class="n">size</span><span class="p">,</span>
+<a name="gbab-381"></a>                    <span class="n">FT_Bool</span>  <span class="n">pedantic</span> <span class="p">);</span>
+<a name="gbab-382"></a>
+<a name="gbab-383"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-384"></a>  <span class="n">tt_size_ready_bytecode</span><span class="p">(</span> <span class="n">TT_Size</span>  <span class="n">size</span><span class="p">,</span>
+<a name="gbab-385"></a>                          <span class="n">FT_Bool</span>  <span class="n">pedantic</span> <span class="p">);</span>
+<a name="gbab-386"></a>
+<a name="gbab-387"></a><span class="cp">#endif </span><span class="cm">/* TT_USE_BYTECODE_INTERPRETER */</span><span class="cp"></span>
+<a name="gbab-388"></a>
+<a name="gbab-389"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-390"></a>  <span class="n">tt_size_reset</span><span class="p">(</span> <span class="n">TT_Size</span>  <span class="n">size</span> <span class="p">);</span>
+<a name="gbab-391"></a>
+<a name="gbab-392"></a>
+<a name="gbab-393"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-394"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-395"></a>  <span class="cm">/* Driver functions                                                      */</span>
+<a name="gbab-396"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-397"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-398"></a>  <span class="n">tt_driver_init</span><span class="p">(</span> <span class="n">FT_Module</span>  <span class="n">ttdriver</span> <span class="p">);</span>    <span class="cm">/* TT_Driver */</span>
+<a name="gbab-399"></a>
+<a name="gbab-400"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span>
+<a name="gbab-401"></a>  <span class="n">tt_driver_done</span><span class="p">(</span> <span class="n">FT_Module</span>  <span class="n">ttdriver</span> <span class="p">);</span>    <span class="cm">/* TT_Driver */</span>
+<a name="gbab-402"></a>
+<a name="gbab-403"></a>
+<a name="gbab-404"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-405"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-406"></a>  <span class="cm">/* Slot functions                                                        */</span>
+<a name="gbab-407"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-408"></a>  <span class="n">FT_LOCAL</span><span class="p">(</span> <span class="n">FT_Error</span> <span class="p">)</span>
+<a name="gbab-409"></a>  <span class="n">tt_slot_init</span><span class="p">(</span> <span class="n">FT_GlyphSlot</span>  <span class="n">slot</span> <span class="p">);</span>
+<a name="gbab-410"></a>
+<a name="gbab-411"></a>
+<a name="gbab-412"></a>  <span class="cm">/* auxiliary */</span>
+<a name="gbab-413"></a><span class="cp">#define IS_HINTED( flags )  ( ( flags &amp; FT_LOAD_NO_HINTING ) == 0 )</span>
+<a name="gbab-414"></a>
+<a name="gbab-415"></a>
+<a name="gbab-416"></a><span class="n">FT_END_HEADER</span>
+<a name="gbab-417"></a>
+<a name="gbab-418"></a><span class="cp">#endif </span><span class="cm">/* TTOBJS_H_ */</span><span class="cp"></span>
+<a name="gbab-419"></a>
+<a name="gbab-420"></a>
+<a name="gbab-421"></a><span class="cm">/* END */</span>
+</pre></div>
+</td></tr></table>

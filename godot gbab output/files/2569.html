@@ -1,0 +1,35 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/** </span>
+<a name="gbab-2"></a><span class="cm"> @file  time.h</span>
+<a name="gbab-3"></a><span class="cm"> @brief ENet time constants and macros</span>
+<a name="gbab-4"></a><span class="cm">*/</span>
+<a name="gbab-5"></a><span class="cp">#ifndef __ENET_TIME_H__</span>
+<a name="gbab-6"></a><span class="cp">#define __ENET_TIME_H__</span>
+<a name="gbab-7"></a>
+<a name="gbab-8"></a><span class="cp">#define ENET_TIME_OVERFLOW 86400000</span>
+<a name="gbab-9"></a>
+<a name="gbab-10"></a><span class="cp">#define ENET_TIME_LESS(a, b) ((a) - (b) &gt;= ENET_TIME_OVERFLOW)</span>
+<a name="gbab-11"></a><span class="cp">#define ENET_TIME_GREATER(a, b) ((b) - (a) &gt;= ENET_TIME_OVERFLOW)</span>
+<a name="gbab-12"></a><span class="cp">#define ENET_TIME_LESS_EQUAL(a, b) (! ENET_TIME_GREATER (a, b))</span>
+<a name="gbab-13"></a><span class="cp">#define ENET_TIME_GREATER_EQUAL(a, b) (! ENET_TIME_LESS (a, b))</span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="cp">#define ENET_TIME_DIFFERENCE(a, b) ((a) - (b) &gt;= ENET_TIME_OVERFLOW ? (b) - (a) : (a) - (b))</span>
+<a name="gbab-16"></a>
+<a name="gbab-17"></a><span class="cp">#endif </span><span class="cm">/* __ENET_TIME_H__ */</span><span class="cp"></span>
+</pre></div>
+</td></tr></table>

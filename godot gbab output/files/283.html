@@ -1,0 +1,559 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*  ustring.h                                                            */</span>
+<a name="gbab-3"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-4"></a><span class="cm">/*                       This file is part of:                           */</span>
+<a name="gbab-5"></a><span class="cm">/*                           GODOT ENGINE                                */</span>
+<a name="gbab-6"></a><span class="cm">/*                    http://www.godotengine.org                         */</span>
+<a name="gbab-7"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-8"></a><span class="cm">/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-10"></a><span class="cm">/* Permission is hereby granted, free of charge, to any person obtaining */</span>
+<a name="gbab-11"></a><span class="cm">/* a copy of this software and associated documentation files (the       */</span>
+<a name="gbab-12"></a><span class="cm">/* &quot;Software&quot;), to deal in the Software without restriction, including   */</span>
+<a name="gbab-13"></a><span class="cm">/* without limitation the rights to use, copy, modify, merge, publish,   */</span>
+<a name="gbab-14"></a><span class="cm">/* distribute, sublicense, and/or sell copies of the Software, and to    */</span>
+<a name="gbab-15"></a><span class="cm">/* permit persons to whom the Software is furnished to do so, subject to */</span>
+<a name="gbab-16"></a><span class="cm">/* the following conditions:                                             */</span>
+<a name="gbab-17"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-18"></a><span class="cm">/* The above copyright notice and this permission notice shall be        */</span>
+<a name="gbab-19"></a><span class="cm">/* included in all copies or substantial portions of the Software.       */</span>
+<a name="gbab-20"></a><span class="cm">/*                                                                       */</span>
+<a name="gbab-21"></a><span class="cm">/* THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,       */</span>
+<a name="gbab-22"></a><span class="cm">/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */</span>
+<a name="gbab-23"></a><span class="cm">/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/</span>
+<a name="gbab-24"></a><span class="cm">/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */</span>
+<a name="gbab-25"></a><span class="cm">/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */</span>
+<a name="gbab-26"></a><span class="cm">/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */</span>
+<a name="gbab-27"></a><span class="cm">/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */</span>
+<a name="gbab-28"></a><span class="cm">/*************************************************************************/</span>
+<a name="gbab-29"></a><span class="cp">#ifndef RSTRING_H</span>
+<a name="gbab-30"></a><span class="cp">#define RSTRING_H</span>
+<a name="gbab-31"></a>
+<a name="gbab-32"></a><span class="cp">#include</span> <span class="cpf">&quot;typedefs.h&quot;</span><span class="cp"></span>
+<a name="gbab-33"></a><span class="cp">#include</span> <span class="cpf">&quot;vector.h&quot;</span><span class="cp"></span>
+<a name="gbab-34"></a><span class="cp">#include</span> <span class="cpf">&quot;array.h&quot;</span><span class="cp"></span>
+<a name="gbab-35"></a>
+<a name="gbab-36"></a><span class="cm">/**</span>
+<a name="gbab-37"></a><span class="cm">	@author red &lt;red@killy&gt;</span>
+<a name="gbab-38"></a><span class="cm">*/</span>
+<a name="gbab-39"></a>
+<a name="gbab-40"></a>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a><span class="n">class</span> <span class="nl">CharString</span> <span class="p">:</span> <span class="n">public</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="p">{</span>
+<a name="gbab-43"></a><span class="nl">public</span><span class="p">:</span>	
+<a name="gbab-44"></a>	<span class="kt">int</span> <span class="n">length</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">size</span><span class="p">()</span> <span class="o">?</span> <span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+<a name="gbab-45"></a>	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">get_data</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-46"></a>	<span class="n">operator</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">get_data</span><span class="p">();};</span>
+<a name="gbab-47"></a><span class="p">};</span>
+<a name="gbab-48"></a>
+<a name="gbab-49"></a>
+<a name="gbab-50"></a><span class="k">typedef</span> <span class="kt">wchar_t</span> <span class="n">CharType</span><span class="p">;</span>
+<a name="gbab-51"></a>
+<a name="gbab-52"></a>
+<a name="gbab-53"></a><span class="k">struct</span> <span class="n">StrRange</span> <span class="p">{</span>
+<a name="gbab-54"></a>
+<a name="gbab-55"></a>	<span class="k">const</span> <span class="n">CharType</span> <span class="o">*</span><span class="n">c_str</span><span class="p">;</span>
+<a name="gbab-56"></a>	<span class="kt">int</span> <span class="n">len</span><span class="p">;</span>
+<a name="gbab-57"></a>
+<a name="gbab-58"></a>	<span class="n">StrRange</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span> <span class="o">*</span><span class="n">p_c_str</span><span class="o">=</span><span class="nb">NULL</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_len</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">c_str</span><span class="o">=</span><span class="n">p_c_str</span><span class="p">;</span> <span class="n">len</span><span class="o">=</span><span class="n">p_len</span><span class="p">;</span> <span class="p">}</span>
+<a name="gbab-59"></a>
+<a name="gbab-60"></a><span class="p">};</span>
+<a name="gbab-61"></a>
+<a name="gbab-62"></a><span class="n">class</span> <span class="nl">String</span> <span class="p">:</span> <span class="n">public</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">CharType</span><span class="o">&gt;</span> <span class="p">{</span>
+<a name="gbab-63"></a>
+<a name="gbab-64"></a>	<span class="kt">void</span> <span class="n">copy_from</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_cstr</span><span class="p">);</span>
+<a name="gbab-65"></a>	<span class="kt">void</span> <span class="nf">copy_from</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span><span class="o">*</span> <span class="n">p_cstr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_clip_to</span><span class="o">=-</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-66"></a>	<span class="kt">void</span> <span class="nf">copy_from</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span><span class="o">&amp;</span> <span class="n">p_char</span><span class="p">);</span>
+<a name="gbab-67"></a>	<span class="kt">bool</span> <span class="nf">_base_is_subsequence_of</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_string</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">case_insensitive</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-68"></a>
+<a name="gbab-69"></a>
+<a name="gbab-70"></a><span class="nl">public</span><span class="p">:</span>
+<a name="gbab-71"></a>
+<a name="gbab-72"></a>	<span class="k">enum</span> <span class="p">{</span>
+<a name="gbab-73"></a>
+<a name="gbab-74"></a>		<span class="n">npos</span><span class="o">=-</span><span class="mi">1</span> <span class="c1">///&lt;for &quot;some&quot; compatibility with std::string (npos is a huge value in std::string)</span>
+<a name="gbab-75"></a>	<span class="p">};</span>
+<a name="gbab-76"></a>
+<a name="gbab-77"></a>
+<a name="gbab-78"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-79"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-80"></a>	<span class="n">String</span> <span class="n">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span> <span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-81"></a>	<span class="c1">//String operator+(CharType p_char) const;</span>
+<a name="gbab-82"></a>
+<a name="gbab-83"></a>	<span class="n">String</span><span class="o">&amp;</span> <span class="n">operator</span><span class="o">+=</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="p">);</span>
+<a name="gbab-84"></a>	<span class="n">String</span><span class="o">&amp;</span> <span class="n">operator</span><span class="o">+=</span><span class="p">(</span><span class="n">CharType</span> <span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-85"></a>	<span class="n">String</span><span class="o">&amp;</span> <span class="n">operator</span><span class="o">+=</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-86"></a>	<span class="n">String</span><span class="o">&amp;</span> <span class="n">operator</span><span class="o">+=</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span> <span class="o">*</span> <span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-87"></a>
+<a name="gbab-88"></a>	<span class="cm">/* Compatibility Operators */</span>
+<a name="gbab-89"></a>
+<a name="gbab-90"></a>
+<a name="gbab-91"></a>	<span class="kt">void</span> <span class="n">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-92"></a>	<span class="kt">void</span> <span class="n">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span> <span class="o">*</span><span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-93"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-94"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span> <span class="o">*</span><span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-95"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">StrRange</span> <span class="o">&amp;</span><span class="n">p_str_range</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-96"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-97"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">!=</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span> <span class="o">*</span><span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-98"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span> <span class="o">*</span><span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-99"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-100"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="n">String</span> <span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-101"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="o">&lt;=</span><span class="p">(</span><span class="n">String</span> <span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-102"></a>
+<a name="gbab-103"></a>	<span class="kt">signed</span> <span class="kt">char</span> <span class="nf">casecmp_to</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-104"></a>	<span class="kt">signed</span> <span class="kt">char</span> <span class="nf">nocasecmp_to</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-105"></a>
+<a name="gbab-106"></a>	<span class="k">const</span> <span class="n">CharType</span> <span class="o">*</span> <span class="nf">c_str</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-107"></a>	<span class="cm">/* standard size stuff */</span>
+<a name="gbab-108"></a>
+<a name="gbab-109"></a>	<span class="kt">int</span> <span class="nf">length</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-110"></a>
+<a name="gbab-111"></a>	<span class="cm">/* complex helpers */</span>
+<a name="gbab-112"></a>	<span class="n">String</span> <span class="nf">substr</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_from</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_chars</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-113"></a>	<span class="kt">int</span> <span class="nf">find</span><span class="p">(</span><span class="n">String</span> <span class="n">p_str</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_from</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">///&lt; return &lt;0 if failed</span>
+<a name="gbab-114"></a>	<span class="kt">int</span> <span class="nf">find_last</span><span class="p">(</span><span class="n">String</span> <span class="n">p_str</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">///&lt; return &lt;0 if failed</span>
+<a name="gbab-115"></a>	<span class="kt">int</span> <span class="nf">findn</span><span class="p">(</span><span class="n">String</span> <span class="n">p_str</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_from</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">///&lt; return &lt;0 if failed, case insensitive</span>
+<a name="gbab-116"></a>	<span class="kt">int</span> <span class="nf">rfind</span><span class="p">(</span><span class="n">String</span> <span class="n">p_str</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_from</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">///&lt; return &lt;0 if failed</span>
+<a name="gbab-117"></a>	<span class="kt">int</span> <span class="nf">rfindn</span><span class="p">(</span><span class="n">String</span> <span class="n">p_str</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_from</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">///&lt; return &lt;0 if failed, case insensitive</span>
+<a name="gbab-118"></a>	<span class="kt">int</span> <span class="nf">findmk</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&amp;</span> <span class="n">p_keys</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_from</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="kt">int</span> <span class="o">*</span><span class="n">r_key</span><span class="o">=</span><span class="nb">NULL</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">///&lt; return &lt;0 if failed</span>
+<a name="gbab-119"></a>	<span class="kt">bool</span> <span class="nf">match</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_wildcard</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-120"></a>	<span class="kt">bool</span> <span class="nf">matchn</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_wildcard</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-121"></a>	<span class="kt">bool</span> <span class="nf">begins_with</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_string</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-122"></a>	<span class="kt">bool</span> <span class="nf">begins_with</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_string</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>	
+<a name="gbab-123"></a>	<span class="kt">bool</span> <span class="nf">ends_with</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_string</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-124"></a>	<span class="kt">bool</span> <span class="nf">is_subsequence_of</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_string</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-125"></a>	<span class="kt">bool</span> <span class="nf">is_subsequence_ofi</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_string</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-126"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">bigrams</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-127"></a>	<span class="kt">float</span> <span class="nf">similarity</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_string</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-128"></a>	<span class="n">String</span> <span class="nf">replace_first</span><span class="p">(</span><span class="n">String</span> <span class="n">p_key</span><span class="p">,</span><span class="n">String</span> <span class="n">p_with</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-129"></a>	<span class="n">String</span> <span class="nf">replace</span><span class="p">(</span><span class="n">String</span> <span class="n">p_key</span><span class="p">,</span><span class="n">String</span> <span class="n">p_with</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-130"></a>	<span class="n">String</span> <span class="nf">replacen</span><span class="p">(</span><span class="n">String</span> <span class="n">p_key</span><span class="p">,</span><span class="n">String</span> <span class="n">p_with</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-131"></a>	<span class="n">String</span> <span class="nf">insert</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_at_pos</span><span class="p">,</span><span class="n">String</span> <span class="n">p_string</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-132"></a>	<span class="n">String</span> <span class="nf">pad_decimals</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_digits</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-133"></a>	<span class="n">String</span> <span class="nf">pad_zeros</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_digits</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-134"></a>	<span class="n">String</span> <span class="nf">lpad</span><span class="p">(</span><span class="kt">int</span> <span class="n">min_length</span><span class="p">,</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">character</span><span class="o">=</span><span class="s">&quot; &quot;</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-135"></a>	<span class="n">String</span> <span class="nf">rpad</span><span class="p">(</span><span class="kt">int</span> <span class="n">min_length</span><span class="p">,</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">character</span><span class="o">=</span><span class="s">&quot; &quot;</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-136"></a>	<span class="n">String</span> <span class="nf">sprintf</span><span class="p">(</span><span class="k">const</span> <span class="n">Array</span><span class="o">&amp;</span> <span class="n">values</span><span class="p">,</span> <span class="kt">bool</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-137"></a>	<span class="k">static</span> <span class="n">String</span> <span class="nf">num</span><span class="p">(</span><span class="kt">double</span> <span class="n">p_num</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_decimals</span><span class="o">=-</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-138"></a>	<span class="k">static</span> <span class="n">String</span> <span class="nf">num_scientific</span><span class="p">(</span><span class="kt">double</span> <span class="n">p_num</span><span class="p">);</span>
+<a name="gbab-139"></a>	<span class="k">static</span> <span class="n">String</span> <span class="nf">num_real</span><span class="p">(</span><span class="kt">double</span> <span class="n">p_num</span><span class="p">);</span>
+<a name="gbab-140"></a>	<span class="k">static</span> <span class="n">String</span> <span class="nf">num_int64</span><span class="p">(</span><span class="kt">int64_t</span> <span class="n">p_num</span><span class="p">,</span><span class="kt">int</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="kt">bool</span> <span class="n">capitalize_hex</span><span class="o">=</span><span class="nb">false</span><span class="p">);</span>
+<a name="gbab-141"></a>	<span class="k">static</span> <span class="n">String</span> <span class="nf">chr</span><span class="p">(</span><span class="n">CharType</span> <span class="n">p_char</span><span class="p">);</span>
+<a name="gbab-142"></a>	<span class="k">static</span> <span class="n">String</span> <span class="nf">md5</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">p_md5</span><span class="p">);</span>
+<a name="gbab-143"></a>	<span class="k">static</span> <span class="n">String</span> <span class="nf">hex_encode_buffer</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="n">p_buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_len</span><span class="p">);</span>
+<a name="gbab-144"></a>	<span class="kt">bool</span> <span class="nf">is_numeric</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-145"></a>	<span class="kt">double</span> <span class="nf">to_double</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-146"></a>	<span class="kt">float</span> <span class="nf">to_float</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-147"></a>	<span class="kt">int</span> <span class="nf">hex_to_int</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-148"></a>	<span class="kt">int</span> <span class="nf">to_int</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-149"></a>
+<a name="gbab-150"></a>	<span class="kt">int64_t</span> <span class="nf">to_int64</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-151"></a>	<span class="k">static</span> <span class="kt">int</span> <span class="nf">to_int</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_len</span><span class="o">=-</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-152"></a>	<span class="k">static</span> <span class="kt">double</span> <span class="nf">to_double</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-153"></a>	<span class="k">static</span> <span class="kt">double</span> <span class="nf">to_double</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span><span class="o">*</span> <span class="n">p_str</span><span class="p">,</span> <span class="k">const</span> <span class="n">CharType</span> <span class="o">**</span><span class="n">r_end</span><span class="o">=</span><span class="nb">NULL</span><span class="p">);</span>
+<a name="gbab-154"></a>	<span class="k">static</span> <span class="kt">int64_t</span> <span class="nf">to_int</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span><span class="o">*</span> <span class="n">p_str</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_len</span><span class="o">=-</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-155"></a>	<span class="n">String</span> <span class="nf">capitalize</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-156"></a>	<span class="n">String</span> <span class="nf">camelcase_to_underscore</span><span class="p">(</span><span class="kt">bool</span> <span class="n">lowercase</span><span class="o">=</span><span class="nb">true</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-157"></a>
+<a name="gbab-158"></a>	<span class="kt">int</span> <span class="nf">get_slice_count</span><span class="p">(</span><span class="n">String</span> <span class="n">p_splitter</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-159"></a>	<span class="n">String</span> <span class="nf">get_slice</span><span class="p">(</span><span class="n">String</span> <span class="n">p_splitter</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_slice</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-160"></a>	<span class="n">String</span> <span class="nf">get_slicec</span><span class="p">(</span><span class="n">CharType</span> <span class="n">splitter</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_slice</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-161"></a>
+<a name="gbab-162"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">split</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">p_splitter</span><span class="p">,</span><span class="kt">bool</span> <span class="n">p_allow_empty</span><span class="o">=</span><span class="nb">true</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-163"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">split_spaces</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-164"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">split_floats</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">p_splitter</span><span class="p">,</span><span class="kt">bool</span> <span class="n">p_allow_empty</span><span class="o">=</span><span class="nb">true</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-165"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">split_floats_mk</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p_splitters</span><span class="p">,</span><span class="kt">bool</span> <span class="n">p_allow_empty</span><span class="o">=</span><span class="nb">true</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-166"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">split_ints</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">p_splitter</span><span class="p">,</span><span class="kt">bool</span> <span class="n">p_allow_empty</span><span class="o">=</span><span class="nb">true</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-167"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">split_ints_mk</span><span class="p">(</span><span class="k">const</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">p_splitters</span><span class="p">,</span><span class="kt">bool</span> <span class="n">p_allow_empty</span><span class="o">=</span><span class="nb">true</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-168"></a>
+<a name="gbab-169"></a>	<span class="k">static</span> <span class="n">CharType</span> <span class="nf">char_uppercase</span><span class="p">(</span><span class="n">CharType</span> <span class="n">p_char</span><span class="p">);</span>
+<a name="gbab-170"></a>	<span class="k">static</span> <span class="n">CharType</span> <span class="nf">char_lowercase</span><span class="p">(</span><span class="n">CharType</span> <span class="n">p_char</span><span class="p">);</span>
+<a name="gbab-171"></a>	<span class="n">String</span> <span class="nf">to_upper</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-172"></a>	<span class="n">String</span> <span class="nf">to_lower</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-173"></a>
+<a name="gbab-174"></a>	<span class="n">String</span> <span class="nf">left</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_pos</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-175"></a>	<span class="n">String</span> <span class="nf">right</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_pos</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-176"></a>	<span class="n">String</span> <span class="nf">strip_edges</span><span class="p">(</span><span class="kt">bool</span> <span class="n">left</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">right</span> <span class="o">=</span> <span class="nb">true</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-177"></a>	<span class="n">String</span> <span class="nf">strip_escapes</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-178"></a>	<span class="n">String</span> <span class="nf">extension</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-179"></a>	<span class="n">String</span> <span class="nf">basename</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-180"></a>	<span class="n">String</span> <span class="nf">plus_file</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_file</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-181"></a>	<span class="n">CharType</span> <span class="nf">ord_at</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_idx</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-182"></a>
+<a name="gbab-183"></a>	<span class="kt">void</span> <span class="nf">erase</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_pos</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_chars</span><span class="p">);</span>
+<a name="gbab-184"></a>
+<a name="gbab-185"></a>	<span class="n">CharString</span> <span class="nf">ascii</span><span class="p">(</span><span class="kt">bool</span> <span class="n">p_allow_extended</span><span class="o">=</span><span class="nb">false</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-186"></a>	<span class="n">CharString</span> <span class="nf">utf8</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-187"></a>	<span class="kt">bool</span> <span class="nf">parse_utf8</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_utf8</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_len</span><span class="o">=-</span><span class="mi">1</span><span class="p">);</span> <span class="c1">//return true on error</span>
+<a name="gbab-188"></a>	<span class="k">static</span> <span class="n">String</span> <span class="nf">utf8</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_utf8</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_len</span><span class="o">=-</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-189"></a>	
+<a name="gbab-190"></a>	<span class="k">static</span> <span class="kt">uint32_t</span> <span class="nf">hash</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span><span class="o">*</span> <span class="n">p_str</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_len</span><span class="p">);</span> <span class="cm">/* hash the string */</span>
+<a name="gbab-191"></a>	<span class="k">static</span> <span class="kt">uint32_t</span> <span class="nf">hash</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span><span class="o">*</span> <span class="n">p_str</span><span class="p">);</span> <span class="cm">/* hash the string */</span>
+<a name="gbab-192"></a>	<span class="k">static</span> <span class="kt">uint32_t</span> <span class="nf">hash</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_cstr</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_len</span><span class="p">);</span> <span class="cm">/* hash the string */</span>
+<a name="gbab-193"></a>	<span class="k">static</span> <span class="kt">uint32_t</span> <span class="nf">hash</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_cstr</span><span class="p">);</span> <span class="cm">/* hash the string */</span>
+<a name="gbab-194"></a>	<span class="kt">uint32_t</span> <span class="nf">hash</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="cm">/* hash the string */</span>
+<a name="gbab-195"></a>	<span class="kt">uint64_t</span> <span class="nf">hash64</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="cm">/* hash the string */</span>
+<a name="gbab-196"></a>	<span class="n">String</span> <span class="nf">md5_text</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-197"></a>	<span class="n">String</span> <span class="nf">sha256_text</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-198"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span> <span class="n">md5_buffer</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-199"></a>	<span class="n">Vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span> <span class="n">sha256_buffer</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-200"></a>	
+<a name="gbab-201"></a>	<span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">empty</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>	
+<a name="gbab-202"></a>
+<a name="gbab-203"></a>	<span class="c1">// path functions</span>
+<a name="gbab-204"></a>	<span class="kt">bool</span> <span class="nf">is_abs_path</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-205"></a>	<span class="kt">bool</span> <span class="nf">is_rel_path</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-206"></a>	<span class="kt">bool</span> <span class="nf">is_resource_file</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-207"></a>	<span class="n">String</span> <span class="nf">path_to</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_path</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-208"></a>	<span class="n">String</span> <span class="nf">path_to_file</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_path</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-209"></a>	<span class="n">String</span> <span class="nf">get_base_dir</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-210"></a>	<span class="n">String</span> <span class="nf">get_file</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-211"></a>	<span class="k">static</span> <span class="n">String</span> <span class="nf">humanize_size</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">p_size</span><span class="p">);</span>
+<a name="gbab-212"></a>	<span class="n">String</span> <span class="nf">simplify_path</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-213"></a>
+<a name="gbab-214"></a>	<span class="n">String</span> <span class="nf">xml_escape</span><span class="p">(</span><span class="kt">bool</span> <span class="n">p_escape_quotes</span><span class="o">=</span><span class="nb">false</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-215"></a>	<span class="n">String</span> <span class="nf">xml_unescape</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-216"></a>    <span class="n">String</span> <span class="nf">http_escape</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-217"></a>    <span class="n">String</span> <span class="nf">http_unescape</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-218"></a>	<span class="n">String</span> <span class="nf">c_escape</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-219"></a>	<span class="n">String</span> <span class="nf">c_unescape</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-220"></a>	<span class="n">String</span> <span class="nf">json_escape</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-221"></a>	<span class="n">String</span> <span class="nf">word_wrap</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_chars_per_line</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-222"></a>
+<a name="gbab-223"></a>	<span class="n">String</span> <span class="nf">percent_encode</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-224"></a>	<span class="n">String</span> <span class="nf">percent_decode</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-225"></a>
+<a name="gbab-226"></a>	<span class="kt">bool</span> <span class="nf">is_valid_identifier</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-227"></a>	<span class="kt">bool</span> <span class="nf">is_valid_integer</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-228"></a>	<span class="kt">bool</span> <span class="nf">is_valid_float</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-229"></a>	<span class="kt">bool</span> <span class="nf">is_valid_html_color</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-230"></a>	<span class="kt">bool</span> <span class="nf">is_valid_ip_address</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<a name="gbab-231"></a>
+<a name="gbab-232"></a>	<span class="cm">/**</span>
+<a name="gbab-233"></a><span class="cm">	 * The constructors must not depend on other overloads</span>
+<a name="gbab-234"></a><span class="cm">	 */</span>
+<a name="gbab-235"></a><span class="cm">/*	String(CharType p_char);*/</span>
+<a name="gbab-236"></a>	<span class="kr">inline</span> <span class="nf">String</span><span class="p">()</span> <span class="p">{}</span>
+<a name="gbab-237"></a>	<span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-238"></a>	<span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="n">CharType</span> <span class="o">*</span><span class="n">p_str</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_clip_to_len</span><span class="o">=-</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-239"></a>	<span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="n">StrRange</span><span class="o">&amp;</span> <span class="n">p_range</span><span class="p">);</span>
+<a name="gbab-240"></a>
+<a name="gbab-241"></a>
+<a name="gbab-242"></a><span class="p">};</span>
+<a name="gbab-243"></a>
+<a name="gbab-244"></a>
+<a name="gbab-245"></a><span class="kt">bool</span> <span class="n">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="n">p_chr</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-246"></a>
+<a name="gbab-247"></a><span class="n">String</span> <span class="n">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="n">p_chr</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-248"></a><span class="n">String</span> <span class="n">operator</span><span class="o">+</span><span class="p">(</span><span class="n">CharType</span> <span class="n">p_chr</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_str</span><span class="p">);</span>
+<a name="gbab-249"></a>
+<a name="gbab-250"></a><span class="n">String</span> <span class="nf">itos</span><span class="p">(</span><span class="kt">int64_t</span> <span class="n">p_val</span><span class="p">);</span>
+<a name="gbab-251"></a><span class="n">String</span> <span class="nf">rtos</span><span class="p">(</span><span class="kt">double</span> <span class="n">p_val</span><span class="p">);</span>
+<a name="gbab-252"></a><span class="n">String</span> <span class="nf">rtoss</span><span class="p">(</span><span class="kt">double</span> <span class="n">p_val</span><span class="p">);</span> <span class="c1">//scientific version</span>
+<a name="gbab-253"></a>
+<a name="gbab-254"></a>
+<a name="gbab-255"></a><span class="k">struct</span> <span class="n">NoCaseComparator</span> <span class="p">{</span>
+<a name="gbab-256"></a>		
+<a name="gbab-257"></a>	<span class="kt">bool</span> <span class="n">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_a</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">p_b</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+<a name="gbab-258"></a>		
+<a name="gbab-259"></a>		<span class="k">return</span> <span class="n">p_a</span><span class="p">.</span><span class="n">nocasecmp_to</span><span class="p">(</span><span class="n">p_b</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">;</span>
+<a name="gbab-260"></a>	<span class="p">}</span>
+<a name="gbab-261"></a><span class="p">};</span>
+<a name="gbab-262"></a>
+<a name="gbab-263"></a> <span class="cm">/* end of namespace */</span>
+<a name="gbab-264"></a>
+<a name="gbab-265"></a><span class="c1">//tool translate</span>
+<a name="gbab-266"></a><span class="cp">#ifdef TOOLS_ENABLED</span>
+<a name="gbab-267"></a>
+<a name="gbab-268"></a><span class="n">String</span> <span class="nf">TTR</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span><span class="p">);</span>
+<a name="gbab-269"></a>
+<a name="gbab-270"></a><span class="cp">#else</span>
+<a name="gbab-271"></a>
+<a name="gbab-272"></a><span class="cp">#define TTR(m_val) (String())</span>
+<a name="gbab-273"></a>
+<a name="gbab-274"></a><span class="cp">#endif</span>
+<a name="gbab-275"></a>
+<a name="gbab-276"></a><span class="c1">//tool or regular translate</span>
+<a name="gbab-277"></a><span class="n">String</span> <span class="nf">RTR</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span><span class="p">);</span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

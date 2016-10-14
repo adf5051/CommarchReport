@@ -1,0 +1,39 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cp">#if !defined(_huffenc_H)</span>
+<a name="gbab-2"></a><span class="cp"># define _huffenc_H (1)</span>
+<a name="gbab-3"></a><span class="cp"># include &quot;huffman.h&quot;</span>
+<a name="gbab-4"></a>
+<a name="gbab-5"></a>
+<a name="gbab-6"></a>
+<a name="gbab-7"></a><span class="k">typedef</span> <span class="n">th_huff_code</span>                  <span class="n">th_huff_table</span><span class="p">[</span><span class="n">TH_NDCT_TOKENS</span><span class="p">];</span>
+<a name="gbab-8"></a>
+<a name="gbab-9"></a>
+<a name="gbab-10"></a>
+<a name="gbab-11"></a><span class="k">extern</span> <span class="k">const</span> <span class="n">th_huff_code</span>
+<a name="gbab-12"></a> <span class="n">TH_VP31_HUFF_CODES</span><span class="p">[</span><span class="n">TH_NHUFFMAN_TABLES</span><span class="p">][</span><span class="n">TH_NDCT_TOKENS</span><span class="p">];</span>
+<a name="gbab-13"></a>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a>
+<a name="gbab-16"></a><span class="kt">int</span> <span class="nf">oc_huff_codes_pack</span><span class="p">(</span><span class="n">oggpack_buffer</span> <span class="o">*</span><span class="n">_opb</span><span class="p">,</span>
+<a name="gbab-17"></a> <span class="k">const</span> <span class="n">th_huff_code</span> <span class="n">_codes</span><span class="p">[</span><span class="n">TH_NHUFFMAN_TABLES</span><span class="p">][</span><span class="n">TH_NDCT_TOKENS</span><span class="p">]);</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

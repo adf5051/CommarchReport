@@ -1,0 +1,1963 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+905
+906
+907
+908
+909
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920
+921
+922
+923
+924
+925
+926
+927
+928
+929
+930
+931
+932
+933
+934
+935
+936
+937
+938
+939
+940
+941
+942
+943
+944
+945
+946
+947
+948
+949
+950
+951
+952
+953
+954
+955
+956
+957
+958
+959
+960
+961
+962
+963
+964
+965
+966
+967
+968
+969
+970
+971
+972
+973
+974
+975
+976
+977
+978
+979
+980
+981</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* Copyright (c) 2010-2011 Xiph.Org Foundation, Skype Limited</span>
+<a name="gbab-2"></a><span class="cm">   Written by Jean-Marc Valin and Koen Vos */</span>
+<a name="gbab-3"></a><span class="cm">/*</span>
+<a name="gbab-4"></a><span class="cm">   Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-5"></a><span class="cm">   modification, are permitted provided that the following conditions</span>
+<a name="gbab-6"></a><span class="cm">   are met:</span>
+<a name="gbab-7"></a>
+<a name="gbab-8"></a><span class="cm">   - Redistributions of source code must retain the above copyright</span>
+<a name="gbab-9"></a><span class="cm">   notice, this list of conditions and the following disclaimer.</span>
+<a name="gbab-10"></a>
+<a name="gbab-11"></a><span class="cm">   - Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-12"></a><span class="cm">   notice, this list of conditions and the following disclaimer in the</span>
+<a name="gbab-13"></a><span class="cm">   documentation and/or other materials provided with the distribution.</span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="cm">   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</span>
+<a name="gbab-16"></a><span class="cm">   ``AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT</span>
+<a name="gbab-17"></a><span class="cm">   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR</span>
+<a name="gbab-18"></a><span class="cm">   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER</span>
+<a name="gbab-19"></a><span class="cm">   OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,</span>
+<a name="gbab-20"></a><span class="cm">   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,</span>
+<a name="gbab-21"></a><span class="cm">   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR</span>
+<a name="gbab-22"></a><span class="cm">   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF</span>
+<a name="gbab-23"></a><span class="cm">   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING</span>
+<a name="gbab-24"></a><span class="cm">   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<a name="gbab-25"></a><span class="cm">   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-26"></a><span class="cm">*/</span>
+<a name="gbab-27"></a>
+<a name="gbab-28"></a><span class="cm">/**</span>
+<a name="gbab-29"></a><span class="cm"> * @file opus.h</span>
+<a name="gbab-30"></a><span class="cm"> * @brief Opus reference implementation API</span>
+<a name="gbab-31"></a><span class="cm"> */</span>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a><span class="cp">#ifndef OPUS_H</span>
+<a name="gbab-34"></a><span class="cp">#define OPUS_H</span>
+<a name="gbab-35"></a>
+<a name="gbab-36"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/opus_types.h&quot;</span><span class="cp"></span>
+<a name="gbab-37"></a><span class="cp">#include</span> <span class="cpf">&quot;opus/opus_defines.h&quot;</span><span class="cp"></span>
+<a name="gbab-38"></a>
+<a name="gbab-39"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-40"></a><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<a name="gbab-41"></a><span class="cp">#endif</span>
+<a name="gbab-42"></a>
+<a name="gbab-43"></a><span class="cm">/**</span>
+<a name="gbab-44"></a><span class="cm"> * @mainpage Opus</span>
+<a name="gbab-45"></a><span class="cm"> *</span>
+<a name="gbab-46"></a><span class="cm"> * The Opus codec is designed for interactive speech and audio transmission over the Internet.</span>
+<a name="gbab-47"></a><span class="cm"> * It is designed by the IETF Codec Working Group and incorporates technology from</span>
+<a name="gbab-48"></a><span class="cm"> * Skype&#39;s SILK codec and Xiph.Org&#39;s CELT codec.</span>
+<a name="gbab-49"></a><span class="cm"> *</span>
+<a name="gbab-50"></a><span class="cm"> * The Opus codec is designed to handle a wide range of interactive audio applications,</span>
+<a name="gbab-51"></a><span class="cm"> * including Voice over IP, videoconferencing, in-game chat, and even remote live music</span>
+<a name="gbab-52"></a><span class="cm"> * performances. It can scale from low bit-rate narrowband speech to very high quality</span>
+<a name="gbab-53"></a><span class="cm"> * stereo music. Its main features are:</span>
+<a name="gbab-54"></a>
+<a name="gbab-55"></a><span class="cm"> * @li Sampling rates from 8 to 48 kHz</span>
+<a name="gbab-56"></a><span class="cm"> * @li Bit-rates from 6 kb/s to 510 kb/s</span>
+<a name="gbab-57"></a><span class="cm"> * @li Support for both constant bit-rate (CBR) and variable bit-rate (VBR)</span>
+<a name="gbab-58"></a><span class="cm"> * @li Audio bandwidth from narrowband to full-band</span>
+<a name="gbab-59"></a><span class="cm"> * @li Support for speech and music</span>
+<a name="gbab-60"></a><span class="cm"> * @li Support for mono and stereo</span>
+<a name="gbab-61"></a><span class="cm"> * @li Support for multichannel (up to 255 channels)</span>
+<a name="gbab-62"></a><span class="cm"> * @li Frame sizes from 2.5 ms to 60 ms</span>
+<a name="gbab-63"></a><span class="cm"> * @li Good loss robustness and packet loss concealment (PLC)</span>
+<a name="gbab-64"></a><span class="cm"> * @li Floating point and fixed-point implementation</span>
+<a name="gbab-65"></a><span class="cm"> *</span>
+<a name="gbab-66"></a><span class="cm"> * Documentation sections:</span>
+<a name="gbab-67"></a><span class="cm"> * @li @ref opus_encoder</span>
+<a name="gbab-68"></a><span class="cm"> * @li @ref opus_decoder</span>
+<a name="gbab-69"></a><span class="cm"> * @li @ref opus_repacketizer</span>
+<a name="gbab-70"></a><span class="cm"> * @li @ref opus_multistream</span>
+<a name="gbab-71"></a><span class="cm"> * @li @ref opus_libinfo</span>
+<a name="gbab-72"></a><span class="cm"> * @li @ref opus_custom</span>
+<a name="gbab-73"></a><span class="cm"> */</span>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a><span class="cm">/** @defgroup opus_encoder Opus Encoder</span>
+<a name="gbab-76"></a><span class="cm">  * @{</span>
+<a name="gbab-77"></a><span class="cm">  *</span>
+<a name="gbab-78"></a><span class="cm">  * @brief This page describes the process and functions used to encode Opus.</span>
+<a name="gbab-79"></a><span class="cm">  *</span>
+<a name="gbab-80"></a><span class="cm">  * Since Opus is a stateful codec, the encoding process starts with creating an encoder</span>
+<a name="gbab-81"></a><span class="cm">  * state. This can be done with:</span>
+<a name="gbab-82"></a><span class="cm">  *</span>
+<a name="gbab-83"></a><span class="cm">  * @code</span>
+<a name="gbab-84"></a><span class="cm">  * int          error;</span>
+<a name="gbab-85"></a><span class="cm">  * OpusEncoder *enc;</span>
+<a name="gbab-86"></a><span class="cm">  * enc = opus_encoder_create(Fs, channels, application, &amp;error);</span>
+<a name="gbab-87"></a><span class="cm">  * @endcode</span>
+<a name="gbab-88"></a><span class="cm">  *</span>
+<a name="gbab-89"></a><span class="cm">  * From this point, @c enc can be used for encoding an audio stream. An encoder state</span>
+<a name="gbab-90"></a><span class="cm">  * @b must @b not be used for more than one stream at the same time. Similarly, the encoder</span>
+<a name="gbab-91"></a><span class="cm">  * state @b must @b not be re-initialized for each frame.</span>
+<a name="gbab-92"></a><span class="cm">  *</span>
+<a name="gbab-93"></a><span class="cm">  * While opus_encoder_create() allocates memory for the state, it&#39;s also possible</span>
+<a name="gbab-94"></a><span class="cm">  * to initialize pre-allocated memory:</span>
+<a name="gbab-95"></a><span class="cm">  *</span>
+<a name="gbab-96"></a><span class="cm">  * @code</span>
+<a name="gbab-97"></a><span class="cm">  * int          size;</span>
+<a name="gbab-98"></a><span class="cm">  * int          error;</span>
+<a name="gbab-99"></a><span class="cm">  * OpusEncoder *enc;</span>
+<a name="gbab-100"></a><span class="cm">  * size = opus_encoder_get_size(channels);</span>
+<a name="gbab-101"></a><span class="cm">  * enc = malloc(size);</span>
+<a name="gbab-102"></a><span class="cm">  * error = opus_encoder_init(enc, Fs, channels, application);</span>
+<a name="gbab-103"></a><span class="cm">  * @endcode</span>
+<a name="gbab-104"></a><span class="cm">  *</span>
+<a name="gbab-105"></a><span class="cm">  * where opus_encoder_get_size() returns the required size for the encoder state. Note that</span>
+<a name="gbab-106"></a><span class="cm">  * future versions of this code may change the size, so no assuptions should be made about it.</span>
+<a name="gbab-107"></a><span class="cm">  *</span>
+<a name="gbab-108"></a><span class="cm">  * The encoder state is always continuous in memory and only a shallow copy is sufficient</span>
+<a name="gbab-109"></a><span class="cm">  * to copy it (e.g. memcpy())</span>
+<a name="gbab-110"></a><span class="cm">  *</span>
+<a name="gbab-111"></a><span class="cm">  * It is possible to change some of the encoder&#39;s settings using the opus_encoder_ctl()</span>
+<a name="gbab-112"></a><span class="cm">  * interface. All these settings already default to the recommended value, so they should</span>
+<a name="gbab-113"></a><span class="cm">  * only be changed when necessary. The most common settings one may want to change are:</span>
+<a name="gbab-114"></a><span class="cm">  *</span>
+<a name="gbab-115"></a><span class="cm">  * @code</span>
+<a name="gbab-116"></a><span class="cm">  * opus_encoder_ctl(enc, OPUS_SET_BITRATE(bitrate));</span>
+<a name="gbab-117"></a><span class="cm">  * opus_encoder_ctl(enc, OPUS_SET_COMPLEXITY(complexity));</span>
+<a name="gbab-118"></a><span class="cm">  * opus_encoder_ctl(enc, OPUS_SET_SIGNAL(signal_type));</span>
+<a name="gbab-119"></a><span class="cm">  * @endcode</span>
+<a name="gbab-120"></a><span class="cm">  *</span>
+<a name="gbab-121"></a><span class="cm">  * where</span>
+<a name="gbab-122"></a><span class="cm">  *</span>
+<a name="gbab-123"></a><span class="cm">  * @arg bitrate is in bits per second (b/s)</span>
+<a name="gbab-124"></a><span class="cm">  * @arg complexity is a value from 1 to 10, where 1 is the lowest complexity and 10 is the highest</span>
+<a name="gbab-125"></a><span class="cm">  * @arg signal_type is either OPUS_AUTO (default), OPUS_SIGNAL_VOICE, or OPUS_SIGNAL_MUSIC</span>
+<a name="gbab-126"></a><span class="cm">  *</span>
+<a name="gbab-127"></a><span class="cm">  * See @ref opus_encoderctls and @ref opus_genericctls for a complete list of parameters that can be set or queried. Most parameters can be set or changed at any time during a stream.</span>
+<a name="gbab-128"></a><span class="cm">  *</span>
+<a name="gbab-129"></a><span class="cm">  * To encode a frame, opus_encode() or opus_encode_float() must be called with exactly one frame (2.5, 5, 10, 20, 40 or 60 ms) of audio data:</span>
+<a name="gbab-130"></a><span class="cm">  * @code</span>
+<a name="gbab-131"></a><span class="cm">  * len = opus_encode(enc, audio_frame, frame_size, packet, max_packet);</span>
+<a name="gbab-132"></a><span class="cm">  * @endcode</span>
+<a name="gbab-133"></a><span class="cm">  *</span>
+<a name="gbab-134"></a><span class="cm">  * where</span>
+<a name="gbab-135"></a><span class="cm">  * &lt;ul&gt;</span>
+<a name="gbab-136"></a><span class="cm">  * &lt;li&gt;audio_frame is the audio data in opus_int16 (or float for opus_encode_float())&lt;/li&gt;</span>
+<a name="gbab-137"></a><span class="cm">  * &lt;li&gt;frame_size is the duration of the frame in samples (per channel)&lt;/li&gt;</span>
+<a name="gbab-138"></a><span class="cm">  * &lt;li&gt;packet is the byte array to which the compressed data is written&lt;/li&gt;</span>
+<a name="gbab-139"></a><span class="cm">  * &lt;li&gt;max_packet is the maximum number of bytes that can be written in the packet (4000 bytes is recommended).</span>
+<a name="gbab-140"></a><span class="cm">  *     Do not use max_packet to control VBR target bitrate, instead use the #OPUS_SET_BITRATE CTL.&lt;/li&gt;</span>
+<a name="gbab-141"></a><span class="cm">  * &lt;/ul&gt;</span>
+<a name="gbab-142"></a><span class="cm">  *</span>
+<a name="gbab-143"></a><span class="cm">  * opus_encode() and opus_encode_float() return the number of bytes actually written to the packet.</span>
+<a name="gbab-144"></a><span class="cm">  * The return value &lt;b&gt;can be negative&lt;/b&gt;, which indicates that an error has occurred. If the return value</span>
+<a name="gbab-145"></a><span class="cm">  * is 1 byte, then the packet does not need to be transmitted (DTX).</span>
+<a name="gbab-146"></a><span class="cm">  *</span>
+<a name="gbab-147"></a><span class="cm">  * Once the encoder state if no longer needed, it can be destroyed with</span>
+<a name="gbab-148"></a><span class="cm">  *</span>
+<a name="gbab-149"></a><span class="cm">  * @code</span>
+<a name="gbab-150"></a><span class="cm">  * opus_encoder_destroy(enc);</span>
+<a name="gbab-151"></a><span class="cm">  * @endcode</span>
+<a name="gbab-152"></a><span class="cm">  *</span>
+<a name="gbab-153"></a><span class="cm">  * If the encoder was created with opus_encoder_init() rather than opus_encoder_create(),</span>
+<a name="gbab-154"></a><span class="cm">  * then no action is required aside from potentially freeing the memory that was manually</span>
+<a name="gbab-155"></a><span class="cm">  * allocated for it (calling free(enc) for the example above)</span>
+<a name="gbab-156"></a><span class="cm">  *</span>
+<a name="gbab-157"></a><span class="cm">  */</span>
+<a name="gbab-158"></a>
+<a name="gbab-159"></a><span class="cm">/** Opus encoder state.</span>
+<a name="gbab-160"></a><span class="cm">  * This contains the complete state of an Opus encoder.</span>
+<a name="gbab-161"></a><span class="cm">  * It is position independent and can be freely copied.</span>
+<a name="gbab-162"></a><span class="cm">  * @see opus_encoder_create,opus_encoder_init</span>
+<a name="gbab-163"></a><span class="cm">  */</span>
+<a name="gbab-164"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">OpusEncoder</span> <span class="n">OpusEncoder</span><span class="p">;</span>
+<a name="gbab-165"></a>
+<a name="gbab-166"></a><span class="cm">/** Gets the size of an &lt;code&gt;OpusEncoder&lt;/code&gt; structure.</span>
+<a name="gbab-167"></a><span class="cm">  * @param[in] channels &lt;tt&gt;int&lt;/tt&gt;: Number of channels.</span>
+<a name="gbab-168"></a><span class="cm">  *                                   This must be 1 or 2.</span>
+<a name="gbab-169"></a><span class="cm">  * @returns The size in bytes.</span>
+<a name="gbab-170"></a><span class="cm">  */</span>
+<a name="gbab-171"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_encoder_get_size</span><span class="p">(</span><span class="kt">int</span> <span class="n">channels</span><span class="p">);</span>
+<a name="gbab-172"></a>
+<a name="gbab-173"></a><span class="cm">/**</span>
+<a name="gbab-174"></a><span class="cm"> */</span>
+<a name="gbab-175"></a>
+<a name="gbab-176"></a><span class="cm">/** Allocates and initializes an encoder state.</span>
+<a name="gbab-177"></a><span class="cm"> * There are three coding modes:</span>
+<a name="gbab-178"></a><span class="cm"> *</span>
+<a name="gbab-179"></a><span class="cm"> * @ref OPUS_APPLICATION_VOIP gives best quality at a given bitrate for voice</span>
+<a name="gbab-180"></a><span class="cm"> *    signals. It enhances the  input signal by high-pass filtering and</span>
+<a name="gbab-181"></a><span class="cm"> *    emphasizing formants and harmonics. Optionally  it includes in-band</span>
+<a name="gbab-182"></a><span class="cm"> *    forward error correction to protect against packet loss. Use this</span>
+<a name="gbab-183"></a><span class="cm"> *    mode for typical VoIP applications. Because of the enhancement,</span>
+<a name="gbab-184"></a><span class="cm"> *    even at high bitrates the output may sound different from the input.</span>
+<a name="gbab-185"></a><span class="cm"> *</span>
+<a name="gbab-186"></a><span class="cm"> * @ref OPUS_APPLICATION_AUDIO gives best quality at a given bitrate for most</span>
+<a name="gbab-187"></a><span class="cm"> *    non-voice signals like music. Use this mode for music and mixed</span>
+<a name="gbab-188"></a><span class="cm"> *    (music/voice) content, broadcast, and applications requiring less</span>
+<a name="gbab-189"></a><span class="cm"> *    than 15 ms of coding delay.</span>
+<a name="gbab-190"></a><span class="cm"> *</span>
+<a name="gbab-191"></a><span class="cm"> * @ref OPUS_APPLICATION_RESTRICTED_LOWDELAY configures low-delay mode that</span>
+<a name="gbab-192"></a><span class="cm"> *    disables the speech-optimized mode in exchange for slightly reduced delay.</span>
+<a name="gbab-193"></a><span class="cm"> *    This mode can only be set on an newly initialized or freshly reset encoder</span>
+<a name="gbab-194"></a><span class="cm"> *    because it changes the codec delay.</span>
+<a name="gbab-195"></a><span class="cm"> *</span>
+<a name="gbab-196"></a><span class="cm"> * This is useful when the caller knows that the speech-optimized modes will not be needed (use with caution).</span>
+<a name="gbab-197"></a><span class="cm"> * @param [in] Fs &lt;tt&gt;opus_int32&lt;/tt&gt;: Sampling rate of input signal (Hz)</span>
+<a name="gbab-198"></a><span class="cm"> *                                     This must be one of 8000, 12000, 16000,</span>
+<a name="gbab-199"></a><span class="cm"> *                                     24000, or 48000.</span>
+<a name="gbab-200"></a><span class="cm"> * @param [in] channels &lt;tt&gt;int&lt;/tt&gt;: Number of channels (1 or 2) in input signal</span>
+<a name="gbab-201"></a><span class="cm"> * @param [in] application &lt;tt&gt;int&lt;/tt&gt;: Coding mode (@ref OPUS_APPLICATION_VOIP/@ref OPUS_APPLICATION_AUDIO/@ref OPUS_APPLICATION_RESTRICTED_LOWDELAY)</span>
+<a name="gbab-202"></a><span class="cm"> * @param [out] error &lt;tt&gt;int*&lt;/tt&gt;: @ref opus_errorcodes</span>
+<a name="gbab-203"></a><span class="cm"> * @note Regardless of the sampling rate and number channels selected, the Opus encoder</span>
+<a name="gbab-204"></a><span class="cm"> * can switch to a lower audio bandwidth or number of channels if the bitrate</span>
+<a name="gbab-205"></a><span class="cm"> * selected is too low. This also means that it is safe to always use 48 kHz stereo input</span>
+<a name="gbab-206"></a><span class="cm"> * and let the encoder optimize the encoding.</span>
+<a name="gbab-207"></a><span class="cm"> */</span>
+<a name="gbab-208"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="n">OpusEncoder</span> <span class="o">*</span><span class="nf">opus_encoder_create</span><span class="p">(</span>
+<a name="gbab-209"></a>    <span class="n">opus_int32</span> <span class="n">Fs</span><span class="p">,</span>
+<a name="gbab-210"></a>    <span class="kt">int</span> <span class="n">channels</span><span class="p">,</span>
+<a name="gbab-211"></a>    <span class="kt">int</span> <span class="n">application</span><span class="p">,</span>
+<a name="gbab-212"></a>    <span class="kt">int</span> <span class="o">*</span><span class="n">error</span>
+<a name="gbab-213"></a><span class="p">);</span>
+<a name="gbab-214"></a>
+<a name="gbab-215"></a><span class="cm">/** Initializes a previously allocated encoder state</span>
+<a name="gbab-216"></a><span class="cm">  * The memory pointed to by st must be at least the size returned by opus_encoder_get_size().</span>
+<a name="gbab-217"></a><span class="cm">  * This is intended for applications which use their own allocator instead of malloc.</span>
+<a name="gbab-218"></a><span class="cm">  * @see opus_encoder_create(),opus_encoder_get_size()</span>
+<a name="gbab-219"></a><span class="cm">  * To reset a previously initialized state, use the #OPUS_RESET_STATE CTL.</span>
+<a name="gbab-220"></a><span class="cm">  * @param [in] st &lt;tt&gt;OpusEncoder*&lt;/tt&gt;: Encoder state</span>
+<a name="gbab-221"></a><span class="cm">  * @param [in] Fs &lt;tt&gt;opus_int32&lt;/tt&gt;: Sampling rate of input signal (Hz)</span>
+<a name="gbab-222"></a><span class="cm"> *                                      This must be one of 8000, 12000, 16000,</span>
+<a name="gbab-223"></a><span class="cm"> *                                      24000, or 48000.</span>
+<a name="gbab-224"></a><span class="cm">  * @param [in] channels &lt;tt&gt;int&lt;/tt&gt;: Number of channels (1 or 2) in input signal</span>
+<a name="gbab-225"></a><span class="cm">  * @param [in] application &lt;tt&gt;int&lt;/tt&gt;: Coding mode (OPUS_APPLICATION_VOIP/OPUS_APPLICATION_AUDIO/OPUS_APPLICATION_RESTRICTED_LOWDELAY)</span>
+<a name="gbab-226"></a><span class="cm">  * @retval #OPUS_OK Success or @ref opus_errorcodes</span>
+<a name="gbab-227"></a><span class="cm">  */</span>
+<a name="gbab-228"></a><span class="n">OPUS_EXPORT</span> <span class="kt">int</span> <span class="nf">opus_encoder_init</span><span class="p">(</span>
+<a name="gbab-229"></a>    <span class="n">OpusEncoder</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span>
+<a name="gbab-230"></a>    <span class="n">opus_int32</span> <span class="n">Fs</span><span class="p">,</span>
+<a name="gbab-231"></a>    <span class="kt">int</span> <span class="n">channels</span><span class="p">,</span>
+<a name="gbab-232"></a>    <span class="kt">int</span> <span class="n">application</span>
+<a name="gbab-233"></a><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-234"></a>
+<a name="gbab-235"></a><span class="cm">/** Encodes an Opus frame.</span>
+<a name="gbab-236"></a><span class="cm">  * @param [in] st &lt;tt&gt;OpusEncoder*&lt;/tt&gt;: Encoder state</span>
+<a name="gbab-237"></a><span class="cm">  * @param [in] pcm &lt;tt&gt;opus_int16*&lt;/tt&gt;: Input signal (interleaved if 2 channels). length is frame_size*channels*sizeof(opus_int16)</span>
+<a name="gbab-238"></a><span class="cm">  * @param [in] frame_size &lt;tt&gt;int&lt;/tt&gt;: Number of samples per channel in the</span>
+<a name="gbab-239"></a><span class="cm">  *                                      input signal.</span>
+<a name="gbab-240"></a><span class="cm">  *                                      This must be an Opus frame size for</span>
+<a name="gbab-241"></a><span class="cm">  *                                      the encoder&#39;s sampling rate.</span>
+<a name="gbab-242"></a><span class="cm">  *                                      For example, at 48 kHz the permitted</span>
+<a name="gbab-243"></a><span class="cm">  *                                      values are 120, 240, 480, 960, 1920,</span>
+<a name="gbab-244"></a><span class="cm">  *                                      and 2880.</span>
+<a name="gbab-245"></a><span class="cm">  *                                      Passing in a duration of less than</span>
+<a name="gbab-246"></a><span class="cm">  *                                      10 ms (480 samples at 48 kHz) will</span>
+<a name="gbab-247"></a><span class="cm">  *                                      prevent the encoder from using the LPC</span>
+<a name="gbab-248"></a><span class="cm">  *                                      or hybrid modes.</span>
+<a name="gbab-249"></a><span class="cm">  * @param [out] data &lt;tt&gt;unsigned char*&lt;/tt&gt;: Output payload.</span>
+<a name="gbab-250"></a><span class="cm">  *                                            This must contain storage for at</span>
+<a name="gbab-251"></a><span class="cm">  *                                            least \a max_data_bytes.</span>
+<a name="gbab-252"></a><span class="cm">  * @param [in] max_data_bytes &lt;tt&gt;opus_int32&lt;/tt&gt;: Size of the allocated</span>
+<a name="gbab-253"></a><span class="cm">  *                                                 memory for the output</span>
+<a name="gbab-254"></a><span class="cm">  *                                                 payload. This may be</span>
+<a name="gbab-255"></a><span class="cm">  *                                                 used to impose an upper limit on</span>
+<a name="gbab-256"></a><span class="cm">  *                                                 the instant bitrate, but should</span>
+<a name="gbab-257"></a><span class="cm">  *                                                 not be used as the only bitrate</span>
+<a name="gbab-258"></a><span class="cm">  *                                                 control. Use #OPUS_SET_BITRATE to</span>
+<a name="gbab-259"></a><span class="cm">  *                                                 control the bitrate.</span>
+<a name="gbab-260"></a><span class="cm">  * @returns The length of the encoded packet (in bytes) on success or a</span>
+<a name="gbab-261"></a><span class="cm">  *          negative error code (see @ref opus_errorcodes) on failure.</span>
+<a name="gbab-262"></a><span class="cm">  */</span>
+<a name="gbab-263"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="n">opus_int32</span> <span class="nf">opus_encode</span><span class="p">(</span>
+<a name="gbab-264"></a>    <span class="n">OpusEncoder</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span>
+<a name="gbab-265"></a>    <span class="k">const</span> <span class="n">opus_int16</span> <span class="o">*</span><span class="n">pcm</span><span class="p">,</span>
+<a name="gbab-266"></a>    <span class="kt">int</span> <span class="n">frame_size</span><span class="p">,</span>
+<a name="gbab-267"></a>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span>
+<a name="gbab-268"></a>    <span class="n">opus_int32</span> <span class="n">max_data_bytes</span>
+<a name="gbab-269"></a><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<a name="gbab-270"></a>
+<a name="gbab-271"></a><span class="cm">/** Encodes an Opus frame from floating point input.</span>
+<a name="gbab-272"></a><span class="cm">  * @param [in] st &lt;tt&gt;OpusEncoder*&lt;/tt&gt;: Encoder state</span>
+<a name="gbab-273"></a><span class="cm">  * @param [in] pcm &lt;tt&gt;float*&lt;/tt&gt;: Input in float format (interleaved if 2 channels), with a normal range of +/-1.0.</span>
+<a name="gbab-274"></a><span class="cm">  *          Samples with a range beyond +/-1.0 are supported but will</span>
+<a name="gbab-275"></a><span class="cm">  *          be clipped by decoders using the integer API and should</span>
+<a name="gbab-276"></a><span class="cm">  *          only be used if it is known that the far end supports</span>
+<a name="gbab-277"></a><span class="cm">  *          extended dynamic range.</span>
+<a name="gbab-278"></a><span class="cm">  *          length is frame_size*channels*sizeof(float)</span>
+<a name="gbab-279"></a><span class="cm">  * @param [in] frame_size &lt;tt&gt;int&lt;/tt&gt;: Number of samples per channel in the</span>
+<a name="gbab-280"></a><span class="cm">  *                                      input signal.</span>
+<a name="gbab-281"></a><span class="cm">  *                                      This must be an Opus frame size for</span>
+<a name="gbab-282"></a><span class="cm">  *                                      the encoder&#39;s sampling rate.</span>
+<a name="gbab-283"></a><span class="cm">  *                                      For example, at 48 kHz the permitted</span>
+<a name="gbab-284"></a><span class="cm">  *                                      values are 120, 240, 480, 960, 1920,</span>
+<a name="gbab-285"></a><span class="cm">  *                                      and 2880.</span>
+<a name="gbab-286"></a><span class="cm">  *                                      Passing in a duration of less than</span>
+<a name="gbab-287"></a><span class="cm">  *                                      10 ms (480 samples at 48 kHz) will</span>
+<a name="gbab-288"></a><span class="cm">  *                                      prevent the encoder from using the LPC</span>
+<a name="gbab-289"></a><span class="cm">  *                                      or hybrid modes.</span>
+<a name="gbab-290"></a><span class="cm">  * @param [out] data &lt;tt&gt;unsigned char*&lt;/tt&gt;: Output payload.</span>
+<a name="gbab-291"></a><span class="cm">  *                                            This must contain storage for at</span>
+<a name="gbab-292"></a><span class="cm">  *                                            least \a max_data_bytes.</span>
+<a name="gbab-293"></a><span class="cm">  * @param [in] max_data_bytes &lt;tt&gt;opus_int32&lt;/tt&gt;: Size of the allocated</span>
+<a name="gbab-294"></a><span class="cm">  *                                                 memory for the output</span>
+<a name="gbab-295"></a><span class="cm">  *                                                 payload. This may be</span>
+<a name="gbab-296"></a><span class="cm">  *                                                 used to impose an upper limit on</span>
+<a name="gbab-297"></a><span class="cm">  *                                                 the instant bitrate, but should</span>
+<a name="gbab-298"></a><span class="cm">  *                                                 not be used as the only bitrate</span>
+<a name="gbab-299"></a><span class="cm">  *                                                 control. Use #OPUS_SET_BITRATE to</span>
+<a name="gbab-300"></a><span class="cm">  *                                                 control the bitrate.</span>
+<a name="gbab-301"></a><span class="cm">  * @returns The length of the encoded packet (in bytes) on success or a</span>
+<a name="gbab-302"></a><span class="cm">  *          negative error code (see @ref opus_errorcodes) on failure.</span>
+<a name="gbab-303"></a><span class="cm">  */</span>
+<a name="gbab-304"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="n">opus_int32</span> <span class="nf">opus_encode_float</span><span class="p">(</span>
+<a name="gbab-305"></a>    <span class="n">OpusEncoder</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span>
+<a name="gbab-306"></a>    <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">pcm</span><span class="p">,</span>
+<a name="gbab-307"></a>    <span class="kt">int</span> <span class="n">frame_size</span><span class="p">,</span>
+<a name="gbab-308"></a>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span>
+<a name="gbab-309"></a>    <span class="n">opus_int32</span> <span class="n">max_data_bytes</span>
+<a name="gbab-310"></a><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<a name="gbab-311"></a>
+<a name="gbab-312"></a><span class="cm">/** Frees an &lt;code&gt;OpusEncoder&lt;/code&gt; allocated by opus_encoder_create().</span>
+<a name="gbab-313"></a><span class="cm">  * @param[in] st &lt;tt&gt;OpusEncoder*&lt;/tt&gt;: State to be freed.</span>
+<a name="gbab-314"></a><span class="cm">  */</span>
+<a name="gbab-315"></a><span class="n">OPUS_EXPORT</span> <span class="kt">void</span> <span class="nf">opus_encoder_destroy</span><span class="p">(</span><span class="n">OpusEncoder</span> <span class="o">*</span><span class="n">st</span><span class="p">);</span>
+<a name="gbab-316"></a>
+<a name="gbab-317"></a><span class="cm">/** Perform a CTL function on an Opus encoder.</span>
+<a name="gbab-318"></a><span class="cm">  *</span>
+<a name="gbab-319"></a><span class="cm">  * Generally the request and subsequent arguments are generated</span>
+<a name="gbab-320"></a><span class="cm">  * by a convenience macro.</span>
+<a name="gbab-321"></a><span class="cm">  * @param st &lt;tt&gt;OpusEncoder*&lt;/tt&gt;: Encoder state.</span>
+<a name="gbab-322"></a><span class="cm">  * @param request This and all remaining parameters should be replaced by one</span>
+<a name="gbab-323"></a><span class="cm">  *                of the convenience macros in @ref opus_genericctls or</span>
+<a name="gbab-324"></a><span class="cm">  *                @ref opus_encoderctls.</span>
+<a name="gbab-325"></a><span class="cm">  * @see opus_genericctls</span>
+<a name="gbab-326"></a><span class="cm">  * @see opus_encoderctls</span>
+<a name="gbab-327"></a><span class="cm">  */</span>
+<a name="gbab-328"></a><span class="n">OPUS_EXPORT</span> <span class="kt">int</span> <span class="nf">opus_encoder_ctl</span><span class="p">(</span><span class="n">OpusEncoder</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> <span class="kt">int</span> <span class="n">request</span><span class="p">,</span> <span class="p">...)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-329"></a><span class="cm">/**@}*/</span>
+<a name="gbab-330"></a>
+<a name="gbab-331"></a><span class="cm">/** @defgroup opus_decoder Opus Decoder</span>
+<a name="gbab-332"></a><span class="cm">  * @{</span>
+<a name="gbab-333"></a><span class="cm">  *</span>
+<a name="gbab-334"></a><span class="cm">  * @brief This page describes the process and functions used to decode Opus.</span>
+<a name="gbab-335"></a><span class="cm">  *</span>
+<a name="gbab-336"></a><span class="cm">  * The decoding process also starts with creating a decoder</span>
+<a name="gbab-337"></a><span class="cm">  * state. This can be done with:</span>
+<a name="gbab-338"></a><span class="cm">  * @code</span>
+<a name="gbab-339"></a><span class="cm">  * int          error;</span>
+<a name="gbab-340"></a><span class="cm">  * OpusDecoder *dec;</span>
+<a name="gbab-341"></a><span class="cm">  * dec = opus_decoder_create(Fs, channels, &amp;error);</span>
+<a name="gbab-342"></a><span class="cm">  * @endcode</span>
+<a name="gbab-343"></a><span class="cm">  * where</span>
+<a name="gbab-344"></a><span class="cm">  * @li Fs is the sampling rate and must be 8000, 12000, 16000, 24000, or 48000</span>
+<a name="gbab-345"></a><span class="cm">  * @li channels is the number of channels (1 or 2)</span>
+<a name="gbab-346"></a><span class="cm">  * @li error will hold the error code in case of failure (or #OPUS_OK on success)</span>
+<a name="gbab-347"></a><span class="cm">  * @li the return value is a newly created decoder state to be used for decoding</span>
+<a name="gbab-348"></a><span class="cm">  *</span>
+<a name="gbab-349"></a><span class="cm">  * While opus_decoder_create() allocates memory for the state, it&#39;s also possible</span>
+<a name="gbab-350"></a><span class="cm">  * to initialize pre-allocated memory:</span>
+<a name="gbab-351"></a><span class="cm">  * @code</span>
+<a name="gbab-352"></a><span class="cm">  * int          size;</span>
+<a name="gbab-353"></a><span class="cm">  * int          error;</span>
+<a name="gbab-354"></a><span class="cm">  * OpusDecoder *dec;</span>
+<a name="gbab-355"></a><span class="cm">  * size = opus_decoder_get_size(channels);</span>
+<a name="gbab-356"></a><span class="cm">  * dec = malloc(size);</span>
+<a name="gbab-357"></a><span class="cm">  * error = opus_decoder_init(dec, Fs, channels);</span>
+<a name="gbab-358"></a><span class="cm">  * @endcode</span>
+<a name="gbab-359"></a><span class="cm">  * where opus_decoder_get_size() returns the required size for the decoder state. Note that</span>
+<a name="gbab-360"></a><span class="cm">  * future versions of this code may change the size, so no assuptions should be made about it.</span>
+<a name="gbab-361"></a><span class="cm">  *</span>
+<a name="gbab-362"></a><span class="cm">  * The decoder state is always continuous in memory and only a shallow copy is sufficient</span>
+<a name="gbab-363"></a><span class="cm">  * to copy it (e.g. memcpy())</span>
+<a name="gbab-364"></a><span class="cm">  *</span>
+<a name="gbab-365"></a><span class="cm">  * To decode a frame, opus_decode() or opus_decode_float() must be called with a packet of compressed audio data:</span>
+<a name="gbab-366"></a><span class="cm">  * @code</span>
+<a name="gbab-367"></a><span class="cm">  * frame_size = opus_decode(dec, packet, len, decoded, max_size, 0);</span>
+<a name="gbab-368"></a><span class="cm">  * @endcode</span>
+<a name="gbab-369"></a><span class="cm">  * where</span>
+<a name="gbab-370"></a><span class="cm">  *</span>
+<a name="gbab-371"></a><span class="cm">  * @li packet is the byte array containing the compressed data</span>
+<a name="gbab-372"></a><span class="cm">  * @li len is the exact number of bytes contained in the packet</span>
+<a name="gbab-373"></a><span class="cm">  * @li decoded is the decoded audio data in opus_int16 (or float for opus_decode_float())</span>
+<a name="gbab-374"></a><span class="cm">  * @li max_size is the max duration of the frame in samples (per channel) that can fit into the decoded_frame array</span>
+<a name="gbab-375"></a><span class="cm">  *</span>
+<a name="gbab-376"></a><span class="cm">  * opus_decode() and opus_decode_float() return the number of samples (per channel) decoded from the packet.</span>
+<a name="gbab-377"></a><span class="cm">  * If that value is negative, then an error has occurred. This can occur if the packet is corrupted or if the audio</span>
+<a name="gbab-378"></a><span class="cm">  * buffer is too small to hold the decoded audio.</span>
+<a name="gbab-379"></a><span class="cm">  *</span>
+<a name="gbab-380"></a><span class="cm">  * Opus is a stateful codec with overlapping blocks and as a result Opus</span>
+<a name="gbab-381"></a><span class="cm">  * packets are not coded independently of each other. Packets must be</span>
+<a name="gbab-382"></a><span class="cm">  * passed into the decoder serially and in the correct order for a correct</span>
+<a name="gbab-383"></a><span class="cm">  * decode. Lost packets can be replaced with loss concealment by calling</span>
+<a name="gbab-384"></a><span class="cm">  * the decoder with a null pointer and zero length for the missing packet.</span>
+<a name="gbab-385"></a><span class="cm">  *</span>
+<a name="gbab-386"></a><span class="cm">  * A single codec state may only be accessed from a single thread at</span>
+<a name="gbab-387"></a><span class="cm">  * a time and any required locking must be performed by the caller. Separate</span>
+<a name="gbab-388"></a><span class="cm">  * streams must be decoded with separate decoder states and can be decoded</span>
+<a name="gbab-389"></a><span class="cm">  * in parallel unless the library was compiled with NONTHREADSAFE_PSEUDOSTACK</span>
+<a name="gbab-390"></a><span class="cm">  * defined.</span>
+<a name="gbab-391"></a><span class="cm">  *</span>
+<a name="gbab-392"></a><span class="cm">  */</span>
+<a name="gbab-393"></a>
+<a name="gbab-394"></a><span class="cm">/** Opus decoder state.</span>
+<a name="gbab-395"></a><span class="cm">  * This contains the complete state of an Opus decoder.</span>
+<a name="gbab-396"></a><span class="cm">  * It is position independent and can be freely copied.</span>
+<a name="gbab-397"></a><span class="cm">  * @see opus_decoder_create,opus_decoder_init</span>
+<a name="gbab-398"></a><span class="cm">  */</span>
+<a name="gbab-399"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">OpusDecoder</span> <span class="n">OpusDecoder</span><span class="p">;</span>
+<a name="gbab-400"></a>
+<a name="gbab-401"></a><span class="cm">/** Gets the size of an &lt;code&gt;OpusDecoder&lt;/code&gt; structure.</span>
+<a name="gbab-402"></a><span class="cm">  * @param [in] channels &lt;tt&gt;int&lt;/tt&gt;: Number of channels.</span>
+<a name="gbab-403"></a><span class="cm">  *                                    This must be 1 or 2.</span>
+<a name="gbab-404"></a><span class="cm">  * @returns The size in bytes.</span>
+<a name="gbab-405"></a><span class="cm">  */</span>
+<a name="gbab-406"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_decoder_get_size</span><span class="p">(</span><span class="kt">int</span> <span class="n">channels</span><span class="p">);</span>
+<a name="gbab-407"></a>
+<a name="gbab-408"></a><span class="cm">/** Allocates and initializes a decoder state.</span>
+<a name="gbab-409"></a><span class="cm">  * @param [in] Fs &lt;tt&gt;opus_int32&lt;/tt&gt;: Sample rate to decode at (Hz).</span>
+<a name="gbab-410"></a><span class="cm">  *                                     This must be one of 8000, 12000, 16000,</span>
+<a name="gbab-411"></a><span class="cm">  *                                     24000, or 48000.</span>
+<a name="gbab-412"></a><span class="cm">  * @param [in] channels &lt;tt&gt;int&lt;/tt&gt;: Number of channels (1 or 2) to decode</span>
+<a name="gbab-413"></a><span class="cm">  * @param [out] error &lt;tt&gt;int*&lt;/tt&gt;: #OPUS_OK Success or @ref opus_errorcodes</span>
+<a name="gbab-414"></a><span class="cm">  *</span>
+<a name="gbab-415"></a><span class="cm">  * Internally Opus stores data at 48000 Hz, so that should be the default</span>
+<a name="gbab-416"></a><span class="cm">  * value for Fs. However, the decoder can efficiently decode to buffers</span>
+<a name="gbab-417"></a><span class="cm">  * at 8, 12, 16, and 24 kHz so if for some reason the caller cannot use</span>
+<a name="gbab-418"></a><span class="cm">  * data at the full sample rate, or knows the compressed data doesn&#39;t</span>
+<a name="gbab-419"></a><span class="cm">  * use the full frequency range, it can request decoding at a reduced</span>
+<a name="gbab-420"></a><span class="cm">  * rate. Likewise, the decoder is capable of filling in either mono or</span>
+<a name="gbab-421"></a><span class="cm">  * interleaved stereo pcm buffers, at the caller&#39;s request.</span>
+<a name="gbab-422"></a><span class="cm">  */</span>
+<a name="gbab-423"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="n">OpusDecoder</span> <span class="o">*</span><span class="nf">opus_decoder_create</span><span class="p">(</span>
+<a name="gbab-424"></a>    <span class="n">opus_int32</span> <span class="n">Fs</span><span class="p">,</span>
+<a name="gbab-425"></a>    <span class="kt">int</span> <span class="n">channels</span><span class="p">,</span>
+<a name="gbab-426"></a>    <span class="kt">int</span> <span class="o">*</span><span class="n">error</span>
+<a name="gbab-427"></a><span class="p">);</span>
+<a name="gbab-428"></a>
+<a name="gbab-429"></a><span class="cm">/** Initializes a previously allocated decoder state.</span>
+<a name="gbab-430"></a><span class="cm">  * The state must be at least the size returned by opus_decoder_get_size().</span>
+<a name="gbab-431"></a><span class="cm">  * This is intended for applications which use their own allocator instead of malloc. @see opus_decoder_create,opus_decoder_get_size</span>
+<a name="gbab-432"></a><span class="cm">  * To reset a previously initialized state, use the #OPUS_RESET_STATE CTL.</span>
+<a name="gbab-433"></a><span class="cm">  * @param [in] st &lt;tt&gt;OpusDecoder*&lt;/tt&gt;: Decoder state.</span>
+<a name="gbab-434"></a><span class="cm">  * @param [in] Fs &lt;tt&gt;opus_int32&lt;/tt&gt;: Sampling rate to decode to (Hz).</span>
+<a name="gbab-435"></a><span class="cm">  *                                     This must be one of 8000, 12000, 16000,</span>
+<a name="gbab-436"></a><span class="cm">  *                                     24000, or 48000.</span>
+<a name="gbab-437"></a><span class="cm">  * @param [in] channels &lt;tt&gt;int&lt;/tt&gt;: Number of channels (1 or 2) to decode</span>
+<a name="gbab-438"></a><span class="cm">  * @retval #OPUS_OK Success or @ref opus_errorcodes</span>
+<a name="gbab-439"></a><span class="cm">  */</span>
+<a name="gbab-440"></a><span class="n">OPUS_EXPORT</span> <span class="kt">int</span> <span class="nf">opus_decoder_init</span><span class="p">(</span>
+<a name="gbab-441"></a>    <span class="n">OpusDecoder</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span>
+<a name="gbab-442"></a>    <span class="n">opus_int32</span> <span class="n">Fs</span><span class="p">,</span>
+<a name="gbab-443"></a>    <span class="kt">int</span> <span class="n">channels</span>
+<a name="gbab-444"></a><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-445"></a>
+<a name="gbab-446"></a><span class="cm">/** Decode an Opus packet.</span>
+<a name="gbab-447"></a><span class="cm">  * @param [in] st &lt;tt&gt;OpusDecoder*&lt;/tt&gt;: Decoder state</span>
+<a name="gbab-448"></a><span class="cm">  * @param [in] data &lt;tt&gt;char*&lt;/tt&gt;: Input payload. Use a NULL pointer to indicate packet loss</span>
+<a name="gbab-449"></a><span class="cm">  * @param [in] len &lt;tt&gt;opus_int32&lt;/tt&gt;: Number of bytes in payload*</span>
+<a name="gbab-450"></a><span class="cm">  * @param [out] pcm &lt;tt&gt;opus_int16*&lt;/tt&gt;: Output signal (interleaved if 2 channels). length</span>
+<a name="gbab-451"></a><span class="cm">  *  is frame_size*channels*sizeof(opus_int16)</span>
+<a name="gbab-452"></a><span class="cm">  * @param [in] frame_size Number of samples per channel of available space in \a pcm.</span>
+<a name="gbab-453"></a><span class="cm">  *  If this is less than the maximum packet duration (120ms; 5760 for 48kHz), this function will</span>
+<a name="gbab-454"></a><span class="cm">  *  not be capable of decoding some packets. In the case of PLC (data==NULL) or FEC (decode_fec=1),</span>
+<a name="gbab-455"></a><span class="cm">  *  then frame_size needs to be exactly the duration of audio that is missing, otherwise the</span>
+<a name="gbab-456"></a><span class="cm">  *  decoder will not be in the optimal state to decode the next incoming packet. For the PLC and</span>
+<a name="gbab-457"></a><span class="cm">  *  FEC cases, frame_size &lt;b&gt;must&lt;/b&gt; be a multiple of 2.5 ms.</span>
+<a name="gbab-458"></a><span class="cm">  * @param [in] decode_fec &lt;tt&gt;int&lt;/tt&gt;: Flag (0 or 1) to request that any in-band forward error correction data be</span>
+<a name="gbab-459"></a><span class="cm">  *  decoded. If no such data is available, the frame is decoded as if it were lost.</span>
+<a name="gbab-460"></a><span class="cm">  * @returns Number of decoded samples or @ref opus_errorcodes</span>
+<a name="gbab-461"></a><span class="cm">  */</span>
+<a name="gbab-462"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_decode</span><span class="p">(</span>
+<a name="gbab-463"></a>    <span class="n">OpusDecoder</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span>
+<a name="gbab-464"></a>    <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span>
+<a name="gbab-465"></a>    <span class="n">opus_int32</span> <span class="n">len</span><span class="p">,</span>
+<a name="gbab-466"></a>    <span class="n">opus_int16</span> <span class="o">*</span><span class="n">pcm</span><span class="p">,</span>
+<a name="gbab-467"></a>    <span class="kt">int</span> <span class="n">frame_size</span><span class="p">,</span>
+<a name="gbab-468"></a>    <span class="kt">int</span> <span class="n">decode_fec</span>
+<a name="gbab-469"></a><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<a name="gbab-470"></a>
+<a name="gbab-471"></a><span class="cm">/** Decode an Opus packet with floating point output.</span>
+<a name="gbab-472"></a><span class="cm">  * @param [in] st &lt;tt&gt;OpusDecoder*&lt;/tt&gt;: Decoder state</span>
+<a name="gbab-473"></a><span class="cm">  * @param [in] data &lt;tt&gt;char*&lt;/tt&gt;: Input payload. Use a NULL pointer to indicate packet loss</span>
+<a name="gbab-474"></a><span class="cm">  * @param [in] len &lt;tt&gt;opus_int32&lt;/tt&gt;: Number of bytes in payload</span>
+<a name="gbab-475"></a><span class="cm">  * @param [out] pcm &lt;tt&gt;float*&lt;/tt&gt;: Output signal (interleaved if 2 channels). length</span>
+<a name="gbab-476"></a><span class="cm">  *  is frame_size*channels*sizeof(float)</span>
+<a name="gbab-477"></a><span class="cm">  * @param [in] frame_size Number of samples per channel of available space in \a pcm.</span>
+<a name="gbab-478"></a><span class="cm">  *  If this is less than the maximum packet duration (120ms; 5760 for 48kHz), this function will</span>
+<a name="gbab-479"></a><span class="cm">  *  not be capable of decoding some packets. In the case of PLC (data==NULL) or FEC (decode_fec=1),</span>
+<a name="gbab-480"></a><span class="cm">  *  then frame_size needs to be exactly the duration of audio that is missing, otherwise the</span>
+<a name="gbab-481"></a><span class="cm">  *  decoder will not be in the optimal state to decode the next incoming packet. For the PLC and</span>
+<a name="gbab-482"></a><span class="cm">  *  FEC cases, frame_size &lt;b&gt;must&lt;/b&gt; be a multiple of 2.5 ms.</span>
+<a name="gbab-483"></a><span class="cm">  * @param [in] decode_fec &lt;tt&gt;int&lt;/tt&gt;: Flag (0 or 1) to request that any in-band forward error correction data be</span>
+<a name="gbab-484"></a><span class="cm">  *  decoded. If no such data is available the frame is decoded as if it were lost.</span>
+<a name="gbab-485"></a><span class="cm">  * @returns Number of decoded samples or @ref opus_errorcodes</span>
+<a name="gbab-486"></a><span class="cm">  */</span>
+<a name="gbab-487"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_decode_float</span><span class="p">(</span>
+<a name="gbab-488"></a>    <span class="n">OpusDecoder</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span>
+<a name="gbab-489"></a>    <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span>
+<a name="gbab-490"></a>    <span class="n">opus_int32</span> <span class="n">len</span><span class="p">,</span>
+<a name="gbab-491"></a>    <span class="kt">float</span> <span class="o">*</span><span class="n">pcm</span><span class="p">,</span>
+<a name="gbab-492"></a>    <span class="kt">int</span> <span class="n">frame_size</span><span class="p">,</span>
+<a name="gbab-493"></a>    <span class="kt">int</span> <span class="n">decode_fec</span>
+<a name="gbab-494"></a><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<a name="gbab-495"></a>
+<a name="gbab-496"></a><span class="cm">/** Perform a CTL function on an Opus decoder.</span>
+<a name="gbab-497"></a><span class="cm">  *</span>
+<a name="gbab-498"></a><span class="cm">  * Generally the request and subsequent arguments are generated</span>
+<a name="gbab-499"></a><span class="cm">  * by a convenience macro.</span>
+<a name="gbab-500"></a><span class="cm">  * @param st &lt;tt&gt;OpusDecoder*&lt;/tt&gt;: Decoder state.</span>
+<a name="gbab-501"></a><span class="cm">  * @param request This and all remaining parameters should be replaced by one</span>
+<a name="gbab-502"></a><span class="cm">  *                of the convenience macros in @ref opus_genericctls or</span>
+<a name="gbab-503"></a><span class="cm">  *                @ref opus_decoderctls.</span>
+<a name="gbab-504"></a><span class="cm">  * @see opus_genericctls</span>
+<a name="gbab-505"></a><span class="cm">  * @see opus_decoderctls</span>
+<a name="gbab-506"></a><span class="cm">  */</span>
+<a name="gbab-507"></a><span class="n">OPUS_EXPORT</span> <span class="kt">int</span> <span class="nf">opus_decoder_ctl</span><span class="p">(</span><span class="n">OpusDecoder</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> <span class="kt">int</span> <span class="n">request</span><span class="p">,</span> <span class="p">...)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-508"></a>
+<a name="gbab-509"></a><span class="cm">/** Frees an &lt;code&gt;OpusDecoder&lt;/code&gt; allocated by opus_decoder_create().</span>
+<a name="gbab-510"></a><span class="cm">  * @param[in] st &lt;tt&gt;OpusDecoder*&lt;/tt&gt;: State to be freed.</span>
+<a name="gbab-511"></a><span class="cm">  */</span>
+<a name="gbab-512"></a><span class="n">OPUS_EXPORT</span> <span class="kt">void</span> <span class="nf">opus_decoder_destroy</span><span class="p">(</span><span class="n">OpusDecoder</span> <span class="o">*</span><span class="n">st</span><span class="p">);</span>
+<a name="gbab-513"></a>
+<a name="gbab-514"></a><span class="cm">/** Parse an opus packet into one or more frames.</span>
+<a name="gbab-515"></a><span class="cm">  * Opus_decode will perform this operation internally so most applications do</span>
+<a name="gbab-516"></a><span class="cm">  * not need to use this function.</span>
+<a name="gbab-517"></a><span class="cm">  * This function does not copy the frames, the returned pointers are pointers into</span>
+<a name="gbab-518"></a><span class="cm">  * the input packet.</span>
+<a name="gbab-519"></a><span class="cm">  * @param [in] data &lt;tt&gt;char*&lt;/tt&gt;: Opus packet to be parsed</span>
+<a name="gbab-520"></a><span class="cm">  * @param [in] len &lt;tt&gt;opus_int32&lt;/tt&gt;: size of data</span>
+<a name="gbab-521"></a><span class="cm">  * @param [out] out_toc &lt;tt&gt;char*&lt;/tt&gt;: TOC pointer</span>
+<a name="gbab-522"></a><span class="cm">  * @param [out] frames &lt;tt&gt;char*[48]&lt;/tt&gt; encapsulated frames</span>
+<a name="gbab-523"></a><span class="cm">  * @param [out] size &lt;tt&gt;opus_int16[48]&lt;/tt&gt; sizes of the encapsulated frames</span>
+<a name="gbab-524"></a><span class="cm">  * @param [out] payload_offset &lt;tt&gt;int*&lt;/tt&gt;: returns the position of the payload within the packet (in bytes)</span>
+<a name="gbab-525"></a><span class="cm">  * @returns number of frames</span>
+<a name="gbab-526"></a><span class="cm">  */</span>
+<a name="gbab-527"></a><span class="n">OPUS_EXPORT</span> <span class="kt">int</span> <span class="nf">opus_packet_parse</span><span class="p">(</span>
+<a name="gbab-528"></a>   <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span>
+<a name="gbab-529"></a>   <span class="n">opus_int32</span> <span class="n">len</span><span class="p">,</span>
+<a name="gbab-530"></a>   <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">out_toc</span><span class="p">,</span>
+<a name="gbab-531"></a>   <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">frames</span><span class="p">[</span><span class="mi">48</span><span class="p">],</span>
+<a name="gbab-532"></a>   <span class="n">opus_int16</span> <span class="n">size</span><span class="p">[</span><span class="mi">48</span><span class="p">],</span>
+<a name="gbab-533"></a>   <span class="kt">int</span> <span class="o">*</span><span class="n">payload_offset</span>
+<a name="gbab-534"></a><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<a name="gbab-535"></a>
+<a name="gbab-536"></a><span class="cm">/** Gets the bandwidth of an Opus packet.</span>
+<a name="gbab-537"></a><span class="cm">  * @param [in] data &lt;tt&gt;char*&lt;/tt&gt;: Opus packet</span>
+<a name="gbab-538"></a><span class="cm">  * @retval OPUS_BANDWIDTH_NARROWBAND Narrowband (4kHz bandpass)</span>
+<a name="gbab-539"></a><span class="cm">  * @retval OPUS_BANDWIDTH_MEDIUMBAND Mediumband (6kHz bandpass)</span>
+<a name="gbab-540"></a><span class="cm">  * @retval OPUS_BANDWIDTH_WIDEBAND Wideband (8kHz bandpass)</span>
+<a name="gbab-541"></a><span class="cm">  * @retval OPUS_BANDWIDTH_SUPERWIDEBAND Superwideband (12kHz bandpass)</span>
+<a name="gbab-542"></a><span class="cm">  * @retval OPUS_BANDWIDTH_FULLBAND Fullband (20kHz bandpass)</span>
+<a name="gbab-543"></a><span class="cm">  * @retval OPUS_INVALID_PACKET The compressed data passed is corrupted or of an unsupported type</span>
+<a name="gbab-544"></a><span class="cm">  */</span>
+<a name="gbab-545"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_packet_get_bandwidth</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-546"></a>
+<a name="gbab-547"></a><span class="cm">/** Gets the number of samples per frame from an Opus packet.</span>
+<a name="gbab-548"></a><span class="cm">  * @param [in] data &lt;tt&gt;char*&lt;/tt&gt;: Opus packet.</span>
+<a name="gbab-549"></a><span class="cm">  *                                  This must contain at least one byte of</span>
+<a name="gbab-550"></a><span class="cm">  *                                  data.</span>
+<a name="gbab-551"></a><span class="cm">  * @param [in] Fs &lt;tt&gt;opus_int32&lt;/tt&gt;: Sampling rate in Hz.</span>
+<a name="gbab-552"></a><span class="cm">  *                                     This must be a multiple of 400, or</span>
+<a name="gbab-553"></a><span class="cm">  *                                     inaccurate results will be returned.</span>
+<a name="gbab-554"></a><span class="cm">  * @returns Number of samples per frame.</span>
+<a name="gbab-555"></a><span class="cm">  */</span>
+<a name="gbab-556"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_packet_get_samples_per_frame</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">Fs</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-557"></a>
+<a name="gbab-558"></a><span class="cm">/** Gets the number of channels from an Opus packet.</span>
+<a name="gbab-559"></a><span class="cm">  * @param [in] data &lt;tt&gt;char*&lt;/tt&gt;: Opus packet</span>
+<a name="gbab-560"></a><span class="cm">  * @returns Number of channels</span>
+<a name="gbab-561"></a><span class="cm">  * @retval OPUS_INVALID_PACKET The compressed data passed is corrupted or of an unsupported type</span>
+<a name="gbab-562"></a><span class="cm">  */</span>
+<a name="gbab-563"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_packet_get_nb_channels</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-564"></a>
+<a name="gbab-565"></a><span class="cm">/** Gets the number of frames in an Opus packet.</span>
+<a name="gbab-566"></a><span class="cm">  * @param [in] packet &lt;tt&gt;char*&lt;/tt&gt;: Opus packet</span>
+<a name="gbab-567"></a><span class="cm">  * @param [in] len &lt;tt&gt;opus_int32&lt;/tt&gt;: Length of packet</span>
+<a name="gbab-568"></a><span class="cm">  * @returns Number of frames</span>
+<a name="gbab-569"></a><span class="cm">  * @retval OPUS_BAD_ARG Insufficient data was passed to the function</span>
+<a name="gbab-570"></a><span class="cm">  * @retval OPUS_INVALID_PACKET The compressed data passed is corrupted or of an unsupported type</span>
+<a name="gbab-571"></a><span class="cm">  */</span>
+<a name="gbab-572"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_packet_get_nb_frames</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">packet</span><span class="p">[],</span> <span class="n">opus_int32</span> <span class="n">len</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-573"></a>
+<a name="gbab-574"></a><span class="cm">/** Gets the number of samples of an Opus packet.</span>
+<a name="gbab-575"></a><span class="cm">  * @param [in] packet &lt;tt&gt;char*&lt;/tt&gt;: Opus packet</span>
+<a name="gbab-576"></a><span class="cm">  * @param [in] len &lt;tt&gt;opus_int32&lt;/tt&gt;: Length of packet</span>
+<a name="gbab-577"></a><span class="cm">  * @param [in] Fs &lt;tt&gt;opus_int32&lt;/tt&gt;: Sampling rate in Hz.</span>
+<a name="gbab-578"></a><span class="cm">  *                                     This must be a multiple of 400, or</span>
+<a name="gbab-579"></a><span class="cm">  *                                     inaccurate results will be returned.</span>
+<a name="gbab-580"></a><span class="cm">  * @returns Number of samples</span>
+<a name="gbab-581"></a><span class="cm">  * @retval OPUS_BAD_ARG Insufficient data was passed to the function</span>
+<a name="gbab-582"></a><span class="cm">  * @retval OPUS_INVALID_PACKET The compressed data passed is corrupted or of an unsupported type</span>
+<a name="gbab-583"></a><span class="cm">  */</span>
+<a name="gbab-584"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_packet_get_nb_samples</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">packet</span><span class="p">[],</span> <span class="n">opus_int32</span> <span class="n">len</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">Fs</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-585"></a>
+<a name="gbab-586"></a><span class="cm">/** Gets the number of samples of an Opus packet.</span>
+<a name="gbab-587"></a><span class="cm">  * @param [in] dec &lt;tt&gt;OpusDecoder*&lt;/tt&gt;: Decoder state</span>
+<a name="gbab-588"></a><span class="cm">  * @param [in] packet &lt;tt&gt;char*&lt;/tt&gt;: Opus packet</span>
+<a name="gbab-589"></a><span class="cm">  * @param [in] len &lt;tt&gt;opus_int32&lt;/tt&gt;: Length of packet</span>
+<a name="gbab-590"></a><span class="cm">  * @returns Number of samples</span>
+<a name="gbab-591"></a><span class="cm">  * @retval OPUS_BAD_ARG Insufficient data was passed to the function</span>
+<a name="gbab-592"></a><span class="cm">  * @retval OPUS_INVALID_PACKET The compressed data passed is corrupted or of an unsupported type</span>
+<a name="gbab-593"></a><span class="cm">  */</span>
+<a name="gbab-594"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_decoder_get_nb_samples</span><span class="p">(</span><span class="k">const</span> <span class="n">OpusDecoder</span> <span class="o">*</span><span class="n">dec</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">packet</span><span class="p">[],</span> <span class="n">opus_int32</span> <span class="n">len</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<a name="gbab-595"></a>
+<a name="gbab-596"></a><span class="cm">/** Applies soft-clipping to bring a float signal within the [-1,1] range. If</span>
+<a name="gbab-597"></a><span class="cm">  * the signal is already in that range, nothing is done. If there are values</span>
+<a name="gbab-598"></a><span class="cm">  * outside of [-1,1], then the signal is clipped as smoothly as possible to</span>
+<a name="gbab-599"></a><span class="cm">  * both fit in the range and avoid creating excessive distortion in the</span>
+<a name="gbab-600"></a><span class="cm">  * process.</span>
+<a name="gbab-601"></a><span class="cm">  * @param [in,out] pcm &lt;tt&gt;float*&lt;/tt&gt;: Input PCM and modified PCM</span>
+<a name="gbab-602"></a><span class="cm">  * @param [in] frame_size &lt;tt&gt;int&lt;/tt&gt; Number of samples per channel to process</span>
+<a name="gbab-603"></a><span class="cm">  * @param [in] channels &lt;tt&gt;int&lt;/tt&gt;: Number of channels</span>
+<a name="gbab-604"></a><span class="cm">  * @param [in,out] softclip_mem &lt;tt&gt;float*&lt;/tt&gt;: State memory for the soft clipping process (one float per channel, initialized to zero)</span>
+<a name="gbab-605"></a><span class="cm">  */</span>
+<a name="gbab-606"></a><span class="n">OPUS_EXPORT</span> <span class="kt">void</span> <span class="nf">opus_pcm_soft_clip</span><span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="n">pcm</span><span class="p">,</span> <span class="kt">int</span> <span class="n">frame_size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">channels</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">softclip_mem</span><span class="p">);</span>
+<a name="gbab-607"></a>
+<a name="gbab-608"></a>
+<a name="gbab-609"></a><span class="cm">/**@}*/</span>
+<a name="gbab-610"></a>
+<a name="gbab-611"></a><span class="cm">/** @defgroup opus_repacketizer Repacketizer</span>
+<a name="gbab-612"></a><span class="cm">  * @{</span>
+<a name="gbab-613"></a><span class="cm">  *</span>
+<a name="gbab-614"></a><span class="cm">  * The repacketizer can be used to merge multiple Opus packets into a single</span>
+<a name="gbab-615"></a><span class="cm">  * packet or alternatively to split Opus packets that have previously been</span>
+<a name="gbab-616"></a><span class="cm">  * merged. Splitting valid Opus packets is always guaranteed to succeed,</span>
+<a name="gbab-617"></a><span class="cm">  * whereas merging valid packets only succeeds if all frames have the same</span>
+<a name="gbab-618"></a><span class="cm">  * mode, bandwidth, and frame size, and when the total duration of the merged</span>
+<a name="gbab-619"></a><span class="cm">  * packet is no more than 120 ms. The 120 ms limit comes from the</span>
+<a name="gbab-620"></a><span class="cm">  * specification and limits decoder memory requirements at a point where</span>
+<a name="gbab-621"></a><span class="cm">  * framing overhead becomes negligible.</span>
+<a name="gbab-622"></a><span class="cm">  *</span>
+<a name="gbab-623"></a><span class="cm">  * The repacketizer currently only operates on elementary Opus</span>
+<a name="gbab-624"></a><span class="cm">  * streams. It will not manipualte multistream packets successfully, except in</span>
+<a name="gbab-625"></a><span class="cm">  * the degenerate case where they consist of data from a single stream.</span>
+<a name="gbab-626"></a><span class="cm">  *</span>
+<a name="gbab-627"></a><span class="cm">  * The repacketizing process starts with creating a repacketizer state, either</span>
+<a name="gbab-628"></a><span class="cm">  * by calling opus_repacketizer_create() or by allocating the memory yourself,</span>
+<a name="gbab-629"></a><span class="cm">  * e.g.,</span>
+<a name="gbab-630"></a><span class="cm">  * @code</span>
+<a name="gbab-631"></a><span class="cm">  * OpusRepacketizer *rp;</span>
+<a name="gbab-632"></a><span class="cm">  * rp = (OpusRepacketizer*)malloc(opus_repacketizer_get_size());</span>
+<a name="gbab-633"></a><span class="cm">  * if (rp != NULL)</span>
+<a name="gbab-634"></a><span class="cm">  *     opus_repacketizer_init(rp);</span>
+<a name="gbab-635"></a><span class="cm">  * @endcode</span>
+<a name="gbab-636"></a><span class="cm">  *</span>
+<a name="gbab-637"></a><span class="cm">  * Then the application should submit packets with opus_repacketizer_cat(),</span>
+<a name="gbab-638"></a><span class="cm">  * extract new packets with opus_repacketizer_out() or</span>
+<a name="gbab-639"></a><span class="cm">  * opus_repacketizer_out_range(), and then reset the state for the next set of</span>
+<a name="gbab-640"></a><span class="cm">  * input packets via opus_repacketizer_init().</span>
+<a name="gbab-641"></a><span class="cm">  *</span>
+<a name="gbab-642"></a><span class="cm">  * For example, to split a sequence of packets into individual frames:</span>
+<a name="gbab-643"></a><span class="cm">  * @code</span>
+<a name="gbab-644"></a><span class="cm">  * unsigned char *data;</span>
+<a name="gbab-645"></a><span class="cm">  * int len;</span>
+<a name="gbab-646"></a><span class="cm">  * while (get_next_packet(&amp;data, &amp;len))</span>
+<a name="gbab-647"></a><span class="cm">  * {</span>
+<a name="gbab-648"></a><span class="cm">  *   unsigned char out[1276];</span>
+<a name="gbab-649"></a><span class="cm">  *   opus_int32 out_len;</span>
+<a name="gbab-650"></a><span class="cm">  *   int nb_frames;</span>
+<a name="gbab-651"></a><span class="cm">  *   int err;</span>
+<a name="gbab-652"></a><span class="cm">  *   int i;</span>
+<a name="gbab-653"></a><span class="cm">  *   err = opus_repacketizer_cat(rp, data, len);</span>
+<a name="gbab-654"></a><span class="cm">  *   if (err != OPUS_OK)</span>
+<a name="gbab-655"></a><span class="cm">  *   {</span>
+<a name="gbab-656"></a><span class="cm">  *     release_packet(data);</span>
+<a name="gbab-657"></a><span class="cm">  *     return err;</span>
+<a name="gbab-658"></a><span class="cm">  *   }</span>
+<a name="gbab-659"></a><span class="cm">  *   nb_frames = opus_repacketizer_get_nb_frames(rp);</span>
+<a name="gbab-660"></a><span class="cm">  *   for (i = 0; i &lt; nb_frames; i++)</span>
+<a name="gbab-661"></a><span class="cm">  *   {</span>
+<a name="gbab-662"></a><span class="cm">  *     out_len = opus_repacketizer_out_range(rp, i, i+1, out, sizeof(out));</span>
+<a name="gbab-663"></a><span class="cm">  *     if (out_len &lt; 0)</span>
+<a name="gbab-664"></a><span class="cm">  *     {</span>
+<a name="gbab-665"></a><span class="cm">  *        release_packet(data);</span>
+<a name="gbab-666"></a><span class="cm">  *        return (int)out_len;</span>
+<a name="gbab-667"></a><span class="cm">  *     }</span>
+<a name="gbab-668"></a><span class="cm">  *     output_next_packet(out, out_len);</span>
+<a name="gbab-669"></a><span class="cm">  *   }</span>
+<a name="gbab-670"></a><span class="cm">  *   opus_repacketizer_init(rp);</span>
+<a name="gbab-671"></a><span class="cm">  *   release_packet(data);</span>
+<a name="gbab-672"></a><span class="cm">  * }</span>
+<a name="gbab-673"></a><span class="cm">  * @endcode</span>
+<a name="gbab-674"></a><span class="cm">  *</span>
+<a name="gbab-675"></a><span class="cm">  * Alternatively, to combine a sequence of frames into packets that each</span>
+<a name="gbab-676"></a><span class="cm">  * contain up to &lt;code&gt;TARGET_DURATION_MS&lt;/code&gt; milliseconds of data:</span>
+<a name="gbab-677"></a><span class="cm">  * @code</span>
+<a name="gbab-678"></a><span class="cm">  * // The maximum number of packets with duration TARGET_DURATION_MS occurs</span>
+<a name="gbab-679"></a><span class="cm">  * // when the frame size is 2.5 ms, for a total of (TARGET_DURATION_MS*2/5)</span>
+<a name="gbab-680"></a><span class="cm">  * // packets.</span>
+<a name="gbab-681"></a><span class="cm">  * unsigned char *data[(TARGET_DURATION_MS*2/5)+1];</span>
+<a name="gbab-682"></a><span class="cm">  * opus_int32 len[(TARGET_DURATION_MS*2/5)+1];</span>
+<a name="gbab-683"></a><span class="cm">  * int nb_packets;</span>
+<a name="gbab-684"></a><span class="cm">  * unsigned char out[1277*(TARGET_DURATION_MS*2/2)];</span>
+<a name="gbab-685"></a><span class="cm">  * opus_int32 out_len;</span>
+<a name="gbab-686"></a><span class="cm">  * int prev_toc;</span>
+<a name="gbab-687"></a><span class="cm">  * nb_packets = 0;</span>
+<a name="gbab-688"></a><span class="cm">  * while (get_next_packet(data+nb_packets, len+nb_packets))</span>
+<a name="gbab-689"></a><span class="cm">  * {</span>
+<a name="gbab-690"></a><span class="cm">  *   int nb_frames;</span>
+<a name="gbab-691"></a><span class="cm">  *   int err;</span>
+<a name="gbab-692"></a><span class="cm">  *   nb_frames = opus_packet_get_nb_frames(data[nb_packets], len[nb_packets]);</span>
+<a name="gbab-693"></a><span class="cm">  *   if (nb_frames &lt; 1)</span>
+<a name="gbab-694"></a><span class="cm">  *   {</span>
+<a name="gbab-695"></a><span class="cm">  *     release_packets(data, nb_packets+1);</span>
+<a name="gbab-696"></a><span class="cm">  *     return nb_frames;</span>
+<a name="gbab-697"></a><span class="cm">  *   }</span>
+<a name="gbab-698"></a><span class="cm">  *   nb_frames += opus_repacketizer_get_nb_frames(rp);</span>
+<a name="gbab-699"></a><span class="cm">  *   // If adding the next packet would exceed our target, or it has an</span>
+<a name="gbab-700"></a><span class="cm">  *   // incompatible TOC sequence, output the packets we already have before</span>
+<a name="gbab-701"></a><span class="cm">  *   // submitting it.</span>
+<a name="gbab-702"></a><span class="cm">  *   // N.B., The nb_packets &gt; 0 check ensures we&#39;ve submitted at least one</span>
+<a name="gbab-703"></a><span class="cm">  *   // packet since the last call to opus_repacketizer_init(). Otherwise a</span>
+<a name="gbab-704"></a><span class="cm">  *   // single packet longer than TARGET_DURATION_MS would cause us to try to</span>
+<a name="gbab-705"></a><span class="cm">  *   // output an (invalid) empty packet. It also ensures that prev_toc has</span>
+<a name="gbab-706"></a><span class="cm">  *   // been set to a valid value. Additionally, len[nb_packets] &gt; 0 is</span>
+<a name="gbab-707"></a><span class="cm">  *   // guaranteed by the call to opus_packet_get_nb_frames() above, so the</span>
+<a name="gbab-708"></a><span class="cm">  *   // reference to data[nb_packets][0] should be valid.</span>
+<a name="gbab-709"></a><span class="cm">  *   if (nb_packets &gt; 0 &amp;&amp; (</span>
+<a name="gbab-710"></a><span class="cm">  *       ((prev_toc &amp; 0xFC) != (data[nb_packets][0] &amp; 0xFC)) ||</span>
+<a name="gbab-711"></a><span class="cm">  *       opus_packet_get_samples_per_frame(data[nb_packets], 48000)*nb_frames &gt;</span>
+<a name="gbab-712"></a><span class="cm">  *       TARGET_DURATION_MS*48))</span>
+<a name="gbab-713"></a><span class="cm">  *   {</span>
+<a name="gbab-714"></a><span class="cm">  *     out_len = opus_repacketizer_out(rp, out, sizeof(out));</span>
+<a name="gbab-715"></a><span class="cm">  *     if (out_len &lt; 0)</span>
+<a name="gbab-716"></a><span class="cm">  *     {</span>
+<a name="gbab-717"></a><span class="cm">  *        release_packets(data, nb_packets+1);</span>
+<a name="gbab-718"></a><span class="cm">  *        return (int)out_len;</span>
+<a name="gbab-719"></a><span class="cm">  *     }</span>
+<a name="gbab-720"></a><span class="cm">  *     output_next_packet(out, out_len);</span>
+<a name="gbab-721"></a><span class="cm">  *     opus_repacketizer_init(rp);</span>
+<a name="gbab-722"></a><span class="cm">  *     release_packets(data, nb_packets);</span>
+<a name="gbab-723"></a><span class="cm">  *     data[0] = data[nb_packets];</span>
+<a name="gbab-724"></a><span class="cm">  *     len[0] = len[nb_packets];</span>
+<a name="gbab-725"></a><span class="cm">  *     nb_packets = 0;</span>
+<a name="gbab-726"></a><span class="cm">  *   }</span>
+<a name="gbab-727"></a><span class="cm">  *   err = opus_repacketizer_cat(rp, data[nb_packets], len[nb_packets]);</span>
+<a name="gbab-728"></a><span class="cm">  *   if (err != OPUS_OK)</span>
+<a name="gbab-729"></a><span class="cm">  *   {</span>
+<a name="gbab-730"></a><span class="cm">  *     release_packets(data, nb_packets+1);</span>
+<a name="gbab-731"></a><span class="cm">  *     return err;</span>
+<a name="gbab-732"></a><span class="cm">  *   }</span>
+<a name="gbab-733"></a><span class="cm">  *   prev_toc = data[nb_packets][0];</span>
+<a name="gbab-734"></a><span class="cm">  *   nb_packets++;</span>
+<a name="gbab-735"></a><span class="cm">  * }</span>
+<a name="gbab-736"></a><span class="cm">  * // Output the final, partial packet.</span>
+<a name="gbab-737"></a><span class="cm">  * if (nb_packets &gt; 0)</span>
+<a name="gbab-738"></a><span class="cm">  * {</span>
+<a name="gbab-739"></a><span class="cm">  *   out_len = opus_repacketizer_out(rp, out, sizeof(out));</span>
+<a name="gbab-740"></a><span class="cm">  *   release_packets(data, nb_packets);</span>
+<a name="gbab-741"></a><span class="cm">  *   if (out_len &lt; 0)</span>
+<a name="gbab-742"></a><span class="cm">  *     return (int)out_len;</span>
+<a name="gbab-743"></a><span class="cm">  *   output_next_packet(out, out_len);</span>
+<a name="gbab-744"></a><span class="cm">  * }</span>
+<a name="gbab-745"></a><span class="cm">  * @endcode</span>
+<a name="gbab-746"></a><span class="cm">  *</span>
+<a name="gbab-747"></a><span class="cm">  * An alternate way of merging packets is to simply call opus_repacketizer_cat()</span>
+<a name="gbab-748"></a><span class="cm">  * unconditionally until it fails. At that point, the merged packet can be</span>
+<a name="gbab-749"></a><span class="cm">  * obtained with opus_repacketizer_out() and the input packet for which</span>
+<a name="gbab-750"></a><span class="cm">  * opus_repacketizer_cat() needs to be re-added to a newly reinitialized</span>
+<a name="gbab-751"></a><span class="cm">  * repacketizer state.</span>
+<a name="gbab-752"></a><span class="cm">  */</span>
+<a name="gbab-753"></a>
+<a name="gbab-754"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">OpusRepacketizer</span> <span class="n">OpusRepacketizer</span><span class="p">;</span>
+<a name="gbab-755"></a>
+<a name="gbab-756"></a><span class="cm">/** Gets the size of an &lt;code&gt;OpusRepacketizer&lt;/code&gt; structure.</span>
+<a name="gbab-757"></a><span class="cm">  * @returns The size in bytes.</span>
+<a name="gbab-758"></a><span class="cm">  */</span>
+<a name="gbab-759"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_repacketizer_get_size</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-760"></a>
+<a name="gbab-761"></a><span class="cm">/** (Re)initializes a previously allocated repacketizer state.</span>
+<a name="gbab-762"></a><span class="cm">  * The state must be at least the size returned by opus_repacketizer_get_size().</span>
+<a name="gbab-763"></a><span class="cm">  * This can be used for applications which use their own allocator instead of</span>
+<a name="gbab-764"></a><span class="cm">  * malloc().</span>
+<a name="gbab-765"></a><span class="cm">  * It must also be called to reset the queue of packets waiting to be</span>
+<a name="gbab-766"></a><span class="cm">  * repacketized, which is necessary if the maximum packet duration of 120 ms</span>
+<a name="gbab-767"></a><span class="cm">  * is reached or if you wish to submit packets with a different Opus</span>
+<a name="gbab-768"></a><span class="cm">  * configuration (coding mode, audio bandwidth, frame size, or channel count).</span>
+<a name="gbab-769"></a><span class="cm">  * Failure to do so will prevent a new packet from being added with</span>
+<a name="gbab-770"></a><span class="cm">  * opus_repacketizer_cat().</span>
+<a name="gbab-771"></a><span class="cm">  * @see opus_repacketizer_create</span>
+<a name="gbab-772"></a><span class="cm">  * @see opus_repacketizer_get_size</span>
+<a name="gbab-773"></a><span class="cm">  * @see opus_repacketizer_cat</span>
+<a name="gbab-774"></a><span class="cm">  * @param rp &lt;tt&gt;OpusRepacketizer*&lt;/tt&gt;: The repacketizer state to</span>
+<a name="gbab-775"></a><span class="cm">  *                                       (re)initialize.</span>
+<a name="gbab-776"></a><span class="cm">  * @returns A pointer to the same repacketizer state that was passed in.</span>
+<a name="gbab-777"></a><span class="cm">  */</span>
+<a name="gbab-778"></a><span class="n">OPUS_EXPORT</span> <span class="n">OpusRepacketizer</span> <span class="o">*</span><span class="nf">opus_repacketizer_init</span><span class="p">(</span><span class="n">OpusRepacketizer</span> <span class="o">*</span><span class="n">rp</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-779"></a>
+<a name="gbab-780"></a><span class="cm">/** Allocates memory and initializes the new repacketizer with</span>
+<a name="gbab-781"></a><span class="cm"> * opus_repacketizer_init().</span>
+<a name="gbab-782"></a><span class="cm">  */</span>
+<a name="gbab-783"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="n">OpusRepacketizer</span> <span class="o">*</span><span class="nf">opus_repacketizer_create</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-784"></a>
+<a name="gbab-785"></a><span class="cm">/** Frees an &lt;code&gt;OpusRepacketizer&lt;/code&gt; allocated by</span>
+<a name="gbab-786"></a><span class="cm">  * opus_repacketizer_create().</span>
+<a name="gbab-787"></a><span class="cm">  * @param[in] rp &lt;tt&gt;OpusRepacketizer*&lt;/tt&gt;: State to be freed.</span>
+<a name="gbab-788"></a><span class="cm">  */</span>
+<a name="gbab-789"></a><span class="n">OPUS_EXPORT</span> <span class="kt">void</span> <span class="nf">opus_repacketizer_destroy</span><span class="p">(</span><span class="n">OpusRepacketizer</span> <span class="o">*</span><span class="n">rp</span><span class="p">);</span>
+<a name="gbab-790"></a>
+<a name="gbab-791"></a><span class="cm">/** Add a packet to the current repacketizer state.</span>
+<a name="gbab-792"></a><span class="cm">  * This packet must match the configuration of any packets already submitted</span>
+<a name="gbab-793"></a><span class="cm">  * for repacketization since the last call to opus_repacketizer_init().</span>
+<a name="gbab-794"></a><span class="cm">  * This means that it must have the same coding mode, audio bandwidth, frame</span>
+<a name="gbab-795"></a><span class="cm">  * size, and channel count.</span>
+<a name="gbab-796"></a><span class="cm">  * This can be checked in advance by examining the top 6 bits of the first</span>
+<a name="gbab-797"></a><span class="cm">  * byte of the packet, and ensuring they match the top 6 bits of the first</span>
+<a name="gbab-798"></a><span class="cm">  * byte of any previously submitted packet.</span>
+<a name="gbab-799"></a><span class="cm">  * The total duration of audio in the repacketizer state also must not exceed</span>
+<a name="gbab-800"></a><span class="cm">  * 120 ms, the maximum duration of a single packet, after adding this packet.</span>
+<a name="gbab-801"></a><span class="cm">  *</span>
+<a name="gbab-802"></a><span class="cm">  * The contents of the current repacketizer state can be extracted into new</span>
+<a name="gbab-803"></a><span class="cm">  * packets using opus_repacketizer_out() or opus_repacketizer_out_range().</span>
+<a name="gbab-804"></a><span class="cm">  *</span>
+<a name="gbab-805"></a><span class="cm">  * In order to add a packet with a different configuration or to add more</span>
+<a name="gbab-806"></a><span class="cm">  * audio beyond 120 ms, you must clear the repacketizer state by calling</span>
+<a name="gbab-807"></a><span class="cm">  * opus_repacketizer_init().</span>
+<a name="gbab-808"></a><span class="cm">  * If a packet is too large to add to the current repacketizer state, no part</span>
+<a name="gbab-809"></a><span class="cm">  * of it is added, even if it contains multiple frames, some of which might</span>
+<a name="gbab-810"></a><span class="cm">  * fit.</span>
+<a name="gbab-811"></a><span class="cm">  * If you wish to be able to add parts of such packets, you should first use</span>
+<a name="gbab-812"></a><span class="cm">  * another repacketizer to split the packet into pieces and add them</span>
+<a name="gbab-813"></a><span class="cm">  * individually.</span>
+<a name="gbab-814"></a><span class="cm">  * @see opus_repacketizer_out_range</span>
+<a name="gbab-815"></a><span class="cm">  * @see opus_repacketizer_out</span>
+<a name="gbab-816"></a><span class="cm">  * @see opus_repacketizer_init</span>
+<a name="gbab-817"></a><span class="cm">  * @param rp &lt;tt&gt;OpusRepacketizer*&lt;/tt&gt;: The repacketizer state to which to</span>
+<a name="gbab-818"></a><span class="cm">  *                                       add the packet.</span>
+<a name="gbab-819"></a><span class="cm">  * @param[in] data &lt;tt&gt;const unsigned char*&lt;/tt&gt;: The packet data.</span>
+<a name="gbab-820"></a><span class="cm">  *                                                The application must ensure</span>
+<a name="gbab-821"></a><span class="cm">  *                                                this pointer remains valid</span>
+<a name="gbab-822"></a><span class="cm">  *                                                until the next call to</span>
+<a name="gbab-823"></a><span class="cm">  *                                                opus_repacketizer_init() or</span>
+<a name="gbab-824"></a><span class="cm">  *                                                opus_repacketizer_destroy().</span>
+<a name="gbab-825"></a><span class="cm">  * @param len &lt;tt&gt;opus_int32&lt;/tt&gt;: The number of bytes in the packet data.</span>
+<a name="gbab-826"></a><span class="cm">  * @returns An error code indicating whether or not the operation succeeded.</span>
+<a name="gbab-827"></a><span class="cm">  * @retval #OPUS_OK The packet&#39;s contents have been added to the repacketizer</span>
+<a name="gbab-828"></a><span class="cm">  *                  state.</span>
+<a name="gbab-829"></a><span class="cm">  * @retval #OPUS_INVALID_PACKET The packet did not have a valid TOC sequence,</span>
+<a name="gbab-830"></a><span class="cm">  *                              the packet&#39;s TOC sequence was not compatible</span>
+<a name="gbab-831"></a><span class="cm">  *                              with previously submitted packets (because</span>
+<a name="gbab-832"></a><span class="cm">  *                              the coding mode, audio bandwidth, frame size,</span>
+<a name="gbab-833"></a><span class="cm">  *                              or channel count did not match), or adding</span>
+<a name="gbab-834"></a><span class="cm">  *                              this packet would increase the total amount of</span>
+<a name="gbab-835"></a><span class="cm">  *                              audio stored in the repacketizer state to more</span>
+<a name="gbab-836"></a><span class="cm">  *                              than 120 ms.</span>
+<a name="gbab-837"></a><span class="cm">  */</span>
+<a name="gbab-838"></a><span class="n">OPUS_EXPORT</span> <span class="kt">int</span> <span class="nf">opus_repacketizer_cat</span><span class="p">(</span><span class="n">OpusRepacketizer</span> <span class="o">*</span><span class="n">rp</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">len</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<a name="gbab-839"></a>
+<a name="gbab-840"></a>
+<a name="gbab-841"></a><span class="cm">/** Construct a new packet from data previously submitted to the repacketizer</span>
+<a name="gbab-842"></a><span class="cm">  * state via opus_repacketizer_cat().</span>
+<a name="gbab-843"></a><span class="cm">  * @param rp &lt;tt&gt;OpusRepacketizer*&lt;/tt&gt;: The repacketizer state from which to</span>
+<a name="gbab-844"></a><span class="cm">  *                                       construct the new packet.</span>
+<a name="gbab-845"></a><span class="cm">  * @param begin &lt;tt&gt;int&lt;/tt&gt;: The index of the first frame in the current</span>
+<a name="gbab-846"></a><span class="cm">  *                            repacketizer state to include in the output.</span>
+<a name="gbab-847"></a><span class="cm">  * @param end &lt;tt&gt;int&lt;/tt&gt;: One past the index of the last frame in the</span>
+<a name="gbab-848"></a><span class="cm">  *                          current repacketizer state to include in the</span>
+<a name="gbab-849"></a><span class="cm">  *                          output.</span>
+<a name="gbab-850"></a><span class="cm">  * @param[out] data &lt;tt&gt;const unsigned char*&lt;/tt&gt;: The buffer in which to</span>
+<a name="gbab-851"></a><span class="cm">  *                                                 store the output packet.</span>
+<a name="gbab-852"></a><span class="cm">  * @param maxlen &lt;tt&gt;opus_int32&lt;/tt&gt;: The maximum number of bytes to store in</span>
+<a name="gbab-853"></a><span class="cm">  *                                    the output buffer. In order to guarantee</span>
+<a name="gbab-854"></a><span class="cm">  *                                    success, this should be at least</span>
+<a name="gbab-855"></a><span class="cm">  *                                    &lt;code&gt;1276&lt;/code&gt; for a single frame,</span>
+<a name="gbab-856"></a><span class="cm">  *                                    or for multiple frames,</span>
+<a name="gbab-857"></a><span class="cm">  *                                    &lt;code&gt;1277*(end-begin)&lt;/code&gt;.</span>
+<a name="gbab-858"></a><span class="cm">  *                                    However, &lt;code&gt;1*(end-begin)&lt;/code&gt; plus</span>
+<a name="gbab-859"></a><span class="cm">  *                                    the size of all packet data submitted to</span>
+<a name="gbab-860"></a><span class="cm">  *                                    the repacketizer since the last call to</span>
+<a name="gbab-861"></a><span class="cm">  *                                    opus_repacketizer_init() or</span>
+<a name="gbab-862"></a><span class="cm">  *                                    opus_repacketizer_create() is also</span>
+<a name="gbab-863"></a><span class="cm">  *                                    sufficient, and possibly much smaller.</span>
+<a name="gbab-864"></a><span class="cm">  * @returns The total size of the output packet on success, or an error code</span>
+<a name="gbab-865"></a><span class="cm">  *          on failure.</span>
+<a name="gbab-866"></a><span class="cm">  * @retval #OPUS_BAD_ARG &lt;code&gt;[begin,end)&lt;/code&gt; was an invalid range of</span>
+<a name="gbab-867"></a><span class="cm">  *                       frames (begin &lt; 0, begin &gt;= end, or end &gt;</span>
+<a name="gbab-868"></a><span class="cm">  *                       opus_repacketizer_get_nb_frames()).</span>
+<a name="gbab-869"></a><span class="cm">  * @retval #OPUS_BUFFER_TOO_SMALL \a maxlen was insufficient to contain the</span>
+<a name="gbab-870"></a><span class="cm">  *                                complete output packet.</span>
+<a name="gbab-871"></a><span class="cm">  */</span>
+<a name="gbab-872"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="n">opus_int32</span> <span class="nf">opus_repacketizer_out_range</span><span class="p">(</span><span class="n">OpusRepacketizer</span> <span class="o">*</span><span class="n">rp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">begin</span><span class="p">,</span> <span class="kt">int</span> <span class="n">end</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">maxlen</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<a name="gbab-873"></a>
+<a name="gbab-874"></a><span class="cm">/** Return the total number of frames contained in packet data submitted to</span>
+<a name="gbab-875"></a><span class="cm">  * the repacketizer state so far via opus_repacketizer_cat() since the last</span>
+<a name="gbab-876"></a><span class="cm">  * call to opus_repacketizer_init() or opus_repacketizer_create().</span>
+<a name="gbab-877"></a><span class="cm">  * This defines the valid range of packets that can be extracted with</span>
+<a name="gbab-878"></a><span class="cm">  * opus_repacketizer_out_range() or opus_repacketizer_out().</span>
+<a name="gbab-879"></a><span class="cm">  * @param rp &lt;tt&gt;OpusRepacketizer*&lt;/tt&gt;: The repacketizer state containing the</span>
+<a name="gbab-880"></a><span class="cm">  *                                       frames.</span>
+<a name="gbab-881"></a><span class="cm">  * @returns The total number of frames contained in the packet data submitted</span>
+<a name="gbab-882"></a><span class="cm">  *          to the repacketizer state.</span>
+<a name="gbab-883"></a><span class="cm">  */</span>
+<a name="gbab-884"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="kt">int</span> <span class="nf">opus_repacketizer_get_nb_frames</span><span class="p">(</span><span class="n">OpusRepacketizer</span> <span class="o">*</span><span class="n">rp</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-885"></a>
+<a name="gbab-886"></a><span class="cm">/** Construct a new packet from data previously submitted to the repacketizer</span>
+<a name="gbab-887"></a><span class="cm">  * state via opus_repacketizer_cat().</span>
+<a name="gbab-888"></a><span class="cm">  * This is a convenience routine that returns all the data submitted so far</span>
+<a name="gbab-889"></a><span class="cm">  * in a single packet.</span>
+<a name="gbab-890"></a><span class="cm">  * It is equivalent to calling</span>
+<a name="gbab-891"></a><span class="cm">  * @code</span>
+<a name="gbab-892"></a><span class="cm">  * opus_repacketizer_out_range(rp, 0, opus_repacketizer_get_nb_frames(rp),</span>
+<a name="gbab-893"></a><span class="cm">  *                             data, maxlen)</span>
+<a name="gbab-894"></a><span class="cm">  * @endcode</span>
+<a name="gbab-895"></a><span class="cm">  * @param rp &lt;tt&gt;OpusRepacketizer*&lt;/tt&gt;: The repacketizer state from which to</span>
+<a name="gbab-896"></a><span class="cm">  *                                       construct the new packet.</span>
+<a name="gbab-897"></a><span class="cm">  * @param[out] data &lt;tt&gt;const unsigned char*&lt;/tt&gt;: The buffer in which to</span>
+<a name="gbab-898"></a><span class="cm">  *                                                 store the output packet.</span>
+<a name="gbab-899"></a><span class="cm">  * @param maxlen &lt;tt&gt;opus_int32&lt;/tt&gt;: The maximum number of bytes to store in</span>
+<a name="gbab-900"></a><span class="cm">  *                                    the output buffer. In order to guarantee</span>
+<a name="gbab-901"></a><span class="cm">  *                                    success, this should be at least</span>
+<a name="gbab-902"></a><span class="cm">  *                                    &lt;code&gt;1277*opus_repacketizer_get_nb_frames(rp)&lt;/code&gt;.</span>
+<a name="gbab-903"></a><span class="cm">  *                                    However,</span>
+<a name="gbab-904"></a><span class="cm">  *                                    &lt;code&gt;1*opus_repacketizer_get_nb_frames(rp)&lt;/code&gt;</span>
+<a name="gbab-905"></a><span class="cm">  *                                    plus the size of all packet data</span>
+<a name="gbab-906"></a><span class="cm">  *                                    submitted to the repacketizer since the</span>
+<a name="gbab-907"></a><span class="cm">  *                                    last call to opus_repacketizer_init() or</span>
+<a name="gbab-908"></a><span class="cm">  *                                    opus_repacketizer_create() is also</span>
+<a name="gbab-909"></a><span class="cm">  *                                    sufficient, and possibly much smaller.</span>
+<a name="gbab-910"></a><span class="cm">  * @returns The total size of the output packet on success, or an error code</span>
+<a name="gbab-911"></a><span class="cm">  *          on failure.</span>
+<a name="gbab-912"></a><span class="cm">  * @retval #OPUS_BUFFER_TOO_SMALL \a maxlen was insufficient to contain the</span>
+<a name="gbab-913"></a><span class="cm">  *                                complete output packet.</span>
+<a name="gbab-914"></a><span class="cm">  */</span>
+<a name="gbab-915"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="n">opus_int32</span> <span class="nf">opus_repacketizer_out</span><span class="p">(</span><span class="n">OpusRepacketizer</span> <span class="o">*</span><span class="n">rp</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">maxlen</span><span class="p">)</span> <span class="n">OPUS_ARG_NONNULL</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-916"></a>
+<a name="gbab-917"></a><span class="cm">/** Pads a given Opus packet to a larger size (possibly changing the TOC sequence).</span>
+<a name="gbab-918"></a><span class="cm">  * @param[in,out] data &lt;tt&gt;const unsigned char*&lt;/tt&gt;: The buffer containing the</span>
+<a name="gbab-919"></a><span class="cm">  *                                                   packet to pad.</span>
+<a name="gbab-920"></a><span class="cm">  * @param len &lt;tt&gt;opus_int32&lt;/tt&gt;: The size of the packet.</span>
+<a name="gbab-921"></a><span class="cm">  *                                 This must be at least 1.</span>
+<a name="gbab-922"></a><span class="cm">  * @param new_len &lt;tt&gt;opus_int32&lt;/tt&gt;: The desired size of the packet after padding.</span>
+<a name="gbab-923"></a><span class="cm">  *                                 This must be at least as large as len.</span>
+<a name="gbab-924"></a><span class="cm">  * @returns an error code</span>
+<a name="gbab-925"></a><span class="cm">  * @retval #OPUS_OK \a on success.</span>
+<a name="gbab-926"></a><span class="cm">  * @retval #OPUS_BAD_ARG \a len was less than 1 or new_len was less than len.</span>
+<a name="gbab-927"></a><span class="cm">  * @retval #OPUS_INVALID_PACKET \a data did not contain a valid Opus packet.</span>
+<a name="gbab-928"></a><span class="cm">  */</span>
+<a name="gbab-929"></a><span class="n">OPUS_EXPORT</span> <span class="kt">int</span> <span class="nf">opus_packet_pad</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">len</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">new_len</span><span class="p">);</span>
+<a name="gbab-930"></a>
+<a name="gbab-931"></a><span class="cm">/** Remove all padding from a given Opus packet and rewrite the TOC sequence to</span>
+<a name="gbab-932"></a><span class="cm">  * minimize space usage.</span>
+<a name="gbab-933"></a><span class="cm">  * @param[in,out] data &lt;tt&gt;const unsigned char*&lt;/tt&gt;: The buffer containing the</span>
+<a name="gbab-934"></a><span class="cm">  *                                                   packet to strip.</span>
+<a name="gbab-935"></a><span class="cm">  * @param len &lt;tt&gt;opus_int32&lt;/tt&gt;: The size of the packet.</span>
+<a name="gbab-936"></a><span class="cm">  *                                 This must be at least 1.</span>
+<a name="gbab-937"></a><span class="cm">  * @returns The new size of the output packet on success, or an error code</span>
+<a name="gbab-938"></a><span class="cm">  *          on failure.</span>
+<a name="gbab-939"></a><span class="cm">  * @retval #OPUS_BAD_ARG \a len was less than 1.</span>
+<a name="gbab-940"></a><span class="cm">  * @retval #OPUS_INVALID_PACKET \a data did not contain a valid Opus packet.</span>
+<a name="gbab-941"></a><span class="cm">  */</span>
+<a name="gbab-942"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="n">opus_int32</span> <span class="nf">opus_packet_unpad</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">len</span><span class="p">);</span>
+<a name="gbab-943"></a>
+<a name="gbab-944"></a><span class="cm">/** Pads a given Opus multi-stream packet to a larger size (possibly changing the TOC sequence).</span>
+<a name="gbab-945"></a><span class="cm">  * @param[in,out] data &lt;tt&gt;const unsigned char*&lt;/tt&gt;: The buffer containing the</span>
+<a name="gbab-946"></a><span class="cm">  *                                                   packet to pad.</span>
+<a name="gbab-947"></a><span class="cm">  * @param len &lt;tt&gt;opus_int32&lt;/tt&gt;: The size of the packet.</span>
+<a name="gbab-948"></a><span class="cm">  *                                 This must be at least 1.</span>
+<a name="gbab-949"></a><span class="cm">  * @param new_len &lt;tt&gt;opus_int32&lt;/tt&gt;: The desired size of the packet after padding.</span>
+<a name="gbab-950"></a><span class="cm">  *                                 This must be at least 1.</span>
+<a name="gbab-951"></a><span class="cm">  * @param nb_streams &lt;tt&gt;opus_int32&lt;/tt&gt;: The number of streams (not channels) in the packet.</span>
+<a name="gbab-952"></a><span class="cm">  *                                 This must be at least as large as len.</span>
+<a name="gbab-953"></a><span class="cm">  * @returns an error code</span>
+<a name="gbab-954"></a><span class="cm">  * @retval #OPUS_OK \a on success.</span>
+<a name="gbab-955"></a><span class="cm">  * @retval #OPUS_BAD_ARG \a len was less than 1.</span>
+<a name="gbab-956"></a><span class="cm">  * @retval #OPUS_INVALID_PACKET \a data did not contain a valid Opus packet.</span>
+<a name="gbab-957"></a><span class="cm">  */</span>
+<a name="gbab-958"></a><span class="n">OPUS_EXPORT</span> <span class="kt">int</span> <span class="nf">opus_multistream_packet_pad</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">len</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">new_len</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nb_streams</span><span class="p">);</span>
+<a name="gbab-959"></a>
+<a name="gbab-960"></a><span class="cm">/** Remove all padding from a given Opus multi-stream packet and rewrite the TOC sequence to</span>
+<a name="gbab-961"></a><span class="cm">  * minimize space usage.</span>
+<a name="gbab-962"></a><span class="cm">  * @param[in,out] data &lt;tt&gt;const unsigned char*&lt;/tt&gt;: The buffer containing the</span>
+<a name="gbab-963"></a><span class="cm">  *                                                   packet to strip.</span>
+<a name="gbab-964"></a><span class="cm">  * @param len &lt;tt&gt;opus_int32&lt;/tt&gt;: The size of the packet.</span>
+<a name="gbab-965"></a><span class="cm">  *                                 This must be at least 1.</span>
+<a name="gbab-966"></a><span class="cm">  * @param nb_streams &lt;tt&gt;opus_int32&lt;/tt&gt;: The number of streams (not channels) in the packet.</span>
+<a name="gbab-967"></a><span class="cm">  *                                 This must be at least 1.</span>
+<a name="gbab-968"></a><span class="cm">  * @returns The new size of the output packet on success, or an error code</span>
+<a name="gbab-969"></a><span class="cm">  *          on failure.</span>
+<a name="gbab-970"></a><span class="cm">  * @retval #OPUS_BAD_ARG \a len was less than 1 or new_len was less than len.</span>
+<a name="gbab-971"></a><span class="cm">  * @retval #OPUS_INVALID_PACKET \a data did not contain a valid Opus packet.</span>
+<a name="gbab-972"></a><span class="cm">  */</span>
+<a name="gbab-973"></a><span class="n">OPUS_EXPORT</span> <span class="n">OPUS_WARN_UNUSED_RESULT</span> <span class="n">opus_int32</span> <span class="nf">opus_multistream_packet_unpad</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">opus_int32</span> <span class="n">len</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nb_streams</span><span class="p">);</span>
+<a name="gbab-974"></a>
+<a name="gbab-975"></a><span class="cm">/**@}*/</span>
+<a name="gbab-976"></a>
+<a name="gbab-977"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-978"></a><span class="p">}</span>
+<a name="gbab-979"></a><span class="cp">#endif</span>
+<a name="gbab-980"></a>
+<a name="gbab-981"></a><span class="cp">#endif </span><span class="cm">/* OPUS_H */</span><span class="cp"></span>
+</pre></div>
+</td></tr></table>

@@ -1,0 +1,127 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="kn">import</span> <span class="nn">os</span>
+<a name="gbab-2"></a><span class="kn">import</span> <span class="nn">sys</span>
+<a name="gbab-3"></a>
+<a name="gbab-4"></a><span class="k">def</span> <span class="nf">is_active</span><span class="p">():</span>
+<a name="gbab-5"></a>	<span class="k">return</span> <span class="bp">True</span>
+<a name="gbab-6"></a>
+<a name="gbab-7"></a><span class="k">def</span> <span class="nf">get_name</span><span class="p">():</span>
+<a name="gbab-8"></a>	<span class="k">return</span> <span class="s2">&quot;Haiku&quot;</span>
+<a name="gbab-9"></a>
+<a name="gbab-10"></a><span class="k">def</span> <span class="nf">can_build</span><span class="p">():</span>
+<a name="gbab-11"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;posix&quot;</span><span class="p">):</span>
+<a name="gbab-12"></a>		<span class="k">return</span> <span class="bp">False</span>
+<a name="gbab-13"></a>	
+<a name="gbab-14"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">):</span>
+<a name="gbab-15"></a>		<span class="k">return</span> <span class="bp">False</span>
+<a name="gbab-16"></a>	
+<a name="gbab-17"></a>	<span class="k">return</span> <span class="bp">True</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="k">def</span> <span class="nf">get_opts</span><span class="p">():</span>
+<a name="gbab-20"></a>	<span class="k">return</span> <span class="p">[</span>
+<a name="gbab-21"></a>		<span class="p">(</span><span class="s1">&#39;debug_release&#39;</span><span class="p">,</span> <span class="s1">&#39;Add debug symbols to release version&#39;</span><span class="p">,</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
+<a name="gbab-22"></a>	<span class="p">]</span>
+<a name="gbab-23"></a>
+<a name="gbab-24"></a><span class="k">def</span> <span class="nf">get_flags</span><span class="p">():</span>
+<a name="gbab-25"></a>	<span class="k">return</span> <span class="p">[</span>
+<a name="gbab-26"></a>		<span class="p">(</span><span class="s1">&#39;builtin_zlib&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">),</span>
+<a name="gbab-27"></a>		<span class="p">(</span><span class="s1">&#39;glew&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">),</span>
+<a name="gbab-28"></a>	<span class="p">]</span>
+<a name="gbab-29"></a>
+<a name="gbab-30"></a><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
+<a name="gbab-31"></a>	<span class="n">is64</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span>
+<a name="gbab-32"></a>
+<a name="gbab-33"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;bits&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+<a name="gbab-34"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">is64</span><span class="p">):</span>
+<a name="gbab-35"></a>			<span class="n">env</span><span class="p">[</span><span class="s2">&quot;bits&quot;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;64&quot;</span>
+<a name="gbab-36"></a>		<span class="k">else</span><span class="p">:</span>
+<a name="gbab-37"></a>			<span class="n">env</span><span class="p">[</span><span class="s2">&quot;bits&quot;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;32&quot;</span>
+<a name="gbab-38"></a>	
+<a name="gbab-39"></a>	<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">CPPPATH</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#platform/haiku&#39;</span><span class="p">])</span>
+<a name="gbab-40"></a>	
+<a name="gbab-41"></a>	<span class="n">env</span><span class="p">[</span><span class="s2">&quot;CC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gcc-x86&quot;</span>
+<a name="gbab-42"></a>	<span class="n">env</span><span class="p">[</span><span class="s2">&quot;CXX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;g++-x86&quot;</span>
+<a name="gbab-43"></a>	
+<a name="gbab-44"></a>	<span class="k">if</span> <span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;release&quot;</span><span class="p">):</span>
+<a name="gbab-45"></a>		<span class="k">if</span> <span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;debug_release&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;yes&quot;</span><span class="p">):</span>
+<a name="gbab-46"></a>			<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">CCFLAGS</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-g2&#39;</span><span class="p">])</span>
+<a name="gbab-47"></a>		<span class="k">else</span><span class="p">:</span>
+<a name="gbab-48"></a>			<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">CCFLAGS</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-O3&#39;</span><span class="p">,</span><span class="s1">&#39;-ffast-math&#39;</span><span class="p">])</span>
+<a name="gbab-49"></a>	<span class="k">elif</span> <span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;release_debug&quot;</span><span class="p">):</span>
+<a name="gbab-50"></a>		<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">CCFLAGS</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-O2&#39;</span><span class="p">,</span><span class="s1">&#39;-ffast-math&#39;</span><span class="p">,</span><span class="s1">&#39;-DDEBUG_ENABLED&#39;</span><span class="p">])</span>
+<a name="gbab-51"></a>	<span class="k">elif</span> <span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;debug&quot;</span><span class="p">):</span>
+<a name="gbab-52"></a>		<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">CCFLAGS</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-g2&#39;</span><span class="p">,</span> <span class="s1">&#39;-Wall&#39;</span><span class="p">,</span><span class="s1">&#39;-DDEBUG_ENABLED&#39;</span><span class="p">,</span><span class="s1">&#39;-DDEBUG_MEMORY_ENABLED&#39;</span><span class="p">])</span>
+<a name="gbab-53"></a>	
+<a name="gbab-54"></a>	<span class="c1">#env.Append(CCFLAGS=[&#39;-DFREETYPE_ENABLED&#39;])</span>
+<a name="gbab-55"></a>	<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">CPPFLAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-DPTHREAD_NO_RENAME&#39;</span><span class="p">])</span> <span class="c1"># TODO: enable when we have pthread_setname_np</span>
+<a name="gbab-56"></a>	<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">CPPFLAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-DOPENGL_ENABLED&#39;</span><span class="p">,</span> <span class="s1">&#39;-DMEDIA_KIT_ENABLED&#39;</span><span class="p">])</span>
+<a name="gbab-57"></a>	<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">CPPFLAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-DUNIX_ENABLED&#39;</span><span class="p">,</span> <span class="s1">&#39;-DGLES2_ENABLED&#39;</span><span class="p">,</span> <span class="s1">&#39;-DGLES_OVER_GL&#39;</span><span class="p">])</span>
+<a name="gbab-58"></a>	<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">LIBS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;be&#39;</span><span class="p">,</span> <span class="s1">&#39;game&#39;</span><span class="p">,</span> <span class="s1">&#39;media&#39;</span><span class="p">,</span> <span class="s1">&#39;network&#39;</span><span class="p">,</span> <span class="s1">&#39;bnetapi&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;GL&#39;</span><span class="p">])</span>
+<a name="gbab-59"></a>	
+<a name="gbab-60"></a>	<span class="kn">import</span> <span class="nn">methods</span>
+<a name="gbab-61"></a>	<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">BUILDERS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;GLSL120&#39;</span> <span class="p">:</span> <span class="n">env</span><span class="o">.</span><span class="n">Builder</span><span class="p">(</span><span class="n">action</span> <span class="o">=</span> <span class="n">methods</span><span class="o">.</span><span class="n">build_legacygl_headers</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;glsl.h&#39;</span><span class="p">,</span><span class="n">src_suffix</span> <span class="o">=</span> <span class="s1">&#39;.glsl&#39;</span><span class="p">)})</span>
+<a name="gbab-62"></a>	<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">BUILDERS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;GLSL&#39;</span> <span class="p">:</span> <span class="n">env</span><span class="o">.</span><span class="n">Builder</span><span class="p">(</span><span class="n">action</span> <span class="o">=</span> <span class="n">methods</span><span class="o">.</span><span class="n">build_glsl_headers</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;glsl.h&#39;</span><span class="p">,</span><span class="n">src_suffix</span> <span class="o">=</span> <span class="s1">&#39;.glsl&#39;</span><span class="p">)})</span>
+<a name="gbab-63"></a>	<span class="n">env</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">BUILDERS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;GLSL120GLES&#39;</span> <span class="p">:</span> <span class="n">env</span><span class="o">.</span><span class="n">Builder</span><span class="p">(</span><span class="n">action</span> <span class="o">=</span> <span class="n">methods</span><span class="o">.</span><span class="n">build_gles2_headers</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;glsl.h&#39;</span><span class="p">,</span><span class="n">src_suffix</span> <span class="o">=</span> <span class="s1">&#39;.glsl&#39;</span><span class="p">)})</span>
+</pre></div>
+</td></tr></table>

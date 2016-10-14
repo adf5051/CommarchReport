@@ -1,0 +1,269 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="c1">// Copyright 2014 Google Inc. All Rights Reserved.</span>
+<a name="gbab-2"></a><span class="c1">//</span>
+<a name="gbab-3"></a><span class="c1">// Use of this source code is governed by a BSD-style license</span>
+<a name="gbab-4"></a><span class="c1">// that can be found in the COPYING file in the root of the source</span>
+<a name="gbab-5"></a><span class="c1">// tree. An additional intellectual property rights grant can be found</span>
+<a name="gbab-6"></a><span class="c1">// in the file PATENTS. All contributing project authors may</span>
+<a name="gbab-7"></a><span class="c1">// be found in the AUTHORS file in the root of the source tree.</span>
+<a name="gbab-8"></a><span class="c1">// -----------------------------------------------------------------------------</span>
+<a name="gbab-9"></a><span class="c1">//</span>
+<a name="gbab-10"></a><span class="c1">// MIPS DSPr2 version of YUV to RGB upsampling functions.</span>
+<a name="gbab-11"></a><span class="c1">//</span>
+<a name="gbab-12"></a><span class="c1">// Author(s):  Branimir Vasic (branimir.vasic@imgtec.com)</span>
+<a name="gbab-13"></a><span class="c1">//             Djordje Pesut  (djordje.pesut@imgtec.com)</span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="cp">#include</span> <span class="cpf">&quot;./dsp.h&quot;</span><span class="cp"></span>
+<a name="gbab-16"></a>
+<a name="gbab-17"></a><span class="cp">#if defined(WEBP_USE_MIPS_DSP_R2)</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#include</span> <span class="cpf">&quot;./yuv.h&quot;</span><span class="cp"></span>
+<a name="gbab-20"></a>
+<a name="gbab-21"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-22"></a><span class="c1">// simple point-sampling</span>
+<a name="gbab-23"></a>
+<a name="gbab-24"></a><span class="cp">#define ROW_FUNC_PART_1()                                                      \</span>
+<a name="gbab-25"></a><span class="cp">  &quot;lbu              %[temp3],   0(%[v])                         \n\t&quot;          \</span>
+<a name="gbab-26"></a><span class="cp">  &quot;lbu              %[temp4],   0(%[u])                         \n\t&quot;          \</span>
+<a name="gbab-27"></a><span class="cp">  &quot;lbu              %[temp0],   0(%[y])                         \n\t&quot;          \</span>
+<a name="gbab-28"></a><span class="cp">  &quot;mul              %[temp1],   %[t_con_1],     %[temp3]        \n\t&quot;          \</span>
+<a name="gbab-29"></a><span class="cp">  &quot;mul              %[temp3],   %[t_con_2],     %[temp3]        \n\t&quot;          \</span>
+<a name="gbab-30"></a><span class="cp">  &quot;mul              %[temp2],   %[t_con_3],     %[temp4]        \n\t&quot;          \</span>
+<a name="gbab-31"></a><span class="cp">  &quot;mul              %[temp4],   %[t_con_4],     %[temp4]        \n\t&quot;          \</span>
+<a name="gbab-32"></a><span class="cp">  &quot;mul              %[temp0],   %[t_con_5],     %[temp0]        \n\t&quot;          \</span>
+<a name="gbab-33"></a><span class="cp">  &quot;subu             %[temp1],   %[temp1],       %[t_con_6]      \n\t&quot;          \</span>
+<a name="gbab-34"></a><span class="cp">  &quot;subu             %[temp3],   %[temp3],       %[t_con_7]      \n\t&quot;          \</span>
+<a name="gbab-35"></a><span class="cp">  &quot;addu             %[temp2],   %[temp2],       %[temp3]        \n\t&quot;          \</span>
+<a name="gbab-36"></a><span class="cp">  &quot;subu             %[temp4],   %[temp4],       %[t_con_8]      \n\t&quot;          \</span>
+<a name="gbab-37"></a>
+<a name="gbab-38"></a><span class="cp">#define ROW_FUNC_PART_2(R, G, B, K)                                            \</span>
+<a name="gbab-39"></a><span class="cp">  &quot;addu             %[temp5],   %[temp0],       %[temp1]        \n\t&quot;          \</span>
+<a name="gbab-40"></a><span class="cp">  &quot;subu             %[temp6],   %[temp0],       %[temp2]        \n\t&quot;          \</span>
+<a name="gbab-41"></a><span class="cp">  &quot;addu             %[temp7],   %[temp0],       %[temp4]        \n\t&quot;          \</span>
+<a name="gbab-42"></a><span class="cp">&quot;.if &quot; #K &quot;                                                     \n\t&quot;          \</span>
+<a name="gbab-43"></a><span class="cp">  &quot;lbu              %[temp0],   1(%[y])                         \n\t&quot;          \</span>
+<a name="gbab-44"></a><span class="cp">&quot;.endif                                                         \n\t&quot;          \</span>
+<a name="gbab-45"></a><span class="cp">  &quot;shll_s.w         %[temp5],   %[temp5],       17              \n\t&quot;          \</span>
+<a name="gbab-46"></a><span class="cp">  &quot;shll_s.w         %[temp6],   %[temp6],       17              \n\t&quot;          \</span>
+<a name="gbab-47"></a><span class="cp">&quot;.if &quot; #K &quot;                                                     \n\t&quot;          \</span>
+<a name="gbab-48"></a><span class="cp">  &quot;mul              %[temp0],   %[t_con_5],     %[temp0]        \n\t&quot;          \</span>
+<a name="gbab-49"></a><span class="cp">&quot;.endif                                                         \n\t&quot;          \</span>
+<a name="gbab-50"></a><span class="cp">  &quot;shll_s.w         %[temp7],   %[temp7],       17              \n\t&quot;          \</span>
+<a name="gbab-51"></a><span class="cp">  &quot;precrqu_s.qb.ph  %[temp5],   %[temp5],       $zero           \n\t&quot;          \</span>
+<a name="gbab-52"></a><span class="cp">  &quot;precrqu_s.qb.ph  %[temp6],   %[temp6],       $zero           \n\t&quot;          \</span>
+<a name="gbab-53"></a><span class="cp">  &quot;precrqu_s.qb.ph  %[temp7],   %[temp7],       $zero           \n\t&quot;          \</span>
+<a name="gbab-54"></a><span class="cp">  &quot;srl              %[temp5],   %[temp5],       24              \n\t&quot;          \</span>
+<a name="gbab-55"></a><span class="cp">  &quot;srl              %[temp6],   %[temp6],       24              \n\t&quot;          \</span>
+<a name="gbab-56"></a><span class="cp">  &quot;srl              %[temp7],   %[temp7],       24              \n\t&quot;          \</span>
+<a name="gbab-57"></a><span class="cp">  &quot;sb               %[temp5],   &quot; #R &quot;(%[dst])                  \n\t&quot;          \</span>
+<a name="gbab-58"></a><span class="cp">  &quot;sb               %[temp6],   &quot; #G &quot;(%[dst])                  \n\t&quot;          \</span>
+<a name="gbab-59"></a><span class="cp">  &quot;sb               %[temp7],   &quot; #B &quot;(%[dst])                  \n\t&quot;          \</span>
+<a name="gbab-60"></a>
+<a name="gbab-61"></a><span class="cp">#define ASM_CLOBBER_LIST()                                                     \</span>
+<a name="gbab-62"></a><span class="cp">  : [temp0]&quot;=&amp;r&quot;(temp0), [temp1]&quot;=&amp;r&quot;(temp1), [temp2]&quot;=&amp;r&quot;(temp2),             \</span>
+<a name="gbab-63"></a><span class="cp">    [temp3]&quot;=&amp;r&quot;(temp3), [temp4]&quot;=&amp;r&quot;(temp4), [temp5]&quot;=&amp;r&quot;(temp5),             \</span>
+<a name="gbab-64"></a><span class="cp">    [temp6]&quot;=&amp;r&quot;(temp6), [temp7]&quot;=&amp;r&quot;(temp7)                                   \</span>
+<a name="gbab-65"></a><span class="cp">  : [t_con_1]&quot;r&quot;(t_con_1), [t_con_2]&quot;r&quot;(t_con_2), [t_con_3]&quot;r&quot;(t_con_3),       \</span>
+<a name="gbab-66"></a><span class="cp">    [t_con_4]&quot;r&quot;(t_con_4), [t_con_5]&quot;r&quot;(t_con_5), [t_con_6]&quot;r&quot;(t_con_6),       \</span>
+<a name="gbab-67"></a><span class="cp">    [u]&quot;r&quot;(u), [v]&quot;r&quot;(v), [y]&quot;r&quot;(y), [dst]&quot;r&quot;(dst),                            \</span>
+<a name="gbab-68"></a><span class="cp">    [t_con_7]&quot;r&quot;(t_con_7), [t_con_8]&quot;r&quot;(t_con_8)                               \</span>
+<a name="gbab-69"></a><span class="cp">  : &quot;memory&quot;, &quot;hi&quot;, &quot;lo&quot;                                                       \</span>
+<a name="gbab-70"></a>
+<a name="gbab-71"></a><span class="cp">#define ROW_FUNC(FUNC_NAME, XSTEP, R, G, B, A)                                 \</span>
+<a name="gbab-72"></a><span class="cp">static void FUNC_NAME(const uint8_t* y,                                        \</span>
+<a name="gbab-73"></a><span class="cp">                      const uint8_t* u, const uint8_t* v,                      \</span>
+<a name="gbab-74"></a><span class="cp">                      uint8_t* dst, int len) {                                 \</span>
+<a name="gbab-75"></a><span class="cp">  int i;                                                                       \</span>
+<a name="gbab-76"></a><span class="cp">  uint32_t temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;             \</span>
+<a name="gbab-77"></a><span class="cp">  const int t_con_1 = 26149;                                                   \</span>
+<a name="gbab-78"></a><span class="cp">  const int t_con_2 = 13320;                                                   \</span>
+<a name="gbab-79"></a><span class="cp">  const int t_con_3 = 6419;                                                    \</span>
+<a name="gbab-80"></a><span class="cp">  const int t_con_4 = 33050;                                                   \</span>
+<a name="gbab-81"></a><span class="cp">  const int t_con_5 = 19077;                                                   \</span>
+<a name="gbab-82"></a><span class="cp">  const int t_con_6 = 14234;                                                   \</span>
+<a name="gbab-83"></a><span class="cp">  const int t_con_7 = 8708;                                                    \</span>
+<a name="gbab-84"></a><span class="cp">  const int t_con_8 = 17685;                                                   \</span>
+<a name="gbab-85"></a><span class="cp">  for (i = 0; i &lt; (len &gt;&gt; 1); i++) {                                           \</span>
+<a name="gbab-86"></a><span class="cp">    __asm__ volatile (                                                         \</span>
+<a name="gbab-87"></a><span class="cp">      ROW_FUNC_PART_1()                                                        \</span>
+<a name="gbab-88"></a><span class="cp">      ROW_FUNC_PART_2(R, G, B, 1)                                              \</span>
+<a name="gbab-89"></a><span class="cp">      ROW_FUNC_PART_2(R + XSTEP, G + XSTEP, B + XSTEP, 0)                      \</span>
+<a name="gbab-90"></a><span class="cp">      ASM_CLOBBER_LIST()                                                       \</span>
+<a name="gbab-91"></a><span class="cp">    );                                                                         \</span>
+<a name="gbab-92"></a><span class="cp">    if (A) dst[A] = dst[A + XSTEP] = 0xff;                                     \</span>
+<a name="gbab-93"></a><span class="cp">    y += 2;                                                                    \</span>
+<a name="gbab-94"></a><span class="cp">    ++u;                                                                       \</span>
+<a name="gbab-95"></a><span class="cp">    ++v;                                                                       \</span>
+<a name="gbab-96"></a><span class="cp">    dst += 2 * XSTEP;                                                          \</span>
+<a name="gbab-97"></a><span class="cp">  }                                                                            \</span>
+<a name="gbab-98"></a><span class="cp">  if (len &amp; 1) {                                                               \</span>
+<a name="gbab-99"></a><span class="cp">    __asm__ volatile (                                                         \</span>
+<a name="gbab-100"></a><span class="cp">      ROW_FUNC_PART_1()                                                        \</span>
+<a name="gbab-101"></a><span class="cp">      ROW_FUNC_PART_2(R, G, B, 0)                                              \</span>
+<a name="gbab-102"></a><span class="cp">      ASM_CLOBBER_LIST()                                                       \</span>
+<a name="gbab-103"></a><span class="cp">    );                                                                         \</span>
+<a name="gbab-104"></a><span class="cp">    if (A) dst[A] = 0xff;                                                      \</span>
+<a name="gbab-105"></a><span class="cp">  }                                                                            \</span>
+<a name="gbab-106"></a><span class="cp">}</span>
+<a name="gbab-107"></a>
+<a name="gbab-108"></a><span class="n">ROW_FUNC</span><span class="p">(</span><span class="n">YuvToRgbRow</span><span class="p">,</span>      <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<a name="gbab-109"></a><span class="n">ROW_FUNC</span><span class="p">(</span><span class="n">YuvToRgbaRow</span><span class="p">,</span>     <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<a name="gbab-110"></a><span class="n">ROW_FUNC</span><span class="p">(</span><span class="n">YuvToBgrRow</span><span class="p">,</span>      <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<a name="gbab-111"></a><span class="n">ROW_FUNC</span><span class="p">(</span><span class="n">YuvToBgraRow</span><span class="p">,</span>     <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<a name="gbab-112"></a>
+<a name="gbab-113"></a><span class="cp">#undef ROW_FUNC</span>
+<a name="gbab-114"></a><span class="cp">#undef ASM_CLOBBER_LIST</span>
+<a name="gbab-115"></a><span class="cp">#undef ROW_FUNC_PART_2</span>
+<a name="gbab-116"></a><span class="cp">#undef ROW_FUNC_PART_1</span>
+<a name="gbab-117"></a>
+<a name="gbab-118"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-119"></a><span class="c1">// Entry point</span>
+<a name="gbab-120"></a>
+<a name="gbab-121"></a><span class="k">extern</span> <span class="kt">void</span> <span class="n">WebPInitSamplersMIPSdspR2</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-122"></a>
+<a name="gbab-123"></a><span class="n">WEBP_TSAN_IGNORE_FUNCTION</span> <span class="kt">void</span> <span class="nf">WebPInitSamplersMIPSdspR2</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-124"></a>  <span class="n">WebPSamplers</span><span class="p">[</span><span class="n">MODE_RGB</span><span class="p">]</span>  <span class="o">=</span> <span class="n">YuvToRgbRow</span><span class="p">;</span>
+<a name="gbab-125"></a>  <span class="n">WebPSamplers</span><span class="p">[</span><span class="n">MODE_RGBA</span><span class="p">]</span> <span class="o">=</span> <span class="n">YuvToRgbaRow</span><span class="p">;</span>
+<a name="gbab-126"></a>  <span class="n">WebPSamplers</span><span class="p">[</span><span class="n">MODE_BGR</span><span class="p">]</span>  <span class="o">=</span> <span class="n">YuvToBgrRow</span><span class="p">;</span>
+<a name="gbab-127"></a>  <span class="n">WebPSamplers</span><span class="p">[</span><span class="n">MODE_BGRA</span><span class="p">]</span> <span class="o">=</span> <span class="n">YuvToBgraRow</span><span class="p">;</span>
+<a name="gbab-128"></a><span class="p">}</span>
+<a name="gbab-129"></a>
+<a name="gbab-130"></a><span class="cp">#else  </span><span class="c1">// !WEBP_USE_MIPS_DSP_R2</span>
+<a name="gbab-131"></a>
+<a name="gbab-132"></a><span class="n">WEBP_DSP_INIT_STUB</span><span class="p">(</span><span class="n">WebPInitSamplersMIPSdspR2</span><span class="p">)</span>
+<a name="gbab-133"></a>
+<a name="gbab-134"></a><span class="cp">#endif  </span><span class="c1">// WEBP_USE_MIPS_DSP_R2</span>
+</pre></div>
+</td></tr></table>

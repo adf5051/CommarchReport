@@ -1,0 +1,681 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* Copyright (C) 2007 Jean-Marc Valin</span>
+<a name="gbab-2"></a><span class="cm">      </span>
+<a name="gbab-3"></a><span class="cm">   File: speex_resampler.h</span>
+<a name="gbab-4"></a><span class="cm">   Resampling code</span>
+<a name="gbab-5"></a><span class="cm">      </span>
+<a name="gbab-6"></a><span class="cm">   The design goals of this code are:</span>
+<a name="gbab-7"></a><span class="cm">      - Very fast algorithm</span>
+<a name="gbab-8"></a><span class="cm">      - Low memory requirement</span>
+<a name="gbab-9"></a><span class="cm">      - Good *perceptual* quality (and not best SNR)</span>
+<a name="gbab-10"></a>
+<a name="gbab-11"></a><span class="cm">   Redistribution and use in source and binary forms, with or without</span>
+<a name="gbab-12"></a><span class="cm">   modification, are permitted provided that the following conditions are</span>
+<a name="gbab-13"></a><span class="cm">   met:</span>
+<a name="gbab-14"></a>
+<a name="gbab-15"></a><span class="cm">   1. Redistributions of source code must retain the above copyright notice,</span>
+<a name="gbab-16"></a><span class="cm">   this list of conditions and the following disclaimer.</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a><span class="cm">   2. Redistributions in binary form must reproduce the above copyright</span>
+<a name="gbab-19"></a><span class="cm">   notice, this list of conditions and the following disclaimer in the</span>
+<a name="gbab-20"></a><span class="cm">   documentation and/or other materials provided with the distribution.</span>
+<a name="gbab-21"></a>
+<a name="gbab-22"></a><span class="cm">   3. The name of the author may not be used to endorse or promote products</span>
+<a name="gbab-23"></a><span class="cm">   derived from this software without specific prior written permission.</span>
+<a name="gbab-24"></a>
+<a name="gbab-25"></a><span class="cm">   THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS&#39;&#39; AND ANY EXPRESS OR</span>
+<a name="gbab-26"></a><span class="cm">   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES</span>
+<a name="gbab-27"></a><span class="cm">   OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<a name="gbab-28"></a><span class="cm">   DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,</span>
+<a name="gbab-29"></a><span class="cm">   INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<a name="gbab-30"></a><span class="cm">   (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR</span>
+<a name="gbab-31"></a><span class="cm">   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)</span>
+<a name="gbab-32"></a><span class="cm">   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,</span>
+<a name="gbab-33"></a><span class="cm">   STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN</span>
+<a name="gbab-34"></a><span class="cm">   ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<a name="gbab-35"></a><span class="cm">   POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="gbab-36"></a><span class="cm">*/</span>
+<a name="gbab-37"></a>
+<a name="gbab-38"></a>
+<a name="gbab-39"></a><span class="cp">#ifndef SPEEX_RESAMPLER_H</span>
+<a name="gbab-40"></a><span class="cp">#define SPEEX_RESAMPLER_H</span>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a><span class="cp">#ifdef OUTSIDE_SPEEX</span>
+<a name="gbab-43"></a>
+<a name="gbab-44"></a><span class="cm">/********* WARNING: MENTAL SANITY ENDS HERE *************/</span>
+<a name="gbab-45"></a>
+<a name="gbab-46"></a><span class="cm">/* If the resampler is defined outside of Speex, we change the symbol names so that </span>
+<a name="gbab-47"></a><span class="cm">   there won&#39;t be any clash if linking with Speex later on. */</span>
+<a name="gbab-48"></a>
+<a name="gbab-49"></a><span class="cm">/* #define RANDOM_PREFIX your software name here */</span>
+<a name="gbab-50"></a><span class="cp">#ifndef RANDOM_PREFIX</span>
+<a name="gbab-51"></a><span class="cp">#error &quot;Please define RANDOM_PREFIX (above) to something specific to your project to prevent symbol name clashes&quot;</span>
+<a name="gbab-52"></a><span class="cp">#endif</span>
+<a name="gbab-53"></a>
+<a name="gbab-54"></a><span class="cp">#define CAT_PREFIX2(a,b) a ## b</span>
+<a name="gbab-55"></a><span class="cp">#define CAT_PREFIX(a,b) CAT_PREFIX2(a, b)</span>
+<a name="gbab-56"></a>      
+<a name="gbab-57"></a><span class="cp">#define speex_resampler_init CAT_PREFIX(RANDOM_PREFIX,_resampler_init)</span>
+<a name="gbab-58"></a><span class="cp">#define speex_resampler_init_frac CAT_PREFIX(RANDOM_PREFIX,_resampler_init_frac)</span>
+<a name="gbab-59"></a><span class="cp">#define speex_resampler_destroy CAT_PREFIX(RANDOM_PREFIX,_resampler_destroy)</span>
+<a name="gbab-60"></a><span class="cp">#define speex_resampler_process_float CAT_PREFIX(RANDOM_PREFIX,_resampler_process_float)</span>
+<a name="gbab-61"></a><span class="cp">#define speex_resampler_process_int CAT_PREFIX(RANDOM_PREFIX,_resampler_process_int)</span>
+<a name="gbab-62"></a><span class="cp">#define speex_resampler_process_interleaved_float CAT_PREFIX(RANDOM_PREFIX,_resampler_process_interleaved_float)</span>
+<a name="gbab-63"></a><span class="cp">#define speex_resampler_process_interleaved_int CAT_PREFIX(RANDOM_PREFIX,_resampler_process_interleaved_int)</span>
+<a name="gbab-64"></a><span class="cp">#define speex_resampler_set_rate CAT_PREFIX(RANDOM_PREFIX,_resampler_set_rate)</span>
+<a name="gbab-65"></a><span class="cp">#define speex_resampler_get_rate CAT_PREFIX(RANDOM_PREFIX,_resampler_get_rate)</span>
+<a name="gbab-66"></a><span class="cp">#define speex_resampler_set_rate_frac CAT_PREFIX(RANDOM_PREFIX,_resampler_set_rate_frac)</span>
+<a name="gbab-67"></a><span class="cp">#define speex_resampler_get_ratio CAT_PREFIX(RANDOM_PREFIX,_resampler_get_ratio)</span>
+<a name="gbab-68"></a><span class="cp">#define speex_resampler_set_quality CAT_PREFIX(RANDOM_PREFIX,_resampler_set_quality)</span>
+<a name="gbab-69"></a><span class="cp">#define speex_resampler_get_quality CAT_PREFIX(RANDOM_PREFIX,_resampler_get_quality)</span>
+<a name="gbab-70"></a><span class="cp">#define speex_resampler_set_input_stride CAT_PREFIX(RANDOM_PREFIX,_resampler_set_input_stride)</span>
+<a name="gbab-71"></a><span class="cp">#define speex_resampler_get_input_stride CAT_PREFIX(RANDOM_PREFIX,_resampler_get_input_stride)</span>
+<a name="gbab-72"></a><span class="cp">#define speex_resampler_set_output_stride CAT_PREFIX(RANDOM_PREFIX,_resampler_set_output_stride)</span>
+<a name="gbab-73"></a><span class="cp">#define speex_resampler_get_output_stride CAT_PREFIX(RANDOM_PREFIX,_resampler_get_output_stride)</span>
+<a name="gbab-74"></a><span class="cp">#define speex_resampler_get_input_latency CAT_PREFIX(RANDOM_PREFIX,_resampler_get_input_latency)</span>
+<a name="gbab-75"></a><span class="cp">#define speex_resampler_get_output_latency CAT_PREFIX(RANDOM_PREFIX,_resampler_get_output_latency)</span>
+<a name="gbab-76"></a><span class="cp">#define speex_resampler_skip_zeros CAT_PREFIX(RANDOM_PREFIX,_resampler_skip_zeros)</span>
+<a name="gbab-77"></a><span class="cp">#define speex_resampler_reset_mem CAT_PREFIX(RANDOM_PREFIX,_resampler_reset_mem)</span>
+<a name="gbab-78"></a><span class="cp">#define speex_resampler_strerror CAT_PREFIX(RANDOM_PREFIX,_resampler_strerror)</span>
+<a name="gbab-79"></a>
+<a name="gbab-80"></a><span class="cp">#define spx_int16_t short</span>
+<a name="gbab-81"></a><span class="cp">#define spx_int32_t int</span>
+<a name="gbab-82"></a><span class="cp">#define spx_uint16_t unsigned short</span>
+<a name="gbab-83"></a><span class="cp">#define spx_uint32_t unsigned int</span>
+<a name="gbab-84"></a>      
+<a name="gbab-85"></a><span class="cp">#else </span><span class="cm">/* OUTSIDE_SPEEX */</span><span class="cp"></span>
+<a name="gbab-86"></a>
+<a name="gbab-87"></a><span class="cp">#include</span> <span class="cpf">&quot;speex/speex_types.h&quot;</span><span class="cp"></span>
+<a name="gbab-88"></a>
+<a name="gbab-89"></a><span class="cp">#endif </span><span class="cm">/* OUTSIDE_SPEEX */</span><span class="cp"></span>
+<a name="gbab-90"></a>
+<a name="gbab-91"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-92"></a><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<a name="gbab-93"></a><span class="cp">#endif</span>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a><span class="cp">#define SPEEX_RESAMPLER_QUALITY_MAX 10</span>
+<a name="gbab-96"></a><span class="cp">#define SPEEX_RESAMPLER_QUALITY_MIN 0</span>
+<a name="gbab-97"></a><span class="cp">#define SPEEX_RESAMPLER_QUALITY_DEFAULT 4</span>
+<a name="gbab-98"></a><span class="cp">#define SPEEX_RESAMPLER_QUALITY_VOIP 3</span>
+<a name="gbab-99"></a><span class="cp">#define SPEEX_RESAMPLER_QUALITY_DESKTOP 5</span>
+<a name="gbab-100"></a>
+<a name="gbab-101"></a><span class="k">enum</span> <span class="p">{</span>
+<a name="gbab-102"></a>   <span class="n">RESAMPLER_ERR_SUCCESS</span>         <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<a name="gbab-103"></a>   <span class="n">RESAMPLER_ERR_ALLOC_FAILED</span>    <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<a name="gbab-104"></a>   <span class="n">RESAMPLER_ERR_BAD_STATE</span>       <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a name="gbab-105"></a>   <span class="n">RESAMPLER_ERR_INVALID_ARG</span>     <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<a name="gbab-106"></a>   <span class="n">RESAMPLER_ERR_PTR_OVERLAP</span>     <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<a name="gbab-107"></a>   
+<a name="gbab-108"></a>   <span class="n">RESAMPLER_ERR_MAX_ERROR</span>
+<a name="gbab-109"></a><span class="p">};</span>
+<a name="gbab-110"></a>
+<a name="gbab-111"></a><span class="k">struct</span> <span class="n">SpeexResamplerState_</span><span class="p">;</span>
+<a name="gbab-112"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="n">SpeexResamplerState_</span> <span class="n">SpeexResamplerState</span><span class="p">;</span>
+<a name="gbab-113"></a>
+<a name="gbab-114"></a><span class="cm">/** Create a new resampler with integer input and output rates.</span>
+<a name="gbab-115"></a><span class="cm"> * @param nb_channels Number of channels to be processed</span>
+<a name="gbab-116"></a><span class="cm"> * @param in_rate Input sampling rate (integer number of Hz).</span>
+<a name="gbab-117"></a><span class="cm"> * @param out_rate Output sampling rate (integer number of Hz).</span>
+<a name="gbab-118"></a><span class="cm"> * @param quality Resampling quality between 0 and 10, where 0 has poor quality</span>
+<a name="gbab-119"></a><span class="cm"> * and 10 has very high quality.</span>
+<a name="gbab-120"></a><span class="cm"> * @return Newly created resampler state</span>
+<a name="gbab-121"></a><span class="cm"> * @retval NULL Error: not enough memory</span>
+<a name="gbab-122"></a><span class="cm"> */</span>
+<a name="gbab-123"></a><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="nf">speex_resampler_init</span><span class="p">(</span><span class="n">spx_uint32_t</span> <span class="n">nb_channels</span><span class="p">,</span> 
+<a name="gbab-124"></a>                                          <span class="n">spx_uint32_t</span> <span class="n">in_rate</span><span class="p">,</span> 
+<a name="gbab-125"></a>                                          <span class="n">spx_uint32_t</span> <span class="n">out_rate</span><span class="p">,</span> 
+<a name="gbab-126"></a>                                          <span class="kt">int</span> <span class="n">quality</span><span class="p">,</span>
+<a name="gbab-127"></a>                                          <span class="kt">int</span> <span class="o">*</span><span class="n">err</span><span class="p">);</span>
+<a name="gbab-128"></a>
+<a name="gbab-129"></a><span class="cm">/** Create a new resampler with fractional input/output rates. The sampling </span>
+<a name="gbab-130"></a><span class="cm"> * rate ratio is an arbitrary rational number with both the numerator and </span>
+<a name="gbab-131"></a><span class="cm"> * denominator being 32-bit integers.</span>
+<a name="gbab-132"></a><span class="cm"> * @param nb_channels Number of channels to be processed</span>
+<a name="gbab-133"></a><span class="cm"> * @param ratio_num Numerator of the sampling rate ratio</span>
+<a name="gbab-134"></a><span class="cm"> * @param ratio_den Denominator of the sampling rate ratio</span>
+<a name="gbab-135"></a><span class="cm"> * @param in_rate Input sampling rate rounded to the nearest integer (in Hz).</span>
+<a name="gbab-136"></a><span class="cm"> * @param out_rate Output sampling rate rounded to the nearest integer (in Hz).</span>
+<a name="gbab-137"></a><span class="cm"> * @param quality Resampling quality between 0 and 10, where 0 has poor quality</span>
+<a name="gbab-138"></a><span class="cm"> * and 10 has very high quality.</span>
+<a name="gbab-139"></a><span class="cm"> * @return Newly created resampler state</span>
+<a name="gbab-140"></a><span class="cm"> * @retval NULL Error: not enough memory</span>
+<a name="gbab-141"></a><span class="cm"> */</span>
+<a name="gbab-142"></a><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="nf">speex_resampler_init_frac</span><span class="p">(</span><span class="n">spx_uint32_t</span> <span class="n">nb_channels</span><span class="p">,</span> 
+<a name="gbab-143"></a>                                               <span class="n">spx_uint32_t</span> <span class="n">ratio_num</span><span class="p">,</span> 
+<a name="gbab-144"></a>                                               <span class="n">spx_uint32_t</span> <span class="n">ratio_den</span><span class="p">,</span> 
+<a name="gbab-145"></a>                                               <span class="n">spx_uint32_t</span> <span class="n">in_rate</span><span class="p">,</span> 
+<a name="gbab-146"></a>                                               <span class="n">spx_uint32_t</span> <span class="n">out_rate</span><span class="p">,</span> 
+<a name="gbab-147"></a>                                               <span class="kt">int</span> <span class="n">quality</span><span class="p">,</span>
+<a name="gbab-148"></a>                                               <span class="kt">int</span> <span class="o">*</span><span class="n">err</span><span class="p">);</span>
+<a name="gbab-149"></a>
+<a name="gbab-150"></a><span class="cm">/** Destroy a resampler state.</span>
+<a name="gbab-151"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-152"></a><span class="cm"> */</span>
+<a name="gbab-153"></a><span class="kt">void</span> <span class="nf">speex_resampler_destroy</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">);</span>
+<a name="gbab-154"></a>
+<a name="gbab-155"></a><span class="cm">/** Resample a float array. The input and output buffers must *not* overlap.</span>
+<a name="gbab-156"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-157"></a><span class="cm"> * @param channel_index Index of the channel to process for the multi-channel </span>
+<a name="gbab-158"></a><span class="cm"> * base (0 otherwise)</span>
+<a name="gbab-159"></a><span class="cm"> * @param in Input buffer</span>
+<a name="gbab-160"></a><span class="cm"> * @param in_len Number of input samples in the input buffer. Returns the </span>
+<a name="gbab-161"></a><span class="cm"> * number of samples processed</span>
+<a name="gbab-162"></a><span class="cm"> * @param out Output buffer</span>
+<a name="gbab-163"></a><span class="cm"> * @param out_len Size of the output buffer. Returns the number of samples written</span>
+<a name="gbab-164"></a><span class="cm"> */</span>
+<a name="gbab-165"></a><span class="kt">int</span> <span class="nf">speex_resampler_process_float</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-166"></a>                                   <span class="n">spx_uint32_t</span> <span class="n">channel_index</span><span class="p">,</span> 
+<a name="gbab-167"></a>                                   <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span> 
+<a name="gbab-168"></a>                                   <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">in_len</span><span class="p">,</span> 
+<a name="gbab-169"></a>                                   <span class="kt">float</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span> 
+<a name="gbab-170"></a>                                   <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">out_len</span><span class="p">);</span>
+<a name="gbab-171"></a>
+<a name="gbab-172"></a><span class="cm">/** Resample an int array. The input and output buffers must *not* overlap.</span>
+<a name="gbab-173"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-174"></a><span class="cm"> * @param channel_index Index of the channel to process for the multi-channel </span>
+<a name="gbab-175"></a><span class="cm"> * base (0 otherwise)</span>
+<a name="gbab-176"></a><span class="cm"> * @param in Input buffer</span>
+<a name="gbab-177"></a><span class="cm"> * @param in_len Number of input samples in the input buffer. Returns the number</span>
+<a name="gbab-178"></a><span class="cm"> * of samples processed</span>
+<a name="gbab-179"></a><span class="cm"> * @param out Output buffer</span>
+<a name="gbab-180"></a><span class="cm"> * @param out_len Size of the output buffer. Returns the number of samples written</span>
+<a name="gbab-181"></a><span class="cm"> */</span>
+<a name="gbab-182"></a><span class="kt">int</span> <span class="nf">speex_resampler_process_int</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-183"></a>                                 <span class="n">spx_uint32_t</span> <span class="n">channel_index</span><span class="p">,</span> 
+<a name="gbab-184"></a>                                 <span class="k">const</span> <span class="n">spx_int16_t</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span> 
+<a name="gbab-185"></a>                                 <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">in_len</span><span class="p">,</span> 
+<a name="gbab-186"></a>                                 <span class="n">spx_int16_t</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span> 
+<a name="gbab-187"></a>                                 <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">out_len</span><span class="p">);</span>
+<a name="gbab-188"></a>
+<a name="gbab-189"></a><span class="cm">/** Resample an interleaved float array. The input and output buffers must *not* overlap.</span>
+<a name="gbab-190"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-191"></a><span class="cm"> * @param in Input buffer</span>
+<a name="gbab-192"></a><span class="cm"> * @param in_len Number of input samples in the input buffer. Returns the number</span>
+<a name="gbab-193"></a><span class="cm"> * of samples processed. This is all per-channel.</span>
+<a name="gbab-194"></a><span class="cm"> * @param out Output buffer</span>
+<a name="gbab-195"></a><span class="cm"> * @param out_len Size of the output buffer. Returns the number of samples written.</span>
+<a name="gbab-196"></a><span class="cm"> * This is all per-channel.</span>
+<a name="gbab-197"></a><span class="cm"> */</span>
+<a name="gbab-198"></a><span class="kt">int</span> <span class="nf">speex_resampler_process_interleaved_float</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-199"></a>                                               <span class="k">const</span> <span class="kt">float</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span> 
+<a name="gbab-200"></a>                                               <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">in_len</span><span class="p">,</span> 
+<a name="gbab-201"></a>                                               <span class="kt">float</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span> 
+<a name="gbab-202"></a>                                               <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">out_len</span><span class="p">);</span>
+<a name="gbab-203"></a>
+<a name="gbab-204"></a><span class="cm">/** Resample an interleaved int array. The input and output buffers must *not* overlap.</span>
+<a name="gbab-205"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-206"></a><span class="cm"> * @param in Input buffer</span>
+<a name="gbab-207"></a><span class="cm"> * @param in_len Number of input samples in the input buffer. Returns the number</span>
+<a name="gbab-208"></a><span class="cm"> * of samples processed. This is all per-channel.</span>
+<a name="gbab-209"></a><span class="cm"> * @param out Output buffer</span>
+<a name="gbab-210"></a><span class="cm"> * @param out_len Size of the output buffer. Returns the number of samples written.</span>
+<a name="gbab-211"></a><span class="cm"> * This is all per-channel.</span>
+<a name="gbab-212"></a><span class="cm"> */</span>
+<a name="gbab-213"></a><span class="kt">int</span> <span class="nf">speex_resampler_process_interleaved_int</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-214"></a>                                             <span class="k">const</span> <span class="n">spx_int16_t</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span> 
+<a name="gbab-215"></a>                                             <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">in_len</span><span class="p">,</span> 
+<a name="gbab-216"></a>                                             <span class="n">spx_int16_t</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span> 
+<a name="gbab-217"></a>                                             <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">out_len</span><span class="p">);</span>
+<a name="gbab-218"></a>
+<a name="gbab-219"></a><span class="cm">/** Set (change) the input/output sampling rates (integer value).</span>
+<a name="gbab-220"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-221"></a><span class="cm"> * @param in_rate Input sampling rate (integer number of Hz).</span>
+<a name="gbab-222"></a><span class="cm"> * @param out_rate Output sampling rate (integer number of Hz).</span>
+<a name="gbab-223"></a><span class="cm"> */</span>
+<a name="gbab-224"></a><span class="kt">int</span> <span class="nf">speex_resampler_set_rate</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-225"></a>                              <span class="n">spx_uint32_t</span> <span class="n">in_rate</span><span class="p">,</span> 
+<a name="gbab-226"></a>                              <span class="n">spx_uint32_t</span> <span class="n">out_rate</span><span class="p">);</span>
+<a name="gbab-227"></a>
+<a name="gbab-228"></a><span class="cm">/** Get the current input/output sampling rates (integer value).</span>
+<a name="gbab-229"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-230"></a><span class="cm"> * @param in_rate Input sampling rate (integer number of Hz) copied.</span>
+<a name="gbab-231"></a><span class="cm"> * @param out_rate Output sampling rate (integer number of Hz) copied.</span>
+<a name="gbab-232"></a><span class="cm"> */</span>
+<a name="gbab-233"></a><span class="kt">void</span> <span class="nf">speex_resampler_get_rate</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-234"></a>                              <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">in_rate</span><span class="p">,</span> 
+<a name="gbab-235"></a>                              <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">out_rate</span><span class="p">);</span>
+<a name="gbab-236"></a>
+<a name="gbab-237"></a><span class="cm">/** Set (change) the input/output sampling rates and resampling ratio </span>
+<a name="gbab-238"></a><span class="cm"> * (fractional values in Hz supported).</span>
+<a name="gbab-239"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-240"></a><span class="cm"> * @param ratio_num Numerator of the sampling rate ratio</span>
+<a name="gbab-241"></a><span class="cm"> * @param ratio_den Denominator of the sampling rate ratio</span>
+<a name="gbab-242"></a><span class="cm"> * @param in_rate Input sampling rate rounded to the nearest integer (in Hz).</span>
+<a name="gbab-243"></a><span class="cm"> * @param out_rate Output sampling rate rounded to the nearest integer (in Hz).</span>
+<a name="gbab-244"></a><span class="cm"> */</span>
+<a name="gbab-245"></a><span class="kt">int</span> <span class="nf">speex_resampler_set_rate_frac</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-246"></a>                                   <span class="n">spx_uint32_t</span> <span class="n">ratio_num</span><span class="p">,</span> 
+<a name="gbab-247"></a>                                   <span class="n">spx_uint32_t</span> <span class="n">ratio_den</span><span class="p">,</span> 
+<a name="gbab-248"></a>                                   <span class="n">spx_uint32_t</span> <span class="n">in_rate</span><span class="p">,</span> 
+<a name="gbab-249"></a>                                   <span class="n">spx_uint32_t</span> <span class="n">out_rate</span><span class="p">);</span>
+<a name="gbab-250"></a>
+<a name="gbab-251"></a><span class="cm">/** Get the current resampling ratio. This will be reduced to the least</span>
+<a name="gbab-252"></a><span class="cm"> * common denominator.</span>
+<a name="gbab-253"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-254"></a><span class="cm"> * @param ratio_num Numerator of the sampling rate ratio copied</span>
+<a name="gbab-255"></a><span class="cm"> * @param ratio_den Denominator of the sampling rate ratio copied</span>
+<a name="gbab-256"></a><span class="cm"> */</span>
+<a name="gbab-257"></a><span class="kt">void</span> <span class="nf">speex_resampler_get_ratio</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-258"></a>                               <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">ratio_num</span><span class="p">,</span> 
+<a name="gbab-259"></a>                               <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">ratio_den</span><span class="p">);</span>
+<a name="gbab-260"></a>
+<a name="gbab-261"></a><span class="cm">/** Set (change) the conversion quality.</span>
+<a name="gbab-262"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-263"></a><span class="cm"> * @param quality Resampling quality between 0 and 10, where 0 has poor </span>
+<a name="gbab-264"></a><span class="cm"> * quality and 10 has very high quality.</span>
+<a name="gbab-265"></a><span class="cm"> */</span>
+<a name="gbab-266"></a><span class="kt">int</span> <span class="nf">speex_resampler_set_quality</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-267"></a>                                 <span class="kt">int</span> <span class="n">quality</span><span class="p">);</span>
+<a name="gbab-268"></a>
+<a name="gbab-269"></a><span class="cm">/** Get the conversion quality.</span>
+<a name="gbab-270"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-271"></a><span class="cm"> * @param quality Resampling quality between 0 and 10, where 0 has poor </span>
+<a name="gbab-272"></a><span class="cm"> * quality and 10 has very high quality.</span>
+<a name="gbab-273"></a><span class="cm"> */</span>
+<a name="gbab-274"></a><span class="kt">void</span> <span class="nf">speex_resampler_get_quality</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-275"></a>                                 <span class="kt">int</span> <span class="o">*</span><span class="n">quality</span><span class="p">);</span>
+<a name="gbab-276"></a>
+<a name="gbab-277"></a><span class="cm">/** Set (change) the input stride.</span>
+<a name="gbab-278"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-279"></a><span class="cm"> * @param stride Input stride</span>
+<a name="gbab-280"></a><span class="cm"> */</span>
+<a name="gbab-281"></a><span class="kt">void</span> <span class="nf">speex_resampler_set_input_stride</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-282"></a>                                      <span class="n">spx_uint32_t</span> <span class="n">stride</span><span class="p">);</span>
+<a name="gbab-283"></a>
+<a name="gbab-284"></a><span class="cm">/** Get the input stride.</span>
+<a name="gbab-285"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-286"></a><span class="cm"> * @param stride Input stride copied</span>
+<a name="gbab-287"></a><span class="cm"> */</span>
+<a name="gbab-288"></a><span class="kt">void</span> <span class="nf">speex_resampler_get_input_stride</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-289"></a>                                      <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">stride</span><span class="p">);</span>
+<a name="gbab-290"></a>
+<a name="gbab-291"></a><span class="cm">/** Set (change) the output stride.</span>
+<a name="gbab-292"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-293"></a><span class="cm"> * @param stride Output stride</span>
+<a name="gbab-294"></a><span class="cm"> */</span>
+<a name="gbab-295"></a><span class="kt">void</span> <span class="nf">speex_resampler_set_output_stride</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-296"></a>                                      <span class="n">spx_uint32_t</span> <span class="n">stride</span><span class="p">);</span>
+<a name="gbab-297"></a>
+<a name="gbab-298"></a><span class="cm">/** Get the output stride.</span>
+<a name="gbab-299"></a><span class="cm"> * @param st Resampler state copied</span>
+<a name="gbab-300"></a><span class="cm"> * @param stride Output stride</span>
+<a name="gbab-301"></a><span class="cm"> */</span>
+<a name="gbab-302"></a><span class="kt">void</span> <span class="nf">speex_resampler_get_output_stride</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">,</span> 
+<a name="gbab-303"></a>                                      <span class="n">spx_uint32_t</span> <span class="o">*</span><span class="n">stride</span><span class="p">);</span>
+<a name="gbab-304"></a>
+<a name="gbab-305"></a><span class="cm">/** Get the latency in input samples introduced by the resampler.</span>
+<a name="gbab-306"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-307"></a><span class="cm"> */</span>
+<a name="gbab-308"></a><span class="kt">int</span> <span class="nf">speex_resampler_get_input_latency</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">);</span>
+<a name="gbab-309"></a>
+<a name="gbab-310"></a><span class="cm">/** Get the latency in output samples introduced by the resampler.</span>
+<a name="gbab-311"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-312"></a><span class="cm"> */</span>
+<a name="gbab-313"></a><span class="kt">int</span> <span class="nf">speex_resampler_get_output_latency</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">);</span>
+<a name="gbab-314"></a>
+<a name="gbab-315"></a><span class="cm">/** Make sure that the first samples to go out of the resamplers don&#39;t have </span>
+<a name="gbab-316"></a><span class="cm"> * leading zeros. This is only useful before starting to use a newly created </span>
+<a name="gbab-317"></a><span class="cm"> * resampler. It is recommended to use that when resampling an audio file, as</span>
+<a name="gbab-318"></a><span class="cm"> * it will generate a file with the same length. For real-time processing,</span>
+<a name="gbab-319"></a><span class="cm"> * it is probably easier not to use this call (so that the output duration</span>
+<a name="gbab-320"></a><span class="cm"> * is the same for the first frame).</span>
+<a name="gbab-321"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-322"></a><span class="cm"> */</span>
+<a name="gbab-323"></a><span class="kt">int</span> <span class="nf">speex_resampler_skip_zeros</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">);</span>
+<a name="gbab-324"></a>
+<a name="gbab-325"></a><span class="cm">/** Reset a resampler so a new (unrelated) stream can be processed.</span>
+<a name="gbab-326"></a><span class="cm"> * @param st Resampler state</span>
+<a name="gbab-327"></a><span class="cm"> */</span>
+<a name="gbab-328"></a><span class="kt">int</span> <span class="nf">speex_resampler_reset_mem</span><span class="p">(</span><span class="n">SpeexResamplerState</span> <span class="o">*</span><span class="n">st</span><span class="p">);</span>
+<a name="gbab-329"></a>
+<a name="gbab-330"></a><span class="cm">/** Returns the English meaning for an error code</span>
+<a name="gbab-331"></a><span class="cm"> * @param err Error code</span>
+<a name="gbab-332"></a><span class="cm"> * @return English string</span>
+<a name="gbab-333"></a><span class="cm"> */</span>
+<a name="gbab-334"></a><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">speex_resampler_strerror</span><span class="p">(</span><span class="kt">int</span> <span class="n">err</span><span class="p">);</span>
+<a name="gbab-335"></a>
+<a name="gbab-336"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-337"></a><span class="p">}</span>
+<a name="gbab-338"></a><span class="cp">#endif</span>
+<a name="gbab-339"></a>
+<a name="gbab-340"></a><span class="cp">#endif</span>
+</pre></div>
+</td></tr></table>

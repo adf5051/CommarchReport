@@ -1,0 +1,2475 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>   1
+   2
+   3
+   4
+   5
+   6
+   7
+   8
+   9
+  10
+  11
+  12
+  13
+  14
+  15
+  16
+  17
+  18
+  19
+  20
+  21
+  22
+  23
+  24
+  25
+  26
+  27
+  28
+  29
+  30
+  31
+  32
+  33
+  34
+  35
+  36
+  37
+  38
+  39
+  40
+  41
+  42
+  43
+  44
+  45
+  46
+  47
+  48
+  49
+  50
+  51
+  52
+  53
+  54
+  55
+  56
+  57
+  58
+  59
+  60
+  61
+  62
+  63
+  64
+  65
+  66
+  67
+  68
+  69
+  70
+  71
+  72
+  73
+  74
+  75
+  76
+  77
+  78
+  79
+  80
+  81
+  82
+  83
+  84
+  85
+  86
+  87
+  88
+  89
+  90
+  91
+  92
+  93
+  94
+  95
+  96
+  97
+  98
+  99
+ 100
+ 101
+ 102
+ 103
+ 104
+ 105
+ 106
+ 107
+ 108
+ 109
+ 110
+ 111
+ 112
+ 113
+ 114
+ 115
+ 116
+ 117
+ 118
+ 119
+ 120
+ 121
+ 122
+ 123
+ 124
+ 125
+ 126
+ 127
+ 128
+ 129
+ 130
+ 131
+ 132
+ 133
+ 134
+ 135
+ 136
+ 137
+ 138
+ 139
+ 140
+ 141
+ 142
+ 143
+ 144
+ 145
+ 146
+ 147
+ 148
+ 149
+ 150
+ 151
+ 152
+ 153
+ 154
+ 155
+ 156
+ 157
+ 158
+ 159
+ 160
+ 161
+ 162
+ 163
+ 164
+ 165
+ 166
+ 167
+ 168
+ 169
+ 170
+ 171
+ 172
+ 173
+ 174
+ 175
+ 176
+ 177
+ 178
+ 179
+ 180
+ 181
+ 182
+ 183
+ 184
+ 185
+ 186
+ 187
+ 188
+ 189
+ 190
+ 191
+ 192
+ 193
+ 194
+ 195
+ 196
+ 197
+ 198
+ 199
+ 200
+ 201
+ 202
+ 203
+ 204
+ 205
+ 206
+ 207
+ 208
+ 209
+ 210
+ 211
+ 212
+ 213
+ 214
+ 215
+ 216
+ 217
+ 218
+ 219
+ 220
+ 221
+ 222
+ 223
+ 224
+ 225
+ 226
+ 227
+ 228
+ 229
+ 230
+ 231
+ 232
+ 233
+ 234
+ 235
+ 236
+ 237
+ 238
+ 239
+ 240
+ 241
+ 242
+ 243
+ 244
+ 245
+ 246
+ 247
+ 248
+ 249
+ 250
+ 251
+ 252
+ 253
+ 254
+ 255
+ 256
+ 257
+ 258
+ 259
+ 260
+ 261
+ 262
+ 263
+ 264
+ 265
+ 266
+ 267
+ 268
+ 269
+ 270
+ 271
+ 272
+ 273
+ 274
+ 275
+ 276
+ 277
+ 278
+ 279
+ 280
+ 281
+ 282
+ 283
+ 284
+ 285
+ 286
+ 287
+ 288
+ 289
+ 290
+ 291
+ 292
+ 293
+ 294
+ 295
+ 296
+ 297
+ 298
+ 299
+ 300
+ 301
+ 302
+ 303
+ 304
+ 305
+ 306
+ 307
+ 308
+ 309
+ 310
+ 311
+ 312
+ 313
+ 314
+ 315
+ 316
+ 317
+ 318
+ 319
+ 320
+ 321
+ 322
+ 323
+ 324
+ 325
+ 326
+ 327
+ 328
+ 329
+ 330
+ 331
+ 332
+ 333
+ 334
+ 335
+ 336
+ 337
+ 338
+ 339
+ 340
+ 341
+ 342
+ 343
+ 344
+ 345
+ 346
+ 347
+ 348
+ 349
+ 350
+ 351
+ 352
+ 353
+ 354
+ 355
+ 356
+ 357
+ 358
+ 359
+ 360
+ 361
+ 362
+ 363
+ 364
+ 365
+ 366
+ 367
+ 368
+ 369
+ 370
+ 371
+ 372
+ 373
+ 374
+ 375
+ 376
+ 377
+ 378
+ 379
+ 380
+ 381
+ 382
+ 383
+ 384
+ 385
+ 386
+ 387
+ 388
+ 389
+ 390
+ 391
+ 392
+ 393
+ 394
+ 395
+ 396
+ 397
+ 398
+ 399
+ 400
+ 401
+ 402
+ 403
+ 404
+ 405
+ 406
+ 407
+ 408
+ 409
+ 410
+ 411
+ 412
+ 413
+ 414
+ 415
+ 416
+ 417
+ 418
+ 419
+ 420
+ 421
+ 422
+ 423
+ 424
+ 425
+ 426
+ 427
+ 428
+ 429
+ 430
+ 431
+ 432
+ 433
+ 434
+ 435
+ 436
+ 437
+ 438
+ 439
+ 440
+ 441
+ 442
+ 443
+ 444
+ 445
+ 446
+ 447
+ 448
+ 449
+ 450
+ 451
+ 452
+ 453
+ 454
+ 455
+ 456
+ 457
+ 458
+ 459
+ 460
+ 461
+ 462
+ 463
+ 464
+ 465
+ 466
+ 467
+ 468
+ 469
+ 470
+ 471
+ 472
+ 473
+ 474
+ 475
+ 476
+ 477
+ 478
+ 479
+ 480
+ 481
+ 482
+ 483
+ 484
+ 485
+ 486
+ 487
+ 488
+ 489
+ 490
+ 491
+ 492
+ 493
+ 494
+ 495
+ 496
+ 497
+ 498
+ 499
+ 500
+ 501
+ 502
+ 503
+ 504
+ 505
+ 506
+ 507
+ 508
+ 509
+ 510
+ 511
+ 512
+ 513
+ 514
+ 515
+ 516
+ 517
+ 518
+ 519
+ 520
+ 521
+ 522
+ 523
+ 524
+ 525
+ 526
+ 527
+ 528
+ 529
+ 530
+ 531
+ 532
+ 533
+ 534
+ 535
+ 536
+ 537
+ 538
+ 539
+ 540
+ 541
+ 542
+ 543
+ 544
+ 545
+ 546
+ 547
+ 548
+ 549
+ 550
+ 551
+ 552
+ 553
+ 554
+ 555
+ 556
+ 557
+ 558
+ 559
+ 560
+ 561
+ 562
+ 563
+ 564
+ 565
+ 566
+ 567
+ 568
+ 569
+ 570
+ 571
+ 572
+ 573
+ 574
+ 575
+ 576
+ 577
+ 578
+ 579
+ 580
+ 581
+ 582
+ 583
+ 584
+ 585
+ 586
+ 587
+ 588
+ 589
+ 590
+ 591
+ 592
+ 593
+ 594
+ 595
+ 596
+ 597
+ 598
+ 599
+ 600
+ 601
+ 602
+ 603
+ 604
+ 605
+ 606
+ 607
+ 608
+ 609
+ 610
+ 611
+ 612
+ 613
+ 614
+ 615
+ 616
+ 617
+ 618
+ 619
+ 620
+ 621
+ 622
+ 623
+ 624
+ 625
+ 626
+ 627
+ 628
+ 629
+ 630
+ 631
+ 632
+ 633
+ 634
+ 635
+ 636
+ 637
+ 638
+ 639
+ 640
+ 641
+ 642
+ 643
+ 644
+ 645
+ 646
+ 647
+ 648
+ 649
+ 650
+ 651
+ 652
+ 653
+ 654
+ 655
+ 656
+ 657
+ 658
+ 659
+ 660
+ 661
+ 662
+ 663
+ 664
+ 665
+ 666
+ 667
+ 668
+ 669
+ 670
+ 671
+ 672
+ 673
+ 674
+ 675
+ 676
+ 677
+ 678
+ 679
+ 680
+ 681
+ 682
+ 683
+ 684
+ 685
+ 686
+ 687
+ 688
+ 689
+ 690
+ 691
+ 692
+ 693
+ 694
+ 695
+ 696
+ 697
+ 698
+ 699
+ 700
+ 701
+ 702
+ 703
+ 704
+ 705
+ 706
+ 707
+ 708
+ 709
+ 710
+ 711
+ 712
+ 713
+ 714
+ 715
+ 716
+ 717
+ 718
+ 719
+ 720
+ 721
+ 722
+ 723
+ 724
+ 725
+ 726
+ 727
+ 728
+ 729
+ 730
+ 731
+ 732
+ 733
+ 734
+ 735
+ 736
+ 737
+ 738
+ 739
+ 740
+ 741
+ 742
+ 743
+ 744
+ 745
+ 746
+ 747
+ 748
+ 749
+ 750
+ 751
+ 752
+ 753
+ 754
+ 755
+ 756
+ 757
+ 758
+ 759
+ 760
+ 761
+ 762
+ 763
+ 764
+ 765
+ 766
+ 767
+ 768
+ 769
+ 770
+ 771
+ 772
+ 773
+ 774
+ 775
+ 776
+ 777
+ 778
+ 779
+ 780
+ 781
+ 782
+ 783
+ 784
+ 785
+ 786
+ 787
+ 788
+ 789
+ 790
+ 791
+ 792
+ 793
+ 794
+ 795
+ 796
+ 797
+ 798
+ 799
+ 800
+ 801
+ 802
+ 803
+ 804
+ 805
+ 806
+ 807
+ 808
+ 809
+ 810
+ 811
+ 812
+ 813
+ 814
+ 815
+ 816
+ 817
+ 818
+ 819
+ 820
+ 821
+ 822
+ 823
+ 824
+ 825
+ 826
+ 827
+ 828
+ 829
+ 830
+ 831
+ 832
+ 833
+ 834
+ 835
+ 836
+ 837
+ 838
+ 839
+ 840
+ 841
+ 842
+ 843
+ 844
+ 845
+ 846
+ 847
+ 848
+ 849
+ 850
+ 851
+ 852
+ 853
+ 854
+ 855
+ 856
+ 857
+ 858
+ 859
+ 860
+ 861
+ 862
+ 863
+ 864
+ 865
+ 866
+ 867
+ 868
+ 869
+ 870
+ 871
+ 872
+ 873
+ 874
+ 875
+ 876
+ 877
+ 878
+ 879
+ 880
+ 881
+ 882
+ 883
+ 884
+ 885
+ 886
+ 887
+ 888
+ 889
+ 890
+ 891
+ 892
+ 893
+ 894
+ 895
+ 896
+ 897
+ 898
+ 899
+ 900
+ 901
+ 902
+ 903
+ 904
+ 905
+ 906
+ 907
+ 908
+ 909
+ 910
+ 911
+ 912
+ 913
+ 914
+ 915
+ 916
+ 917
+ 918
+ 919
+ 920
+ 921
+ 922
+ 923
+ 924
+ 925
+ 926
+ 927
+ 928
+ 929
+ 930
+ 931
+ 932
+ 933
+ 934
+ 935
+ 936
+ 937
+ 938
+ 939
+ 940
+ 941
+ 942
+ 943
+ 944
+ 945
+ 946
+ 947
+ 948
+ 949
+ 950
+ 951
+ 952
+ 953
+ 954
+ 955
+ 956
+ 957
+ 958
+ 959
+ 960
+ 961
+ 962
+ 963
+ 964
+ 965
+ 966
+ 967
+ 968
+ 969
+ 970
+ 971
+ 972
+ 973
+ 974
+ 975
+ 976
+ 977
+ 978
+ 979
+ 980
+ 981
+ 982
+ 983
+ 984
+ 985
+ 986
+ 987
+ 988
+ 989
+ 990
+ 991
+ 992
+ 993
+ 994
+ 995
+ 996
+ 997
+ 998
+ 999
+1000
+1001
+1002
+1003
+1004
+1005
+1006
+1007
+1008
+1009
+1010
+1011
+1012
+1013
+1014
+1015
+1016
+1017
+1018
+1019
+1020
+1021
+1022
+1023
+1024
+1025
+1026
+1027
+1028
+1029
+1030
+1031
+1032
+1033
+1034
+1035
+1036
+1037
+1038
+1039
+1040
+1041
+1042
+1043
+1044
+1045
+1046
+1047
+1048
+1049
+1050
+1051
+1052
+1053
+1054
+1055
+1056
+1057
+1058
+1059
+1060
+1061
+1062
+1063
+1064
+1065
+1066
+1067
+1068
+1069
+1070
+1071
+1072
+1073
+1074
+1075
+1076
+1077
+1078
+1079
+1080
+1081
+1082
+1083
+1084
+1085
+1086
+1087
+1088
+1089
+1090
+1091
+1092
+1093
+1094
+1095
+1096
+1097
+1098
+1099
+1100
+1101
+1102
+1103
+1104
+1105
+1106
+1107
+1108
+1109
+1110
+1111
+1112
+1113
+1114
+1115
+1116
+1117
+1118
+1119
+1120
+1121
+1122
+1123
+1124
+1125
+1126
+1127
+1128
+1129
+1130
+1131
+1132
+1133
+1134
+1135
+1136
+1137
+1138
+1139
+1140
+1141
+1142
+1143
+1144
+1145
+1146
+1147
+1148
+1149
+1150
+1151
+1152
+1153
+1154
+1155
+1156
+1157
+1158
+1159
+1160
+1161
+1162
+1163
+1164
+1165
+1166
+1167
+1168
+1169
+1170
+1171
+1172
+1173
+1174
+1175
+1176
+1177
+1178
+1179
+1180
+1181
+1182
+1183
+1184
+1185
+1186
+1187
+1188
+1189
+1190
+1191
+1192
+1193
+1194
+1195
+1196
+1197
+1198
+1199
+1200
+1201
+1202
+1203
+1204
+1205
+1206
+1207
+1208
+1209
+1210
+1211
+1212
+1213
+1214
+1215
+1216
+1217
+1218
+1219
+1220
+1221
+1222
+1223
+1224
+1225
+1226
+1227
+1228
+1229
+1230
+1231
+1232
+1233
+1234
+1235
+1236
+1237</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-3"></a><span class="cm">/*  ttnameid.h                                                             */</span>
+<a name="gbab-4"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-5"></a><span class="cm">/*    TrueType name ID definitions (specification only).                   */</span>
+<a name="gbab-6"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-7"></a><span class="cm">/*  Copyright 1996-2016 by                                                 */</span>
+<a name="gbab-8"></a><span class="cm">/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-10"></a><span class="cm">/*  This file is part of the FreeType project, and may only be used,       */</span>
+<a name="gbab-11"></a><span class="cm">/*  modified, and distributed under the terms of the FreeType project      */</span>
+<a name="gbab-12"></a><span class="cm">/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */</span>
+<a name="gbab-13"></a><span class="cm">/*  this file you indicate that you have read the license and              */</span>
+<a name="gbab-14"></a><span class="cm">/*  understand and accept it fully.                                        */</span>
+<a name="gbab-15"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-16"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#ifndef TTNAMEID_H_</span>
+<a name="gbab-20"></a><span class="cp">#define TTNAMEID_H_</span>
+<a name="gbab-21"></a>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="cp">#include</span> <span class="cpf">&lt;ft2build.h&gt;</span><span class="cp"></span>
+<a name="gbab-24"></a>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="n">FT_BEGIN_HEADER</span>
+<a name="gbab-27"></a>
+<a name="gbab-28"></a>
+<a name="gbab-29"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-30"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-31"></a>  <span class="cm">/* &lt;Section&gt;                                                             */</span>
+<a name="gbab-32"></a>  <span class="cm">/*    truetype_tables                                                    */</span>
+<a name="gbab-33"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-34"></a>
+<a name="gbab-35"></a>
+<a name="gbab-36"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-37"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-38"></a>  <span class="cm">/* Possible values for the `platform&#39; identifier code in the name        */</span>
+<a name="gbab-39"></a>  <span class="cm">/* records of the TTF `name&#39; table.                                      */</span>
+<a name="gbab-40"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-41"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-42"></a>
+<a name="gbab-43"></a>
+<a name="gbab-44"></a>  <span class="cm">/***********************************************************************</span>
+<a name="gbab-45"></a><span class="cm">   *</span>
+<a name="gbab-46"></a><span class="cm">   * @enum:</span>
+<a name="gbab-47"></a><span class="cm">   *   TT_PLATFORM_XXX</span>
+<a name="gbab-48"></a><span class="cm">   *</span>
+<a name="gbab-49"></a><span class="cm">   * @description:</span>
+<a name="gbab-50"></a><span class="cm">   *   A list of valid values for the `platform_id&#39; identifier code in</span>
+<a name="gbab-51"></a><span class="cm">   *   @FT_CharMapRec and @FT_SfntName structures.</span>
+<a name="gbab-52"></a><span class="cm">   *</span>
+<a name="gbab-53"></a><span class="cm">   * @values:</span>
+<a name="gbab-54"></a><span class="cm">   *   TT_PLATFORM_APPLE_UNICODE ::</span>
+<a name="gbab-55"></a><span class="cm">   *     Used by Apple to indicate a Unicode character map and/or name entry.</span>
+<a name="gbab-56"></a><span class="cm">   *     See @TT_APPLE_ID_XXX for corresponding `encoding_id&#39; values.  Note</span>
+<a name="gbab-57"></a><span class="cm">   *     that name entries in this format are coded as big-endian UCS-2</span>
+<a name="gbab-58"></a><span class="cm">   *     character codes _only_.</span>
+<a name="gbab-59"></a><span class="cm">   *</span>
+<a name="gbab-60"></a><span class="cm">   *   TT_PLATFORM_MACINTOSH ::</span>
+<a name="gbab-61"></a><span class="cm">   *     Used by Apple to indicate a MacOS-specific charmap and/or name entry.</span>
+<a name="gbab-62"></a><span class="cm">   *     See @TT_MAC_ID_XXX for corresponding `encoding_id&#39; values.  Note that</span>
+<a name="gbab-63"></a><span class="cm">   *     most TrueType fonts contain an Apple roman charmap to be usable on</span>
+<a name="gbab-64"></a><span class="cm">   *     MacOS systems (even if they contain a Microsoft charmap as well).</span>
+<a name="gbab-65"></a><span class="cm">   *</span>
+<a name="gbab-66"></a><span class="cm">   *   TT_PLATFORM_ISO ::</span>
+<a name="gbab-67"></a><span class="cm">   *     This value was used to specify ISO/IEC 10646 charmaps.  It is however</span>
+<a name="gbab-68"></a><span class="cm">   *     now deprecated.  See @TT_ISO_ID_XXX for a list of corresponding</span>
+<a name="gbab-69"></a><span class="cm">   *     `encoding_id&#39; values.</span>
+<a name="gbab-70"></a><span class="cm">   *</span>
+<a name="gbab-71"></a><span class="cm">   *   TT_PLATFORM_MICROSOFT ::</span>
+<a name="gbab-72"></a><span class="cm">   *     Used by Microsoft to indicate Windows-specific charmaps.  See</span>
+<a name="gbab-73"></a><span class="cm">   *     @TT_MS_ID_XXX for a list of corresponding `encoding_id&#39; values.</span>
+<a name="gbab-74"></a><span class="cm">   *     Note that most fonts contain a Unicode charmap using</span>
+<a name="gbab-75"></a><span class="cm">   *     (TT_PLATFORM_MICROSOFT, @TT_MS_ID_UNICODE_CS).</span>
+<a name="gbab-76"></a><span class="cm">   *</span>
+<a name="gbab-77"></a><span class="cm">   *   TT_PLATFORM_CUSTOM ::</span>
+<a name="gbab-78"></a><span class="cm">   *     Used to indicate application-specific charmaps.</span>
+<a name="gbab-79"></a><span class="cm">   *</span>
+<a name="gbab-80"></a><span class="cm">   *   TT_PLATFORM_ADOBE ::</span>
+<a name="gbab-81"></a><span class="cm">   *     This value isn&#39;t part of any font format specification, but is used</span>
+<a name="gbab-82"></a><span class="cm">   *     by FreeType to report Adobe-specific charmaps in an @FT_CharMapRec</span>
+<a name="gbab-83"></a><span class="cm">   *     structure.  See @TT_ADOBE_ID_XXX.</span>
+<a name="gbab-84"></a><span class="cm">   */</span>
+<a name="gbab-85"></a>
+<a name="gbab-86"></a><span class="cp">#define TT_PLATFORM_APPLE_UNICODE  0</span>
+<a name="gbab-87"></a><span class="cp">#define TT_PLATFORM_MACINTOSH      1</span>
+<a name="gbab-88"></a><span class="cp">#define TT_PLATFORM_ISO            2 </span><span class="cm">/* deprecated */</span><span class="cp"></span>
+<a name="gbab-89"></a><span class="cp">#define TT_PLATFORM_MICROSOFT      3</span>
+<a name="gbab-90"></a><span class="cp">#define TT_PLATFORM_CUSTOM         4</span>
+<a name="gbab-91"></a><span class="cp">#define TT_PLATFORM_ADOBE          7 </span><span class="cm">/* artificial */</span><span class="cp"></span>
+<a name="gbab-92"></a>
+<a name="gbab-93"></a>
+<a name="gbab-94"></a>  <span class="cm">/***********************************************************************</span>
+<a name="gbab-95"></a><span class="cm">   *</span>
+<a name="gbab-96"></a><span class="cm">   * @enum:</span>
+<a name="gbab-97"></a><span class="cm">   *   TT_APPLE_ID_XXX</span>
+<a name="gbab-98"></a><span class="cm">   *</span>
+<a name="gbab-99"></a><span class="cm">   * @description:</span>
+<a name="gbab-100"></a><span class="cm">   *   A list of valid values for the `encoding_id&#39; for</span>
+<a name="gbab-101"></a><span class="cm">   *   @TT_PLATFORM_APPLE_UNICODE charmaps and name entries.</span>
+<a name="gbab-102"></a><span class="cm">   *</span>
+<a name="gbab-103"></a><span class="cm">   * @values:</span>
+<a name="gbab-104"></a><span class="cm">   *   TT_APPLE_ID_DEFAULT ::</span>
+<a name="gbab-105"></a><span class="cm">   *     Unicode version 1.0.</span>
+<a name="gbab-106"></a><span class="cm">   *</span>
+<a name="gbab-107"></a><span class="cm">   *   TT_APPLE_ID_UNICODE_1_1 ::</span>
+<a name="gbab-108"></a><span class="cm">   *     Unicode 1.1; specifies Hangul characters starting at U+34xx.</span>
+<a name="gbab-109"></a><span class="cm">   *</span>
+<a name="gbab-110"></a><span class="cm">   *   TT_APPLE_ID_ISO_10646 ::</span>
+<a name="gbab-111"></a><span class="cm">   *     Deprecated (identical to preceding).</span>
+<a name="gbab-112"></a><span class="cm">   *</span>
+<a name="gbab-113"></a><span class="cm">   *   TT_APPLE_ID_UNICODE_2_0 ::</span>
+<a name="gbab-114"></a><span class="cm">   *     Unicode 2.0 and beyond (UTF-16 BMP only).</span>
+<a name="gbab-115"></a><span class="cm">   *</span>
+<a name="gbab-116"></a><span class="cm">   *   TT_APPLE_ID_UNICODE_32 ::</span>
+<a name="gbab-117"></a><span class="cm">   *     Unicode 3.1 and beyond, using UTF-32.</span>
+<a name="gbab-118"></a><span class="cm">   *</span>
+<a name="gbab-119"></a><span class="cm">   *   TT_APPLE_ID_VARIANT_SELECTOR ::</span>
+<a name="gbab-120"></a><span class="cm">   *     From Adobe, not Apple.  Not a normal cmap.  Specifies variations</span>
+<a name="gbab-121"></a><span class="cm">   *     on a real cmap.</span>
+<a name="gbab-122"></a><span class="cm">   */</span>
+<a name="gbab-123"></a>
+<a name="gbab-124"></a><span class="cp">#define TT_APPLE_ID_DEFAULT           0 </span><span class="cm">/* Unicode 1.0 */</span><span class="cp"></span>
+<a name="gbab-125"></a><span class="cp">#define TT_APPLE_ID_UNICODE_1_1       1 </span><span class="cm">/* specify Hangul at U+34xx */</span><span class="cp"></span>
+<a name="gbab-126"></a><span class="cp">#define TT_APPLE_ID_ISO_10646         2 </span><span class="cm">/* deprecated */</span><span class="cp"></span>
+<a name="gbab-127"></a><span class="cp">#define TT_APPLE_ID_UNICODE_2_0       3 </span><span class="cm">/* or later */</span><span class="cp"></span>
+<a name="gbab-128"></a><span class="cp">#define TT_APPLE_ID_UNICODE_32        4 </span><span class="cm">/* 2.0 or later, full repertoire */</span><span class="cp"></span>
+<a name="gbab-129"></a><span class="cp">#define TT_APPLE_ID_VARIANT_SELECTOR  5 </span><span class="cm">/* variation selector data */</span><span class="cp"></span>
+<a name="gbab-130"></a>
+<a name="gbab-131"></a>
+<a name="gbab-132"></a>  <span class="cm">/***********************************************************************</span>
+<a name="gbab-133"></a><span class="cm">   *</span>
+<a name="gbab-134"></a><span class="cm">   * @enum:</span>
+<a name="gbab-135"></a><span class="cm">   *   TT_MAC_ID_XXX</span>
+<a name="gbab-136"></a><span class="cm">   *</span>
+<a name="gbab-137"></a><span class="cm">   * @description:</span>
+<a name="gbab-138"></a><span class="cm">   *   A list of valid values for the `encoding_id&#39; for</span>
+<a name="gbab-139"></a><span class="cm">   *   @TT_PLATFORM_MACINTOSH charmaps and name entries.</span>
+<a name="gbab-140"></a><span class="cm">   *</span>
+<a name="gbab-141"></a><span class="cm">   * @values:</span>
+<a name="gbab-142"></a><span class="cm">   *   TT_MAC_ID_ROMAN ::</span>
+<a name="gbab-143"></a><span class="cm">   *   TT_MAC_ID_JAPANESE ::</span>
+<a name="gbab-144"></a><span class="cm">   *   TT_MAC_ID_TRADITIONAL_CHINESE ::</span>
+<a name="gbab-145"></a><span class="cm">   *   TT_MAC_ID_KOREAN ::</span>
+<a name="gbab-146"></a><span class="cm">   *   TT_MAC_ID_ARABIC ::</span>
+<a name="gbab-147"></a><span class="cm">   *   TT_MAC_ID_HEBREW ::</span>
+<a name="gbab-148"></a><span class="cm">   *   TT_MAC_ID_GREEK ::</span>
+<a name="gbab-149"></a><span class="cm">   *   TT_MAC_ID_RUSSIAN ::</span>
+<a name="gbab-150"></a><span class="cm">   *   TT_MAC_ID_RSYMBOL ::</span>
+<a name="gbab-151"></a><span class="cm">   *   TT_MAC_ID_DEVANAGARI ::</span>
+<a name="gbab-152"></a><span class="cm">   *   TT_MAC_ID_GURMUKHI ::</span>
+<a name="gbab-153"></a><span class="cm">   *   TT_MAC_ID_GUJARATI ::</span>
+<a name="gbab-154"></a><span class="cm">   *   TT_MAC_ID_ORIYA ::</span>
+<a name="gbab-155"></a><span class="cm">   *   TT_MAC_ID_BENGALI ::</span>
+<a name="gbab-156"></a><span class="cm">   *   TT_MAC_ID_TAMIL ::</span>
+<a name="gbab-157"></a><span class="cm">   *   TT_MAC_ID_TELUGU ::</span>
+<a name="gbab-158"></a><span class="cm">   *   TT_MAC_ID_KANNADA ::</span>
+<a name="gbab-159"></a><span class="cm">   *   TT_MAC_ID_MALAYALAM ::</span>
+<a name="gbab-160"></a><span class="cm">   *   TT_MAC_ID_SINHALESE ::</span>
+<a name="gbab-161"></a><span class="cm">   *   TT_MAC_ID_BURMESE ::</span>
+<a name="gbab-162"></a><span class="cm">   *   TT_MAC_ID_KHMER ::</span>
+<a name="gbab-163"></a><span class="cm">   *   TT_MAC_ID_THAI ::</span>
+<a name="gbab-164"></a><span class="cm">   *   TT_MAC_ID_LAOTIAN ::</span>
+<a name="gbab-165"></a><span class="cm">   *   TT_MAC_ID_GEORGIAN ::</span>
+<a name="gbab-166"></a><span class="cm">   *   TT_MAC_ID_ARMENIAN ::</span>
+<a name="gbab-167"></a><span class="cm">   *   TT_MAC_ID_MALDIVIAN ::</span>
+<a name="gbab-168"></a><span class="cm">   *   TT_MAC_ID_SIMPLIFIED_CHINESE ::</span>
+<a name="gbab-169"></a><span class="cm">   *   TT_MAC_ID_TIBETAN ::</span>
+<a name="gbab-170"></a><span class="cm">   *   TT_MAC_ID_MONGOLIAN ::</span>
+<a name="gbab-171"></a><span class="cm">   *   TT_MAC_ID_GEEZ ::</span>
+<a name="gbab-172"></a><span class="cm">   *   TT_MAC_ID_SLAVIC ::</span>
+<a name="gbab-173"></a><span class="cm">   *   TT_MAC_ID_VIETNAMESE ::</span>
+<a name="gbab-174"></a><span class="cm">   *   TT_MAC_ID_SINDHI ::</span>
+<a name="gbab-175"></a><span class="cm">   *   TT_MAC_ID_UNINTERP ::</span>
+<a name="gbab-176"></a><span class="cm">   */</span>
+<a name="gbab-177"></a>
+<a name="gbab-178"></a><span class="cp">#define TT_MAC_ID_ROMAN                 0</span>
+<a name="gbab-179"></a><span class="cp">#define TT_MAC_ID_JAPANESE              1</span>
+<a name="gbab-180"></a><span class="cp">#define TT_MAC_ID_TRADITIONAL_CHINESE   2</span>
+<a name="gbab-181"></a><span class="cp">#define TT_MAC_ID_KOREAN                3</span>
+<a name="gbab-182"></a><span class="cp">#define TT_MAC_ID_ARABIC                4</span>
+<a name="gbab-183"></a><span class="cp">#define TT_MAC_ID_HEBREW                5</span>
+<a name="gbab-184"></a><span class="cp">#define TT_MAC_ID_GREEK                 6</span>
+<a name="gbab-185"></a><span class="cp">#define TT_MAC_ID_RUSSIAN               7</span>
+<a name="gbab-186"></a><span class="cp">#define TT_MAC_ID_RSYMBOL               8</span>
+<a name="gbab-187"></a><span class="cp">#define TT_MAC_ID_DEVANAGARI            9</span>
+<a name="gbab-188"></a><span class="cp">#define TT_MAC_ID_GURMUKHI             10</span>
+<a name="gbab-189"></a><span class="cp">#define TT_MAC_ID_GUJARATI             11</span>
+<a name="gbab-190"></a><span class="cp">#define TT_MAC_ID_ORIYA                12</span>
+<a name="gbab-191"></a><span class="cp">#define TT_MAC_ID_BENGALI              13</span>
+<a name="gbab-192"></a><span class="cp">#define TT_MAC_ID_TAMIL                14</span>
+<a name="gbab-193"></a><span class="cp">#define TT_MAC_ID_TELUGU               15</span>
+<a name="gbab-194"></a><span class="cp">#define TT_MAC_ID_KANNADA              16</span>
+<a name="gbab-195"></a><span class="cp">#define TT_MAC_ID_MALAYALAM            17</span>
+<a name="gbab-196"></a><span class="cp">#define TT_MAC_ID_SINHALESE            18</span>
+<a name="gbab-197"></a><span class="cp">#define TT_MAC_ID_BURMESE              19</span>
+<a name="gbab-198"></a><span class="cp">#define TT_MAC_ID_KHMER                20</span>
+<a name="gbab-199"></a><span class="cp">#define TT_MAC_ID_THAI                 21</span>
+<a name="gbab-200"></a><span class="cp">#define TT_MAC_ID_LAOTIAN              22</span>
+<a name="gbab-201"></a><span class="cp">#define TT_MAC_ID_GEORGIAN             23</span>
+<a name="gbab-202"></a><span class="cp">#define TT_MAC_ID_ARMENIAN             24</span>
+<a name="gbab-203"></a><span class="cp">#define TT_MAC_ID_MALDIVIAN            25</span>
+<a name="gbab-204"></a><span class="cp">#define TT_MAC_ID_SIMPLIFIED_CHINESE   25</span>
+<a name="gbab-205"></a><span class="cp">#define TT_MAC_ID_TIBETAN              26</span>
+<a name="gbab-206"></a><span class="cp">#define TT_MAC_ID_MONGOLIAN            27</span>
+<a name="gbab-207"></a><span class="cp">#define TT_MAC_ID_GEEZ                 28</span>
+<a name="gbab-208"></a><span class="cp">#define TT_MAC_ID_SLAVIC               29</span>
+<a name="gbab-209"></a><span class="cp">#define TT_MAC_ID_VIETNAMESE           30</span>
+<a name="gbab-210"></a><span class="cp">#define TT_MAC_ID_SINDHI               31</span>
+<a name="gbab-211"></a><span class="cp">#define TT_MAC_ID_UNINTERP             32</span>
+<a name="gbab-212"></a>
+<a name="gbab-213"></a>
+<a name="gbab-214"></a>  <span class="cm">/***********************************************************************</span>
+<a name="gbab-215"></a><span class="cm">   *</span>
+<a name="gbab-216"></a><span class="cm">   * @enum:</span>
+<a name="gbab-217"></a><span class="cm">   *   TT_ISO_ID_XXX</span>
+<a name="gbab-218"></a><span class="cm">   *</span>
+<a name="gbab-219"></a><span class="cm">   * @description:</span>
+<a name="gbab-220"></a><span class="cm">   *   A list of valid values for the `encoding_id&#39; for</span>
+<a name="gbab-221"></a><span class="cm">   *   @TT_PLATFORM_ISO charmaps and name entries.</span>
+<a name="gbab-222"></a><span class="cm">   *</span>
+<a name="gbab-223"></a><span class="cm">   *   Their use is now deprecated.</span>
+<a name="gbab-224"></a><span class="cm">   *</span>
+<a name="gbab-225"></a><span class="cm">   * @values:</span>
+<a name="gbab-226"></a><span class="cm">   *   TT_ISO_ID_7BIT_ASCII ::</span>
+<a name="gbab-227"></a><span class="cm">   *     ASCII.</span>
+<a name="gbab-228"></a><span class="cm">   *   TT_ISO_ID_10646 ::</span>
+<a name="gbab-229"></a><span class="cm">   *     ISO/10646.</span>
+<a name="gbab-230"></a><span class="cm">   *   TT_ISO_ID_8859_1 ::</span>
+<a name="gbab-231"></a><span class="cm">   *     Also known as Latin-1.</span>
+<a name="gbab-232"></a><span class="cm">   */</span>
+<a name="gbab-233"></a>
+<a name="gbab-234"></a><span class="cp">#define TT_ISO_ID_7BIT_ASCII  0</span>
+<a name="gbab-235"></a><span class="cp">#define TT_ISO_ID_10646       1</span>
+<a name="gbab-236"></a><span class="cp">#define TT_ISO_ID_8859_1      2</span>
+<a name="gbab-237"></a>
+<a name="gbab-238"></a>
+<a name="gbab-239"></a>  <span class="cm">/***********************************************************************</span>
+<a name="gbab-240"></a><span class="cm">   *</span>
+<a name="gbab-241"></a><span class="cm">   * @enum:</span>
+<a name="gbab-242"></a><span class="cm">   *   TT_MS_ID_XXX</span>
+<a name="gbab-243"></a><span class="cm">   *</span>
+<a name="gbab-244"></a><span class="cm">   * @description:</span>
+<a name="gbab-245"></a><span class="cm">   *   A list of valid values for the `encoding_id&#39; for</span>
+<a name="gbab-246"></a><span class="cm">   *   @TT_PLATFORM_MICROSOFT charmaps and name entries.</span>
+<a name="gbab-247"></a><span class="cm">   *</span>
+<a name="gbab-248"></a><span class="cm">   * @values:</span>
+<a name="gbab-249"></a><span class="cm">   *   TT_MS_ID_SYMBOL_CS ::</span>
+<a name="gbab-250"></a><span class="cm">   *     Corresponds to Microsoft symbol encoding. See</span>
+<a name="gbab-251"></a><span class="cm">   *     @FT_ENCODING_MS_SYMBOL.</span>
+<a name="gbab-252"></a><span class="cm">   *</span>
+<a name="gbab-253"></a><span class="cm">   *   TT_MS_ID_UNICODE_CS ::</span>
+<a name="gbab-254"></a><span class="cm">   *     Corresponds to a Microsoft WGL4 charmap, matching Unicode.  See</span>
+<a name="gbab-255"></a><span class="cm">   *     @FT_ENCODING_UNICODE.</span>
+<a name="gbab-256"></a><span class="cm">   *</span>
+<a name="gbab-257"></a><span class="cm">   *   TT_MS_ID_SJIS ::</span>
+<a name="gbab-258"></a><span class="cm">   *     Corresponds to SJIS Japanese encoding.  See @FT_ENCODING_SJIS.</span>
+<a name="gbab-259"></a><span class="cm">   *</span>
+<a name="gbab-260"></a><span class="cm">   *   TT_MS_ID_GB2312 ::</span>
+<a name="gbab-261"></a><span class="cm">   *     Corresponds to Simplified Chinese as used in Mainland China.  See</span>
+<a name="gbab-262"></a><span class="cm">   *     @FT_ENCODING_GB2312.</span>
+<a name="gbab-263"></a><span class="cm">   *</span>
+<a name="gbab-264"></a><span class="cm">   *   TT_MS_ID_BIG_5 ::</span>
+<a name="gbab-265"></a><span class="cm">   *     Corresponds to Traditional Chinese as used in Taiwan and Hong Kong.</span>
+<a name="gbab-266"></a><span class="cm">   *     See @FT_ENCODING_BIG5.</span>
+<a name="gbab-267"></a><span class="cm">   *</span>
+<a name="gbab-268"></a><span class="cm">   *   TT_MS_ID_WANSUNG ::</span>
+<a name="gbab-269"></a><span class="cm">   *     Corresponds to Korean Wansung encoding.  See @FT_ENCODING_WANSUNG.</span>
+<a name="gbab-270"></a><span class="cm">   *</span>
+<a name="gbab-271"></a><span class="cm">   *   TT_MS_ID_JOHAB ::</span>
+<a name="gbab-272"></a><span class="cm">   *     Corresponds to Johab encoding.  See @FT_ENCODING_JOHAB.</span>
+<a name="gbab-273"></a><span class="cm">   *</span>
+<a name="gbab-274"></a><span class="cm">   *   TT_MS_ID_UCS_4 ::</span>
+<a name="gbab-275"></a><span class="cm">   *     Corresponds to UCS-4 or UTF-32 charmaps.  This has been added to</span>
+<a name="gbab-276"></a><span class="cm">   *     the OpenType specification version 1.4 (mid-2001.)</span>
+<a name="gbab-277"></a><span class="cm">   */</span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a><span class="cp">#define TT_MS_ID_SYMBOL_CS    0</span>
+<a name="gbab-280"></a><span class="cp">#define TT_MS_ID_UNICODE_CS   1</span>
+<a name="gbab-281"></a><span class="cp">#define TT_MS_ID_SJIS         2</span>
+<a name="gbab-282"></a><span class="cp">#define TT_MS_ID_GB2312       3</span>
+<a name="gbab-283"></a><span class="cp">#define TT_MS_ID_BIG_5        4</span>
+<a name="gbab-284"></a><span class="cp">#define TT_MS_ID_WANSUNG      5</span>
+<a name="gbab-285"></a><span class="cp">#define TT_MS_ID_JOHAB        6</span>
+<a name="gbab-286"></a><span class="cp">#define TT_MS_ID_UCS_4       10</span>
+<a name="gbab-287"></a>
+<a name="gbab-288"></a>
+<a name="gbab-289"></a>  <span class="cm">/***********************************************************************</span>
+<a name="gbab-290"></a><span class="cm">   *</span>
+<a name="gbab-291"></a><span class="cm">   * @enum:</span>
+<a name="gbab-292"></a><span class="cm">   *   TT_ADOBE_ID_XXX</span>
+<a name="gbab-293"></a><span class="cm">   *</span>
+<a name="gbab-294"></a><span class="cm">   * @description:</span>
+<a name="gbab-295"></a><span class="cm">   *   A list of valid values for the `encoding_id&#39; for</span>
+<a name="gbab-296"></a><span class="cm">   *   @TT_PLATFORM_ADOBE charmaps.  This is a FreeType-specific extension!</span>
+<a name="gbab-297"></a><span class="cm">   *</span>
+<a name="gbab-298"></a><span class="cm">   * @values:</span>
+<a name="gbab-299"></a><span class="cm">   *   TT_ADOBE_ID_STANDARD ::</span>
+<a name="gbab-300"></a><span class="cm">   *     Adobe standard encoding.</span>
+<a name="gbab-301"></a><span class="cm">   *   TT_ADOBE_ID_EXPERT ::</span>
+<a name="gbab-302"></a><span class="cm">   *     Adobe expert encoding.</span>
+<a name="gbab-303"></a><span class="cm">   *   TT_ADOBE_ID_CUSTOM ::</span>
+<a name="gbab-304"></a><span class="cm">   *     Adobe custom encoding.</span>
+<a name="gbab-305"></a><span class="cm">   *   TT_ADOBE_ID_LATIN_1 ::</span>
+<a name="gbab-306"></a><span class="cm">   *     Adobe Latin~1 encoding.</span>
+<a name="gbab-307"></a><span class="cm">   */</span>
+<a name="gbab-308"></a>
+<a name="gbab-309"></a><span class="cp">#define TT_ADOBE_ID_STANDARD  0</span>
+<a name="gbab-310"></a><span class="cp">#define TT_ADOBE_ID_EXPERT    1</span>
+<a name="gbab-311"></a><span class="cp">#define TT_ADOBE_ID_CUSTOM    2</span>
+<a name="gbab-312"></a><span class="cp">#define TT_ADOBE_ID_LATIN_1   3</span>
+<a name="gbab-313"></a>
+<a name="gbab-314"></a>
+<a name="gbab-315"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-316"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-317"></a>  <span class="cm">/* Possible values of the language identifier field in the name records  */</span>
+<a name="gbab-318"></a>  <span class="cm">/* of the TTF `name&#39; table if the `platform&#39; identifier code is          */</span>
+<a name="gbab-319"></a>  <span class="cm">/* TT_PLATFORM_MACINTOSH.  These values are also used as return values   */</span>
+<a name="gbab-320"></a>  <span class="cm">/* for function @FT_Get_CMap_Language_ID.                                */</span>
+<a name="gbab-321"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-322"></a>  <span class="cm">/* The canonical source for the Apple assigned Language ID&#39;s is at       */</span>
+<a name="gbab-323"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-324"></a>  <span class="cm">/*   https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html */</span>
+<a name="gbab-325"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-326"></a><span class="cp">#define TT_MAC_LANGID_ENGLISH                       0</span>
+<a name="gbab-327"></a><span class="cp">#define TT_MAC_LANGID_FRENCH                        1</span>
+<a name="gbab-328"></a><span class="cp">#define TT_MAC_LANGID_GERMAN                        2</span>
+<a name="gbab-329"></a><span class="cp">#define TT_MAC_LANGID_ITALIAN                       3</span>
+<a name="gbab-330"></a><span class="cp">#define TT_MAC_LANGID_DUTCH                         4</span>
+<a name="gbab-331"></a><span class="cp">#define TT_MAC_LANGID_SWEDISH                       5</span>
+<a name="gbab-332"></a><span class="cp">#define TT_MAC_LANGID_SPANISH                       6</span>
+<a name="gbab-333"></a><span class="cp">#define TT_MAC_LANGID_DANISH                        7</span>
+<a name="gbab-334"></a><span class="cp">#define TT_MAC_LANGID_PORTUGUESE                    8</span>
+<a name="gbab-335"></a><span class="cp">#define TT_MAC_LANGID_NORWEGIAN                     9</span>
+<a name="gbab-336"></a><span class="cp">#define TT_MAC_LANGID_HEBREW                       10</span>
+<a name="gbab-337"></a><span class="cp">#define TT_MAC_LANGID_JAPANESE                     11</span>
+<a name="gbab-338"></a><span class="cp">#define TT_MAC_LANGID_ARABIC                       12</span>
+<a name="gbab-339"></a><span class="cp">#define TT_MAC_LANGID_FINNISH                      13</span>
+<a name="gbab-340"></a><span class="cp">#define TT_MAC_LANGID_GREEK                        14</span>
+<a name="gbab-341"></a><span class="cp">#define TT_MAC_LANGID_ICELANDIC                    15</span>
+<a name="gbab-342"></a><span class="cp">#define TT_MAC_LANGID_MALTESE                      16</span>
+<a name="gbab-343"></a><span class="cp">#define TT_MAC_LANGID_TURKISH                      17</span>
+<a name="gbab-344"></a><span class="cp">#define TT_MAC_LANGID_CROATIAN                     18</span>
+<a name="gbab-345"></a><span class="cp">#define TT_MAC_LANGID_CHINESE_TRADITIONAL          19</span>
+<a name="gbab-346"></a><span class="cp">#define TT_MAC_LANGID_URDU                         20</span>
+<a name="gbab-347"></a><span class="cp">#define TT_MAC_LANGID_HINDI                        21</span>
+<a name="gbab-348"></a><span class="cp">#define TT_MAC_LANGID_THAI                         22</span>
+<a name="gbab-349"></a><span class="cp">#define TT_MAC_LANGID_KOREAN                       23</span>
+<a name="gbab-350"></a><span class="cp">#define TT_MAC_LANGID_LITHUANIAN                   24</span>
+<a name="gbab-351"></a><span class="cp">#define TT_MAC_LANGID_POLISH                       25</span>
+<a name="gbab-352"></a><span class="cp">#define TT_MAC_LANGID_HUNGARIAN                    26</span>
+<a name="gbab-353"></a><span class="cp">#define TT_MAC_LANGID_ESTONIAN                     27</span>
+<a name="gbab-354"></a><span class="cp">#define TT_MAC_LANGID_LETTISH                      28</span>
+<a name="gbab-355"></a><span class="cp">#define TT_MAC_LANGID_SAAMISK                      29</span>
+<a name="gbab-356"></a><span class="cp">#define TT_MAC_LANGID_FAEROESE                     30</span>
+<a name="gbab-357"></a><span class="cp">#define TT_MAC_LANGID_FARSI                        31</span>
+<a name="gbab-358"></a><span class="cp">#define TT_MAC_LANGID_RUSSIAN                      32</span>
+<a name="gbab-359"></a><span class="cp">#define TT_MAC_LANGID_CHINESE_SIMPLIFIED           33</span>
+<a name="gbab-360"></a><span class="cp">#define TT_MAC_LANGID_FLEMISH                      34</span>
+<a name="gbab-361"></a><span class="cp">#define TT_MAC_LANGID_IRISH                        35</span>
+<a name="gbab-362"></a><span class="cp">#define TT_MAC_LANGID_ALBANIAN                     36</span>
+<a name="gbab-363"></a><span class="cp">#define TT_MAC_LANGID_ROMANIAN                     37</span>
+<a name="gbab-364"></a><span class="cp">#define TT_MAC_LANGID_CZECH                        38</span>
+<a name="gbab-365"></a><span class="cp">#define TT_MAC_LANGID_SLOVAK                       39</span>
+<a name="gbab-366"></a><span class="cp">#define TT_MAC_LANGID_SLOVENIAN                    40</span>
+<a name="gbab-367"></a><span class="cp">#define TT_MAC_LANGID_YIDDISH                      41</span>
+<a name="gbab-368"></a><span class="cp">#define TT_MAC_LANGID_SERBIAN                      42</span>
+<a name="gbab-369"></a><span class="cp">#define TT_MAC_LANGID_MACEDONIAN                   43</span>
+<a name="gbab-370"></a><span class="cp">#define TT_MAC_LANGID_BULGARIAN                    44</span>
+<a name="gbab-371"></a><span class="cp">#define TT_MAC_LANGID_UKRAINIAN                    45</span>
+<a name="gbab-372"></a><span class="cp">#define TT_MAC_LANGID_BYELORUSSIAN                 46</span>
+<a name="gbab-373"></a><span class="cp">#define TT_MAC_LANGID_UZBEK                        47</span>
+<a name="gbab-374"></a><span class="cp">#define TT_MAC_LANGID_KAZAKH                       48</span>
+<a name="gbab-375"></a><span class="cp">#define TT_MAC_LANGID_AZERBAIJANI                  49</span>
+<a name="gbab-376"></a><span class="cp">#define TT_MAC_LANGID_AZERBAIJANI_CYRILLIC_SCRIPT  49</span>
+<a name="gbab-377"></a><span class="cp">#define TT_MAC_LANGID_AZERBAIJANI_ARABIC_SCRIPT    50</span>
+<a name="gbab-378"></a><span class="cp">#define TT_MAC_LANGID_ARMENIAN                     51</span>
+<a name="gbab-379"></a><span class="cp">#define TT_MAC_LANGID_GEORGIAN                     52</span>
+<a name="gbab-380"></a><span class="cp">#define TT_MAC_LANGID_MOLDAVIAN                    53</span>
+<a name="gbab-381"></a><span class="cp">#define TT_MAC_LANGID_KIRGHIZ                      54</span>
+<a name="gbab-382"></a><span class="cp">#define TT_MAC_LANGID_TAJIKI                       55</span>
+<a name="gbab-383"></a><span class="cp">#define TT_MAC_LANGID_TURKMEN                      56</span>
+<a name="gbab-384"></a><span class="cp">#define TT_MAC_LANGID_MONGOLIAN                    57</span>
+<a name="gbab-385"></a><span class="cp">#define TT_MAC_LANGID_MONGOLIAN_MONGOLIAN_SCRIPT   57</span>
+<a name="gbab-386"></a><span class="cp">#define TT_MAC_LANGID_MONGOLIAN_CYRILLIC_SCRIPT    58</span>
+<a name="gbab-387"></a><span class="cp">#define TT_MAC_LANGID_PASHTO                       59</span>
+<a name="gbab-388"></a><span class="cp">#define TT_MAC_LANGID_KURDISH                      60</span>
+<a name="gbab-389"></a><span class="cp">#define TT_MAC_LANGID_KASHMIRI                     61</span>
+<a name="gbab-390"></a><span class="cp">#define TT_MAC_LANGID_SINDHI                       62</span>
+<a name="gbab-391"></a><span class="cp">#define TT_MAC_LANGID_TIBETAN                      63</span>
+<a name="gbab-392"></a><span class="cp">#define TT_MAC_LANGID_NEPALI                       64</span>
+<a name="gbab-393"></a><span class="cp">#define TT_MAC_LANGID_SANSKRIT                     65</span>
+<a name="gbab-394"></a><span class="cp">#define TT_MAC_LANGID_MARATHI                      66</span>
+<a name="gbab-395"></a><span class="cp">#define TT_MAC_LANGID_BENGALI                      67</span>
+<a name="gbab-396"></a><span class="cp">#define TT_MAC_LANGID_ASSAMESE                     68</span>
+<a name="gbab-397"></a><span class="cp">#define TT_MAC_LANGID_GUJARATI                     69</span>
+<a name="gbab-398"></a><span class="cp">#define TT_MAC_LANGID_PUNJABI                      70</span>
+<a name="gbab-399"></a><span class="cp">#define TT_MAC_LANGID_ORIYA                        71</span>
+<a name="gbab-400"></a><span class="cp">#define TT_MAC_LANGID_MALAYALAM                    72</span>
+<a name="gbab-401"></a><span class="cp">#define TT_MAC_LANGID_KANNADA                      73</span>
+<a name="gbab-402"></a><span class="cp">#define TT_MAC_LANGID_TAMIL                        74</span>
+<a name="gbab-403"></a><span class="cp">#define TT_MAC_LANGID_TELUGU                       75</span>
+<a name="gbab-404"></a><span class="cp">#define TT_MAC_LANGID_SINHALESE                    76</span>
+<a name="gbab-405"></a><span class="cp">#define TT_MAC_LANGID_BURMESE                      77</span>
+<a name="gbab-406"></a><span class="cp">#define TT_MAC_LANGID_KHMER                        78</span>
+<a name="gbab-407"></a><span class="cp">#define TT_MAC_LANGID_LAO                          79</span>
+<a name="gbab-408"></a><span class="cp">#define TT_MAC_LANGID_VIETNAMESE                   80</span>
+<a name="gbab-409"></a><span class="cp">#define TT_MAC_LANGID_INDONESIAN                   81</span>
+<a name="gbab-410"></a><span class="cp">#define TT_MAC_LANGID_TAGALOG                      82</span>
+<a name="gbab-411"></a><span class="cp">#define TT_MAC_LANGID_MALAY_ROMAN_SCRIPT           83</span>
+<a name="gbab-412"></a><span class="cp">#define TT_MAC_LANGID_MALAY_ARABIC_SCRIPT          84</span>
+<a name="gbab-413"></a><span class="cp">#define TT_MAC_LANGID_AMHARIC                      85</span>
+<a name="gbab-414"></a><span class="cp">#define TT_MAC_LANGID_TIGRINYA                     86</span>
+<a name="gbab-415"></a><span class="cp">#define TT_MAC_LANGID_GALLA                        87</span>
+<a name="gbab-416"></a><span class="cp">#define TT_MAC_LANGID_SOMALI                       88</span>
+<a name="gbab-417"></a><span class="cp">#define TT_MAC_LANGID_SWAHILI                      89</span>
+<a name="gbab-418"></a><span class="cp">#define TT_MAC_LANGID_RUANDA                       90</span>
+<a name="gbab-419"></a><span class="cp">#define TT_MAC_LANGID_RUNDI                        91</span>
+<a name="gbab-420"></a><span class="cp">#define TT_MAC_LANGID_CHEWA                        92</span>
+<a name="gbab-421"></a><span class="cp">#define TT_MAC_LANGID_MALAGASY                     93</span>
+<a name="gbab-422"></a><span class="cp">#define TT_MAC_LANGID_ESPERANTO                    94</span>
+<a name="gbab-423"></a><span class="cp">#define TT_MAC_LANGID_WELSH                       128</span>
+<a name="gbab-424"></a><span class="cp">#define TT_MAC_LANGID_BASQUE                      129</span>
+<a name="gbab-425"></a><span class="cp">#define TT_MAC_LANGID_CATALAN                     130</span>
+<a name="gbab-426"></a><span class="cp">#define TT_MAC_LANGID_LATIN                       131</span>
+<a name="gbab-427"></a><span class="cp">#define TT_MAC_LANGID_QUECHUA                     132</span>
+<a name="gbab-428"></a><span class="cp">#define TT_MAC_LANGID_GUARANI                     133</span>
+<a name="gbab-429"></a><span class="cp">#define TT_MAC_LANGID_AYMARA                      134</span>
+<a name="gbab-430"></a><span class="cp">#define TT_MAC_LANGID_TATAR                       135</span>
+<a name="gbab-431"></a><span class="cp">#define TT_MAC_LANGID_UIGHUR                      136</span>
+<a name="gbab-432"></a><span class="cp">#define TT_MAC_LANGID_DZONGKHA                    137</span>
+<a name="gbab-433"></a><span class="cp">#define TT_MAC_LANGID_JAVANESE                    138</span>
+<a name="gbab-434"></a><span class="cp">#define TT_MAC_LANGID_SUNDANESE                   139</span>
+<a name="gbab-435"></a>
+<a name="gbab-436"></a>
+<a name="gbab-437"></a><span class="cp">#if 0</span><span class="c">  /* these seem to be errors that have been dropped */</span>
+<a name="gbab-438"></a>
+<a name="gbab-439"></a><span class="c">#define TT_MAC_LANGID_SCOTTISH_GAELIC             140</span>
+<a name="gbab-440"></a><span class="c">#define TT_MAC_LANGID_IRISH_GAELIC                141</span>
+<a name="gbab-441"></a>
+<a name="gbab-442"></a><span class="cp">#endif</span>
+<a name="gbab-443"></a>
+<a name="gbab-444"></a>
+<a name="gbab-445"></a>  <span class="cm">/* The following codes are new as of 2000-03-10 */</span>
+<a name="gbab-446"></a><span class="cp">#define TT_MAC_LANGID_GALICIAN                    140</span>
+<a name="gbab-447"></a><span class="cp">#define TT_MAC_LANGID_AFRIKAANS                   141</span>
+<a name="gbab-448"></a><span class="cp">#define TT_MAC_LANGID_BRETON                      142</span>
+<a name="gbab-449"></a><span class="cp">#define TT_MAC_LANGID_INUKTITUT                   143</span>
+<a name="gbab-450"></a><span class="cp">#define TT_MAC_LANGID_SCOTTISH_GAELIC             144</span>
+<a name="gbab-451"></a><span class="cp">#define TT_MAC_LANGID_MANX_GAELIC                 145</span>
+<a name="gbab-452"></a><span class="cp">#define TT_MAC_LANGID_IRISH_GAELIC                146</span>
+<a name="gbab-453"></a><span class="cp">#define TT_MAC_LANGID_TONGAN                      147</span>
+<a name="gbab-454"></a><span class="cp">#define TT_MAC_LANGID_GREEK_POLYTONIC             148</span>
+<a name="gbab-455"></a><span class="cp">#define TT_MAC_LANGID_GREELANDIC                  149</span>
+<a name="gbab-456"></a><span class="cp">#define TT_MAC_LANGID_AZERBAIJANI_ROMAN_SCRIPT    150</span>
+<a name="gbab-457"></a>
+<a name="gbab-458"></a>
+<a name="gbab-459"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-460"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-461"></a>  <span class="cm">/* Possible values of the language identifier field in the name records  */</span>
+<a name="gbab-462"></a>  <span class="cm">/* of the TTF `name&#39; table if the `platform&#39; identifier code is          */</span>
+<a name="gbab-463"></a>  <span class="cm">/* TT_PLATFORM_MICROSOFT.                                                */</span>
+<a name="gbab-464"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-465"></a>  <span class="cm">/* The canonical source for the MS assigned LCIDs is                     */</span>
+<a name="gbab-466"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-467"></a>  <span class="cm">/*   http://www.microsoft.com/globaldev/reference/lcid-all.mspx          */</span>
+<a name="gbab-468"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-469"></a>
+<a name="gbab-470"></a><span class="cp">#define TT_MS_LANGID_ARABIC_GENERAL                    0x0001</span>
+<a name="gbab-471"></a><span class="cp">#define TT_MS_LANGID_ARABIC_SAUDI_ARABIA               0x0401</span>
+<a name="gbab-472"></a><span class="cp">#define TT_MS_LANGID_ARABIC_IRAQ                       0x0801</span>
+<a name="gbab-473"></a><span class="cp">#define TT_MS_LANGID_ARABIC_EGYPT                      0x0C01</span>
+<a name="gbab-474"></a><span class="cp">#define TT_MS_LANGID_ARABIC_LIBYA                      0x1001</span>
+<a name="gbab-475"></a><span class="cp">#define TT_MS_LANGID_ARABIC_ALGERIA                    0x1401</span>
+<a name="gbab-476"></a><span class="cp">#define TT_MS_LANGID_ARABIC_MOROCCO                    0x1801</span>
+<a name="gbab-477"></a><span class="cp">#define TT_MS_LANGID_ARABIC_TUNISIA                    0x1C01</span>
+<a name="gbab-478"></a><span class="cp">#define TT_MS_LANGID_ARABIC_OMAN                       0x2001</span>
+<a name="gbab-479"></a><span class="cp">#define TT_MS_LANGID_ARABIC_YEMEN                      0x2401</span>
+<a name="gbab-480"></a><span class="cp">#define TT_MS_LANGID_ARABIC_SYRIA                      0x2801</span>
+<a name="gbab-481"></a><span class="cp">#define TT_MS_LANGID_ARABIC_JORDAN                     0x2C01</span>
+<a name="gbab-482"></a><span class="cp">#define TT_MS_LANGID_ARABIC_LEBANON                    0x3001</span>
+<a name="gbab-483"></a><span class="cp">#define TT_MS_LANGID_ARABIC_KUWAIT                     0x3401</span>
+<a name="gbab-484"></a><span class="cp">#define TT_MS_LANGID_ARABIC_UAE                        0x3801</span>
+<a name="gbab-485"></a><span class="cp">#define TT_MS_LANGID_ARABIC_BAHRAIN                    0x3C01</span>
+<a name="gbab-486"></a><span class="cp">#define TT_MS_LANGID_ARABIC_QATAR                      0x4001</span>
+<a name="gbab-487"></a><span class="cp">#define TT_MS_LANGID_BULGARIAN_BULGARIA                0x0402</span>
+<a name="gbab-488"></a><span class="cp">#define TT_MS_LANGID_CATALAN_SPAIN                     0x0403</span>
+<a name="gbab-489"></a><span class="cp">#define TT_MS_LANGID_CHINESE_GENERAL                   0x0004</span>
+<a name="gbab-490"></a><span class="cp">#define TT_MS_LANGID_CHINESE_TAIWAN                    0x0404</span>
+<a name="gbab-491"></a><span class="cp">#define TT_MS_LANGID_CHINESE_PRC                       0x0804</span>
+<a name="gbab-492"></a><span class="cp">#define TT_MS_LANGID_CHINESE_HONG_KONG                 0x0C04</span>
+<a name="gbab-493"></a><span class="cp">#define TT_MS_LANGID_CHINESE_SINGAPORE                 0x1004</span>
+<a name="gbab-494"></a>
+<a name="gbab-495"></a><span class="cp">#if 1  </span><span class="cm">/* this looks like the correct value */</span><span class="cp"></span>
+<a name="gbab-496"></a><span class="cp">#define TT_MS_LANGID_CHINESE_MACAU                     0x1404</span>
+<a name="gbab-497"></a><span class="cp">#else  </span><span class="cm">/* but beware, Microsoft may change its mind...</span>
+<a name="gbab-498"></a><span class="cm">          the most recent Word reference has the following: */</span><span class="cp"></span>
+<a name="gbab-499"></a><span class="cp">#define TT_MS_LANGID_CHINESE_MACAU  TT_MS_LANGID_CHINESE_HONG_KONG</span>
+<a name="gbab-500"></a><span class="cp">#endif</span>
+<a name="gbab-501"></a>
+<a name="gbab-502"></a><span class="cp">#if 0</span><span class="c">  /* used only with .NET `cultures&#39;; commented out */</span>
+<a name="gbab-503"></a><span class="c">#define TT_MS_LANGID_CHINESE_TRADITIONAL               0x7C04</span>
+<a name="gbab-504"></a><span class="cp">#endif</span>
+<a name="gbab-505"></a>
+<a name="gbab-506"></a><span class="cp">#define TT_MS_LANGID_CZECH_CZECH_REPUBLIC              0x0405</span>
+<a name="gbab-507"></a><span class="cp">#define TT_MS_LANGID_DANISH_DENMARK                    0x0406</span>
+<a name="gbab-508"></a><span class="cp">#define TT_MS_LANGID_GERMAN_GERMANY                    0x0407</span>
+<a name="gbab-509"></a><span class="cp">#define TT_MS_LANGID_GERMAN_SWITZERLAND                0x0807</span>
+<a name="gbab-510"></a><span class="cp">#define TT_MS_LANGID_GERMAN_AUSTRIA                    0x0C07</span>
+<a name="gbab-511"></a><span class="cp">#define TT_MS_LANGID_GERMAN_LUXEMBOURG                 0x1007</span>
+<a name="gbab-512"></a><span class="cp">#define TT_MS_LANGID_GERMAN_LIECHTENSTEI               0x1407</span>
+<a name="gbab-513"></a><span class="cp">#define TT_MS_LANGID_GREEK_GREECE                      0x0408</span>
+<a name="gbab-514"></a>
+<a name="gbab-515"></a>  <span class="cm">/* don&#39;t ask what this one means... It is commented out currently. */</span>
+<a name="gbab-516"></a><span class="cp">#if 0</span><span class="c"></span>
+<a name="gbab-517"></a><span class="c">#define TT_MS_LANGID_GREEK_GREECE2                     0x2008</span>
+<a name="gbab-518"></a><span class="cp">#endif</span>
+<a name="gbab-519"></a>
+<a name="gbab-520"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_GENERAL                   0x0009</span>
+<a name="gbab-521"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_UNITED_STATES             0x0409</span>
+<a name="gbab-522"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_UNITED_KINGDOM            0x0809</span>
+<a name="gbab-523"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_AUSTRALIA                 0x0C09</span>
+<a name="gbab-524"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_CANADA                    0x1009</span>
+<a name="gbab-525"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_NEW_ZEALAND               0x1409</span>
+<a name="gbab-526"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_IRELAND                   0x1809</span>
+<a name="gbab-527"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_SOUTH_AFRICA              0x1C09</span>
+<a name="gbab-528"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_JAMAICA                   0x2009</span>
+<a name="gbab-529"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_CARIBBEAN                 0x2409</span>
+<a name="gbab-530"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_BELIZE                    0x2809</span>
+<a name="gbab-531"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_TRINIDAD                  0x2C09</span>
+<a name="gbab-532"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_ZIMBABWE                  0x3009</span>
+<a name="gbab-533"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_PHILIPPINES               0x3409</span>
+<a name="gbab-534"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_INDONESIA                 0x3809</span>
+<a name="gbab-535"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_HONG_KONG                 0x3C09</span>
+<a name="gbab-536"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_INDIA                     0x4009</span>
+<a name="gbab-537"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_MALAYSIA                  0x4409</span>
+<a name="gbab-538"></a><span class="cp">#define TT_MS_LANGID_ENGLISH_SINGAPORE                 0x4809</span>
+<a name="gbab-539"></a><span class="cp">#define TT_MS_LANGID_SPANISH_SPAIN_TRADITIONAL_SORT    0x040A</span>
+<a name="gbab-540"></a><span class="cp">#define TT_MS_LANGID_SPANISH_MEXICO                    0x080A</span>
+<a name="gbab-541"></a><span class="cp">#define TT_MS_LANGID_SPANISH_SPAIN_INTERNATIONAL_SORT  0x0C0A</span>
+<a name="gbab-542"></a><span class="cp">#define TT_MS_LANGID_SPANISH_GUATEMALA                 0x100A</span>
+<a name="gbab-543"></a><span class="cp">#define TT_MS_LANGID_SPANISH_COSTA_RICA                0x140A</span>
+<a name="gbab-544"></a><span class="cp">#define TT_MS_LANGID_SPANISH_PANAMA                    0x180A</span>
+<a name="gbab-545"></a><span class="cp">#define TT_MS_LANGID_SPANISH_DOMINICAN_REPUBLIC        0x1C0A</span>
+<a name="gbab-546"></a><span class="cp">#define TT_MS_LANGID_SPANISH_VENEZUELA                 0x200A</span>
+<a name="gbab-547"></a><span class="cp">#define TT_MS_LANGID_SPANISH_COLOMBIA                  0x240A</span>
+<a name="gbab-548"></a><span class="cp">#define TT_MS_LANGID_SPANISH_PERU                      0x280A</span>
+<a name="gbab-549"></a><span class="cp">#define TT_MS_LANGID_SPANISH_ARGENTINA                 0x2C0A</span>
+<a name="gbab-550"></a><span class="cp">#define TT_MS_LANGID_SPANISH_ECUADOR                   0x300A</span>
+<a name="gbab-551"></a><span class="cp">#define TT_MS_LANGID_SPANISH_CHILE                     0x340A</span>
+<a name="gbab-552"></a><span class="cp">#define TT_MS_LANGID_SPANISH_URUGUAY                   0x380A</span>
+<a name="gbab-553"></a><span class="cp">#define TT_MS_LANGID_SPANISH_PARAGUAY                  0x3C0A</span>
+<a name="gbab-554"></a><span class="cp">#define TT_MS_LANGID_SPANISH_BOLIVIA                   0x400A</span>
+<a name="gbab-555"></a><span class="cp">#define TT_MS_LANGID_SPANISH_EL_SALVADOR               0x440A</span>
+<a name="gbab-556"></a><span class="cp">#define TT_MS_LANGID_SPANISH_HONDURAS                  0x480A</span>
+<a name="gbab-557"></a><span class="cp">#define TT_MS_LANGID_SPANISH_NICARAGUA                 0x4C0A</span>
+<a name="gbab-558"></a><span class="cp">#define TT_MS_LANGID_SPANISH_PUERTO_RICO               0x500A</span>
+<a name="gbab-559"></a><span class="cp">#define TT_MS_LANGID_SPANISH_UNITED_STATES             0x540A</span>
+<a name="gbab-560"></a>  <span class="cm">/* The following ID blatantly violate MS specs by using a */</span>
+<a name="gbab-561"></a>  <span class="cm">/* sublanguage &gt; 0x1F.                                    */</span>
+<a name="gbab-562"></a><span class="cp">#define TT_MS_LANGID_SPANISH_LATIN_AMERICA             0xE40AU</span>
+<a name="gbab-563"></a><span class="cp">#define TT_MS_LANGID_FINNISH_FINLAND                   0x040B</span>
+<a name="gbab-564"></a><span class="cp">#define TT_MS_LANGID_FRENCH_FRANCE                     0x040C</span>
+<a name="gbab-565"></a><span class="cp">#define TT_MS_LANGID_FRENCH_BELGIUM                    0x080C</span>
+<a name="gbab-566"></a><span class="cp">#define TT_MS_LANGID_FRENCH_CANADA                     0x0C0C</span>
+<a name="gbab-567"></a><span class="cp">#define TT_MS_LANGID_FRENCH_SWITZERLAND                0x100C</span>
+<a name="gbab-568"></a><span class="cp">#define TT_MS_LANGID_FRENCH_LUXEMBOURG                 0x140C</span>
+<a name="gbab-569"></a><span class="cp">#define TT_MS_LANGID_FRENCH_MONACO                     0x180C</span>
+<a name="gbab-570"></a><span class="cp">#define TT_MS_LANGID_FRENCH_WEST_INDIES                0x1C0C</span>
+<a name="gbab-571"></a><span class="cp">#define TT_MS_LANGID_FRENCH_REUNION                    0x200C</span>
+<a name="gbab-572"></a><span class="cp">#define TT_MS_LANGID_FRENCH_CONGO                      0x240C</span>
+<a name="gbab-573"></a>  <span class="cm">/* which was formerly: */</span>
+<a name="gbab-574"></a><span class="cp">#define TT_MS_LANGID_FRENCH_ZAIRE  TT_MS_LANGID_FRENCH_CONGO</span>
+<a name="gbab-575"></a><span class="cp">#define TT_MS_LANGID_FRENCH_SENEGAL                    0x280C</span>
+<a name="gbab-576"></a><span class="cp">#define TT_MS_LANGID_FRENCH_CAMEROON                   0x2C0C</span>
+<a name="gbab-577"></a><span class="cp">#define TT_MS_LANGID_FRENCH_COTE_D_IVOIRE              0x300C</span>
+<a name="gbab-578"></a><span class="cp">#define TT_MS_LANGID_FRENCH_MALI                       0x340C</span>
+<a name="gbab-579"></a><span class="cp">#define TT_MS_LANGID_FRENCH_MOROCCO                    0x380C</span>
+<a name="gbab-580"></a><span class="cp">#define TT_MS_LANGID_FRENCH_HAITI                      0x3C0C</span>
+<a name="gbab-581"></a>  <span class="cm">/* and another violation of the spec (see 0xE40AU) */</span>
+<a name="gbab-582"></a><span class="cp">#define TT_MS_LANGID_FRENCH_NORTH_AFRICA               0xE40CU</span>
+<a name="gbab-583"></a><span class="cp">#define TT_MS_LANGID_HEBREW_ISRAEL                     0x040D</span>
+<a name="gbab-584"></a><span class="cp">#define TT_MS_LANGID_HUNGARIAN_HUNGARY                 0x040E</span>
+<a name="gbab-585"></a><span class="cp">#define TT_MS_LANGID_ICELANDIC_ICELAND                 0x040F</span>
+<a name="gbab-586"></a><span class="cp">#define TT_MS_LANGID_ITALIAN_ITALY                     0x0410</span>
+<a name="gbab-587"></a><span class="cp">#define TT_MS_LANGID_ITALIAN_SWITZERLAND               0x0810</span>
+<a name="gbab-588"></a><span class="cp">#define TT_MS_LANGID_JAPANESE_JAPAN                    0x0411</span>
+<a name="gbab-589"></a><span class="cp">#define TT_MS_LANGID_KOREAN_EXTENDED_WANSUNG_KOREA     0x0412</span>
+<a name="gbab-590"></a><span class="cp">#define TT_MS_LANGID_KOREAN_JOHAB_KOREA                0x0812</span>
+<a name="gbab-591"></a><span class="cp">#define TT_MS_LANGID_DUTCH_NETHERLANDS                 0x0413</span>
+<a name="gbab-592"></a><span class="cp">#define TT_MS_LANGID_DUTCH_BELGIUM                     0x0813</span>
+<a name="gbab-593"></a><span class="cp">#define TT_MS_LANGID_NORWEGIAN_NORWAY_BOKMAL           0x0414</span>
+<a name="gbab-594"></a><span class="cp">#define TT_MS_LANGID_NORWEGIAN_NORWAY_NYNORSK          0x0814</span>
+<a name="gbab-595"></a><span class="cp">#define TT_MS_LANGID_POLISH_POLAND                     0x0415</span>
+<a name="gbab-596"></a><span class="cp">#define TT_MS_LANGID_PORTUGUESE_BRAZIL                 0x0416</span>
+<a name="gbab-597"></a><span class="cp">#define TT_MS_LANGID_PORTUGUESE_PORTUGAL               0x0816</span>
+<a name="gbab-598"></a><span class="cp">#define TT_MS_LANGID_RHAETO_ROMANIC_SWITZERLAND        0x0417</span>
+<a name="gbab-599"></a><span class="cp">#define TT_MS_LANGID_ROMANIAN_ROMANIA                  0x0418</span>
+<a name="gbab-600"></a><span class="cp">#define TT_MS_LANGID_MOLDAVIAN_MOLDAVIA                0x0818</span>
+<a name="gbab-601"></a><span class="cp">#define TT_MS_LANGID_RUSSIAN_RUSSIA                    0x0419</span>
+<a name="gbab-602"></a><span class="cp">#define TT_MS_LANGID_RUSSIAN_MOLDAVIA                  0x0819</span>
+<a name="gbab-603"></a><span class="cp">#define TT_MS_LANGID_CROATIAN_CROATIA                  0x041A</span>
+<a name="gbab-604"></a><span class="cp">#define TT_MS_LANGID_SERBIAN_SERBIA_LATIN              0x081A</span>
+<a name="gbab-605"></a><span class="cp">#define TT_MS_LANGID_SERBIAN_SERBIA_CYRILLIC           0x0C1A</span>
+<a name="gbab-606"></a>
+<a name="gbab-607"></a><span class="cp">#if 0</span><span class="c">  /* this used to be this value, but it looks like we were wrong */</span>
+<a name="gbab-608"></a><span class="c">#define TT_MS_LANGID_BOSNIAN_BOSNIA_HERZEGOVINA        0x101A</span>
+<a name="gbab-609"></a><span class="cp">#else  /* current sources say */</span>
+<a name="gbab-610"></a><span class="cp">#define TT_MS_LANGID_CROATIAN_BOSNIA_HERZEGOVINA       0x101A</span>
+<a name="gbab-611"></a><span class="cp">#define TT_MS_LANGID_BOSNIAN_BOSNIA_HERZEGOVINA        0x141A</span>
+<a name="gbab-612"></a>       <span class="cm">/* and XPsp2 Platform SDK added (2004-07-26) */</span>
+<a name="gbab-613"></a>       <span class="cm">/* Names are shortened to be significant within 40 chars. */</span>
+<a name="gbab-614"></a><span class="cp">#define TT_MS_LANGID_SERBIAN_BOSNIA_HERZ_LATIN         0x181A</span>
+<a name="gbab-615"></a><span class="cp">#define TT_MS_LANGID_SERBIAN_BOSNIA_HERZ_CYRILLIC      0x181A</span>
+<a name="gbab-616"></a><span class="cp">#endif</span>
+<a name="gbab-617"></a>
+<a name="gbab-618"></a><span class="cp">#define TT_MS_LANGID_SLOVAK_SLOVAKIA                   0x041B</span>
+<a name="gbab-619"></a><span class="cp">#define TT_MS_LANGID_ALBANIAN_ALBANIA                  0x041C</span>
+<a name="gbab-620"></a><span class="cp">#define TT_MS_LANGID_SWEDISH_SWEDEN                    0x041D</span>
+<a name="gbab-621"></a><span class="cp">#define TT_MS_LANGID_SWEDISH_FINLAND                   0x081D</span>
+<a name="gbab-622"></a><span class="cp">#define TT_MS_LANGID_THAI_THAILAND                     0x041E</span>
+<a name="gbab-623"></a><span class="cp">#define TT_MS_LANGID_TURKISH_TURKEY                    0x041F</span>
+<a name="gbab-624"></a><span class="cp">#define TT_MS_LANGID_URDU_PAKISTAN                     0x0420</span>
+<a name="gbab-625"></a><span class="cp">#define TT_MS_LANGID_URDU_INDIA                        0x0820</span>
+<a name="gbab-626"></a><span class="cp">#define TT_MS_LANGID_INDONESIAN_INDONESIA              0x0421</span>
+<a name="gbab-627"></a><span class="cp">#define TT_MS_LANGID_UKRAINIAN_UKRAINE                 0x0422</span>
+<a name="gbab-628"></a><span class="cp">#define TT_MS_LANGID_BELARUSIAN_BELARUS                0x0423</span>
+<a name="gbab-629"></a><span class="cp">#define TT_MS_LANGID_SLOVENE_SLOVENIA                  0x0424</span>
+<a name="gbab-630"></a><span class="cp">#define TT_MS_LANGID_ESTONIAN_ESTONIA                  0x0425</span>
+<a name="gbab-631"></a><span class="cp">#define TT_MS_LANGID_LATVIAN_LATVIA                    0x0426</span>
+<a name="gbab-632"></a><span class="cp">#define TT_MS_LANGID_LITHUANIAN_LITHUANIA              0x0427</span>
+<a name="gbab-633"></a><span class="cp">#define TT_MS_LANGID_CLASSIC_LITHUANIAN_LITHUANIA      0x0827</span>
+<a name="gbab-634"></a><span class="cp">#define TT_MS_LANGID_TAJIK_TAJIKISTAN                  0x0428</span>
+<a name="gbab-635"></a><span class="cp">#define TT_MS_LANGID_FARSI_IRAN                        0x0429</span>
+<a name="gbab-636"></a><span class="cp">#define TT_MS_LANGID_VIETNAMESE_VIET_NAM               0x042A</span>
+<a name="gbab-637"></a><span class="cp">#define TT_MS_LANGID_ARMENIAN_ARMENIA                  0x042B</span>
+<a name="gbab-638"></a><span class="cp">#define TT_MS_LANGID_AZERI_AZERBAIJAN_LATIN            0x042C</span>
+<a name="gbab-639"></a><span class="cp">#define TT_MS_LANGID_AZERI_AZERBAIJAN_CYRILLIC         0x082C</span>
+<a name="gbab-640"></a><span class="cp">#define TT_MS_LANGID_BASQUE_SPAIN                      0x042D</span>
+<a name="gbab-641"></a><span class="cp">#define TT_MS_LANGID_SORBIAN_GERMANY                   0x042E</span>
+<a name="gbab-642"></a><span class="cp">#define TT_MS_LANGID_MACEDONIAN_MACEDONIA              0x042F</span>
+<a name="gbab-643"></a><span class="cp">#define TT_MS_LANGID_SUTU_SOUTH_AFRICA                 0x0430</span>
+<a name="gbab-644"></a><span class="cp">#define TT_MS_LANGID_TSONGA_SOUTH_AFRICA               0x0431</span>
+<a name="gbab-645"></a><span class="cp">#define TT_MS_LANGID_TSWANA_SOUTH_AFRICA               0x0432</span>
+<a name="gbab-646"></a><span class="cp">#define TT_MS_LANGID_VENDA_SOUTH_AFRICA                0x0433</span>
+<a name="gbab-647"></a><span class="cp">#define TT_MS_LANGID_XHOSA_SOUTH_AFRICA                0x0434</span>
+<a name="gbab-648"></a><span class="cp">#define TT_MS_LANGID_ZULU_SOUTH_AFRICA                 0x0435</span>
+<a name="gbab-649"></a><span class="cp">#define TT_MS_LANGID_AFRIKAANS_SOUTH_AFRICA            0x0436</span>
+<a name="gbab-650"></a><span class="cp">#define TT_MS_LANGID_GEORGIAN_GEORGIA                  0x0437</span>
+<a name="gbab-651"></a><span class="cp">#define TT_MS_LANGID_FAEROESE_FAEROE_ISLANDS           0x0438</span>
+<a name="gbab-652"></a><span class="cp">#define TT_MS_LANGID_HINDI_INDIA                       0x0439</span>
+<a name="gbab-653"></a><span class="cp">#define TT_MS_LANGID_MALTESE_MALTA                     0x043A</span>
+<a name="gbab-654"></a>  <span class="cm">/* Added by XPsp2 Platform SDK (2004-07-26) */</span>
+<a name="gbab-655"></a><span class="cp">#define TT_MS_LANGID_SAMI_NORTHERN_NORWAY              0x043B</span>
+<a name="gbab-656"></a><span class="cp">#define TT_MS_LANGID_SAMI_NORTHERN_SWEDEN              0x083B</span>
+<a name="gbab-657"></a><span class="cp">#define TT_MS_LANGID_SAMI_NORTHERN_FINLAND             0x0C3B</span>
+<a name="gbab-658"></a><span class="cp">#define TT_MS_LANGID_SAMI_LULE_NORWAY                  0x103B</span>
+<a name="gbab-659"></a><span class="cp">#define TT_MS_LANGID_SAMI_LULE_SWEDEN                  0x143B</span>
+<a name="gbab-660"></a><span class="cp">#define TT_MS_LANGID_SAMI_SOUTHERN_NORWAY              0x183B</span>
+<a name="gbab-661"></a><span class="cp">#define TT_MS_LANGID_SAMI_SOUTHERN_SWEDEN              0x1C3B</span>
+<a name="gbab-662"></a><span class="cp">#define TT_MS_LANGID_SAMI_SKOLT_FINLAND                0x203B</span>
+<a name="gbab-663"></a><span class="cp">#define TT_MS_LANGID_SAMI_INARI_FINLAND                0x243B</span>
+<a name="gbab-664"></a>  <span class="cm">/* ... and we also keep our old identifier... */</span>
+<a name="gbab-665"></a><span class="cp">#define TT_MS_LANGID_SAAMI_LAPONIA                     0x043B</span>
+<a name="gbab-666"></a>
+<a name="gbab-667"></a><span class="cp">#if 0</span><span class="c"> /* this seems to be a previous inversion */</span>
+<a name="gbab-668"></a><span class="c">#define TT_MS_LANGID_IRISH_GAELIC_IRELAND              0x043C</span>
+<a name="gbab-669"></a><span class="c">#define TT_MS_LANGID_SCOTTISH_GAELIC_UNITED_KINGDOM    0x083C</span>
+<a name="gbab-670"></a><span class="cp">#else</span>
+<a name="gbab-671"></a><span class="cp">#define TT_MS_LANGID_SCOTTISH_GAELIC_UNITED_KINGDOM    0x083C</span>
+<a name="gbab-672"></a><span class="cp">#define TT_MS_LANGID_IRISH_GAELIC_IRELAND              0x043C</span>
+<a name="gbab-673"></a><span class="cp">#endif</span>
+<a name="gbab-674"></a>
+<a name="gbab-675"></a><span class="cp">#define TT_MS_LANGID_YIDDISH_GERMANY                   0x043D</span>
+<a name="gbab-676"></a><span class="cp">#define TT_MS_LANGID_MALAY_MALAYSIA                    0x043E</span>
+<a name="gbab-677"></a><span class="cp">#define TT_MS_LANGID_MALAY_BRUNEI_DARUSSALAM           0x083E</span>
+<a name="gbab-678"></a><span class="cp">#define TT_MS_LANGID_KAZAK_KAZAKSTAN                   0x043F</span>
+<a name="gbab-679"></a><span class="cp">#define TT_MS_LANGID_KIRGHIZ_KIRGHIZSTAN </span><span class="cm">/* Cyrillic*/</span><span class="cp"> 0x0440</span>
+<a name="gbab-680"></a>  <span class="cm">/* alias declared in Windows 2000 */</span>
+<a name="gbab-681"></a><span class="cp">#define TT_MS_LANGID_KIRGHIZ_KIRGHIZ_REPUBLIC \</span>
+<a name="gbab-682"></a><span class="cp">          TT_MS_LANGID_KIRGHIZ_KIRGHIZSTAN</span>
+<a name="gbab-683"></a>
+<a name="gbab-684"></a><span class="cp">#define TT_MS_LANGID_SWAHILI_KENYA                     0x0441</span>
+<a name="gbab-685"></a><span class="cp">#define TT_MS_LANGID_TURKMEN_TURKMENISTAN              0x0442</span>
+<a name="gbab-686"></a><span class="cp">#define TT_MS_LANGID_UZBEK_UZBEKISTAN_LATIN            0x0443</span>
+<a name="gbab-687"></a><span class="cp">#define TT_MS_LANGID_UZBEK_UZBEKISTAN_CYRILLIC         0x0843</span>
+<a name="gbab-688"></a><span class="cp">#define TT_MS_LANGID_TATAR_TATARSTAN                   0x0444</span>
+<a name="gbab-689"></a><span class="cp">#define TT_MS_LANGID_BENGALI_INDIA                     0x0445</span>
+<a name="gbab-690"></a><span class="cp">#define TT_MS_LANGID_BENGALI_BANGLADESH                0x0845</span>
+<a name="gbab-691"></a><span class="cp">#define TT_MS_LANGID_PUNJABI_INDIA                     0x0446</span>
+<a name="gbab-692"></a><span class="cp">#define TT_MS_LANGID_PUNJABI_ARABIC_PAKISTAN           0x0846</span>
+<a name="gbab-693"></a><span class="cp">#define TT_MS_LANGID_GUJARATI_INDIA                    0x0447</span>
+<a name="gbab-694"></a><span class="cp">#define TT_MS_LANGID_ORIYA_INDIA                       0x0448</span>
+<a name="gbab-695"></a><span class="cp">#define TT_MS_LANGID_TAMIL_INDIA                       0x0449</span>
+<a name="gbab-696"></a><span class="cp">#define TT_MS_LANGID_TELUGU_INDIA                      0x044A</span>
+<a name="gbab-697"></a><span class="cp">#define TT_MS_LANGID_KANNADA_INDIA                     0x044B</span>
+<a name="gbab-698"></a><span class="cp">#define TT_MS_LANGID_MALAYALAM_INDIA                   0x044C</span>
+<a name="gbab-699"></a><span class="cp">#define TT_MS_LANGID_ASSAMESE_INDIA                    0x044D</span>
+<a name="gbab-700"></a><span class="cp">#define TT_MS_LANGID_MARATHI_INDIA                     0x044E</span>
+<a name="gbab-701"></a><span class="cp">#define TT_MS_LANGID_SANSKRIT_INDIA                    0x044F</span>
+<a name="gbab-702"></a><span class="cp">#define TT_MS_LANGID_MONGOLIAN_MONGOLIA </span><span class="cm">/* Cyrillic */</span><span class="cp"> 0x0450</span>
+<a name="gbab-703"></a><span class="cp">#define TT_MS_LANGID_MONGOLIAN_MONGOLIA_MONGOLIAN      0x0850</span>
+<a name="gbab-704"></a><span class="cp">#define TT_MS_LANGID_TIBETAN_CHINA                     0x0451</span>
+<a name="gbab-705"></a>  <span class="cm">/* Don&#39;t use the next constant!  It has            */</span>
+<a name="gbab-706"></a>  <span class="cm">/*   (1) the wrong spelling (Dzonghka)             */</span>
+<a name="gbab-707"></a>  <span class="cm">/*   (2) Microsoft doesn&#39;t officially define it -- */</span>
+<a name="gbab-708"></a>  <span class="cm">/*       at least it is not in the List of Local   */</span>
+<a name="gbab-709"></a>  <span class="cm">/*       ID Values.                                */</span>
+<a name="gbab-710"></a>  <span class="cm">/*   (3) Dzongkha is not the same language as      */</span>
+<a name="gbab-711"></a>  <span class="cm">/*       Tibetan, so merging it is wrong anyway.   */</span>
+<a name="gbab-712"></a>  <span class="cm">/*                                                 */</span>
+<a name="gbab-713"></a>  <span class="cm">/* TT_MS_LANGID_TIBETAN_BHUTAN is correct, BTW.    */</span>
+<a name="gbab-714"></a><span class="cp">#define TT_MS_LANGID_DZONGHKA_BHUTAN                   0x0851</span>
+<a name="gbab-715"></a>
+<a name="gbab-716"></a><span class="cp">#if 0</span><span class="c"></span>
+<a name="gbab-717"></a><span class="c">  /* the following used to be defined */</span>
+<a name="gbab-718"></a><span class="c">#define TT_MS_LANGID_TIBETAN_BHUTAN                    0x0451</span>
+<a name="gbab-719"></a><span class="c">  /* ... but it was changed; */</span>
+<a name="gbab-720"></a><span class="cp">#else</span>
+<a name="gbab-721"></a>  <span class="cm">/* So we will continue to #define it, but with the correct value */</span>
+<a name="gbab-722"></a><span class="cp">#define TT_MS_LANGID_TIBETAN_BHUTAN   TT_MS_LANGID_DZONGHKA_BHUTAN</span>
+<a name="gbab-723"></a><span class="cp">#endif</span>
+<a name="gbab-724"></a>
+<a name="gbab-725"></a><span class="cp">#define TT_MS_LANGID_WELSH_WALES                       0x0452</span>
+<a name="gbab-726"></a><span class="cp">#define TT_MS_LANGID_KHMER_CAMBODIA                    0x0453</span>
+<a name="gbab-727"></a><span class="cp">#define TT_MS_LANGID_LAO_LAOS                          0x0454</span>
+<a name="gbab-728"></a><span class="cp">#define TT_MS_LANGID_BURMESE_MYANMAR                   0x0455</span>
+<a name="gbab-729"></a><span class="cp">#define TT_MS_LANGID_GALICIAN_SPAIN                    0x0456</span>
+<a name="gbab-730"></a><span class="cp">#define TT_MS_LANGID_KONKANI_INDIA                     0x0457</span>
+<a name="gbab-731"></a><span class="cp">#define TT_MS_LANGID_MANIPURI_INDIA  </span><span class="cm">/* Bengali */</span><span class="cp">     0x0458</span>
+<a name="gbab-732"></a><span class="cp">#define TT_MS_LANGID_SINDHI_INDIA </span><span class="cm">/* Arabic */</span><span class="cp">         0x0459</span>
+<a name="gbab-733"></a><span class="cp">#define TT_MS_LANGID_SINDHI_PAKISTAN                   0x0859</span>
+<a name="gbab-734"></a>  <span class="cm">/* Missing a LCID for Sindhi in Devanagari script */</span>
+<a name="gbab-735"></a><span class="cp">#define TT_MS_LANGID_SYRIAC_SYRIA                      0x045A</span>
+<a name="gbab-736"></a><span class="cp">#define TT_MS_LANGID_SINHALESE_SRI_LANKA               0x045B</span>
+<a name="gbab-737"></a><span class="cp">#define TT_MS_LANGID_CHEROKEE_UNITED_STATES            0x045C</span>
+<a name="gbab-738"></a><span class="cp">#define TT_MS_LANGID_INUKTITUT_CANADA                  0x045D</span>
+<a name="gbab-739"></a><span class="cp">#define TT_MS_LANGID_AMHARIC_ETHIOPIA                  0x045E</span>
+<a name="gbab-740"></a><span class="cp">#define TT_MS_LANGID_TAMAZIGHT_MOROCCO </span><span class="cm">/* Arabic */</span><span class="cp">    0x045F</span>
+<a name="gbab-741"></a><span class="cp">#define TT_MS_LANGID_TAMAZIGHT_MOROCCO_LATIN           0x085F</span>
+<a name="gbab-742"></a>  <span class="cm">/* Missing a LCID for Tifinagh script */</span>
+<a name="gbab-743"></a><span class="cp">#define TT_MS_LANGID_KASHMIRI_PAKISTAN </span><span class="cm">/* Arabic */</span><span class="cp">    0x0460</span>
+<a name="gbab-744"></a>  <span class="cm">/* Spelled this way by XPsp2 Platform SDK (2004-07-26) */</span>
+<a name="gbab-745"></a>  <span class="cm">/* script is yet unclear... might be Arabic, Nagari or Sharada */</span>
+<a name="gbab-746"></a><span class="cp">#define TT_MS_LANGID_KASHMIRI_SASIA                    0x0860</span>
+<a name="gbab-747"></a>  <span class="cm">/* ... and aliased (by MS) for compatibility reasons. */</span>
+<a name="gbab-748"></a><span class="cp">#define TT_MS_LANGID_KASHMIRI_INDIA TT_MS_LANGID_KASHMIRI_SASIA</span>
+<a name="gbab-749"></a><span class="cp">#define TT_MS_LANGID_NEPALI_NEPAL                      0x0461</span>
+<a name="gbab-750"></a><span class="cp">#define TT_MS_LANGID_NEPALI_INDIA                      0x0861</span>
+<a name="gbab-751"></a><span class="cp">#define TT_MS_LANGID_FRISIAN_NETHERLANDS               0x0462</span>
+<a name="gbab-752"></a><span class="cp">#define TT_MS_LANGID_PASHTO_AFGHANISTAN                0x0463</span>
+<a name="gbab-753"></a><span class="cp">#define TT_MS_LANGID_FILIPINO_PHILIPPINES              0x0464</span>
+<a name="gbab-754"></a><span class="cp">#define TT_MS_LANGID_DHIVEHI_MALDIVES                  0x0465</span>
+<a name="gbab-755"></a>  <span class="cm">/* alias declared in Windows 2000 */</span>
+<a name="gbab-756"></a><span class="cp">#define TT_MS_LANGID_DIVEHI_MALDIVES  TT_MS_LANGID_DHIVEHI_MALDIVES</span>
+<a name="gbab-757"></a><span class="cp">#define TT_MS_LANGID_EDO_NIGERIA                       0x0466</span>
+<a name="gbab-758"></a><span class="cp">#define TT_MS_LANGID_FULFULDE_NIGERIA                  0x0467</span>
+<a name="gbab-759"></a><span class="cp">#define TT_MS_LANGID_HAUSA_NIGERIA                     0x0468</span>
+<a name="gbab-760"></a><span class="cp">#define TT_MS_LANGID_IBIBIO_NIGERIA                    0x0469</span>
+<a name="gbab-761"></a><span class="cp">#define TT_MS_LANGID_YORUBA_NIGERIA                    0x046A</span>
+<a name="gbab-762"></a><span class="cp">#define TT_MS_LANGID_QUECHUA_BOLIVIA                   0x046B</span>
+<a name="gbab-763"></a><span class="cp">#define TT_MS_LANGID_QUECHUA_ECUADOR                   0x086B</span>
+<a name="gbab-764"></a><span class="cp">#define TT_MS_LANGID_QUECHUA_PERU                      0x0C6B</span>
+<a name="gbab-765"></a><span class="cp">#define TT_MS_LANGID_SEPEDI_SOUTH_AFRICA               0x046C</span>
+<a name="gbab-766"></a>  <span class="cm">/* Also spelled by XPsp2 Platform SDK (2004-07-26) */</span>
+<a name="gbab-767"></a><span class="cp">#define TT_MS_LANGID_SOTHO_SOUTHERN_SOUTH_AFRICA \</span>
+<a name="gbab-768"></a><span class="cp">          TT_MS_LANGID_SEPEDI_SOUTH_AFRICA</span>
+<a name="gbab-769"></a>  <span class="cm">/* language codes 0x046D, 0x046E and 0x046F are (still) unknown. */</span>
+<a name="gbab-770"></a><span class="cp">#define TT_MS_LANGID_IGBO_NIGERIA                      0x0470</span>
+<a name="gbab-771"></a><span class="cp">#define TT_MS_LANGID_KANURI_NIGERIA                    0x0471</span>
+<a name="gbab-772"></a><span class="cp">#define TT_MS_LANGID_OROMO_ETHIOPIA                    0x0472</span>
+<a name="gbab-773"></a><span class="cp">#define TT_MS_LANGID_TIGRIGNA_ETHIOPIA                 0x0473</span>
+<a name="gbab-774"></a><span class="cp">#define TT_MS_LANGID_TIGRIGNA_ERYTHREA                 0x0873</span>
+<a name="gbab-775"></a>  <span class="cm">/* also spelled in the `Passport SDK&#39; list as: */</span>
+<a name="gbab-776"></a><span class="cp">#define TT_MS_LANGID_TIGRIGNA_ERYTREA  TT_MS_LANGID_TIGRIGNA_ERYTHREA</span>
+<a name="gbab-777"></a><span class="cp">#define TT_MS_LANGID_GUARANI_PARAGUAY                  0x0474</span>
+<a name="gbab-778"></a><span class="cp">#define TT_MS_LANGID_HAWAIIAN_UNITED_STATES            0x0475</span>
+<a name="gbab-779"></a><span class="cp">#define TT_MS_LANGID_LATIN                             0x0476</span>
+<a name="gbab-780"></a><span class="cp">#define TT_MS_LANGID_SOMALI_SOMALIA                    0x0477</span>
+<a name="gbab-781"></a>  <span class="cm">/* Note: Yi does not have a (proper) ISO 639-2 code, since it is mostly */</span>
+<a name="gbab-782"></a>  <span class="cm">/*       not written (but OTOH the peculiar writing system is worth     */</span>
+<a name="gbab-783"></a>  <span class="cm">/*       studying).                                                     */</span>
+<a name="gbab-784"></a><span class="cp">#define TT_MS_LANGID_YI_CHINA                          0x0478</span>
+<a name="gbab-785"></a><span class="cp">#define TT_MS_LANGID_PAPIAMENTU_NETHERLANDS_ANTILLES   0x0479</span>
+<a name="gbab-786"></a>  <span class="cm">/* language codes from 0x047A to 0x047F are (still) unknown. */</span>
+<a name="gbab-787"></a><span class="cp">#define TT_MS_LANGID_UIGHUR_CHINA                      0x0480</span>
+<a name="gbab-788"></a><span class="cp">#define TT_MS_LANGID_MAORI_NEW_ZEALAND                 0x0481</span>
+<a name="gbab-789"></a>
+<a name="gbab-790"></a><span class="cp">#if 0</span><span class="c">  /* not deemed useful for fonts */</span>
+<a name="gbab-791"></a><span class="c">#define TT_MS_LANGID_HUMAN_INTERFACE_DEVICE            0x04FF</span>
+<a name="gbab-792"></a><span class="cp">#endif</span>
+<a name="gbab-793"></a>
+<a name="gbab-794"></a>
+<a name="gbab-795"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-796"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-797"></a>  <span class="cm">/* Possible values of the `name&#39; identifier field in the name records of */</span>
+<a name="gbab-798"></a>  <span class="cm">/* the TTF `name&#39; table.  These values are platform independent.         */</span>
+<a name="gbab-799"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-800"></a><span class="cp">#define TT_NAME_ID_COPYRIGHT            0</span>
+<a name="gbab-801"></a><span class="cp">#define TT_NAME_ID_FONT_FAMILY          1</span>
+<a name="gbab-802"></a><span class="cp">#define TT_NAME_ID_FONT_SUBFAMILY       2</span>
+<a name="gbab-803"></a><span class="cp">#define TT_NAME_ID_UNIQUE_ID            3</span>
+<a name="gbab-804"></a><span class="cp">#define TT_NAME_ID_FULL_NAME            4</span>
+<a name="gbab-805"></a><span class="cp">#define TT_NAME_ID_VERSION_STRING       5</span>
+<a name="gbab-806"></a><span class="cp">#define TT_NAME_ID_PS_NAME              6</span>
+<a name="gbab-807"></a><span class="cp">#define TT_NAME_ID_TRADEMARK            7</span>
+<a name="gbab-808"></a>
+<a name="gbab-809"></a>  <span class="cm">/* the following values are from the OpenType spec */</span>
+<a name="gbab-810"></a><span class="cp">#define TT_NAME_ID_MANUFACTURER         8</span>
+<a name="gbab-811"></a><span class="cp">#define TT_NAME_ID_DESIGNER             9</span>
+<a name="gbab-812"></a><span class="cp">#define TT_NAME_ID_DESCRIPTION          10</span>
+<a name="gbab-813"></a><span class="cp">#define TT_NAME_ID_VENDOR_URL           11</span>
+<a name="gbab-814"></a><span class="cp">#define TT_NAME_ID_DESIGNER_URL         12</span>
+<a name="gbab-815"></a><span class="cp">#define TT_NAME_ID_LICENSE              13</span>
+<a name="gbab-816"></a><span class="cp">#define TT_NAME_ID_LICENSE_URL          14</span>
+<a name="gbab-817"></a>  <span class="cm">/* number 15 is reserved */</span>
+<a name="gbab-818"></a><span class="cp">#define TT_NAME_ID_PREFERRED_FAMILY     16</span>
+<a name="gbab-819"></a><span class="cp">#define TT_NAME_ID_PREFERRED_SUBFAMILY  17</span>
+<a name="gbab-820"></a><span class="cp">#define TT_NAME_ID_MAC_FULL_NAME        18</span>
+<a name="gbab-821"></a>
+<a name="gbab-822"></a>  <span class="cm">/* The following code is new as of 2000-01-21 */</span>
+<a name="gbab-823"></a><span class="cp">#define TT_NAME_ID_SAMPLE_TEXT          19</span>
+<a name="gbab-824"></a>
+<a name="gbab-825"></a>  <span class="cm">/* This is new in OpenType 1.3 */</span>
+<a name="gbab-826"></a><span class="cp">#define TT_NAME_ID_CID_FINDFONT_NAME    20</span>
+<a name="gbab-827"></a>
+<a name="gbab-828"></a>  <span class="cm">/* This is new in OpenType 1.5 */</span>
+<a name="gbab-829"></a><span class="cp">#define TT_NAME_ID_WWS_FAMILY           21</span>
+<a name="gbab-830"></a><span class="cp">#define TT_NAME_ID_WWS_SUBFAMILY        22</span>
+<a name="gbab-831"></a>
+<a name="gbab-832"></a>
+<a name="gbab-833"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-834"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-835"></a>  <span class="cm">/* Bit mask values for the Unicode Ranges from the TTF `OS2 &#39; table.     */</span>
+<a name="gbab-836"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-837"></a>  <span class="cm">/* Updated 08-Nov-2008.                                                  */</span>
+<a name="gbab-838"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-839"></a>
+<a name="gbab-840"></a>  <span class="cm">/* Bit  0   Basic Latin */</span>
+<a name="gbab-841"></a><span class="cp">#define TT_UCR_BASIC_LATIN                     (1L &lt;&lt;  0) </span><span class="cm">/* U+0020-U+007E */</span><span class="cp"></span>
+<a name="gbab-842"></a>  <span class="cm">/* Bit  1   C1 Controls and Latin-1 Supplement */</span>
+<a name="gbab-843"></a><span class="cp">#define TT_UCR_LATIN1_SUPPLEMENT               (1L &lt;&lt;  1) </span><span class="cm">/* U+0080-U+00FF */</span><span class="cp"></span>
+<a name="gbab-844"></a>  <span class="cm">/* Bit  2   Latin Extended-A */</span>
+<a name="gbab-845"></a><span class="cp">#define TT_UCR_LATIN_EXTENDED_A                (1L &lt;&lt;  2) </span><span class="cm">/* U+0100-U+017F */</span><span class="cp"></span>
+<a name="gbab-846"></a>  <span class="cm">/* Bit  3   Latin Extended-B */</span>
+<a name="gbab-847"></a><span class="cp">#define TT_UCR_LATIN_EXTENDED_B                (1L &lt;&lt;  3) </span><span class="cm">/* U+0180-U+024F */</span><span class="cp"></span>
+<a name="gbab-848"></a>  <span class="cm">/* Bit  4   IPA Extensions                 */</span>
+<a name="gbab-849"></a>  <span class="cm">/*          Phonetic Extensions            */</span>
+<a name="gbab-850"></a>  <span class="cm">/*          Phonetic Extensions Supplement */</span>
+<a name="gbab-851"></a><span class="cp">#define TT_UCR_IPA_EXTENSIONS                  (1L &lt;&lt;  4) </span><span class="cm">/* U+0250-U+02AF */</span><span class="cp"></span>
+<a name="gbab-852"></a>                                                          <span class="cm">/* U+1D00-U+1D7F */</span>
+<a name="gbab-853"></a>                                                          <span class="cm">/* U+1D80-U+1DBF */</span>
+<a name="gbab-854"></a>  <span class="cm">/* Bit  5   Spacing Modifier Letters */</span>
+<a name="gbab-855"></a>  <span class="cm">/*          Modifier Tone Letters    */</span>
+<a name="gbab-856"></a><span class="cp">#define TT_UCR_SPACING_MODIFIER                (1L &lt;&lt;  5) </span><span class="cm">/* U+02B0-U+02FF */</span><span class="cp"></span>
+<a name="gbab-857"></a>                                                          <span class="cm">/* U+A700-U+A71F */</span>
+<a name="gbab-858"></a>  <span class="cm">/* Bit  6   Combining Diacritical Marks            */</span>
+<a name="gbab-859"></a>  <span class="cm">/*          Combining Diacritical Marks Supplement */</span>
+<a name="gbab-860"></a><span class="cp">#define TT_UCR_COMBINING_DIACRITICS            (1L &lt;&lt;  6) </span><span class="cm">/* U+0300-U+036F */</span><span class="cp"></span>
+<a name="gbab-861"></a>                                                          <span class="cm">/* U+1DC0-U+1DFF */</span>
+<a name="gbab-862"></a>  <span class="cm">/* Bit  7   Greek and Coptic */</span>
+<a name="gbab-863"></a><span class="cp">#define TT_UCR_GREEK                           (1L &lt;&lt;  7) </span><span class="cm">/* U+0370-U+03FF */</span><span class="cp"></span>
+<a name="gbab-864"></a>  <span class="cm">/* Bit  8   Coptic */</span>
+<a name="gbab-865"></a><span class="cp">#define TT_UCR_COPTIC                          (1L &lt;&lt;  8) </span><span class="cm">/* U+2C80-U+2CFF */</span><span class="cp"></span>
+<a name="gbab-866"></a>  <span class="cm">/* Bit  9   Cyrillic            */</span>
+<a name="gbab-867"></a>  <span class="cm">/*          Cyrillic Supplement */</span>
+<a name="gbab-868"></a>  <span class="cm">/*          Cyrillic Extended-A */</span>
+<a name="gbab-869"></a>  <span class="cm">/*          Cyrillic Extended-B */</span>
+<a name="gbab-870"></a><span class="cp">#define TT_UCR_CYRILLIC                        (1L &lt;&lt;  9) </span><span class="cm">/* U+0400-U+04FF */</span><span class="cp"></span>
+<a name="gbab-871"></a>                                                          <span class="cm">/* U+0500-U+052F */</span>
+<a name="gbab-872"></a>                                                          <span class="cm">/* U+2DE0-U+2DFF */</span>
+<a name="gbab-873"></a>                                                          <span class="cm">/* U+A640-U+A69F */</span>
+<a name="gbab-874"></a>  <span class="cm">/* Bit 10   Armenian */</span>
+<a name="gbab-875"></a><span class="cp">#define TT_UCR_ARMENIAN                        (1L &lt;&lt; 10) </span><span class="cm">/* U+0530-U+058F */</span><span class="cp"></span>
+<a name="gbab-876"></a>  <span class="cm">/* Bit 11   Hebrew */</span>
+<a name="gbab-877"></a><span class="cp">#define TT_UCR_HEBREW                          (1L &lt;&lt; 11) </span><span class="cm">/* U+0590-U+05FF */</span><span class="cp"></span>
+<a name="gbab-878"></a>  <span class="cm">/* Bit 12   Vai */</span>
+<a name="gbab-879"></a><span class="cp">#define TT_UCR_VAI                             (1L &lt;&lt; 12) </span><span class="cm">/* U+A500-U+A63F */</span><span class="cp"></span>
+<a name="gbab-880"></a>  <span class="cm">/* Bit 13   Arabic            */</span>
+<a name="gbab-881"></a>  <span class="cm">/*          Arabic Supplement */</span>
+<a name="gbab-882"></a><span class="cp">#define TT_UCR_ARABIC                          (1L &lt;&lt; 13) </span><span class="cm">/* U+0600-U+06FF */</span><span class="cp"></span>
+<a name="gbab-883"></a>                                                          <span class="cm">/* U+0750-U+077F */</span>
+<a name="gbab-884"></a>  <span class="cm">/* Bit 14   NKo */</span>
+<a name="gbab-885"></a><span class="cp">#define TT_UCR_NKO                             (1L &lt;&lt; 14) </span><span class="cm">/* U+07C0-U+07FF */</span><span class="cp"></span>
+<a name="gbab-886"></a>  <span class="cm">/* Bit 15   Devanagari */</span>
+<a name="gbab-887"></a><span class="cp">#define TT_UCR_DEVANAGARI                      (1L &lt;&lt; 15) </span><span class="cm">/* U+0900-U+097F */</span><span class="cp"></span>
+<a name="gbab-888"></a>  <span class="cm">/* Bit 16   Bengali */</span>
+<a name="gbab-889"></a><span class="cp">#define TT_UCR_BENGALI                         (1L &lt;&lt; 16) </span><span class="cm">/* U+0980-U+09FF */</span><span class="cp"></span>
+<a name="gbab-890"></a>  <span class="cm">/* Bit 17   Gurmukhi */</span>
+<a name="gbab-891"></a><span class="cp">#define TT_UCR_GURMUKHI                        (1L &lt;&lt; 17) </span><span class="cm">/* U+0A00-U+0A7F */</span><span class="cp"></span>
+<a name="gbab-892"></a>  <span class="cm">/* Bit 18   Gujarati */</span>
+<a name="gbab-893"></a><span class="cp">#define TT_UCR_GUJARATI                        (1L &lt;&lt; 18) </span><span class="cm">/* U+0A80-U+0AFF */</span><span class="cp"></span>
+<a name="gbab-894"></a>  <span class="cm">/* Bit 19   Oriya */</span>
+<a name="gbab-895"></a><span class="cp">#define TT_UCR_ORIYA                           (1L &lt;&lt; 19) </span><span class="cm">/* U+0B00-U+0B7F */</span><span class="cp"></span>
+<a name="gbab-896"></a>  <span class="cm">/* Bit 20   Tamil */</span>
+<a name="gbab-897"></a><span class="cp">#define TT_UCR_TAMIL                           (1L &lt;&lt; 20) </span><span class="cm">/* U+0B80-U+0BFF */</span><span class="cp"></span>
+<a name="gbab-898"></a>  <span class="cm">/* Bit 21   Telugu */</span>
+<a name="gbab-899"></a><span class="cp">#define TT_UCR_TELUGU                          (1L &lt;&lt; 21) </span><span class="cm">/* U+0C00-U+0C7F */</span><span class="cp"></span>
+<a name="gbab-900"></a>  <span class="cm">/* Bit 22   Kannada */</span>
+<a name="gbab-901"></a><span class="cp">#define TT_UCR_KANNADA                         (1L &lt;&lt; 22) </span><span class="cm">/* U+0C80-U+0CFF */</span><span class="cp"></span>
+<a name="gbab-902"></a>  <span class="cm">/* Bit 23   Malayalam */</span>
+<a name="gbab-903"></a><span class="cp">#define TT_UCR_MALAYALAM                       (1L &lt;&lt; 23) </span><span class="cm">/* U+0D00-U+0D7F */</span><span class="cp"></span>
+<a name="gbab-904"></a>  <span class="cm">/* Bit 24   Thai */</span>
+<a name="gbab-905"></a><span class="cp">#define TT_UCR_THAI                            (1L &lt;&lt; 24) </span><span class="cm">/* U+0E00-U+0E7F */</span><span class="cp"></span>
+<a name="gbab-906"></a>  <span class="cm">/* Bit 25   Lao */</span>
+<a name="gbab-907"></a><span class="cp">#define TT_UCR_LAO                             (1L &lt;&lt; 25) </span><span class="cm">/* U+0E80-U+0EFF */</span><span class="cp"></span>
+<a name="gbab-908"></a>  <span class="cm">/* Bit 26   Georgian            */</span>
+<a name="gbab-909"></a>  <span class="cm">/*          Georgian Supplement */</span>
+<a name="gbab-910"></a><span class="cp">#define TT_UCR_GEORGIAN                        (1L &lt;&lt; 26) </span><span class="cm">/* U+10A0-U+10FF */</span><span class="cp"></span>
+<a name="gbab-911"></a>                                                          <span class="cm">/* U+2D00-U+2D2F */</span>
+<a name="gbab-912"></a>  <span class="cm">/* Bit 27   Balinese */</span>
+<a name="gbab-913"></a><span class="cp">#define TT_UCR_BALINESE                        (1L &lt;&lt; 27) </span><span class="cm">/* U+1B00-U+1B7F */</span><span class="cp"></span>
+<a name="gbab-914"></a>  <span class="cm">/* Bit 28   Hangul Jamo */</span>
+<a name="gbab-915"></a><span class="cp">#define TT_UCR_HANGUL_JAMO                     (1L &lt;&lt; 28) </span><span class="cm">/* U+1100-U+11FF */</span><span class="cp"></span>
+<a name="gbab-916"></a>  <span class="cm">/* Bit 29   Latin Extended Additional */</span>
+<a name="gbab-917"></a>  <span class="cm">/*          Latin Extended-C          */</span>
+<a name="gbab-918"></a>  <span class="cm">/*          Latin Extended-D          */</span>
+<a name="gbab-919"></a><span class="cp">#define TT_UCR_LATIN_EXTENDED_ADDITIONAL       (1L &lt;&lt; 29) </span><span class="cm">/* U+1E00-U+1EFF */</span><span class="cp"></span>
+<a name="gbab-920"></a>                                                          <span class="cm">/* U+2C60-U+2C7F */</span>
+<a name="gbab-921"></a>                                                          <span class="cm">/* U+A720-U+A7FF */</span>
+<a name="gbab-922"></a>  <span class="cm">/* Bit 30   Greek Extended */</span>
+<a name="gbab-923"></a><span class="cp">#define TT_UCR_GREEK_EXTENDED                  (1L &lt;&lt; 30) </span><span class="cm">/* U+1F00-U+1FFF */</span><span class="cp"></span>
+<a name="gbab-924"></a>  <span class="cm">/* Bit 31   General Punctuation      */</span>
+<a name="gbab-925"></a>  <span class="cm">/*          Supplemental Punctuation */</span>
+<a name="gbab-926"></a><span class="cp">#define TT_UCR_GENERAL_PUNCTUATION             (1L &lt;&lt; 31) </span><span class="cm">/* U+2000-U+206F */</span><span class="cp"></span>
+<a name="gbab-927"></a>                                                          <span class="cm">/* U+2E00-U+2E7F */</span>
+<a name="gbab-928"></a>  <span class="cm">/* Bit 32   Superscripts And Subscripts */</span>
+<a name="gbab-929"></a><span class="cp">#define TT_UCR_SUPERSCRIPTS_SUBSCRIPTS         (1L &lt;&lt;  0) </span><span class="cm">/* U+2070-U+209F */</span><span class="cp"></span>
+<a name="gbab-930"></a>  <span class="cm">/* Bit 33   Currency Symbols */</span>
+<a name="gbab-931"></a><span class="cp">#define TT_UCR_CURRENCY_SYMBOLS                (1L &lt;&lt;  1) </span><span class="cm">/* U+20A0-U+20CF */</span><span class="cp"></span>
+<a name="gbab-932"></a>  <span class="cm">/* Bit 34   Combining Diacritical Marks For Symbols */</span>
+<a name="gbab-933"></a><span class="cp">#define TT_UCR_COMBINING_DIACRITICS_SYMB       (1L &lt;&lt;  2) </span><span class="cm">/* U+20D0-U+20FF */</span><span class="cp"></span>
+<a name="gbab-934"></a>  <span class="cm">/* Bit 35   Letterlike Symbols */</span>
+<a name="gbab-935"></a><span class="cp">#define TT_UCR_LETTERLIKE_SYMBOLS              (1L &lt;&lt;  3) </span><span class="cm">/* U+2100-U+214F */</span><span class="cp"></span>
+<a name="gbab-936"></a>  <span class="cm">/* Bit 36   Number Forms */</span>
+<a name="gbab-937"></a><span class="cp">#define TT_UCR_NUMBER_FORMS                    (1L &lt;&lt;  4) </span><span class="cm">/* U+2150-U+218F */</span><span class="cp"></span>
+<a name="gbab-938"></a>  <span class="cm">/* Bit 37   Arrows                           */</span>
+<a name="gbab-939"></a>  <span class="cm">/*          Supplemental Arrows-A            */</span>
+<a name="gbab-940"></a>  <span class="cm">/*          Supplemental Arrows-B            */</span>
+<a name="gbab-941"></a>  <span class="cm">/*          Miscellaneous Symbols and Arrows */</span>
+<a name="gbab-942"></a><span class="cp">#define TT_UCR_ARROWS                          (1L &lt;&lt;  5) </span><span class="cm">/* U+2190-U+21FF */</span><span class="cp"></span>
+<a name="gbab-943"></a>                                                          <span class="cm">/* U+27F0-U+27FF */</span>
+<a name="gbab-944"></a>                                                          <span class="cm">/* U+2900-U+297F */</span>
+<a name="gbab-945"></a>                                                          <span class="cm">/* U+2B00-U+2BFF */</span>
+<a name="gbab-946"></a>  <span class="cm">/* Bit 38   Mathematical Operators               */</span>
+<a name="gbab-947"></a>  <span class="cm">/*          Supplemental Mathematical Operators  */</span>
+<a name="gbab-948"></a>  <span class="cm">/*          Miscellaneous Mathematical Symbols-A */</span>
+<a name="gbab-949"></a>  <span class="cm">/*          Miscellaneous Mathematical Symbols-B */</span>
+<a name="gbab-950"></a><span class="cp">#define TT_UCR_MATHEMATICAL_OPERATORS          (1L &lt;&lt;  6) </span><span class="cm">/* U+2200-U+22FF */</span><span class="cp"></span>
+<a name="gbab-951"></a>                                                          <span class="cm">/* U+2A00-U+2AFF */</span>
+<a name="gbab-952"></a>                                                          <span class="cm">/* U+27C0-U+27EF */</span>
+<a name="gbab-953"></a>                                                          <span class="cm">/* U+2980-U+29FF */</span>
+<a name="gbab-954"></a>  <span class="cm">/* Bit 39 Miscellaneous Technical */</span>
+<a name="gbab-955"></a><span class="cp">#define TT_UCR_MISCELLANEOUS_TECHNICAL         (1L &lt;&lt;  7) </span><span class="cm">/* U+2300-U+23FF */</span><span class="cp"></span>
+<a name="gbab-956"></a>  <span class="cm">/* Bit 40   Control Pictures */</span>
+<a name="gbab-957"></a><span class="cp">#define TT_UCR_CONTROL_PICTURES                (1L &lt;&lt;  8) </span><span class="cm">/* U+2400-U+243F */</span><span class="cp"></span>
+<a name="gbab-958"></a>  <span class="cm">/* Bit 41   Optical Character Recognition */</span>
+<a name="gbab-959"></a><span class="cp">#define TT_UCR_OCR                             (1L &lt;&lt;  9) </span><span class="cm">/* U+2440-U+245F */</span><span class="cp"></span>
+<a name="gbab-960"></a>  <span class="cm">/* Bit 42   Enclosed Alphanumerics */</span>
+<a name="gbab-961"></a><span class="cp">#define TT_UCR_ENCLOSED_ALPHANUMERICS          (1L &lt;&lt; 10) </span><span class="cm">/* U+2460-U+24FF */</span><span class="cp"></span>
+<a name="gbab-962"></a>  <span class="cm">/* Bit 43   Box Drawing */</span>
+<a name="gbab-963"></a><span class="cp">#define TT_UCR_BOX_DRAWING                     (1L &lt;&lt; 11) </span><span class="cm">/* U+2500-U+257F */</span><span class="cp"></span>
+<a name="gbab-964"></a>  <span class="cm">/* Bit 44   Block Elements */</span>
+<a name="gbab-965"></a><span class="cp">#define TT_UCR_BLOCK_ELEMENTS                  (1L &lt;&lt; 12) </span><span class="cm">/* U+2580-U+259F */</span><span class="cp"></span>
+<a name="gbab-966"></a>  <span class="cm">/* Bit 45   Geometric Shapes */</span>
+<a name="gbab-967"></a><span class="cp">#define TT_UCR_GEOMETRIC_SHAPES                (1L &lt;&lt; 13) </span><span class="cm">/* U+25A0-U+25FF */</span><span class="cp"></span>
+<a name="gbab-968"></a>  <span class="cm">/* Bit 46   Miscellaneous Symbols */</span>
+<a name="gbab-969"></a><span class="cp">#define TT_UCR_MISCELLANEOUS_SYMBOLS           (1L &lt;&lt; 14) </span><span class="cm">/* U+2600-U+26FF */</span><span class="cp"></span>
+<a name="gbab-970"></a>  <span class="cm">/* Bit 47   Dingbats */</span>
+<a name="gbab-971"></a><span class="cp">#define TT_UCR_DINGBATS                        (1L &lt;&lt; 15) </span><span class="cm">/* U+2700-U+27BF */</span><span class="cp"></span>
+<a name="gbab-972"></a>  <span class="cm">/* Bit 48   CJK Symbols and Punctuation */</span>
+<a name="gbab-973"></a><span class="cp">#define TT_UCR_CJK_SYMBOLS                     (1L &lt;&lt; 16) </span><span class="cm">/* U+3000-U+303F */</span><span class="cp"></span>
+<a name="gbab-974"></a>  <span class="cm">/* Bit 49   Hiragana */</span>
+<a name="gbab-975"></a><span class="cp">#define TT_UCR_HIRAGANA                        (1L &lt;&lt; 17) </span><span class="cm">/* U+3040-U+309F */</span><span class="cp"></span>
+<a name="gbab-976"></a>  <span class="cm">/* Bit 50   Katakana                     */</span>
+<a name="gbab-977"></a>  <span class="cm">/*          Katakana Phonetic Extensions */</span>
+<a name="gbab-978"></a><span class="cp">#define TT_UCR_KATAKANA                        (1L &lt;&lt; 18) </span><span class="cm">/* U+30A0-U+30FF */</span><span class="cp"></span>
+<a name="gbab-979"></a>                                                          <span class="cm">/* U+31F0-U+31FF */</span>
+<a name="gbab-980"></a>  <span class="cm">/* Bit 51   Bopomofo          */</span>
+<a name="gbab-981"></a>  <span class="cm">/*          Bopomofo Extended */</span>
+<a name="gbab-982"></a><span class="cp">#define TT_UCR_BOPOMOFO                        (1L &lt;&lt; 19) </span><span class="cm">/* U+3100-U+312F */</span><span class="cp"></span>
+<a name="gbab-983"></a>                                                          <span class="cm">/* U+31A0-U+31BF */</span>
+<a name="gbab-984"></a>  <span class="cm">/* Bit 52   Hangul Compatibility Jamo */</span>
+<a name="gbab-985"></a><span class="cp">#define TT_UCR_HANGUL_COMPATIBILITY_JAMO       (1L &lt;&lt; 20) </span><span class="cm">/* U+3130-U+318F */</span><span class="cp"></span>
+<a name="gbab-986"></a>  <span class="cm">/* Bit 53   Phags-Pa */</span>
+<a name="gbab-987"></a><span class="cp">#define TT_UCR_CJK_MISC                        (1L &lt;&lt; 21) </span><span class="cm">/* U+A840-U+A87F */</span><span class="cp"></span>
+<a name="gbab-988"></a><span class="cp">#define TT_UCR_KANBUN  TT_UCR_CJK_MISC </span><span class="cm">/* deprecated */</span><span class="cp"></span>
+<a name="gbab-989"></a><span class="cp">#define TT_UCR_PHAGSPA</span>
+<a name="gbab-990"></a>  <span class="cm">/* Bit 54   Enclosed CJK Letters and Months */</span>
+<a name="gbab-991"></a><span class="cp">#define TT_UCR_ENCLOSED_CJK_LETTERS_MONTHS     (1L &lt;&lt; 22) </span><span class="cm">/* U+3200-U+32FF */</span><span class="cp"></span>
+<a name="gbab-992"></a>  <span class="cm">/* Bit 55   CJK Compatibility */</span>
+<a name="gbab-993"></a><span class="cp">#define TT_UCR_CJK_COMPATIBILITY               (1L &lt;&lt; 23) </span><span class="cm">/* U+3300-U+33FF */</span><span class="cp"></span>
+<a name="gbab-994"></a>  <span class="cm">/* Bit 56   Hangul Syllables */</span>
+<a name="gbab-995"></a><span class="cp">#define TT_UCR_HANGUL                          (1L &lt;&lt; 24) </span><span class="cm">/* U+AC00-U+D7A3 */</span><span class="cp"></span>
+<a name="gbab-996"></a>  <span class="cm">/* Bit 57   High Surrogates              */</span>
+<a name="gbab-997"></a>  <span class="cm">/*          High Private Use Surrogates  */</span>
+<a name="gbab-998"></a>  <span class="cm">/*          Low Surrogates               */</span>
+<a name="gbab-999"></a>  <span class="cm">/*                                       */</span>
+<a name="gbab-1000"></a>  <span class="cm">/* According to OpenType specs v.1.3+,   */</span>
+<a name="gbab-1001"></a>  <span class="cm">/* setting bit 57 implies that there is  */</span>
+<a name="gbab-1002"></a>  <span class="cm">/* at least one codepoint beyond the     */</span>
+<a name="gbab-1003"></a>  <span class="cm">/* Basic Multilingual Plane that is      */</span>
+<a name="gbab-1004"></a>  <span class="cm">/* supported by this font.  So it really */</span>
+<a name="gbab-1005"></a>  <span class="cm">/* means &gt;= U+10000                      */</span>
+<a name="gbab-1006"></a><span class="cp">#define TT_UCR_SURROGATES                      (1L &lt;&lt; 25) </span><span class="cm">/* U+D800-U+DB7F */</span><span class="cp"></span>
+<a name="gbab-1007"></a>                                                          <span class="cm">/* U+DB80-U+DBFF */</span>
+<a name="gbab-1008"></a>                                                          <span class="cm">/* U+DC00-U+DFFF */</span>
+<a name="gbab-1009"></a><span class="cp">#define TT_UCR_NON_PLANE_0  TT_UCR_SURROGATES</span>
+<a name="gbab-1010"></a>  <span class="cm">/* Bit 58  Phoenician */</span>
+<a name="gbab-1011"></a><span class="cp">#define TT_UCR_PHOENICIAN                      (1L &lt;&lt; 26) </span><span class="cm">/*U+10900-U+1091F*/</span><span class="cp"></span>
+<a name="gbab-1012"></a>  <span class="cm">/* Bit 59   CJK Unified Ideographs             */</span>
+<a name="gbab-1013"></a>  <span class="cm">/*          CJK Radicals Supplement            */</span>
+<a name="gbab-1014"></a>  <span class="cm">/*          Kangxi Radicals                    */</span>
+<a name="gbab-1015"></a>  <span class="cm">/*          Ideographic Description Characters */</span>
+<a name="gbab-1016"></a>  <span class="cm">/*          CJK Unified Ideographs Extension A */</span>
+<a name="gbab-1017"></a>  <span class="cm">/*          CJK Unified Ideographs Extension B */</span>
+<a name="gbab-1018"></a>  <span class="cm">/*          Kanbun                             */</span>
+<a name="gbab-1019"></a><span class="cp">#define TT_UCR_CJK_UNIFIED_IDEOGRAPHS          (1L &lt;&lt; 27) </span><span class="cm">/* U+4E00-U+9FFF */</span><span class="cp"></span>
+<a name="gbab-1020"></a>                                                          <span class="cm">/* U+2E80-U+2EFF */</span>
+<a name="gbab-1021"></a>                                                          <span class="cm">/* U+2F00-U+2FDF */</span>
+<a name="gbab-1022"></a>                                                          <span class="cm">/* U+2FF0-U+2FFF */</span>
+<a name="gbab-1023"></a>                                                          <span class="cm">/* U+3400-U+4DB5 */</span>
+<a name="gbab-1024"></a>                                                          <span class="cm">/*U+20000-U+2A6DF*/</span>
+<a name="gbab-1025"></a>                                                          <span class="cm">/* U+3190-U+319F */</span>
+<a name="gbab-1026"></a>  <span class="cm">/* Bit 60   Private Use */</span>
+<a name="gbab-1027"></a><span class="cp">#define TT_UCR_PRIVATE_USE                     (1L &lt;&lt; 28) </span><span class="cm">/* U+E000-U+F8FF */</span><span class="cp"></span>
+<a name="gbab-1028"></a>  <span class="cm">/* Bit 61   CJK Strokes                             */</span>
+<a name="gbab-1029"></a>  <span class="cm">/*          CJK Compatibility Ideographs            */</span>
+<a name="gbab-1030"></a>  <span class="cm">/*          CJK Compatibility Ideographs Supplement */</span>
+<a name="gbab-1031"></a><span class="cp">#define TT_UCR_CJK_COMPATIBILITY_IDEOGRAPHS    (1L &lt;&lt; 29) </span><span class="cm">/* U+31C0-U+31EF */</span><span class="cp"></span>
+<a name="gbab-1032"></a>                                                          <span class="cm">/* U+F900-U+FAFF */</span>
+<a name="gbab-1033"></a>                                                          <span class="cm">/*U+2F800-U+2FA1F*/</span>
+<a name="gbab-1034"></a>  <span class="cm">/* Bit 62   Alphabetic Presentation Forms */</span>
+<a name="gbab-1035"></a><span class="cp">#define TT_UCR_ALPHABETIC_PRESENTATION_FORMS   (1L &lt;&lt; 30) </span><span class="cm">/* U+FB00-U+FB4F */</span><span class="cp"></span>
+<a name="gbab-1036"></a>  <span class="cm">/* Bit 63   Arabic Presentation Forms-A */</span>
+<a name="gbab-1037"></a><span class="cp">#define TT_UCR_ARABIC_PRESENTATIONS_A          (1L &lt;&lt; 31) </span><span class="cm">/* U+FB50-U+FDFF */</span><span class="cp"></span>
+<a name="gbab-1038"></a>  <span class="cm">/* Bit 64   Combining Half Marks */</span>
+<a name="gbab-1039"></a><span class="cp">#define TT_UCR_COMBINING_HALF_MARKS            (1L &lt;&lt;  0) </span><span class="cm">/* U+FE20-U+FE2F */</span><span class="cp"></span>
+<a name="gbab-1040"></a>  <span class="cm">/* Bit 65   Vertical forms          */</span>
+<a name="gbab-1041"></a>  <span class="cm">/*          CJK Compatibility Forms */</span>
+<a name="gbab-1042"></a><span class="cp">#define TT_UCR_CJK_COMPATIBILITY_FORMS         (1L &lt;&lt;  1) </span><span class="cm">/* U+FE10-U+FE1F */</span><span class="cp"></span>
+<a name="gbab-1043"></a>                                                          <span class="cm">/* U+FE30-U+FE4F */</span>
+<a name="gbab-1044"></a>  <span class="cm">/* Bit 66   Small Form Variants */</span>
+<a name="gbab-1045"></a><span class="cp">#define TT_UCR_SMALL_FORM_VARIANTS             (1L &lt;&lt;  2) </span><span class="cm">/* U+FE50-U+FE6F */</span><span class="cp"></span>
+<a name="gbab-1046"></a>  <span class="cm">/* Bit 67   Arabic Presentation Forms-B */</span>
+<a name="gbab-1047"></a><span class="cp">#define TT_UCR_ARABIC_PRESENTATIONS_B          (1L &lt;&lt;  3) </span><span class="cm">/* U+FE70-U+FEFE */</span><span class="cp"></span>
+<a name="gbab-1048"></a>  <span class="cm">/* Bit 68   Halfwidth and Fullwidth Forms */</span>
+<a name="gbab-1049"></a><span class="cp">#define TT_UCR_HALFWIDTH_FULLWIDTH_FORMS       (1L &lt;&lt;  4) </span><span class="cm">/* U+FF00-U+FFEF */</span><span class="cp"></span>
+<a name="gbab-1050"></a>  <span class="cm">/* Bit 69   Specials */</span>
+<a name="gbab-1051"></a><span class="cp">#define TT_UCR_SPECIALS                        (1L &lt;&lt;  5) </span><span class="cm">/* U+FFF0-U+FFFD */</span><span class="cp"></span>
+<a name="gbab-1052"></a>  <span class="cm">/* Bit 70   Tibetan */</span>
+<a name="gbab-1053"></a><span class="cp">#define TT_UCR_TIBETAN                         (1L &lt;&lt;  6) </span><span class="cm">/* U+0F00-U+0FFF */</span><span class="cp"></span>
+<a name="gbab-1054"></a>  <span class="cm">/* Bit 71   Syriac */</span>
+<a name="gbab-1055"></a><span class="cp">#define TT_UCR_SYRIAC                          (1L &lt;&lt;  7) </span><span class="cm">/* U+0700-U+074F */</span><span class="cp"></span>
+<a name="gbab-1056"></a>  <span class="cm">/* Bit 72   Thaana */</span>
+<a name="gbab-1057"></a><span class="cp">#define TT_UCR_THAANA                          (1L &lt;&lt;  8) </span><span class="cm">/* U+0780-U+07BF */</span><span class="cp"></span>
+<a name="gbab-1058"></a>  <span class="cm">/* Bit 73   Sinhala */</span>
+<a name="gbab-1059"></a><span class="cp">#define TT_UCR_SINHALA                         (1L &lt;&lt;  9) </span><span class="cm">/* U+0D80-U+0DFF */</span><span class="cp"></span>
+<a name="gbab-1060"></a>  <span class="cm">/* Bit 74   Myanmar */</span>
+<a name="gbab-1061"></a><span class="cp">#define TT_UCR_MYANMAR                         (1L &lt;&lt; 10) </span><span class="cm">/* U+1000-U+109F */</span><span class="cp"></span>
+<a name="gbab-1062"></a>  <span class="cm">/* Bit 75   Ethiopic            */</span>
+<a name="gbab-1063"></a>  <span class="cm">/*          Ethiopic Supplement */</span>
+<a name="gbab-1064"></a>  <span class="cm">/*          Ethiopic Extended   */</span>
+<a name="gbab-1065"></a><span class="cp">#define TT_UCR_ETHIOPIC                        (1L &lt;&lt; 11) </span><span class="cm">/* U+1200-U+137F */</span><span class="cp"></span>
+<a name="gbab-1066"></a>                                                          <span class="cm">/* U+1380-U+139F */</span>
+<a name="gbab-1067"></a>                                                          <span class="cm">/* U+2D80-U+2DDF */</span>
+<a name="gbab-1068"></a>  <span class="cm">/* Bit 76   Cherokee */</span>
+<a name="gbab-1069"></a><span class="cp">#define TT_UCR_CHEROKEE                        (1L &lt;&lt; 12) </span><span class="cm">/* U+13A0-U+13FF */</span><span class="cp"></span>
+<a name="gbab-1070"></a>  <span class="cm">/* Bit 77   Unified Canadian Aboriginal Syllabics */</span>
+<a name="gbab-1071"></a><span class="cp">#define TT_UCR_CANADIAN_ABORIGINAL_SYLLABICS   (1L &lt;&lt; 13) </span><span class="cm">/* U+1400-U+167F */</span><span class="cp"></span>
+<a name="gbab-1072"></a>  <span class="cm">/* Bit 78   Ogham */</span>
+<a name="gbab-1073"></a><span class="cp">#define TT_UCR_OGHAM                           (1L &lt;&lt; 14) </span><span class="cm">/* U+1680-U+169F */</span><span class="cp"></span>
+<a name="gbab-1074"></a>  <span class="cm">/* Bit 79   Runic */</span>
+<a name="gbab-1075"></a><span class="cp">#define TT_UCR_RUNIC                           (1L &lt;&lt; 15) </span><span class="cm">/* U+16A0-U+16FF */</span><span class="cp"></span>
+<a name="gbab-1076"></a>  <span class="cm">/* Bit 80   Khmer         */</span>
+<a name="gbab-1077"></a>  <span class="cm">/*          Khmer Symbols */</span>
+<a name="gbab-1078"></a><span class="cp">#define TT_UCR_KHMER                           (1L &lt;&lt; 16) </span><span class="cm">/* U+1780-U+17FF */</span><span class="cp"></span>
+<a name="gbab-1079"></a>                                                          <span class="cm">/* U+19E0-U+19FF */</span>
+<a name="gbab-1080"></a>  <span class="cm">/* Bit 81   Mongolian */</span>
+<a name="gbab-1081"></a><span class="cp">#define TT_UCR_MONGOLIAN                       (1L &lt;&lt; 17) </span><span class="cm">/* U+1800-U+18AF */</span><span class="cp"></span>
+<a name="gbab-1082"></a>  <span class="cm">/* Bit 82   Braille Patterns */</span>
+<a name="gbab-1083"></a><span class="cp">#define TT_UCR_BRAILLE                         (1L &lt;&lt; 18) </span><span class="cm">/* U+2800-U+28FF */</span><span class="cp"></span>
+<a name="gbab-1084"></a>  <span class="cm">/* Bit 83   Yi Syllables */</span>
+<a name="gbab-1085"></a>  <span class="cm">/*          Yi Radicals  */</span>
+<a name="gbab-1086"></a><span class="cp">#define TT_UCR_YI                              (1L &lt;&lt; 19) </span><span class="cm">/* U+A000-U+A48F */</span><span class="cp"></span>
+<a name="gbab-1087"></a>                                                          <span class="cm">/* U+A490-U+A4CF */</span>
+<a name="gbab-1088"></a>  <span class="cm">/* Bit 84   Tagalog  */</span>
+<a name="gbab-1089"></a>  <span class="cm">/*          Hanunoo  */</span>
+<a name="gbab-1090"></a>  <span class="cm">/*          Buhid    */</span>
+<a name="gbab-1091"></a>  <span class="cm">/*          Tagbanwa */</span>
+<a name="gbab-1092"></a><span class="cp">#define TT_UCR_PHILIPPINE                      (1L &lt;&lt; 20) </span><span class="cm">/* U+1700-U+171F */</span><span class="cp"></span>
+<a name="gbab-1093"></a>                                                          <span class="cm">/* U+1720-U+173F */</span>
+<a name="gbab-1094"></a>                                                          <span class="cm">/* U+1740-U+175F */</span>
+<a name="gbab-1095"></a>                                                          <span class="cm">/* U+1760-U+177F */</span>
+<a name="gbab-1096"></a>  <span class="cm">/* Bit 85   Old Italic */</span>
+<a name="gbab-1097"></a><span class="cp">#define TT_UCR_OLD_ITALIC                      (1L &lt;&lt; 21) </span><span class="cm">/*U+10300-U+1032F*/</span><span class="cp"></span>
+<a name="gbab-1098"></a>  <span class="cm">/* Bit 86   Gothic */</span>
+<a name="gbab-1099"></a><span class="cp">#define TT_UCR_GOTHIC                          (1L &lt;&lt; 22) </span><span class="cm">/*U+10330-U+1034F*/</span><span class="cp"></span>
+<a name="gbab-1100"></a>  <span class="cm">/* Bit 87   Deseret */</span>
+<a name="gbab-1101"></a><span class="cp">#define TT_UCR_DESERET                         (1L &lt;&lt; 23) </span><span class="cm">/*U+10400-U+1044F*/</span><span class="cp"></span>
+<a name="gbab-1102"></a>  <span class="cm">/* Bit 88   Byzantine Musical Symbols      */</span>
+<a name="gbab-1103"></a>  <span class="cm">/*          Musical Symbols                */</span>
+<a name="gbab-1104"></a>  <span class="cm">/*          Ancient Greek Musical Notation */</span>
+<a name="gbab-1105"></a><span class="cp">#define TT_UCR_MUSICAL_SYMBOLS                 (1L &lt;&lt; 24) </span><span class="cm">/*U+1D000-U+1D0FF*/</span><span class="cp"></span>
+<a name="gbab-1106"></a>                                                          <span class="cm">/*U+1D100-U+1D1FF*/</span>
+<a name="gbab-1107"></a>                                                          <span class="cm">/*U+1D200-U+1D24F*/</span>
+<a name="gbab-1108"></a>  <span class="cm">/* Bit 89   Mathematical Alphanumeric Symbols */</span>
+<a name="gbab-1109"></a><span class="cp">#define TT_UCR_MATH_ALPHANUMERIC_SYMBOLS       (1L &lt;&lt; 25) </span><span class="cm">/*U+1D400-U+1D7FF*/</span><span class="cp"></span>
+<a name="gbab-1110"></a>  <span class="cm">/* Bit 90   Private Use (plane 15) */</span>
+<a name="gbab-1111"></a>  <span class="cm">/*          Private Use (plane 16) */</span>
+<a name="gbab-1112"></a><span class="cp">#define TT_UCR_PRIVATE_USE_SUPPLEMENTARY       (1L &lt;&lt; 26) </span><span class="cm">/*U+F0000-U+FFFFD*/</span><span class="cp"></span>
+<a name="gbab-1113"></a>                                                        <span class="cm">/*U+100000-U+10FFFD*/</span>
+<a name="gbab-1114"></a>  <span class="cm">/* Bit 91   Variation Selectors            */</span>
+<a name="gbab-1115"></a>  <span class="cm">/*          Variation Selectors Supplement */</span>
+<a name="gbab-1116"></a><span class="cp">#define TT_UCR_VARIATION_SELECTORS             (1L &lt;&lt; 27) </span><span class="cm">/* U+FE00-U+FE0F */</span><span class="cp"></span>
+<a name="gbab-1117"></a>                                                          <span class="cm">/*U+E0100-U+E01EF*/</span>
+<a name="gbab-1118"></a>  <span class="cm">/* Bit 92   Tags */</span>
+<a name="gbab-1119"></a><span class="cp">#define TT_UCR_TAGS                            (1L &lt;&lt; 28) </span><span class="cm">/*U+E0000-U+E007F*/</span><span class="cp"></span>
+<a name="gbab-1120"></a>  <span class="cm">/* Bit 93   Limbu */</span>
+<a name="gbab-1121"></a><span class="cp">#define TT_UCR_LIMBU                           (1L &lt;&lt; 29) </span><span class="cm">/* U+1900-U+194F */</span><span class="cp"></span>
+<a name="gbab-1122"></a>  <span class="cm">/* Bit 94   Tai Le */</span>
+<a name="gbab-1123"></a><span class="cp">#define TT_UCR_TAI_LE                          (1L &lt;&lt; 30) </span><span class="cm">/* U+1950-U+197F */</span><span class="cp"></span>
+<a name="gbab-1124"></a>  <span class="cm">/* Bit 95   New Tai Lue */</span>
+<a name="gbab-1125"></a><span class="cp">#define TT_UCR_NEW_TAI_LUE                     (1L &lt;&lt; 31) </span><span class="cm">/* U+1980-U+19DF */</span><span class="cp"></span>
+<a name="gbab-1126"></a>  <span class="cm">/* Bit 96   Buginese */</span>
+<a name="gbab-1127"></a><span class="cp">#define TT_UCR_BUGINESE                        (1L &lt;&lt;  0) </span><span class="cm">/* U+1A00-U+1A1F */</span><span class="cp"></span>
+<a name="gbab-1128"></a>  <span class="cm">/* Bit 97   Glagolitic */</span>
+<a name="gbab-1129"></a><span class="cp">#define TT_UCR_GLAGOLITIC                      (1L &lt;&lt;  1) </span><span class="cm">/* U+2C00-U+2C5F */</span><span class="cp"></span>
+<a name="gbab-1130"></a>  <span class="cm">/* Bit 98   Tifinagh */</span>
+<a name="gbab-1131"></a><span class="cp">#define TT_UCR_TIFINAGH                        (1L &lt;&lt;  2) </span><span class="cm">/* U+2D30-U+2D7F */</span><span class="cp"></span>
+<a name="gbab-1132"></a>  <span class="cm">/* Bit 99   Yijing Hexagram Symbols */</span>
+<a name="gbab-1133"></a><span class="cp">#define TT_UCR_YIJING                          (1L &lt;&lt;  3) </span><span class="cm">/* U+4DC0-U+4DFF */</span><span class="cp"></span>
+<a name="gbab-1134"></a>  <span class="cm">/* Bit 100  Syloti Nagri */</span>
+<a name="gbab-1135"></a><span class="cp">#define TT_UCR_SYLOTI_NAGRI                    (1L &lt;&lt;  4) </span><span class="cm">/* U+A800-U+A82F */</span><span class="cp"></span>
+<a name="gbab-1136"></a>  <span class="cm">/* Bit 101  Linear B Syllabary */</span>
+<a name="gbab-1137"></a>  <span class="cm">/*          Linear B Ideograms */</span>
+<a name="gbab-1138"></a>  <span class="cm">/*          Aegean Numbers     */</span>
+<a name="gbab-1139"></a><span class="cp">#define TT_UCR_LINEAR_B                        (1L &lt;&lt;  5) </span><span class="cm">/*U+10000-U+1007F*/</span><span class="cp"></span>
+<a name="gbab-1140"></a>                                                          <span class="cm">/*U+10080-U+100FF*/</span>
+<a name="gbab-1141"></a>                                                          <span class="cm">/*U+10100-U+1013F*/</span>
+<a name="gbab-1142"></a>  <span class="cm">/* Bit 102  Ancient Greek Numbers */</span>
+<a name="gbab-1143"></a><span class="cp">#define TT_UCR_ANCIENT_GREEK_NUMBERS           (1L &lt;&lt;  6) </span><span class="cm">/*U+10140-U+1018F*/</span><span class="cp"></span>
+<a name="gbab-1144"></a>  <span class="cm">/* Bit 103  Ugaritic */</span>
+<a name="gbab-1145"></a><span class="cp">#define TT_UCR_UGARITIC                        (1L &lt;&lt;  7) </span><span class="cm">/*U+10380-U+1039F*/</span><span class="cp"></span>
+<a name="gbab-1146"></a>  <span class="cm">/* Bit 104  Old Persian */</span>
+<a name="gbab-1147"></a><span class="cp">#define TT_UCR_OLD_PERSIAN                     (1L &lt;&lt;  8) </span><span class="cm">/*U+103A0-U+103DF*/</span><span class="cp"></span>
+<a name="gbab-1148"></a>  <span class="cm">/* Bit 105  Shavian */</span>
+<a name="gbab-1149"></a><span class="cp">#define TT_UCR_SHAVIAN                         (1L &lt;&lt;  9) </span><span class="cm">/*U+10450-U+1047F*/</span><span class="cp"></span>
+<a name="gbab-1150"></a>  <span class="cm">/* Bit 106  Osmanya */</span>
+<a name="gbab-1151"></a><span class="cp">#define TT_UCR_OSMANYA                         (1L &lt;&lt; 10) </span><span class="cm">/*U+10480-U+104AF*/</span><span class="cp"></span>
+<a name="gbab-1152"></a>  <span class="cm">/* Bit 107  Cypriot Syllabary */</span>
+<a name="gbab-1153"></a><span class="cp">#define TT_UCR_CYPRIOT_SYLLABARY               (1L &lt;&lt; 11) </span><span class="cm">/*U+10800-U+1083F*/</span><span class="cp"></span>
+<a name="gbab-1154"></a>  <span class="cm">/* Bit 108  Kharoshthi */</span>
+<a name="gbab-1155"></a><span class="cp">#define TT_UCR_KHAROSHTHI                      (1L &lt;&lt; 12) </span><span class="cm">/*U+10A00-U+10A5F*/</span><span class="cp"></span>
+<a name="gbab-1156"></a>  <span class="cm">/* Bit 109  Tai Xuan Jing Symbols */</span>
+<a name="gbab-1157"></a><span class="cp">#define TT_UCR_TAI_XUAN_JING                   (1L &lt;&lt; 13) </span><span class="cm">/*U+1D300-U+1D35F*/</span><span class="cp"></span>
+<a name="gbab-1158"></a>  <span class="cm">/* Bit 110  Cuneiform                         */</span>
+<a name="gbab-1159"></a>  <span class="cm">/*          Cuneiform Numbers and Punctuation */</span>
+<a name="gbab-1160"></a><span class="cp">#define TT_UCR_CUNEIFORM                       (1L &lt;&lt; 14) </span><span class="cm">/*U+12000-U+123FF*/</span><span class="cp"></span>
+<a name="gbab-1161"></a>                                                          <span class="cm">/*U+12400-U+1247F*/</span>
+<a name="gbab-1162"></a>  <span class="cm">/* Bit 111  Counting Rod Numerals */</span>
+<a name="gbab-1163"></a><span class="cp">#define TT_UCR_COUNTING_ROD_NUMERALS           (1L &lt;&lt; 15) </span><span class="cm">/*U+1D360-U+1D37F*/</span><span class="cp"></span>
+<a name="gbab-1164"></a>  <span class="cm">/* Bit 112  Sundanese */</span>
+<a name="gbab-1165"></a><span class="cp">#define TT_UCR_SUNDANESE                       (1L &lt;&lt; 16) </span><span class="cm">/* U+1B80-U+1BBF */</span><span class="cp"></span>
+<a name="gbab-1166"></a>  <span class="cm">/* Bit 113  Lepcha */</span>
+<a name="gbab-1167"></a><span class="cp">#define TT_UCR_LEPCHA                          (1L &lt;&lt; 17) </span><span class="cm">/* U+1C00-U+1C4F */</span><span class="cp"></span>
+<a name="gbab-1168"></a>  <span class="cm">/* Bit 114  Ol Chiki */</span>
+<a name="gbab-1169"></a><span class="cp">#define TT_UCR_OL_CHIKI                        (1L &lt;&lt; 18) </span><span class="cm">/* U+1C50-U+1C7F */</span><span class="cp"></span>
+<a name="gbab-1170"></a>  <span class="cm">/* Bit 115  Saurashtra */</span>
+<a name="gbab-1171"></a><span class="cp">#define TT_UCR_SAURASHTRA                      (1L &lt;&lt; 19) </span><span class="cm">/* U+A880-U+A8DF */</span><span class="cp"></span>
+<a name="gbab-1172"></a>  <span class="cm">/* Bit 116  Kayah Li */</span>
+<a name="gbab-1173"></a><span class="cp">#define TT_UCR_KAYAH_LI                        (1L &lt;&lt; 20) </span><span class="cm">/* U+A900-U+A92F */</span><span class="cp"></span>
+<a name="gbab-1174"></a>  <span class="cm">/* Bit 117  Rejang */</span>
+<a name="gbab-1175"></a><span class="cp">#define TT_UCR_REJANG                          (1L &lt;&lt; 21) </span><span class="cm">/* U+A930-U+A95F */</span><span class="cp"></span>
+<a name="gbab-1176"></a>  <span class="cm">/* Bit 118  Cham */</span>
+<a name="gbab-1177"></a><span class="cp">#define TT_UCR_CHAM                            (1L &lt;&lt; 22) </span><span class="cm">/* U+AA00-U+AA5F */</span><span class="cp"></span>
+<a name="gbab-1178"></a>  <span class="cm">/* Bit 119  Ancient Symbols */</span>
+<a name="gbab-1179"></a><span class="cp">#define TT_UCR_ANCIENT_SYMBOLS                 (1L &lt;&lt; 23) </span><span class="cm">/*U+10190-U+101CF*/</span><span class="cp"></span>
+<a name="gbab-1180"></a>  <span class="cm">/* Bit 120  Phaistos Disc */</span>
+<a name="gbab-1181"></a><span class="cp">#define TT_UCR_PHAISTOS_DISC                   (1L &lt;&lt; 24) </span><span class="cm">/*U+101D0-U+101FF*/</span><span class="cp"></span>
+<a name="gbab-1182"></a>  <span class="cm">/* Bit 121  Carian */</span>
+<a name="gbab-1183"></a>  <span class="cm">/*          Lycian */</span>
+<a name="gbab-1184"></a>  <span class="cm">/*          Lydian */</span>
+<a name="gbab-1185"></a><span class="cp">#define TT_UCR_OLD_ANATOLIAN                   (1L &lt;&lt; 25) </span><span class="cm">/*U+102A0-U+102DF*/</span><span class="cp"></span>
+<a name="gbab-1186"></a>                                                          <span class="cm">/*U+10280-U+1029F*/</span>
+<a name="gbab-1187"></a>                                                          <span class="cm">/*U+10920-U+1093F*/</span>
+<a name="gbab-1188"></a>  <span class="cm">/* Bit 122  Domino Tiles  */</span>
+<a name="gbab-1189"></a>  <span class="cm">/*          Mahjong Tiles */</span>
+<a name="gbab-1190"></a><span class="cp">#define TT_UCR_GAME_TILES                      (1L &lt;&lt; 26) </span><span class="cm">/*U+1F030-U+1F09F*/</span><span class="cp"></span>
+<a name="gbab-1191"></a>                                                          <span class="cm">/*U+1F000-U+1F02F*/</span>
+<a name="gbab-1192"></a>  <span class="cm">/* Bit 123-127 Reserved for process-internal usage */</span>
+<a name="gbab-1193"></a>
+<a name="gbab-1194"></a>
+<a name="gbab-1195"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-1196"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-1197"></a>  <span class="cm">/* Some compilers have a very limited length of identifiers.             */</span>
+<a name="gbab-1198"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-1199"></a><span class="cp">#if defined( __TURBOC__ ) &amp;&amp; __TURBOC__ &lt; 0x0410 || defined( __PACIFIC__ )</span>
+<a name="gbab-1200"></a><span class="cp">#define HAVE_LIMIT_ON_IDENTS</span>
+<a name="gbab-1201"></a><span class="cp">#endif</span>
+<a name="gbab-1202"></a>
+<a name="gbab-1203"></a>
+<a name="gbab-1204"></a><span class="cp">#ifndef HAVE_LIMIT_ON_IDENTS</span>
+<a name="gbab-1205"></a>
+<a name="gbab-1206"></a>
+<a name="gbab-1207"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-1208"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-1209"></a>  <span class="cm">/* Here some alias #defines in order to be clearer.                      */</span>
+<a name="gbab-1210"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-1211"></a>  <span class="cm">/* These are not always #defined to stay within the 31~character limit,  */</span>
+<a name="gbab-1212"></a>  <span class="cm">/* which some compilers have.                                            */</span>
+<a name="gbab-1213"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-1214"></a>  <span class="cm">/* Credits go to Dave Hoo &lt;dhoo@flash.net&gt; for pointing out that modern  */</span>
+<a name="gbab-1215"></a>  <span class="cm">/* Borland compilers (read: from BC++ 3.1 on) can increase this limit.   */</span>
+<a name="gbab-1216"></a>  <span class="cm">/* If you get a warning with such a compiler, use the -i40 switch.       */</span>
+<a name="gbab-1217"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-1218"></a><span class="cp">#define TT_UCR_ARABIC_PRESENTATION_FORMS_A      \</span>
+<a name="gbab-1219"></a><span class="cp">         TT_UCR_ARABIC_PRESENTATIONS_A</span>
+<a name="gbab-1220"></a><span class="cp">#define TT_UCR_ARABIC_PRESENTATION_FORMS_B      \</span>
+<a name="gbab-1221"></a><span class="cp">         TT_UCR_ARABIC_PRESENTATIONS_B</span>
+<a name="gbab-1222"></a>
+<a name="gbab-1223"></a><span class="cp">#define TT_UCR_COMBINING_DIACRITICAL_MARKS      \</span>
+<a name="gbab-1224"></a><span class="cp">         TT_UCR_COMBINING_DIACRITICS</span>
+<a name="gbab-1225"></a><span class="cp">#define TT_UCR_COMBINING_DIACRITICAL_MARKS_SYMB \</span>
+<a name="gbab-1226"></a><span class="cp">         TT_UCR_COMBINING_DIACRITICS_SYMB</span>
+<a name="gbab-1227"></a>
+<a name="gbab-1228"></a>
+<a name="gbab-1229"></a><span class="cp">#endif </span><span class="cm">/* !HAVE_LIMIT_ON_IDENTS */</span><span class="cp"></span>
+<a name="gbab-1230"></a>
+<a name="gbab-1231"></a>
+<a name="gbab-1232"></a><span class="n">FT_END_HEADER</span>
+<a name="gbab-1233"></a>
+<a name="gbab-1234"></a><span class="cp">#endif </span><span class="cm">/* TTNAMEID_H_ */</span><span class="cp"></span>
+<a name="gbab-1235"></a>
+<a name="gbab-1236"></a>
+<a name="gbab-1237"></a><span class="cm">/* END */</span>
+</pre></div>
+</td></tr></table>

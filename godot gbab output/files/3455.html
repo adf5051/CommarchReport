@@ -1,0 +1,27 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cp">#include</span> <span class="cpf">&quot;editor_scale.h&quot;</span><span class="cp"></span>
+<a name="gbab-2"></a><span class="cp">#include</span> <span class="cpf">&quot;os/os.h&quot;</span><span class="cp"></span>
+<a name="gbab-3"></a>
+<a name="gbab-4"></a><span class="k">static</span> <span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+<a name="gbab-5"></a>
+<a name="gbab-6"></a><span class="kt">void</span> <span class="nf">editor_set_scale</span><span class="p">(</span><span class="kt">float</span> <span class="n">p_scale</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-7"></a>
+<a name="gbab-8"></a>	<span class="n">scale</span><span class="o">=</span><span class="n">p_scale</span><span class="p">;</span>
+<a name="gbab-9"></a><span class="p">}</span>
+<a name="gbab-10"></a><span class="kt">float</span> <span class="nf">editor_get_scale</span><span class="p">()</span> <span class="p">{</span>
+<a name="gbab-11"></a>
+<a name="gbab-12"></a>	<span class="k">return</span> <span class="n">scale</span><span class="p">;</span>
+<a name="gbab-13"></a><span class="p">}</span>
+</pre></div>
+</td></tr></table>

@@ -1,0 +1,539 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="c1">// Copyright 2014 Google Inc. All Rights Reserved.</span>
+<a name="gbab-2"></a><span class="c1">//</span>
+<a name="gbab-3"></a><span class="c1">// Use of this source code is governed by a BSD-style license</span>
+<a name="gbab-4"></a><span class="c1">// that can be found in the COPYING file in the root of the source</span>
+<a name="gbab-5"></a><span class="c1">// tree. An additional intellectual property rights grant can be found</span>
+<a name="gbab-6"></a><span class="c1">// in the file PATENTS. All contributing project authors may</span>
+<a name="gbab-7"></a><span class="c1">// be found in the AUTHORS file in the root of the source tree.</span>
+<a name="gbab-8"></a><span class="c1">// -----------------------------------------------------------------------------</span>
+<a name="gbab-9"></a><span class="c1">//</span>
+<a name="gbab-10"></a><span class="c1">// NEON variant of methods for lossless decoder</span>
+<a name="gbab-11"></a><span class="c1">//</span>
+<a name="gbab-12"></a><span class="c1">// Author: Skal (pascal.massimino@gmail.com)</span>
+<a name="gbab-13"></a>
+<a name="gbab-14"></a><span class="cp">#include</span> <span class="cpf">&quot;./dsp.h&quot;</span><span class="cp"></span>
+<a name="gbab-15"></a>
+<a name="gbab-16"></a><span class="cp">#if defined(WEBP_USE_NEON)</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a><span class="cp">#include</span> <span class="cpf">&lt;arm_neon.h&gt;</span><span class="cp"></span>
+<a name="gbab-19"></a>
+<a name="gbab-20"></a><span class="cp">#include</span> <span class="cpf">&quot;./lossless.h&quot;</span><span class="cp"></span>
+<a name="gbab-21"></a><span class="cp">#include</span> <span class="cpf">&quot;./neon.h&quot;</span><span class="cp"></span>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-24"></a><span class="c1">// Colorspace conversion functions</span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="cp">#if !defined(WORK_AROUND_GCC)</span>
+<a name="gbab-27"></a><span class="c1">// gcc 4.6.0 had some trouble (NDK-r9) with this code. We only use it for</span>
+<a name="gbab-28"></a><span class="c1">// gcc-4.8.x at least.</span>
+<a name="gbab-29"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ConvertBGRAToRGBA</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span>
+<a name="gbab-30"></a>                              <span class="kt">int</span> <span class="n">num_pixels</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-31"></a>  <span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">end</span> <span class="o">=</span> <span class="n">src</span> <span class="o">+</span> <span class="p">(</span><span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mi">15</span><span class="p">);</span>
+<a name="gbab-32"></a>  <span class="k">for</span> <span class="p">(;</span> <span class="n">src</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">src</span> <span class="o">+=</span> <span class="mi">16</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-33"></a>    <span class="n">uint8x16x4_t</span> <span class="n">pixel</span> <span class="o">=</span> <span class="n">vld4q_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">src</span><span class="p">);</span>
+<a name="gbab-34"></a>    <span class="c1">// swap B and R. (VSWP d0,d2 has no intrinsics equivalent!)</span>
+<a name="gbab-35"></a>    <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<a name="gbab-36"></a>    <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<a name="gbab-37"></a>    <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+<a name="gbab-38"></a>    <span class="n">vst4q_u8</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">pixel</span><span class="p">);</span>
+<a name="gbab-39"></a>    <span class="n">dst</span> <span class="o">+=</span> <span class="mi">64</span><span class="p">;</span>
+<a name="gbab-40"></a>  <span class="p">}</span>
+<a name="gbab-41"></a>  <span class="n">VP8LConvertBGRAToRGBA_C</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>  <span class="c1">// left-overs</span>
+<a name="gbab-42"></a><span class="p">}</span>
+<a name="gbab-43"></a>
+<a name="gbab-44"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ConvertBGRAToBGR</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span>
+<a name="gbab-45"></a>                             <span class="kt">int</span> <span class="n">num_pixels</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-46"></a>  <span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">end</span> <span class="o">=</span> <span class="n">src</span> <span class="o">+</span> <span class="p">(</span><span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mi">15</span><span class="p">);</span>
+<a name="gbab-47"></a>  <span class="k">for</span> <span class="p">(;</span> <span class="n">src</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">src</span> <span class="o">+=</span> <span class="mi">16</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-48"></a>    <span class="k">const</span> <span class="n">uint8x16x4_t</span> <span class="n">pixel</span> <span class="o">=</span> <span class="n">vld4q_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">src</span><span class="p">);</span>
+<a name="gbab-49"></a>    <span class="k">const</span> <span class="n">uint8x16x3_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="p">{</span> <span class="p">{</span> <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">}</span> <span class="p">};</span>
+<a name="gbab-50"></a>    <span class="n">vst3q_u8</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">tmp</span><span class="p">);</span>
+<a name="gbab-51"></a>    <span class="n">dst</span> <span class="o">+=</span> <span class="mi">48</span><span class="p">;</span>
+<a name="gbab-52"></a>  <span class="p">}</span>
+<a name="gbab-53"></a>  <span class="n">VP8LConvertBGRAToBGR_C</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>  <span class="c1">// left-overs</span>
+<a name="gbab-54"></a><span class="p">}</span>
+<a name="gbab-55"></a>
+<a name="gbab-56"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ConvertBGRAToRGB</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span>
+<a name="gbab-57"></a>                             <span class="kt">int</span> <span class="n">num_pixels</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-58"></a>  <span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">end</span> <span class="o">=</span> <span class="n">src</span> <span class="o">+</span> <span class="p">(</span><span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mi">15</span><span class="p">);</span>
+<a name="gbab-59"></a>  <span class="k">for</span> <span class="p">(;</span> <span class="n">src</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">src</span> <span class="o">+=</span> <span class="mi">16</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-60"></a>    <span class="k">const</span> <span class="n">uint8x16x4_t</span> <span class="n">pixel</span> <span class="o">=</span> <span class="n">vld4q_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">src</span><span class="p">);</span>
+<a name="gbab-61"></a>    <span class="k">const</span> <span class="n">uint8x16x3_t</span> <span class="n">tmp</span> <span class="o">=</span> <span class="p">{</span> <span class="p">{</span> <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pixel</span><span class="p">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">}</span> <span class="p">};</span>
+<a name="gbab-62"></a>    <span class="n">vst3q_u8</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">tmp</span><span class="p">);</span>
+<a name="gbab-63"></a>    <span class="n">dst</span> <span class="o">+=</span> <span class="mi">48</span><span class="p">;</span>
+<a name="gbab-64"></a>  <span class="p">}</span>
+<a name="gbab-65"></a>  <span class="n">VP8LConvertBGRAToRGB_C</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>  <span class="c1">// left-overs</span>
+<a name="gbab-66"></a><span class="p">}</span>
+<a name="gbab-67"></a>
+<a name="gbab-68"></a><span class="cp">#else  </span><span class="c1">// WORK_AROUND_GCC</span>
+<a name="gbab-69"></a>
+<a name="gbab-70"></a><span class="c1">// gcc-4.6.0 fallback</span>
+<a name="gbab-71"></a>
+<a name="gbab-72"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">kRGBAShuffle</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span> <span class="p">};</span>
+<a name="gbab-73"></a>
+<a name="gbab-74"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ConvertBGRAToRGBA</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span>
+<a name="gbab-75"></a>                              <span class="kt">int</span> <span class="n">num_pixels</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-76"></a>  <span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">end</span> <span class="o">=</span> <span class="n">src</span> <span class="o">+</span> <span class="p">(</span><span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-77"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kRGBAShuffle</span><span class="p">);</span>
+<a name="gbab-78"></a>  <span class="k">for</span> <span class="p">(;</span> <span class="n">src</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">src</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-79"></a>    <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">pixels</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">src</span><span class="p">);</span>
+<a name="gbab-80"></a>    <span class="n">vst1_u8</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">vtbl1_u8</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">));</span>
+<a name="gbab-81"></a>    <span class="n">dst</span> <span class="o">+=</span> <span class="mi">8</span><span class="p">;</span>
+<a name="gbab-82"></a>  <span class="p">}</span>
+<a name="gbab-83"></a>  <span class="n">VP8LConvertBGRAToRGBA_C</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>  <span class="c1">// left-overs</span>
+<a name="gbab-84"></a><span class="p">}</span>
+<a name="gbab-85"></a>
+<a name="gbab-86"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">kBGRShuffle</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-87"></a>  <span class="p">{</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>  <span class="mi">9</span> <span class="p">},</span>
+<a name="gbab-88"></a>  <span class="p">{</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">20</span> <span class="p">},</span>
+<a name="gbab-89"></a>  <span class="p">{</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">30</span> <span class="p">}</span>
+<a name="gbab-90"></a><span class="p">};</span>
+<a name="gbab-91"></a>
+<a name="gbab-92"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ConvertBGRAToBGR</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span>
+<a name="gbab-93"></a>                             <span class="kt">int</span> <span class="n">num_pixels</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-94"></a>  <span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">end</span> <span class="o">=</span> <span class="n">src</span> <span class="o">+</span> <span class="p">(</span><span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mi">7</span><span class="p">);</span>
+<a name="gbab-95"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle0</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kBGRShuffle</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<a name="gbab-96"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle1</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kBGRShuffle</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<a name="gbab-97"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle2</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kBGRShuffle</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<a name="gbab-98"></a>  <span class="k">for</span> <span class="p">(;</span> <span class="n">src</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">src</span> <span class="o">+=</span> <span class="mi">8</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-99"></a>    <span class="n">uint8x8x4_t</span> <span class="n">pixels</span><span class="p">;</span>
+<a name="gbab-100"></a>    <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span>
+<a name="gbab-101"></a>                 <span class="n">vld1_u8</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">0</span><span class="p">)),</span>
+<a name="gbab-102"></a>                 <span class="n">vld1_u8</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)),</span>
+<a name="gbab-103"></a>                 <span class="n">vld1_u8</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)),</span>
+<a name="gbab-104"></a>                 <span class="n">vld1_u8</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">6</span><span class="p">)));</span>
+<a name="gbab-105"></a>    <span class="n">vst1_u8</span><span class="p">(</span><span class="n">dst</span> <span class="o">+</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">shuffle0</span><span class="p">));</span>
+<a name="gbab-106"></a>    <span class="n">vst1_u8</span><span class="p">(</span><span class="n">dst</span> <span class="o">+</span>  <span class="mi">8</span><span class="p">,</span> <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">shuffle1</span><span class="p">));</span>
+<a name="gbab-107"></a>    <span class="n">vst1_u8</span><span class="p">(</span><span class="n">dst</span> <span class="o">+</span> <span class="mi">16</span><span class="p">,</span> <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">shuffle2</span><span class="p">));</span>
+<a name="gbab-108"></a>    <span class="n">dst</span> <span class="o">+=</span> <span class="mi">8</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+<a name="gbab-109"></a>  <span class="p">}</span>
+<a name="gbab-110"></a>  <span class="n">VP8LConvertBGRAToBGR_C</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>  <span class="c1">// left-overs</span>
+<a name="gbab-111"></a><span class="p">}</span>
+<a name="gbab-112"></a>
+<a name="gbab-113"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">kRGBShuffle</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-114"></a>  <span class="p">{</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span>  <span class="mi">9</span> <span class="p">},</span>
+<a name="gbab-115"></a>  <span class="p">{</span>  <span class="mi">8</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span> <span class="p">},</span>
+<a name="gbab-116"></a>  <span class="p">{</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">28</span> <span class="p">}</span>
+<a name="gbab-117"></a><span class="p">};</span>
+<a name="gbab-118"></a>
+<a name="gbab-119"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">ConvertBGRAToRGB</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">src</span><span class="p">,</span>
+<a name="gbab-120"></a>                             <span class="kt">int</span> <span class="n">num_pixels</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-121"></a>  <span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">end</span> <span class="o">=</span> <span class="n">src</span> <span class="o">+</span> <span class="p">(</span><span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mi">7</span><span class="p">);</span>
+<a name="gbab-122"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle0</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kRGBShuffle</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<a name="gbab-123"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle1</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kRGBShuffle</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<a name="gbab-124"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle2</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kRGBShuffle</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<a name="gbab-125"></a>  <span class="k">for</span> <span class="p">(;</span> <span class="n">src</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">src</span> <span class="o">+=</span> <span class="mi">8</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-126"></a>    <span class="n">uint8x8x4_t</span> <span class="n">pixels</span><span class="p">;</span>
+<a name="gbab-127"></a>    <span class="n">INIT_VECTOR4</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span>
+<a name="gbab-128"></a>                 <span class="n">vld1_u8</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">0</span><span class="p">)),</span>
+<a name="gbab-129"></a>                 <span class="n">vld1_u8</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)),</span>
+<a name="gbab-130"></a>                 <span class="n">vld1_u8</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)),</span>
+<a name="gbab-131"></a>                 <span class="n">vld1_u8</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">src</span> <span class="o">+</span> <span class="mi">6</span><span class="p">)));</span>
+<a name="gbab-132"></a>    <span class="n">vst1_u8</span><span class="p">(</span><span class="n">dst</span> <span class="o">+</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">shuffle0</span><span class="p">));</span>
+<a name="gbab-133"></a>    <span class="n">vst1_u8</span><span class="p">(</span><span class="n">dst</span> <span class="o">+</span>  <span class="mi">8</span><span class="p">,</span> <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">shuffle1</span><span class="p">));</span>
+<a name="gbab-134"></a>    <span class="n">vst1_u8</span><span class="p">(</span><span class="n">dst</span> <span class="o">+</span> <span class="mi">16</span><span class="p">,</span> <span class="n">vtbl4_u8</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">shuffle2</span><span class="p">));</span>
+<a name="gbab-135"></a>    <span class="n">dst</span> <span class="o">+=</span> <span class="mi">8</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+<a name="gbab-136"></a>  <span class="p">}</span>
+<a name="gbab-137"></a>  <span class="n">VP8LConvertBGRAToRGB_C</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>  <span class="c1">// left-overs</span>
+<a name="gbab-138"></a><span class="p">}</span>
+<a name="gbab-139"></a>
+<a name="gbab-140"></a><span class="cp">#endif   </span><span class="c1">// !WORK_AROUND_GCC</span>
+<a name="gbab-141"></a>
+<a name="gbab-142"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-143"></a><span class="c1">// Subtract-Green Transform</span>
+<a name="gbab-144"></a>
+<a name="gbab-145"></a><span class="c1">// vtbl?_u8 are marked unavailable for iOS arm64 with Xcode &lt; 6.3, use</span>
+<a name="gbab-146"></a><span class="c1">// non-standard versions there.</span>
+<a name="gbab-147"></a><span class="cp">#if defined(__APPLE__) &amp;&amp; defined(__aarch64__) &amp;&amp; \</span>
+<a name="gbab-148"></a><span class="cp">    defined(__apple_build_version__) &amp;&amp; (__apple_build_version__&lt; 6020037)</span>
+<a name="gbab-149"></a><span class="cp">#define USE_VTBLQ</span>
+<a name="gbab-150"></a><span class="cp">#endif</span>
+<a name="gbab-151"></a>
+<a name="gbab-152"></a><span class="cp">#ifdef USE_VTBLQ</span>
+<a name="gbab-153"></a><span class="c1">// 255 = byte will be zeroed</span>
+<a name="gbab-154"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">kGreenShuffle</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-155"></a>  <span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">255</span>
+<a name="gbab-156"></a><span class="p">};</span>
+<a name="gbab-157"></a>
+<a name="gbab-158"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">uint8x16_t</span> <span class="nf">DoGreenShuffle</span><span class="p">(</span><span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">argb</span><span class="p">,</span>
+<a name="gbab-159"></a>                                             <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">shuffle</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-160"></a>  <span class="k">return</span> <span class="n">vcombine_u8</span><span class="p">(</span><span class="n">vtbl1q_u8</span><span class="p">(</span><span class="n">argb</span><span class="p">,</span> <span class="n">vget_low_u8</span><span class="p">(</span><span class="n">shuffle</span><span class="p">)),</span>
+<a name="gbab-161"></a>                     <span class="n">vtbl1q_u8</span><span class="p">(</span><span class="n">argb</span><span class="p">,</span> <span class="n">vget_high_u8</span><span class="p">(</span><span class="n">shuffle</span><span class="p">)));</span>
+<a name="gbab-162"></a><span class="p">}</span>
+<a name="gbab-163"></a><span class="cp">#else  </span><span class="c1">// !USE_VTBLQ</span>
+<a name="gbab-164"></a><span class="c1">// 255 = byte will be zeroed</span>
+<a name="gbab-165"></a><span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">kGreenShuffle</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">255</span>  <span class="p">};</span>
+<a name="gbab-166"></a>
+<a name="gbab-167"></a><span class="k">static</span> <span class="n">WEBP_INLINE</span> <span class="n">uint8x16_t</span> <span class="nf">DoGreenShuffle</span><span class="p">(</span><span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">argb</span><span class="p">,</span>
+<a name="gbab-168"></a>                                             <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-169"></a>  <span class="k">return</span> <span class="n">vcombine_u8</span><span class="p">(</span><span class="n">vtbl1_u8</span><span class="p">(</span><span class="n">vget_low_u8</span><span class="p">(</span><span class="n">argb</span><span class="p">),</span> <span class="n">shuffle</span><span class="p">),</span>
+<a name="gbab-170"></a>                     <span class="n">vtbl1_u8</span><span class="p">(</span><span class="n">vget_high_u8</span><span class="p">(</span><span class="n">argb</span><span class="p">),</span> <span class="n">shuffle</span><span class="p">));</span>
+<a name="gbab-171"></a><span class="p">}</span>
+<a name="gbab-172"></a><span class="cp">#endif  </span><span class="c1">// USE_VTBLQ</span>
+<a name="gbab-173"></a>
+<a name="gbab-174"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">AddGreenToBlueAndRed</span><span class="p">(</span><span class="kt">uint32_t</span><span class="o">*</span> <span class="n">argb_data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_pixels</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-175"></a>  <span class="k">const</span> <span class="kt">uint32_t</span><span class="o">*</span> <span class="k">const</span> <span class="n">end</span> <span class="o">=</span> <span class="n">argb_data</span> <span class="o">+</span> <span class="p">(</span><span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mi">3</span><span class="p">);</span>
+<a name="gbab-176"></a><span class="cp">#ifdef USE_VTBLQ</span>
+<a name="gbab-177"></a>  <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="n">vld1q_u8</span><span class="p">(</span><span class="n">kGreenShuffle</span><span class="p">);</span>
+<a name="gbab-178"></a><span class="cp">#else</span>
+<a name="gbab-179"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">kGreenShuffle</span><span class="p">);</span>
+<a name="gbab-180"></a><span class="cp">#endif</span>
+<a name="gbab-181"></a>  <span class="k">for</span> <span class="p">(;</span> <span class="n">argb_data</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">argb_data</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-182"></a>    <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">argb</span> <span class="o">=</span> <span class="n">vld1q_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">argb_data</span><span class="p">);</span>
+<a name="gbab-183"></a>    <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">greens</span> <span class="o">=</span> <span class="n">DoGreenShuffle</span><span class="p">(</span><span class="n">argb</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">);</span>
+<a name="gbab-184"></a>    <span class="n">vst1q_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">argb_data</span><span class="p">,</span> <span class="n">vaddq_u8</span><span class="p">(</span><span class="n">argb</span><span class="p">,</span> <span class="n">greens</span><span class="p">));</span>
+<a name="gbab-185"></a>  <span class="p">}</span>
+<a name="gbab-186"></a>  <span class="c1">// fallthrough and finish off with plain-C</span>
+<a name="gbab-187"></a>  <span class="n">VP8LAddGreenToBlueAndRed_C</span><span class="p">(</span><span class="n">argb_data</span><span class="p">,</span> <span class="n">num_pixels</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">);</span>
+<a name="gbab-188"></a><span class="p">}</span>
+<a name="gbab-189"></a>
+<a name="gbab-190"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-191"></a><span class="c1">// Color Transform</span>
+<a name="gbab-192"></a>
+<a name="gbab-193"></a><span class="k">static</span> <span class="kt">void</span> <span class="nf">TransformColorInverse</span><span class="p">(</span><span class="k">const</span> <span class="n">VP8LMultipliers</span><span class="o">*</span> <span class="k">const</span> <span class="n">m</span><span class="p">,</span>
+<a name="gbab-194"></a>                                  <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">argb_data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num_pixels</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-195"></a>  <span class="c1">// sign-extended multiplying constants, pre-shifted by 6.</span>
+<a name="gbab-196"></a><span class="cp">#define CST(X)  (((int16_t)(m-&gt;X &lt;&lt; 8)) &gt;&gt; 6)</span>
+<a name="gbab-197"></a>  <span class="k">const</span> <span class="kt">int16_t</span> <span class="n">rb</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-198"></a>    <span class="n">CST</span><span class="p">(</span><span class="n">green_to_blue_</span><span class="p">),</span> <span class="n">CST</span><span class="p">(</span><span class="n">green_to_red_</span><span class="p">),</span>
+<a name="gbab-199"></a>    <span class="n">CST</span><span class="p">(</span><span class="n">green_to_blue_</span><span class="p">),</span> <span class="n">CST</span><span class="p">(</span><span class="n">green_to_red_</span><span class="p">),</span>
+<a name="gbab-200"></a>    <span class="n">CST</span><span class="p">(</span><span class="n">green_to_blue_</span><span class="p">),</span> <span class="n">CST</span><span class="p">(</span><span class="n">green_to_red_</span><span class="p">),</span>
+<a name="gbab-201"></a>    <span class="n">CST</span><span class="p">(</span><span class="n">green_to_blue_</span><span class="p">),</span> <span class="n">CST</span><span class="p">(</span><span class="n">green_to_red_</span><span class="p">)</span>
+<a name="gbab-202"></a>  <span class="p">};</span>
+<a name="gbab-203"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">mults_rb</span> <span class="o">=</span> <span class="n">vld1q_s16</span><span class="p">(</span><span class="n">rb</span><span class="p">);</span>
+<a name="gbab-204"></a>  <span class="k">const</span> <span class="kt">int16_t</span> <span class="n">b2</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-205"></a>    <span class="mi">0</span><span class="p">,</span> <span class="n">CST</span><span class="p">(</span><span class="n">red_to_blue_</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">CST</span><span class="p">(</span><span class="n">red_to_blue_</span><span class="p">),</span>
+<a name="gbab-206"></a>    <span class="mi">0</span><span class="p">,</span> <span class="n">CST</span><span class="p">(</span><span class="n">red_to_blue_</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">CST</span><span class="p">(</span><span class="n">red_to_blue_</span><span class="p">),</span>
+<a name="gbab-207"></a>  <span class="p">};</span>
+<a name="gbab-208"></a>  <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">mults_b2</span> <span class="o">=</span> <span class="n">vld1q_s16</span><span class="p">(</span><span class="n">b2</span><span class="p">);</span>
+<a name="gbab-209"></a><span class="cp">#undef CST</span>
+<a name="gbab-210"></a><span class="cp">#ifdef USE_VTBLQ</span>
+<a name="gbab-211"></a>  <span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">kg0g0</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a name="gbab-212"></a>    <span class="mi">255</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">13</span>
+<a name="gbab-213"></a>  <span class="p">};</span>
+<a name="gbab-214"></a>  <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="n">vld1q_u8</span><span class="p">(</span><span class="n">kg0g0</span><span class="p">);</span>
+<a name="gbab-215"></a><span class="cp">#else</span>
+<a name="gbab-216"></a>  <span class="k">static</span> <span class="k">const</span> <span class="kt">uint8_t</span> <span class="n">k0g0g</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
+<a name="gbab-217"></a>  <span class="k">const</span> <span class="n">uint8x8_t</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="n">vld1_u8</span><span class="p">(</span><span class="n">k0g0g</span><span class="p">);</span>
+<a name="gbab-218"></a><span class="cp">#endif</span>
+<a name="gbab-219"></a>  <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">mask_ag</span> <span class="o">=</span> <span class="n">vdupq_n_u32</span><span class="p">(</span><span class="mh">0xff00ff00u</span><span class="p">);</span>
+<a name="gbab-220"></a>  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<a name="gbab-221"></a>  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">&lt;=</span> <span class="n">num_pixels</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-222"></a>    <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">in</span> <span class="o">=</span> <span class="n">vld1q_u8</span><span class="p">((</span><span class="kt">uint8_t</span><span class="o">*</span><span class="p">)(</span><span class="n">argb_data</span> <span class="o">+</span> <span class="n">i</span><span class="p">));</span>
+<a name="gbab-223"></a>    <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">a0g0</span> <span class="o">=</span> <span class="n">vandq_u32</span><span class="p">(</span><span class="n">vreinterpretq_u32_u8</span><span class="p">(</span><span class="n">in</span><span class="p">),</span> <span class="n">mask_ag</span><span class="p">);</span>
+<a name="gbab-224"></a>    <span class="c1">// 0 g 0 g</span>
+<a name="gbab-225"></a>    <span class="k">const</span> <span class="n">uint8x16_t</span> <span class="n">greens</span> <span class="o">=</span> <span class="n">DoGreenShuffle</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">);</span>
+<a name="gbab-226"></a>    <span class="c1">// x dr  x db1</span>
+<a name="gbab-227"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">A</span> <span class="o">=</span> <span class="n">vqdmulhq_s16</span><span class="p">(</span><span class="n">vreinterpretq_s16_u8</span><span class="p">(</span><span class="n">greens</span><span class="p">),</span> <span class="n">mults_rb</span><span class="p">);</span>
+<a name="gbab-228"></a>    <span class="c1">// x r&#39;  x   b&#39;</span>
+<a name="gbab-229"></a>    <span class="k">const</span> <span class="n">int8x16_t</span> <span class="n">B</span> <span class="o">=</span> <span class="n">vaddq_s8</span><span class="p">(</span><span class="n">vreinterpretq_s8_u8</span><span class="p">(</span><span class="n">in</span><span class="p">),</span>
+<a name="gbab-230"></a>                                 <span class="n">vreinterpretq_s8_s16</span><span class="p">(</span><span class="n">A</span><span class="p">));</span>
+<a name="gbab-231"></a>    <span class="c1">// r&#39; 0   b&#39; 0</span>
+<a name="gbab-232"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">C</span> <span class="o">=</span> <span class="n">vshlq_n_s16</span><span class="p">(</span><span class="n">vreinterpretq_s16_s8</span><span class="p">(</span><span class="n">B</span><span class="p">),</span> <span class="mi">8</span><span class="p">);</span>
+<a name="gbab-233"></a>    <span class="c1">// x db2  0  0</span>
+<a name="gbab-234"></a>    <span class="k">const</span> <span class="n">int16x8_t</span> <span class="n">D</span> <span class="o">=</span> <span class="n">vqdmulhq_s16</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">mults_b2</span><span class="p">);</span>
+<a name="gbab-235"></a>    <span class="c1">// 0  x db2  0</span>
+<a name="gbab-236"></a>    <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">E</span> <span class="o">=</span> <span class="n">vshrq_n_u32</span><span class="p">(</span><span class="n">vreinterpretq_u32_s16</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="mi">8</span><span class="p">);</span>
+<a name="gbab-237"></a>    <span class="c1">// r&#39; x  b&#39;&#39; 0</span>
+<a name="gbab-238"></a>    <span class="k">const</span> <span class="n">int8x16_t</span> <span class="n">F</span> <span class="o">=</span> <span class="n">vaddq_s8</span><span class="p">(</span><span class="n">vreinterpretq_s8_u32</span><span class="p">(</span><span class="n">E</span><span class="p">),</span>
+<a name="gbab-239"></a>                                 <span class="n">vreinterpretq_s8_s16</span><span class="p">(</span><span class="n">C</span><span class="p">));</span>
+<a name="gbab-240"></a>    <span class="c1">// 0  r&#39;  0  b&#39;&#39;</span>
+<a name="gbab-241"></a>    <span class="k">const</span> <span class="n">uint16x8_t</span> <span class="n">G</span> <span class="o">=</span> <span class="n">vshrq_n_u16</span><span class="p">(</span><span class="n">vreinterpretq_u16_s8</span><span class="p">(</span><span class="n">F</span><span class="p">),</span> <span class="mi">8</span><span class="p">);</span>
+<a name="gbab-242"></a>    <span class="k">const</span> <span class="n">uint32x4_t</span> <span class="n">out</span> <span class="o">=</span> <span class="n">vorrq_u32</span><span class="p">(</span><span class="n">vreinterpretq_u32_u16</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="n">a0g0</span><span class="p">);</span>
+<a name="gbab-243"></a>    <span class="n">vst1q_u32</span><span class="p">(</span><span class="n">argb_data</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">out</span><span class="p">);</span>
+<a name="gbab-244"></a>  <span class="p">}</span>
+<a name="gbab-245"></a>  <span class="c1">// Fall-back to C-version for left-overs.</span>
+<a name="gbab-246"></a>  <span class="n">VP8LTransformColorInverse_C</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">argb_data</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">num_pixels</span> <span class="o">-</span> <span class="n">i</span><span class="p">);</span>
+<a name="gbab-247"></a><span class="p">}</span>
+<a name="gbab-248"></a>
+<a name="gbab-249"></a><span class="cp">#undef USE_VTBLQ</span>
+<a name="gbab-250"></a>
+<a name="gbab-251"></a><span class="c1">//------------------------------------------------------------------------------</span>
+<a name="gbab-252"></a><span class="c1">// Entry point</span>
+<a name="gbab-253"></a>
+<a name="gbab-254"></a><span class="k">extern</span> <span class="kt">void</span> <span class="nf">VP8LDspInitNEON</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<a name="gbab-255"></a>
+<a name="gbab-256"></a><span class="n">WEBP_TSAN_IGNORE_FUNCTION</span> <span class="kt">void</span> <span class="nf">VP8LDspInitNEON</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+<a name="gbab-257"></a>  <span class="n">VP8LConvertBGRAToRGBA</span> <span class="o">=</span> <span class="n">ConvertBGRAToRGBA</span><span class="p">;</span>
+<a name="gbab-258"></a>  <span class="n">VP8LConvertBGRAToBGR</span> <span class="o">=</span> <span class="n">ConvertBGRAToBGR</span><span class="p">;</span>
+<a name="gbab-259"></a>  <span class="n">VP8LConvertBGRAToRGB</span> <span class="o">=</span> <span class="n">ConvertBGRAToRGB</span><span class="p">;</span>
+<a name="gbab-260"></a>
+<a name="gbab-261"></a>  <span class="n">VP8LAddGreenToBlueAndRed</span> <span class="o">=</span> <span class="n">AddGreenToBlueAndRed</span><span class="p">;</span>
+<a name="gbab-262"></a>  <span class="n">VP8LTransformColorInverse</span> <span class="o">=</span> <span class="n">TransformColorInverse</span><span class="p">;</span>
+<a name="gbab-263"></a><span class="p">}</span>
+<a name="gbab-264"></a>
+<a name="gbab-265"></a><span class="cp">#else  </span><span class="c1">// !WEBP_USE_NEON</span>
+<a name="gbab-266"></a>
+<a name="gbab-267"></a><span class="n">WEBP_DSP_INIT_STUB</span><span class="p">(</span><span class="n">VP8LDspInitNEON</span><span class="p">)</span>
+<a name="gbab-268"></a>
+<a name="gbab-269"></a><span class="cp">#endif  </span><span class="c1">// WEBP_USE_NEON</span>
+</pre></div>
+</td></tr></table>

@@ -1,0 +1,1243 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/* pngconf.h - machine configurable file for libpng</span>
+<a name="gbab-2"></a><span class="cm"> *</span>
+<a name="gbab-3"></a><span class="cm"> * libpng version 1.6.23, June 9, 2016</span>
+<a name="gbab-4"></a><span class="cm"> *</span>
+<a name="gbab-5"></a><span class="cm"> * Copyright (c) 1998-2002,2004,2006-2015 Glenn Randers-Pehrson</span>
+<a name="gbab-6"></a><span class="cm"> * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)</span>
+<a name="gbab-7"></a><span class="cm"> * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)</span>
+<a name="gbab-8"></a><span class="cm"> *</span>
+<a name="gbab-9"></a><span class="cm"> * This code is released under the libpng license.</span>
+<a name="gbab-10"></a><span class="cm"> * For conditions of distribution and use, see the disclaimer</span>
+<a name="gbab-11"></a><span class="cm"> * and license in png.h</span>
+<a name="gbab-12"></a><span class="cm"> *</span>
+<a name="gbab-13"></a><span class="cm"> * Any machine specific code is near the front of this file, so if you</span>
+<a name="gbab-14"></a><span class="cm"> * are configuring libpng for a machine, you may want to read the section</span>
+<a name="gbab-15"></a><span class="cm"> * starting here down to where it starts to typedef png_color, png_text,</span>
+<a name="gbab-16"></a><span class="cm"> * and png_info.</span>
+<a name="gbab-17"></a><span class="cm"> */</span>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#ifndef PNGCONF_H</span>
+<a name="gbab-20"></a><span class="cp">#define PNGCONF_H</span>
+<a name="gbab-21"></a>
+<a name="gbab-22"></a><span class="cp">#ifndef PNG_BUILDING_SYMBOL_TABLE </span><span class="cm">/* else includes may cause problems */</span><span class="cp"></span>
+<a name="gbab-23"></a>
+<a name="gbab-24"></a><span class="cm">/* From libpng 1.6.0 libpng requires an ANSI X3.159-1989 (&quot;ISOC90&quot;) compliant C</span>
+<a name="gbab-25"></a><span class="cm"> * compiler for correct compilation.  The following header files are required by</span>
+<a name="gbab-26"></a><span class="cm"> * the standard.  If your compiler doesn&#39;t provide these header files, or they</span>
+<a name="gbab-27"></a><span class="cm"> * do not match the standard, you will need to provide/improve them.</span>
+<a name="gbab-28"></a><span class="cm"> */</span>
+<a name="gbab-29"></a><span class="cp">#    include &lt;limits.h&gt;</span>
+<a name="gbab-30"></a><span class="cp">#include</span> <span class="cpf">&lt;stddef.h&gt;</span><span class="cp"></span>
+<a name="gbab-31"></a>
+<a name="gbab-32"></a><span class="cm">/* Library header files.  These header files are all defined by ISOC90; libpng</span>
+<a name="gbab-33"></a><span class="cm"> * expects conformant implementations, however, an ISOC90 conformant system need</span>
+<a name="gbab-34"></a><span class="cm"> * not provide these header files if the functionality cannot be implemented.</span>
+<a name="gbab-35"></a><span class="cm"> * In this case it will be necessary to disable the relevant parts of libpng in</span>
+<a name="gbab-36"></a><span class="cm"> * the build of pnglibconf.h.</span>
+<a name="gbab-37"></a><span class="cm"> *</span>
+<a name="gbab-38"></a><span class="cm"> * Prior to 1.6.0 string.h was included here; the API changes in 1.6.0 to not</span>
+<a name="gbab-39"></a><span class="cm"> * include this unnecessary header file.</span>
+<a name="gbab-40"></a><span class="cm"> */</span>
+<a name="gbab-41"></a>
+<a name="gbab-42"></a><span class="cp">#  ifdef PNG_STDIO_SUPPORTED</span>
+<a name="gbab-43"></a>   <span class="cm">/* Required for the definition of FILE: */</span>
+<a name="gbab-44"></a><span class="cp">#    include &lt;stdio.h&gt;</span>
+<a name="gbab-45"></a><span class="cp">#  endif</span>
+<a name="gbab-46"></a>
+<a name="gbab-47"></a><span class="cp">#ifdef PNG_SETJMP_SUPPORTED</span>
+<a name="gbab-48"></a>   <span class="cm">/* Required for the definition of jmp_buf and the declaration of longjmp: */</span>
+<a name="gbab-49"></a><span class="cp">#  include &lt;setjmp.h&gt;</span>
+<a name="gbab-50"></a><span class="cp">#endif</span>
+<a name="gbab-51"></a>
+<a name="gbab-52"></a><span class="cp">#ifdef PNG_CONVERT_tIME_SUPPORTED</span>
+<a name="gbab-53"></a>   <span class="cm">/* Required for struct tm: */</span>
+<a name="gbab-54"></a><span class="cp">#  include &lt;time.h&gt;</span>
+<a name="gbab-55"></a><span class="cp">#endif</span>
+<a name="gbab-56"></a>
+<a name="gbab-57"></a><span class="cp">#endif </span><span class="cm">/* PNG_BUILDING_SYMBOL_TABLE */</span><span class="cp"></span>
+<a name="gbab-58"></a>
+<a name="gbab-59"></a><span class="cm">/* Prior to 1.6.0 it was possible to turn off &#39;const&#39; in declarations using</span>
+<a name="gbab-60"></a><span class="cm"> * PNG_NO_CONST; this is no longer supported except for data declarations which</span>
+<a name="gbab-61"></a><span class="cm"> * apparently still cause problems in 2011 on some compilers.</span>
+<a name="gbab-62"></a><span class="cm"> */</span>
+<a name="gbab-63"></a><span class="cp">#define PNG_CONST const </span><span class="cm">/* backward compatibility only */</span><span class="cp"></span>
+<a name="gbab-64"></a>
+<a name="gbab-65"></a><span class="cm">/* This controls optimization of the reading of 16-bit and 32-bit values</span>
+<a name="gbab-66"></a><span class="cm"> * from PNG files.  It can be set on a per-app-file basis - it</span>
+<a name="gbab-67"></a><span class="cm"> * just changes whether a macro is used when the function is called.</span>
+<a name="gbab-68"></a><span class="cm"> * The library builder sets the default; if read functions are not</span>
+<a name="gbab-69"></a><span class="cm"> * built into the library the macro implementation is forced on.</span>
+<a name="gbab-70"></a><span class="cm"> */</span>
+<a name="gbab-71"></a><span class="cp">#ifndef PNG_READ_INT_FUNCTIONS_SUPPORTED</span>
+<a name="gbab-72"></a><span class="cp">#  define PNG_USE_READ_MACROS</span>
+<a name="gbab-73"></a><span class="cp">#endif</span>
+<a name="gbab-74"></a><span class="cp">#if !defined(PNG_NO_USE_READ_MACROS) &amp;&amp; !defined(PNG_USE_READ_MACROS)</span>
+<a name="gbab-75"></a><span class="cp">#  if PNG_DEFAULT_READ_MACROS</span>
+<a name="gbab-76"></a><span class="cp">#    define PNG_USE_READ_MACROS</span>
+<a name="gbab-77"></a><span class="cp">#  endif</span>
+<a name="gbab-78"></a><span class="cp">#endif</span>
+<a name="gbab-79"></a>
+<a name="gbab-80"></a><span class="cm">/* COMPILER SPECIFIC OPTIONS.</span>
+<a name="gbab-81"></a><span class="cm"> *</span>
+<a name="gbab-82"></a><span class="cm"> * These options are provided so that a variety of difficult compilers</span>
+<a name="gbab-83"></a><span class="cm"> * can be used.  Some are fixed at build time (e.g. PNG_API_RULE</span>
+<a name="gbab-84"></a><span class="cm"> * below) but still have compiler specific implementations, others</span>
+<a name="gbab-85"></a><span class="cm"> * may be changed on a per-file basis when compiling against libpng.</span>
+<a name="gbab-86"></a><span class="cm"> */</span>
+<a name="gbab-87"></a>
+<a name="gbab-88"></a><span class="cm">/* The PNGARG macro was used in versions of libpng prior to 1.6.0 to protect</span>
+<a name="gbab-89"></a><span class="cm"> * against legacy (pre ISOC90) compilers that did not understand function</span>
+<a name="gbab-90"></a><span class="cm"> * prototypes.  It is not required for modern C compilers.</span>
+<a name="gbab-91"></a><span class="cm"> */</span>
+<a name="gbab-92"></a><span class="cp">#ifndef PNGARG</span>
+<a name="gbab-93"></a><span class="cp">#      define PNGARG(arglist) arglist</span>
+<a name="gbab-94"></a><span class="cp">#endif</span>
+<a name="gbab-95"></a>
+<a name="gbab-96"></a><span class="cm">/* Function calling conventions.</span>
+<a name="gbab-97"></a><span class="cm"> * =============================</span>
+<a name="gbab-98"></a><span class="cm"> * Normally it is not necessary to specify to the compiler how to call</span>
+<a name="gbab-99"></a><span class="cm"> * a function - it just does it - however on x86 systems derived from</span>
+<a name="gbab-100"></a><span class="cm"> * Microsoft and Borland C compilers (&#39;IBM PC&#39;, &#39;DOS&#39;, &#39;Windows&#39; systems</span>
+<a name="gbab-101"></a><span class="cm"> * and some others) there are multiple ways to call a function and the</span>
+<a name="gbab-102"></a><span class="cm"> * default can be changed on the compiler command line.  For this reason</span>
+<a name="gbab-103"></a><span class="cm"> * libpng specifies the calling convention of every exported function and</span>
+<a name="gbab-104"></a><span class="cm"> * every function called via a user supplied function pointer.  This is</span>
+<a name="gbab-105"></a><span class="cm"> * done in this file by defining the following macros:</span>
+<a name="gbab-106"></a><span class="cm"> *</span>
+<a name="gbab-107"></a><span class="cm"> * PNGAPI    Calling convention for exported functions.</span>
+<a name="gbab-108"></a><span class="cm"> * PNGCBAPI  Calling convention for user provided (callback) functions.</span>
+<a name="gbab-109"></a><span class="cm"> * PNGCAPI   Calling convention used by the ANSI-C library (required</span>
+<a name="gbab-110"></a><span class="cm"> *           for longjmp callbacks and sometimes used internally to</span>
+<a name="gbab-111"></a><span class="cm"> *           specify the calling convention for zlib).</span>
+<a name="gbab-112"></a><span class="cm"> *</span>
+<a name="gbab-113"></a><span class="cm"> * These macros should never be overridden.  If it is necessary to</span>
+<a name="gbab-114"></a><span class="cm"> * change calling convention in a private build this can be done</span>
+<a name="gbab-115"></a><span class="cm"> * by setting PNG_API_RULE (which defaults to 0) to one of the values</span>
+<a name="gbab-116"></a><span class="cm"> * below to select the correct &#39;API&#39; variants.</span>
+<a name="gbab-117"></a><span class="cm"> *</span>
+<a name="gbab-118"></a><span class="cm"> * PNG_API_RULE=0 Use PNGCAPI - the &#39;C&#39; calling convention - throughout.</span>
+<a name="gbab-119"></a><span class="cm"> *                This is correct in every known environment.</span>
+<a name="gbab-120"></a><span class="cm"> * PNG_API_RULE=1 Use the operating system convention for PNGAPI and</span>
+<a name="gbab-121"></a><span class="cm"> *                the &#39;C&#39; calling convention (from PNGCAPI) for</span>
+<a name="gbab-122"></a><span class="cm"> *                callbacks (PNGCBAPI).  This is no longer required</span>
+<a name="gbab-123"></a><span class="cm"> *                in any known environment - if it has to be used</span>
+<a name="gbab-124"></a><span class="cm"> *                please post an explanation of the problem to the</span>
+<a name="gbab-125"></a><span class="cm"> *                libpng mailing list.</span>
+<a name="gbab-126"></a><span class="cm"> *</span>
+<a name="gbab-127"></a><span class="cm"> * These cases only differ if the operating system does not use the C</span>
+<a name="gbab-128"></a><span class="cm"> * calling convention, at present this just means the above cases</span>
+<a name="gbab-129"></a><span class="cm"> * (x86 DOS/Windows sytems) and, even then, this does not apply to</span>
+<a name="gbab-130"></a><span class="cm"> * Cygwin running on those systems.</span>
+<a name="gbab-131"></a><span class="cm"> *</span>
+<a name="gbab-132"></a><span class="cm"> * Note that the value must be defined in pnglibconf.h so that what</span>
+<a name="gbab-133"></a><span class="cm"> * the application uses to call the library matches the conventions</span>
+<a name="gbab-134"></a><span class="cm"> * set when building the library.</span>
+<a name="gbab-135"></a><span class="cm"> */</span>
+<a name="gbab-136"></a>
+<a name="gbab-137"></a><span class="cm">/* Symbol export</span>
+<a name="gbab-138"></a><span class="cm"> * =============</span>
+<a name="gbab-139"></a><span class="cm"> * When building a shared library it is almost always necessary to tell</span>
+<a name="gbab-140"></a><span class="cm"> * the compiler which symbols to export.  The png.h macro &#39;PNG_EXPORT&#39;</span>
+<a name="gbab-141"></a><span class="cm"> * is used to mark the symbols.  On some systems these symbols can be</span>
+<a name="gbab-142"></a><span class="cm"> * extracted at link time and need no special processing by the compiler,</span>
+<a name="gbab-143"></a><span class="cm"> * on other systems the symbols are flagged by the compiler and just</span>
+<a name="gbab-144"></a><span class="cm"> * the declaration requires a special tag applied (unfortunately) in a</span>
+<a name="gbab-145"></a><span class="cm"> * compiler dependent way.  Some systems can do either.</span>
+<a name="gbab-146"></a><span class="cm"> *</span>
+<a name="gbab-147"></a><span class="cm"> * A small number of older systems also require a symbol from a DLL to</span>
+<a name="gbab-148"></a><span class="cm"> * be flagged to the program that calls it.  This is a problem because</span>
+<a name="gbab-149"></a><span class="cm"> * we do not know in the header file included by application code that</span>
+<a name="gbab-150"></a><span class="cm"> * the symbol will come from a shared library, as opposed to a statically</span>
+<a name="gbab-151"></a><span class="cm"> * linked one.  For this reason the application must tell us by setting</span>
+<a name="gbab-152"></a><span class="cm"> * the magic flag PNG_USE_DLL to turn on the special processing before</span>
+<a name="gbab-153"></a><span class="cm"> * it includes png.h.</span>
+<a name="gbab-154"></a><span class="cm"> *</span>
+<a name="gbab-155"></a><span class="cm"> * Four additional macros are used to make this happen:</span>
+<a name="gbab-156"></a><span class="cm"> *</span>
+<a name="gbab-157"></a><span class="cm"> * PNG_IMPEXP The magic (if any) to cause a symbol to be exported from</span>
+<a name="gbab-158"></a><span class="cm"> *            the build or imported if PNG_USE_DLL is set - compiler</span>
+<a name="gbab-159"></a><span class="cm"> *            and system specific.</span>
+<a name="gbab-160"></a><span class="cm"> *</span>
+<a name="gbab-161"></a><span class="cm"> * PNG_EXPORT_TYPE(type) A macro that pre or appends PNG_IMPEXP to</span>
+<a name="gbab-162"></a><span class="cm"> *                       &#39;type&#39;, compiler specific.</span>
+<a name="gbab-163"></a><span class="cm"> *</span>
+<a name="gbab-164"></a><span class="cm"> * PNG_DLL_EXPORT Set to the magic to use during a libpng build to</span>
+<a name="gbab-165"></a><span class="cm"> *                make a symbol exported from the DLL.  Not used in the</span>
+<a name="gbab-166"></a><span class="cm"> *                public header files; see pngpriv.h for how it is used</span>
+<a name="gbab-167"></a><span class="cm"> *                in the libpng build.</span>
+<a name="gbab-168"></a><span class="cm"> *</span>
+<a name="gbab-169"></a><span class="cm"> * PNG_DLL_IMPORT Set to the magic to force the libpng symbols to come</span>
+<a name="gbab-170"></a><span class="cm"> *                from a DLL - used to define PNG_IMPEXP when</span>
+<a name="gbab-171"></a><span class="cm"> *                PNG_USE_DLL is set.</span>
+<a name="gbab-172"></a><span class="cm"> */</span>
+<a name="gbab-173"></a>
+<a name="gbab-174"></a><span class="cm">/* System specific discovery.</span>
+<a name="gbab-175"></a><span class="cm"> * ==========================</span>
+<a name="gbab-176"></a><span class="cm"> * This code is used at build time to find PNG_IMPEXP, the API settings</span>
+<a name="gbab-177"></a><span class="cm"> * and PNG_EXPORT_TYPE(), it may also set a macro to indicate the DLL</span>
+<a name="gbab-178"></a><span class="cm"> * import processing is possible.  On Windows systems it also sets</span>
+<a name="gbab-179"></a><span class="cm"> * compiler-specific macros to the values required to change the calling</span>
+<a name="gbab-180"></a><span class="cm"> * conventions of the various functions.</span>
+<a name="gbab-181"></a><span class="cm"> */</span>
+<a name="gbab-182"></a><span class="cp">#if defined(_Windows) || defined(_WINDOWS) || defined(WIN32) ||\</span>
+<a name="gbab-183"></a><span class="cp">    defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__)</span>
+<a name="gbab-184"></a>  <span class="cm">/* Windows system (DOS doesn&#39;t support DLLs).  Includes builds under Cygwin or</span>
+<a name="gbab-185"></a><span class="cm">   * MinGW on any architecture currently supported by Windows.  Also includes</span>
+<a name="gbab-186"></a><span class="cm">   * Watcom builds but these need special treatment because they are not</span>
+<a name="gbab-187"></a><span class="cm">   * compatible with GCC or Visual C because of different calling conventions.</span>
+<a name="gbab-188"></a><span class="cm">   */</span>
+<a name="gbab-189"></a><span class="cp">#  if PNG_API_RULE == 2</span>
+<a name="gbab-190"></a>    <span class="cm">/* If this line results in an error, either because __watcall is not</span>
+<a name="gbab-191"></a><span class="cm">     * understood or because of a redefine just below you cannot use *this*</span>
+<a name="gbab-192"></a><span class="cm">     * build of the library with the compiler you are using.  *This* build was</span>
+<a name="gbab-193"></a><span class="cm">     * build using Watcom and applications must also be built using Watcom!</span>
+<a name="gbab-194"></a><span class="cm">     */</span>
+<a name="gbab-195"></a><span class="cp">#    define PNGCAPI __watcall</span>
+<a name="gbab-196"></a><span class="cp">#  endif</span>
+<a name="gbab-197"></a>
+<a name="gbab-198"></a><span class="cp">#  if defined(__GNUC__) || (defined (_MSC_VER) &amp;&amp; (_MSC_VER &gt;= 800))</span>
+<a name="gbab-199"></a><span class="cp">#    define PNGCAPI __cdecl</span>
+<a name="gbab-200"></a><span class="cp">#    if PNG_API_RULE == 1</span>
+<a name="gbab-201"></a>       <span class="cm">/* If this line results in an error __stdcall is not understood and</span>
+<a name="gbab-202"></a><span class="cm">        * PNG_API_RULE should not have been set to &#39;1&#39;.</span>
+<a name="gbab-203"></a><span class="cm">        */</span>
+<a name="gbab-204"></a><span class="cp">#      define PNGAPI __stdcall</span>
+<a name="gbab-205"></a><span class="cp">#    endif</span>
+<a name="gbab-206"></a><span class="cp">#  else</span>
+<a name="gbab-207"></a>    <span class="cm">/* An older compiler, or one not detected (erroneously) above,</span>
+<a name="gbab-208"></a><span class="cm">     * if necessary override on the command line to get the correct</span>
+<a name="gbab-209"></a><span class="cm">     * variants for the compiler.</span>
+<a name="gbab-210"></a><span class="cm">     */</span>
+<a name="gbab-211"></a><span class="cp">#    ifndef PNGCAPI</span>
+<a name="gbab-212"></a><span class="cp">#      define PNGCAPI _cdecl</span>
+<a name="gbab-213"></a><span class="cp">#    endif</span>
+<a name="gbab-214"></a><span class="cp">#    if PNG_API_RULE == 1 &amp;&amp; !defined(PNGAPI)</span>
+<a name="gbab-215"></a><span class="cp">#      define PNGAPI _stdcall</span>
+<a name="gbab-216"></a><span class="cp">#    endif</span>
+<a name="gbab-217"></a><span class="cp">#  endif </span><span class="cm">/* compiler/api */</span><span class="cp"></span>
+<a name="gbab-218"></a>
+<a name="gbab-219"></a>  <span class="cm">/* NOTE: PNGCBAPI always defaults to PNGCAPI. */</span>
+<a name="gbab-220"></a>
+<a name="gbab-221"></a><span class="cp">#  if defined(PNGAPI) &amp;&amp; !defined(PNG_USER_PRIVATEBUILD)</span>
+<a name="gbab-222"></a><span class="cp">#     error &quot;PNG_USER_PRIVATEBUILD must be defined if PNGAPI is changed&quot;</span>
+<a name="gbab-223"></a><span class="cp">#  endif</span>
+<a name="gbab-224"></a>
+<a name="gbab-225"></a><span class="cp">#  if (defined(_MSC_VER) &amp;&amp; _MSC_VER &lt; 800) ||\</span>
+<a name="gbab-226"></a><span class="cp">      (defined(__BORLANDC__) &amp;&amp; __BORLANDC__ &lt; 0x500)</span>
+<a name="gbab-227"></a>    <span class="cm">/* older Borland and MSC</span>
+<a name="gbab-228"></a><span class="cm">     * compilers used &#39;__export&#39; and required this to be after</span>
+<a name="gbab-229"></a><span class="cm">     * the type.</span>
+<a name="gbab-230"></a><span class="cm">     */</span>
+<a name="gbab-231"></a><span class="cp">#    ifndef PNG_EXPORT_TYPE</span>
+<a name="gbab-232"></a><span class="cp">#      define PNG_EXPORT_TYPE(type) type PNG_IMPEXP</span>
+<a name="gbab-233"></a><span class="cp">#    endif</span>
+<a name="gbab-234"></a><span class="cp">#    define PNG_DLL_EXPORT __export</span>
+<a name="gbab-235"></a><span class="cp">#  else </span><span class="cm">/* newer compiler */</span><span class="cp"></span>
+<a name="gbab-236"></a><span class="cp">#    define PNG_DLL_EXPORT __declspec(dllexport)</span>
+<a name="gbab-237"></a><span class="cp">#    ifndef PNG_DLL_IMPORT</span>
+<a name="gbab-238"></a><span class="cp">#      define PNG_DLL_IMPORT __declspec(dllimport)</span>
+<a name="gbab-239"></a><span class="cp">#    endif</span>
+<a name="gbab-240"></a><span class="cp">#  endif </span><span class="cm">/* compiler */</span><span class="cp"></span>
+<a name="gbab-241"></a>
+<a name="gbab-242"></a><span class="cp">#else </span><span class="cm">/* !Windows */</span><span class="cp"></span>
+<a name="gbab-243"></a><span class="cp">#  if (defined(__IBMC__) || defined(__IBMCPP__)) &amp;&amp; defined(__OS2__)</span>
+<a name="gbab-244"></a><span class="cp">#    define PNGAPI _System</span>
+<a name="gbab-245"></a><span class="cp">#  else </span><span class="cm">/* !Windows/x86 &amp;&amp; !OS/2 */</span><span class="cp"></span>
+<a name="gbab-246"></a>    <span class="cm">/* Use the defaults, or define PNG*API on the command line (but</span>
+<a name="gbab-247"></a><span class="cm">     * this will have to be done for every compile!)</span>
+<a name="gbab-248"></a><span class="cm">     */</span>
+<a name="gbab-249"></a><span class="cp">#  endif </span><span class="cm">/* other system, !OS/2 */</span><span class="cp"></span>
+<a name="gbab-250"></a><span class="cp">#endif </span><span class="cm">/* !Windows/x86 */</span><span class="cp"></span>
+<a name="gbab-251"></a>
+<a name="gbab-252"></a><span class="cm">/* Now do all the defaulting . */</span>
+<a name="gbab-253"></a><span class="cp">#ifndef PNGCAPI</span>
+<a name="gbab-254"></a><span class="cp">#  define PNGCAPI</span>
+<a name="gbab-255"></a><span class="cp">#endif</span>
+<a name="gbab-256"></a><span class="cp">#ifndef PNGCBAPI</span>
+<a name="gbab-257"></a><span class="cp">#  define PNGCBAPI PNGCAPI</span>
+<a name="gbab-258"></a><span class="cp">#endif</span>
+<a name="gbab-259"></a><span class="cp">#ifndef PNGAPI</span>
+<a name="gbab-260"></a><span class="cp">#  define PNGAPI PNGCAPI</span>
+<a name="gbab-261"></a><span class="cp">#endif</span>
+<a name="gbab-262"></a>
+<a name="gbab-263"></a><span class="cm">/* PNG_IMPEXP may be set on the compilation system command line or (if not set)</span>
+<a name="gbab-264"></a><span class="cm"> * then in an internal header file when building the library, otherwise (when</span>
+<a name="gbab-265"></a><span class="cm"> * using the library) it is set here.</span>
+<a name="gbab-266"></a><span class="cm"> */</span>
+<a name="gbab-267"></a><span class="cp">#ifndef PNG_IMPEXP</span>
+<a name="gbab-268"></a><span class="cp">#  if defined(PNG_USE_DLL) &amp;&amp; defined(PNG_DLL_IMPORT)</span>
+<a name="gbab-269"></a>     <span class="cm">/* This forces use of a DLL, disallowing static linking */</span>
+<a name="gbab-270"></a><span class="cp">#    define PNG_IMPEXP PNG_DLL_IMPORT</span>
+<a name="gbab-271"></a><span class="cp">#  endif</span>
+<a name="gbab-272"></a>
+<a name="gbab-273"></a><span class="cp">#  ifndef PNG_IMPEXP</span>
+<a name="gbab-274"></a><span class="cp">#    define PNG_IMPEXP</span>
+<a name="gbab-275"></a><span class="cp">#  endif</span>
+<a name="gbab-276"></a><span class="cp">#endif</span>
+<a name="gbab-277"></a>
+<a name="gbab-278"></a><span class="cm">/* In 1.5.2 the definition of PNG_FUNCTION has been changed to always treat</span>
+<a name="gbab-279"></a><span class="cm"> * &#39;attributes&#39; as a storage class - the attributes go at the start of the</span>
+<a name="gbab-280"></a><span class="cm"> * function definition, and attributes are always appended regardless of the</span>
+<a name="gbab-281"></a><span class="cm"> * compiler.  This considerably simplifies these macros but may cause problems</span>
+<a name="gbab-282"></a><span class="cm"> * if any compilers both need function attributes and fail to handle them as</span>
+<a name="gbab-283"></a><span class="cm"> * a storage class (this is unlikely.)</span>
+<a name="gbab-284"></a><span class="cm"> */</span>
+<a name="gbab-285"></a><span class="cp">#ifndef PNG_FUNCTION</span>
+<a name="gbab-286"></a><span class="cp">#  define PNG_FUNCTION(type, name, args, attributes) attributes type name args</span>
+<a name="gbab-287"></a><span class="cp">#endif</span>
+<a name="gbab-288"></a>
+<a name="gbab-289"></a><span class="cp">#ifndef PNG_EXPORT_TYPE</span>
+<a name="gbab-290"></a><span class="cp">#  define PNG_EXPORT_TYPE(type) PNG_IMPEXP type</span>
+<a name="gbab-291"></a><span class="cp">#endif</span>
+<a name="gbab-292"></a>
+<a name="gbab-293"></a>   <span class="cm">/* The ordinal value is only relevant when preprocessing png.h for symbol</span>
+<a name="gbab-294"></a><span class="cm">    * table entries, so we discard it here.  See the .dfn files in the</span>
+<a name="gbab-295"></a><span class="cm">    * scripts directory.</span>
+<a name="gbab-296"></a><span class="cm">    */</span>
+<a name="gbab-297"></a>
+<a name="gbab-298"></a><span class="cp">#ifndef PNG_EXPORTA</span>
+<a name="gbab-299"></a><span class="cp">#  define PNG_EXPORTA(ordinal, type, name, args, attributes)\</span>
+<a name="gbab-300"></a><span class="cp">      PNG_FUNCTION(PNG_EXPORT_TYPE(type),(PNGAPI name),PNGARG(args), \</span>
+<a name="gbab-301"></a><span class="cp">      PNG_LINKAGE_API attributes)</span>
+<a name="gbab-302"></a><span class="cp">#endif</span>
+<a name="gbab-303"></a>
+<a name="gbab-304"></a><span class="cm">/* ANSI-C (C90) does not permit a macro to be invoked with an empty argument,</span>
+<a name="gbab-305"></a><span class="cm"> * so make something non-empty to satisfy the requirement:</span>
+<a name="gbab-306"></a><span class="cm"> */</span>
+<a name="gbab-307"></a><span class="cp">#define PNG_EMPTY </span><span class="cm">/*empty list*/</span><span class="cp"></span>
+<a name="gbab-308"></a>
+<a name="gbab-309"></a><span class="cp">#define PNG_EXPORT(ordinal, type, name, args)\</span>
+<a name="gbab-310"></a><span class="cp">   PNG_EXPORTA(ordinal, type, name, args, PNG_EMPTY)</span>
+<a name="gbab-311"></a>
+<a name="gbab-312"></a><span class="cm">/* Use PNG_REMOVED to comment out a removed interface. */</span>
+<a name="gbab-313"></a><span class="cp">#ifndef PNG_REMOVED</span>
+<a name="gbab-314"></a><span class="cp">#  define PNG_REMOVED(ordinal, type, name, args, attributes)</span>
+<a name="gbab-315"></a><span class="cp">#endif</span>
+<a name="gbab-316"></a>
+<a name="gbab-317"></a><span class="cp">#ifndef PNG_CALLBACK</span>
+<a name="gbab-318"></a><span class="cp">#  define PNG_CALLBACK(type, name, args) type (PNGCBAPI name) PNGARG(args)</span>
+<a name="gbab-319"></a><span class="cp">#endif</span>
+<a name="gbab-320"></a>
+<a name="gbab-321"></a><span class="cm">/* Support for compiler specific function attributes.  These are used</span>
+<a name="gbab-322"></a><span class="cm"> * so that where compiler support is available incorrect use of API</span>
+<a name="gbab-323"></a><span class="cm"> * functions in png.h will generate compiler warnings.</span>
+<a name="gbab-324"></a><span class="cm"> *</span>
+<a name="gbab-325"></a><span class="cm"> * Added at libpng-1.2.41.</span>
+<a name="gbab-326"></a><span class="cm"> */</span>
+<a name="gbab-327"></a>
+<a name="gbab-328"></a><span class="cp">#ifndef PNG_NO_PEDANTIC_WARNINGS</span>
+<a name="gbab-329"></a><span class="cp">#  ifndef PNG_PEDANTIC_WARNINGS_SUPPORTED</span>
+<a name="gbab-330"></a><span class="cp">#    define PNG_PEDANTIC_WARNINGS_SUPPORTED</span>
+<a name="gbab-331"></a><span class="cp">#  endif</span>
+<a name="gbab-332"></a><span class="cp">#endif</span>
+<a name="gbab-333"></a>
+<a name="gbab-334"></a><span class="cp">#ifdef PNG_PEDANTIC_WARNINGS_SUPPORTED</span>
+<a name="gbab-335"></a>  <span class="cm">/* Support for compiler specific function attributes.  These are used</span>
+<a name="gbab-336"></a><span class="cm">   * so that where compiler support is available, incorrect use of API</span>
+<a name="gbab-337"></a><span class="cm">   * functions in png.h will generate compiler warnings.  Added at libpng</span>
+<a name="gbab-338"></a><span class="cm">   * version 1.2.41.  Disabling these removes the warnings but may also produce</span>
+<a name="gbab-339"></a><span class="cm">   * less efficient code.</span>
+<a name="gbab-340"></a><span class="cm">   */</span>
+<a name="gbab-341"></a><span class="cp">#  if defined(__clang__) &amp;&amp; defined(__has_attribute)</span>
+<a name="gbab-342"></a>     <span class="cm">/* Clang defines both __clang__ and __GNUC__. Check __clang__ first. */</span>
+<a name="gbab-343"></a><span class="cp">#    if !defined(PNG_USE_RESULT) &amp;&amp; __has_attribute(__warn_unused_result__)</span>
+<a name="gbab-344"></a><span class="cp">#      define PNG_USE_RESULT __attribute__((__warn_unused_result__))</span>
+<a name="gbab-345"></a><span class="cp">#    endif</span>
+<a name="gbab-346"></a><span class="cp">#    if !defined(PNG_NORETURN) &amp;&amp; __has_attribute(__noreturn__)</span>
+<a name="gbab-347"></a><span class="cp">#      define PNG_NORETURN __attribute__((__noreturn__))</span>
+<a name="gbab-348"></a><span class="cp">#    endif</span>
+<a name="gbab-349"></a><span class="cp">#    if !defined(PNG_ALLOCATED) &amp;&amp; __has_attribute(__malloc__)</span>
+<a name="gbab-350"></a><span class="cp">#      define PNG_ALLOCATED __attribute__((__malloc__))</span>
+<a name="gbab-351"></a><span class="cp">#    endif</span>
+<a name="gbab-352"></a><span class="cp">#    if !defined(PNG_DEPRECATED) &amp;&amp; __has_attribute(__deprecated__)</span>
+<a name="gbab-353"></a><span class="cp">#      define PNG_DEPRECATED __attribute__((__deprecated__))</span>
+<a name="gbab-354"></a><span class="cp">#    endif</span>
+<a name="gbab-355"></a><span class="cp">#    if !defined(PNG_PRIVATE)</span>
+<a name="gbab-356"></a><span class="cp">#      ifdef __has_extension</span>
+<a name="gbab-357"></a><span class="cp">#        if __has_extension(attribute_unavailable_with_message)</span>
+<a name="gbab-358"></a><span class="cp">#          define PNG_PRIVATE __attribute__((__unavailable__(\</span>
+<a name="gbab-359"></a><span class="cp">             &quot;This function is not exported by libpng.&quot;)))</span>
+<a name="gbab-360"></a><span class="cp">#        endif</span>
+<a name="gbab-361"></a><span class="cp">#      endif</span>
+<a name="gbab-362"></a><span class="cp">#    endif</span>
+<a name="gbab-363"></a><span class="cp">#    ifndef PNG_RESTRICT</span>
+<a name="gbab-364"></a><span class="cp">#      define PNG_RESTRICT __restrict</span>
+<a name="gbab-365"></a><span class="cp">#    endif</span>
+<a name="gbab-366"></a>
+<a name="gbab-367"></a><span class="cp">#  elif defined(__GNUC__)</span>
+<a name="gbab-368"></a><span class="cp">#    ifndef PNG_USE_RESULT</span>
+<a name="gbab-369"></a><span class="cp">#      define PNG_USE_RESULT __attribute__((__warn_unused_result__))</span>
+<a name="gbab-370"></a><span class="cp">#    endif</span>
+<a name="gbab-371"></a><span class="cp">#    ifndef PNG_NORETURN</span>
+<a name="gbab-372"></a><span class="cp">#      define PNG_NORETURN   __attribute__((__noreturn__))</span>
+<a name="gbab-373"></a><span class="cp">#    endif</span>
+<a name="gbab-374"></a><span class="cp">#    if __GNUC__ &gt;= 3</span>
+<a name="gbab-375"></a><span class="cp">#    ifndef PNG_ALLOCATED</span>
+<a name="gbab-376"></a><span class="cp">#      define PNG_ALLOCATED  __attribute__((__malloc__))</span>
+<a name="gbab-377"></a><span class="cp">#    endif</span>
+<a name="gbab-378"></a><span class="cp">#    ifndef PNG_DEPRECATED</span>
+<a name="gbab-379"></a><span class="cp">#      define PNG_DEPRECATED __attribute__((__deprecated__))</span>
+<a name="gbab-380"></a><span class="cp">#    endif</span>
+<a name="gbab-381"></a><span class="cp">#    ifndef PNG_PRIVATE</span>
+<a name="gbab-382"></a><span class="cp">#      if 0 </span><span class="cm">/* Doesn&#39;t work so we use deprecated instead*/</span><span class="cp"></span>
+<a name="gbab-383"></a><span class="cp">#        define PNG_PRIVATE \</span>
+<a name="gbab-384"></a><span class="cp">          __attribute__((warning(&quot;This function is not exported by libpng.&quot;)))</span>
+<a name="gbab-385"></a><span class="cp">#      else</span>
+<a name="gbab-386"></a><span class="cp">#        define PNG_PRIVATE \</span>
+<a name="gbab-387"></a><span class="cp">          __attribute__((__deprecated__))</span>
+<a name="gbab-388"></a><span class="cp">#      endif</span>
+<a name="gbab-389"></a><span class="cp">#    endif</span>
+<a name="gbab-390"></a><span class="cp">#      if ((__GNUC__ &gt; 3) || !defined(__GNUC_MINOR__) || (__GNUC_MINOR__ &gt;= 1))</span>
+<a name="gbab-391"></a><span class="cp">#        ifndef PNG_RESTRICT</span>
+<a name="gbab-392"></a><span class="cp">#          define PNG_RESTRICT __restrict</span>
+<a name="gbab-393"></a><span class="cp">#        endif</span>
+<a name="gbab-394"></a><span class="cp">#      endif </span><span class="cm">/* __GNUC__.__GNUC_MINOR__ &gt; 3.0 */</span><span class="cp"></span>
+<a name="gbab-395"></a><span class="cp">#    endif </span><span class="cm">/* __GNUC__ &gt;= 3 */</span><span class="cp"></span>
+<a name="gbab-396"></a>
+<a name="gbab-397"></a><span class="cp">#  elif defined(_MSC_VER)  &amp;&amp; (_MSC_VER &gt;= 1300)</span>
+<a name="gbab-398"></a><span class="cp">#    ifndef PNG_USE_RESULT</span>
+<a name="gbab-399"></a><span class="cp">#      define PNG_USE_RESULT </span><span class="cm">/* not supported */</span><span class="cp"></span>
+<a name="gbab-400"></a><span class="cp">#    endif</span>
+<a name="gbab-401"></a><span class="cp">#    ifndef PNG_NORETURN</span>
+<a name="gbab-402"></a><span class="cp">#      define PNG_NORETURN __declspec(noreturn)</span>
+<a name="gbab-403"></a><span class="cp">#    endif</span>
+<a name="gbab-404"></a><span class="cp">#    ifndef PNG_ALLOCATED</span>
+<a name="gbab-405"></a><span class="cp">#      if (_MSC_VER &gt;= 1400)</span>
+<a name="gbab-406"></a><span class="cp">#        define PNG_ALLOCATED __declspec(restrict)</span>
+<a name="gbab-407"></a><span class="cp">#      endif</span>
+<a name="gbab-408"></a><span class="cp">#    endif</span>
+<a name="gbab-409"></a><span class="cp">#    ifndef PNG_DEPRECATED</span>
+<a name="gbab-410"></a><span class="cp">#      define PNG_DEPRECATED __declspec(deprecated)</span>
+<a name="gbab-411"></a><span class="cp">#    endif</span>
+<a name="gbab-412"></a><span class="cp">#    ifndef PNG_PRIVATE</span>
+<a name="gbab-413"></a><span class="cp">#      define PNG_PRIVATE __declspec(deprecated)</span>
+<a name="gbab-414"></a><span class="cp">#    endif</span>
+<a name="gbab-415"></a><span class="cp">#    ifndef PNG_RESTRICT</span>
+<a name="gbab-416"></a><span class="cp">#      if (_MSC_VER &gt;= 1400)</span>
+<a name="gbab-417"></a><span class="cp">#        define PNG_RESTRICT __restrict</span>
+<a name="gbab-418"></a><span class="cp">#      endif</span>
+<a name="gbab-419"></a><span class="cp">#    endif</span>
+<a name="gbab-420"></a>
+<a name="gbab-421"></a><span class="cp">#  elif defined(__WATCOMC__)</span>
+<a name="gbab-422"></a><span class="cp">#    ifndef PNG_RESTRICT</span>
+<a name="gbab-423"></a><span class="cp">#      define PNG_RESTRICT __restrict</span>
+<a name="gbab-424"></a><span class="cp">#    endif</span>
+<a name="gbab-425"></a><span class="cp">#  endif</span>
+<a name="gbab-426"></a><span class="cp">#endif </span><span class="cm">/* PNG_PEDANTIC_WARNINGS */</span><span class="cp"></span>
+<a name="gbab-427"></a>
+<a name="gbab-428"></a><span class="cp">#ifndef PNG_DEPRECATED</span>
+<a name="gbab-429"></a><span class="cp">#  define PNG_DEPRECATED  </span><span class="cm">/* Use of this function is deprecated */</span><span class="cp"></span>
+<a name="gbab-430"></a><span class="cp">#endif</span>
+<a name="gbab-431"></a><span class="cp">#ifndef PNG_USE_RESULT</span>
+<a name="gbab-432"></a><span class="cp">#  define PNG_USE_RESULT  </span><span class="cm">/* The result of this function must be checked */</span><span class="cp"></span>
+<a name="gbab-433"></a><span class="cp">#endif</span>
+<a name="gbab-434"></a><span class="cp">#ifndef PNG_NORETURN</span>
+<a name="gbab-435"></a><span class="cp">#  define PNG_NORETURN    </span><span class="cm">/* This function does not return */</span><span class="cp"></span>
+<a name="gbab-436"></a><span class="cp">#endif</span>
+<a name="gbab-437"></a><span class="cp">#ifndef PNG_ALLOCATED</span>
+<a name="gbab-438"></a><span class="cp">#  define PNG_ALLOCATED   </span><span class="cm">/* The result of the function is new memory */</span><span class="cp"></span>
+<a name="gbab-439"></a><span class="cp">#endif</span>
+<a name="gbab-440"></a><span class="cp">#ifndef PNG_PRIVATE</span>
+<a name="gbab-441"></a><span class="cp">#  define PNG_PRIVATE     </span><span class="cm">/* This is a private libpng function */</span><span class="cp"></span>
+<a name="gbab-442"></a><span class="cp">#endif</span>
+<a name="gbab-443"></a><span class="cp">#ifndef PNG_RESTRICT</span>
+<a name="gbab-444"></a><span class="cp">#  define PNG_RESTRICT    </span><span class="cm">/* The C99 &quot;restrict&quot; feature */</span><span class="cp"></span>
+<a name="gbab-445"></a><span class="cp">#endif</span>
+<a name="gbab-446"></a>
+<a name="gbab-447"></a><span class="cp">#ifndef PNG_FP_EXPORT     </span><span class="cm">/* A floating point API. */</span><span class="cp"></span>
+<a name="gbab-448"></a><span class="cp">#  ifdef PNG_FLOATING_POINT_SUPPORTED</span>
+<a name="gbab-449"></a><span class="cp">#     define PNG_FP_EXPORT(ordinal, type, name, args)\</span>
+<a name="gbab-450"></a><span class="cp">         PNG_EXPORT(ordinal, type, name, args);</span>
+<a name="gbab-451"></a><span class="cp">#  else                   </span><span class="cm">/* No floating point APIs */</span><span class="cp"></span>
+<a name="gbab-452"></a><span class="cp">#     define PNG_FP_EXPORT(ordinal, type, name, args)</span>
+<a name="gbab-453"></a><span class="cp">#  endif</span>
+<a name="gbab-454"></a><span class="cp">#endif</span>
+<a name="gbab-455"></a><span class="cp">#ifndef PNG_FIXED_EXPORT  </span><span class="cm">/* A fixed point API. */</span><span class="cp"></span>
+<a name="gbab-456"></a><span class="cp">#  ifdef PNG_FIXED_POINT_SUPPORTED</span>
+<a name="gbab-457"></a><span class="cp">#     define PNG_FIXED_EXPORT(ordinal, type, name, args)\</span>
+<a name="gbab-458"></a><span class="cp">         PNG_EXPORT(ordinal, type, name, args);</span>
+<a name="gbab-459"></a><span class="cp">#  else                   </span><span class="cm">/* No fixed point APIs */</span><span class="cp"></span>
+<a name="gbab-460"></a><span class="cp">#     define PNG_FIXED_EXPORT(ordinal, type, name, args)</span>
+<a name="gbab-461"></a><span class="cp">#  endif</span>
+<a name="gbab-462"></a><span class="cp">#endif</span>
+<a name="gbab-463"></a>
+<a name="gbab-464"></a><span class="cp">#ifndef PNG_BUILDING_SYMBOL_TABLE</span>
+<a name="gbab-465"></a><span class="cm">/* Some typedefs to get us started.  These should be safe on most of the common</span>
+<a name="gbab-466"></a><span class="cm"> * platforms.</span>
+<a name="gbab-467"></a><span class="cm"> *</span>
+<a name="gbab-468"></a><span class="cm"> * png_uint_32 and png_int_32 may, currently, be larger than required to hold a</span>
+<a name="gbab-469"></a><span class="cm"> * 32-bit value however this is not normally advisable.</span>
+<a name="gbab-470"></a><span class="cm"> *</span>
+<a name="gbab-471"></a><span class="cm"> * png_uint_16 and png_int_16 should always be two bytes in size - this is</span>
+<a name="gbab-472"></a><span class="cm"> * verified at library build time.</span>
+<a name="gbab-473"></a><span class="cm"> *</span>
+<a name="gbab-474"></a><span class="cm"> * png_byte must always be one byte in size.</span>
+<a name="gbab-475"></a><span class="cm"> *</span>
+<a name="gbab-476"></a><span class="cm"> * The checks below use constants from limits.h, as defined by the ISOC90</span>
+<a name="gbab-477"></a><span class="cm"> * standard.</span>
+<a name="gbab-478"></a><span class="cm"> */</span>
+<a name="gbab-479"></a><span class="cp">#if CHAR_BIT == 8 &amp;&amp; UCHAR_MAX == 255</span>
+<a name="gbab-480"></a><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">png_byte</span><span class="p">;</span>
+<a name="gbab-481"></a><span class="cp">#else</span>
+<a name="gbab-482"></a><span class="cp">#  error &quot;libpng requires 8-bit bytes&quot;</span>
+<a name="gbab-483"></a><span class="cp">#endif</span>
+<a name="gbab-484"></a>
+<a name="gbab-485"></a><span class="cp">#if INT_MIN == -32768 &amp;&amp; INT_MAX == 32767</span>
+<a name="gbab-486"></a>   <span class="k">typedef</span> <span class="kt">int</span> <span class="n">png_int_16</span><span class="p">;</span>
+<a name="gbab-487"></a><span class="cp">#elif SHRT_MIN == -32768 &amp;&amp; SHRT_MAX == 32767</span>
+<a name="gbab-488"></a>   <span class="k">typedef</span> <span class="kt">short</span> <span class="n">png_int_16</span><span class="p">;</span>
+<a name="gbab-489"></a><span class="cp">#else</span>
+<a name="gbab-490"></a><span class="cp">#  error &quot;libpng requires a signed 16-bit type&quot;</span>
+<a name="gbab-491"></a><span class="cp">#endif</span>
+<a name="gbab-492"></a>
+<a name="gbab-493"></a><span class="cp">#if UINT_MAX == 65535</span>
+<a name="gbab-494"></a>   <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">png_uint_16</span><span class="p">;</span>
+<a name="gbab-495"></a><span class="cp">#elif USHRT_MAX == 65535</span>
+<a name="gbab-496"></a>   <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">png_uint_16</span><span class="p">;</span>
+<a name="gbab-497"></a><span class="cp">#else</span>
+<a name="gbab-498"></a><span class="cp">#  error &quot;libpng requires an unsigned 16-bit type&quot;</span>
+<a name="gbab-499"></a><span class="cp">#endif</span>
+<a name="gbab-500"></a>
+<a name="gbab-501"></a><span class="cp">#if INT_MIN &lt; -2147483646 &amp;&amp; INT_MAX &gt; 2147483646</span>
+<a name="gbab-502"></a>   <span class="k">typedef</span> <span class="kt">int</span> <span class="n">png_int_32</span><span class="p">;</span>
+<a name="gbab-503"></a><span class="cp">#elif LONG_MIN &lt; -2147483646 &amp;&amp; LONG_MAX &gt; 2147483646</span>
+<a name="gbab-504"></a>   <span class="k">typedef</span> <span class="kt">long</span> <span class="kt">int</span> <span class="n">png_int_32</span><span class="p">;</span>
+<a name="gbab-505"></a><span class="cp">#else</span>
+<a name="gbab-506"></a><span class="cp">#  error &quot;libpng requires a signed 32-bit (or more) type&quot;</span>
+<a name="gbab-507"></a><span class="cp">#endif</span>
+<a name="gbab-508"></a>
+<a name="gbab-509"></a><span class="cp">#if UINT_MAX &gt; 4294967294</span>
+<a name="gbab-510"></a>   <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">png_uint_32</span><span class="p">;</span>
+<a name="gbab-511"></a><span class="cp">#elif ULONG_MAX &gt; 4294967294</span>
+<a name="gbab-512"></a>   <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">int</span> <span class="n">png_uint_32</span><span class="p">;</span>
+<a name="gbab-513"></a><span class="cp">#else</span>
+<a name="gbab-514"></a><span class="cp">#  error &quot;libpng requires an unsigned 32-bit (or more) type&quot;</span>
+<a name="gbab-515"></a><span class="cp">#endif</span>
+<a name="gbab-516"></a>
+<a name="gbab-517"></a><span class="cm">/* Prior to 1.6.0 it was possible to disable the use of size_t, 1.6.0, however,</span>
+<a name="gbab-518"></a><span class="cm"> * requires an ISOC90 compiler and relies on consistent behavior of sizeof.</span>
+<a name="gbab-519"></a><span class="cm"> */</span>
+<a name="gbab-520"></a><span class="k">typedef</span> <span class="kt">size_t</span> <span class="n">png_size_t</span><span class="p">;</span>
+<a name="gbab-521"></a><span class="k">typedef</span> <span class="kt">ptrdiff_t</span> <span class="n">png_ptrdiff_t</span><span class="p">;</span>
+<a name="gbab-522"></a>
+<a name="gbab-523"></a><span class="cm">/* libpng needs to know the maximum value of &#39;size_t&#39; and this controls the</span>
+<a name="gbab-524"></a><span class="cm"> * definition of png_alloc_size_t, below.  This maximum value of size_t limits</span>
+<a name="gbab-525"></a><span class="cm"> * but does not control the maximum allocations the library makes - there is</span>
+<a name="gbab-526"></a><span class="cm"> * direct application control of this through png_set_user_limits().</span>
+<a name="gbab-527"></a><span class="cm"> */</span>
+<a name="gbab-528"></a><span class="cp">#ifndef PNG_SMALL_SIZE_T</span>
+<a name="gbab-529"></a>   <span class="cm">/* Compiler specific tests for systems where size_t is known to be less than</span>
+<a name="gbab-530"></a><span class="cm">    * 32 bits (some of these systems may no longer work because of the lack of</span>
+<a name="gbab-531"></a><span class="cm">    * &#39;far&#39; support; see above.)</span>
+<a name="gbab-532"></a><span class="cm"> */</span>
+<a name="gbab-533"></a><span class="cp">#  if (defined(__TURBOC__) &amp;&amp; !defined(__FLAT__)) ||\</span>
+<a name="gbab-534"></a><span class="cp">   (defined(_MSC_VER) &amp;&amp; defined(MAXSEG_64K))</span>
+<a name="gbab-535"></a><span class="cp">#     define PNG_SMALL_SIZE_T</span>
+<a name="gbab-536"></a><span class="cp">#  endif</span>
+<a name="gbab-537"></a><span class="cp">#endif</span>
+<a name="gbab-538"></a>
+<a name="gbab-539"></a><span class="cm">/* png_alloc_size_t is guaranteed to be no smaller than png_size_t, and no</span>
+<a name="gbab-540"></a><span class="cm"> * smaller than png_uint_32.  Casts from png_size_t or png_uint_32 to</span>
+<a name="gbab-541"></a><span class="cm"> * png_alloc_size_t are not necessary; in fact, it is recommended not to use</span>
+<a name="gbab-542"></a><span class="cm"> * them at all so that the compiler can complain when something turns out to be</span>
+<a name="gbab-543"></a><span class="cm"> * problematic.</span>
+<a name="gbab-544"></a><span class="cm"> *</span>
+<a name="gbab-545"></a><span class="cm"> * Casts in the other direction (from png_alloc_size_t to png_size_t or</span>
+<a name="gbab-546"></a><span class="cm"> * png_uint_32) should be explicitly applied; however, we do not expect to</span>
+<a name="gbab-547"></a><span class="cm"> * encounter practical situations that require such conversions.</span>
+<a name="gbab-548"></a><span class="cm"> *</span>
+<a name="gbab-549"></a><span class="cm"> * PNG_SMALL_SIZE_T must be defined if the maximum value of size_t is less than</span>
+<a name="gbab-550"></a><span class="cm"> * 4294967295 - i.e. less than the maximum value of png_uint_32.</span>
+<a name="gbab-551"></a><span class="cm"> */</span>
+<a name="gbab-552"></a><span class="cp">#ifdef PNG_SMALL_SIZE_T</span>
+<a name="gbab-553"></a>   <span class="k">typedef</span> <span class="n">png_uint_32</span> <span class="n">png_alloc_size_t</span><span class="p">;</span>
+<a name="gbab-554"></a><span class="cp">#  else</span>
+<a name="gbab-555"></a>   <span class="k">typedef</span> <span class="n">png_size_t</span> <span class="n">png_alloc_size_t</span><span class="p">;</span>
+<a name="gbab-556"></a><span class="cp">#  endif</span>
+<a name="gbab-557"></a>
+<a name="gbab-558"></a><span class="cm">/* Prior to 1.6.0 libpng offered limited support for Microsoft C compiler</span>
+<a name="gbab-559"></a><span class="cm"> * implementations of Intel CPU specific support of user-mode segmented address</span>
+<a name="gbab-560"></a><span class="cm"> * spaces, where 16-bit pointers address more than 65536 bytes of memory using</span>
+<a name="gbab-561"></a><span class="cm"> * separate &#39;segment&#39; registers.  The implementation requires two different</span>
+<a name="gbab-562"></a><span class="cm"> * types of pointer (only one of which includes the segment value.)</span>
+<a name="gbab-563"></a><span class="cm"> *</span>
+<a name="gbab-564"></a><span class="cm"> * If required this support is available in version 1.2 of libpng and may be</span>
+<a name="gbab-565"></a><span class="cm"> * available in versions through 1.5, although the correctness of the code has</span>
+<a name="gbab-566"></a><span class="cm"> * not been verified recently.</span>
+<a name="gbab-567"></a><span class="cm"> */</span>
+<a name="gbab-568"></a>
+<a name="gbab-569"></a><span class="cm">/* Typedef for floating-point numbers that are converted to fixed-point with a</span>
+<a name="gbab-570"></a><span class="cm"> * multiple of 100,000, e.g., gamma</span>
+<a name="gbab-571"></a><span class="cm"> */</span>
+<a name="gbab-572"></a><span class="k">typedef</span> <span class="n">png_int_32</span> <span class="n">png_fixed_point</span><span class="p">;</span>
+<a name="gbab-573"></a>
+<a name="gbab-574"></a><span class="cm">/* Add typedefs for pointers */</span>
+<a name="gbab-575"></a><span class="k">typedef</span> <span class="kt">void</span>                  <span class="o">*</span> <span class="n">png_voidp</span><span class="p">;</span>
+<a name="gbab-576"></a><span class="k">typedef</span> <span class="k">const</span> <span class="kt">void</span>            <span class="o">*</span> <span class="n">png_const_voidp</span><span class="p">;</span>
+<a name="gbab-577"></a><span class="k">typedef</span> <span class="n">png_byte</span>              <span class="o">*</span> <span class="n">png_bytep</span><span class="p">;</span>
+<a name="gbab-578"></a><span class="k">typedef</span> <span class="k">const</span> <span class="n">png_byte</span>        <span class="o">*</span> <span class="n">png_const_bytep</span><span class="p">;</span>
+<a name="gbab-579"></a><span class="k">typedef</span> <span class="n">png_uint_32</span>           <span class="o">*</span> <span class="n">png_uint_32p</span><span class="p">;</span>
+<a name="gbab-580"></a><span class="k">typedef</span> <span class="k">const</span> <span class="n">png_uint_32</span>     <span class="o">*</span> <span class="n">png_const_uint_32p</span><span class="p">;</span>
+<a name="gbab-581"></a><span class="k">typedef</span> <span class="n">png_int_32</span>            <span class="o">*</span> <span class="n">png_int_32p</span><span class="p">;</span>
+<a name="gbab-582"></a><span class="k">typedef</span> <span class="k">const</span> <span class="n">png_int_32</span>      <span class="o">*</span> <span class="n">png_const_int_32p</span><span class="p">;</span>
+<a name="gbab-583"></a><span class="k">typedef</span> <span class="n">png_uint_16</span>           <span class="o">*</span> <span class="n">png_uint_16p</span><span class="p">;</span>
+<a name="gbab-584"></a><span class="k">typedef</span> <span class="k">const</span> <span class="n">png_uint_16</span>     <span class="o">*</span> <span class="n">png_const_uint_16p</span><span class="p">;</span>
+<a name="gbab-585"></a><span class="k">typedef</span> <span class="n">png_int_16</span>            <span class="o">*</span> <span class="n">png_int_16p</span><span class="p">;</span>
+<a name="gbab-586"></a><span class="k">typedef</span> <span class="k">const</span> <span class="n">png_int_16</span>      <span class="o">*</span> <span class="n">png_const_int_16p</span><span class="p">;</span>
+<a name="gbab-587"></a><span class="k">typedef</span> <span class="kt">char</span>                  <span class="o">*</span> <span class="n">png_charp</span><span class="p">;</span>
+<a name="gbab-588"></a><span class="k">typedef</span> <span class="k">const</span> <span class="kt">char</span>            <span class="o">*</span> <span class="n">png_const_charp</span><span class="p">;</span>
+<a name="gbab-589"></a><span class="k">typedef</span> <span class="n">png_fixed_point</span>       <span class="o">*</span> <span class="n">png_fixed_point_p</span><span class="p">;</span>
+<a name="gbab-590"></a><span class="k">typedef</span> <span class="k">const</span> <span class="n">png_fixed_point</span> <span class="o">*</span> <span class="n">png_const_fixed_point_p</span><span class="p">;</span>
+<a name="gbab-591"></a><span class="k">typedef</span> <span class="n">png_size_t</span>            <span class="o">*</span> <span class="n">png_size_tp</span><span class="p">;</span>
+<a name="gbab-592"></a><span class="k">typedef</span> <span class="k">const</span> <span class="n">png_size_t</span>      <span class="o">*</span> <span class="n">png_const_size_tp</span><span class="p">;</span>
+<a name="gbab-593"></a>
+<a name="gbab-594"></a><span class="cp">#ifdef PNG_STDIO_SUPPORTED</span>
+<a name="gbab-595"></a><span class="k">typedef</span> <span class="kt">FILE</span>            <span class="o">*</span> <span class="n">png_FILE_p</span><span class="p">;</span>
+<a name="gbab-596"></a><span class="cp">#endif</span>
+<a name="gbab-597"></a>
+<a name="gbab-598"></a><span class="cp">#ifdef PNG_FLOATING_POINT_SUPPORTED</span>
+<a name="gbab-599"></a><span class="k">typedef</span> <span class="kt">double</span>       <span class="o">*</span> <span class="n">png_doublep</span><span class="p">;</span>
+<a name="gbab-600"></a><span class="k">typedef</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="n">png_const_doublep</span><span class="p">;</span>
+<a name="gbab-601"></a><span class="cp">#endif</span>
+<a name="gbab-602"></a>
+<a name="gbab-603"></a><span class="cm">/* Pointers to pointers; i.e. arrays */</span>
+<a name="gbab-604"></a><span class="k">typedef</span> <span class="n">png_byte</span>        <span class="o">*</span> <span class="o">*</span> <span class="n">png_bytepp</span><span class="p">;</span>
+<a name="gbab-605"></a><span class="k">typedef</span> <span class="n">png_uint_32</span>     <span class="o">*</span> <span class="o">*</span> <span class="n">png_uint_32pp</span><span class="p">;</span>
+<a name="gbab-606"></a><span class="k">typedef</span> <span class="n">png_int_32</span>      <span class="o">*</span> <span class="o">*</span> <span class="n">png_int_32pp</span><span class="p">;</span>
+<a name="gbab-607"></a><span class="k">typedef</span> <span class="n">png_uint_16</span>     <span class="o">*</span> <span class="o">*</span> <span class="n">png_uint_16pp</span><span class="p">;</span>
+<a name="gbab-608"></a><span class="k">typedef</span> <span class="n">png_int_16</span>      <span class="o">*</span> <span class="o">*</span> <span class="n">png_int_16pp</span><span class="p">;</span>
+<a name="gbab-609"></a><span class="k">typedef</span> <span class="k">const</span> <span class="kt">char</span>      <span class="o">*</span> <span class="o">*</span> <span class="n">png_const_charpp</span><span class="p">;</span>
+<a name="gbab-610"></a><span class="k">typedef</span> <span class="kt">char</span>            <span class="o">*</span> <span class="o">*</span> <span class="n">png_charpp</span><span class="p">;</span>
+<a name="gbab-611"></a><span class="k">typedef</span> <span class="n">png_fixed_point</span> <span class="o">*</span> <span class="o">*</span> <span class="n">png_fixed_point_pp</span><span class="p">;</span>
+<a name="gbab-612"></a><span class="cp">#ifdef PNG_FLOATING_POINT_SUPPORTED</span>
+<a name="gbab-613"></a><span class="k">typedef</span> <span class="kt">double</span>          <span class="o">*</span> <span class="o">*</span> <span class="n">png_doublepp</span><span class="p">;</span>
+<a name="gbab-614"></a><span class="cp">#endif</span>
+<a name="gbab-615"></a>
+<a name="gbab-616"></a><span class="cm">/* Pointers to pointers to pointers; i.e., pointer to array */</span>
+<a name="gbab-617"></a><span class="k">typedef</span> <span class="kt">char</span>            <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">png_charppp</span><span class="p">;</span>
+<a name="gbab-618"></a>
+<a name="gbab-619"></a><span class="cp">#endif </span><span class="cm">/* PNG_BUILDING_SYMBOL_TABLE */</span><span class="cp"></span>
+<a name="gbab-620"></a>
+<a name="gbab-621"></a><span class="cp">#endif </span><span class="cm">/* PNGCONF_H */</span><span class="cp"></span>
+</pre></div>
+</td></tr></table>

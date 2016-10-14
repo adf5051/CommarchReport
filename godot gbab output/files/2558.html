@@ -1,0 +1,1137 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cp">#ifndef GODOT_C_H</span>
+<a name="gbab-2"></a><span class="cp">#define GODOT_C_H</span>
+<a name="gbab-3"></a>
+<a name="gbab-4"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-5"></a><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<a name="gbab-6"></a><span class="cp">#endif</span>
+<a name="gbab-7"></a>
+<a name="gbab-8"></a>
+<a name="gbab-9"></a><span class="cp">#if defined(GDAPI_BUILT_IN) || !defined(WINDOWS_ENABLED)</span>
+<a name="gbab-10"></a><span class="cp">#define GDAPI</span>
+<a name="gbab-11"></a><span class="cp">#elif defined(GDAPI_EXPORTS)</span>
+<a name="gbab-12"></a><span class="cp">#define GDAPI __declspec(dllexport)</span>
+<a name="gbab-13"></a><span class="cp">#else</span>
+<a name="gbab-14"></a><span class="cp">#define GDAPI __declspec(dllimport)</span>
+<a name="gbab-15"></a><span class="cp">#endif</span>
+<a name="gbab-16"></a>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a><span class="cp">#define GODOT_API_VERSION 1</span>
+<a name="gbab-19"></a>
+<a name="gbab-20"></a>
+<a name="gbab-21"></a><span class="k">typedef</span> <span class="kt">int</span> <span class="n">godot_bool</span><span class="p">;</span>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="cp">#define GODOT_FALSE 0</span>
+<a name="gbab-24"></a><span class="cp">#define GODOT_TRUE 1</span>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="c1">////// Image</span>
+<a name="gbab-27"></a>
+<a name="gbab-28"></a>
+<a name="gbab-29"></a><span class="cp">#define GODOT_IMAGE_FORMAT_GRAYSCALE 0</span>
+<a name="gbab-30"></a><span class="cp">#define GODOT_IMAGE_FORMAT_INTENSITY 1</span>
+<a name="gbab-31"></a><span class="cp">#define GODOT_IMAGE_FORMAT_GRAYSCALE_ALPHA 2</span>
+<a name="gbab-32"></a><span class="cp">#define GODOT_IMAGE_FORMAT_RGB 3</span>
+<a name="gbab-33"></a><span class="cp">#define GODOT_IMAGE_FORMAT_RGBA 4</span>
+<a name="gbab-34"></a><span class="cp">#define GODOT_IMAGE_FORMAT_INDEXED 5</span>
+<a name="gbab-35"></a><span class="cp">#define GODOT_IMAGE_FORMAT_INDEXED_ALPHA 6</span>
+<a name="gbab-36"></a><span class="cp">#define GODOT_IMAGE_FORMAT_YUV_422 7</span>
+<a name="gbab-37"></a><span class="cp">#define GODOT_IMAGE_FORMAT_YUV_444 8</span>
+<a name="gbab-38"></a><span class="cp">#define GODOT_IMAGE_FORMAT_BC1 9</span>
+<a name="gbab-39"></a><span class="cp">#define GODOT_IMAGE_FORMAT_BC2 10</span>
+<a name="gbab-40"></a><span class="cp">#define GODOT_IMAGE_FORMAT_BC3 11</span>
+<a name="gbab-41"></a><span class="cp">#define GODOT_IMAGE_FORMAT_BC4 12</span>
+<a name="gbab-42"></a><span class="cp">#define GODOT_IMAGE_FORMAT_BC5 13</span>
+<a name="gbab-43"></a><span class="cp">#define GODOT_IMAGE_FORMAT_PVRTC2 14</span>
+<a name="gbab-44"></a><span class="cp">#define GODOT_IMAGE_FORMAT_PVRTC2_ALPHA 15</span>
+<a name="gbab-45"></a><span class="cp">#define GODOT_IMAGE_FORMAT_PVRTC4 16</span>
+<a name="gbab-46"></a><span class="cp">#define GODOT_IMAGE_FORMAT_PVRTC4_ALPHA 17</span>
+<a name="gbab-47"></a><span class="cp">#define GODOT_IMAGE_FORMAT_ETC 18</span>
+<a name="gbab-48"></a><span class="cp">#define GODOT_IMAGE_FORMAT_ATC 19</span>
+<a name="gbab-49"></a><span class="cp">#define GODOT_IMAGE_FORMAT_ATC_ALPHA_EXPLICIT 20</span>
+<a name="gbab-50"></a><span class="cp">#define GODOT_IMAGE_FORMAT_ATC_ALPHA_INTERPOLATED 21</span>
+<a name="gbab-51"></a>
+<a name="gbab-52"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_image</span><span class="p">;</span>
+<a name="gbab-53"></a>
+<a name="gbab-54"></a><span class="n">godot_image</span> <span class="n">GDAPI</span> <span class="nf">godot_image_create_empty</span><span class="p">();</span>
+<a name="gbab-55"></a><span class="n">godot_image</span> <span class="n">GDAPI</span> <span class="nf">godot_image_create</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_width</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_height</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_format</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_use_mipmaps</span><span class="p">);</span>
+<a name="gbab-56"></a><span class="n">godot_image</span> <span class="n">GDAPI</span> <span class="nf">godot_image_create_with_data</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_width</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_height</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_format</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_use_mipmaps</span><span class="p">,</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_buffer</span><span class="p">);</span>
+<a name="gbab-57"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_image_get_width</span><span class="p">(</span><span class="n">godot_image</span> <span class="n">p_image</span><span class="p">);</span>
+<a name="gbab-58"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_image_get_height</span><span class="p">(</span><span class="n">godot_image</span> <span class="n">p_image</span><span class="p">);</span>
+<a name="gbab-59"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_image_get_format</span><span class="p">(</span><span class="n">godot_image</span> <span class="n">p_image</span><span class="p">);</span>
+<a name="gbab-60"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_image_get_mipmap_count</span><span class="p">(</span><span class="n">godot_image</span> <span class="n">p_image</span><span class="p">);</span>
+<a name="gbab-61"></a><span class="n">godot_image</span> <span class="n">GDAPI</span> <span class="nf">godot_image_copy</span><span class="p">(</span><span class="n">godot_image</span> <span class="n">p_image</span><span class="p">);</span>
+<a name="gbab-62"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_image_free</span><span class="p">(</span><span class="n">godot_image</span> <span class="n">p_image</span><span class="p">);</span>
+<a name="gbab-63"></a>
+<a name="gbab-64"></a>
+<a name="gbab-65"></a><span class="c1">////// RID</span>
+<a name="gbab-66"></a>
+<a name="gbab-67"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_rid</span><span class="p">;</span>
+<a name="gbab-68"></a>
+<a name="gbab-69"></a><span class="n">godot_rid</span> <span class="n">GDAPI</span> <span class="nf">godot_rid_create</span><span class="p">();</span>
+<a name="gbab-70"></a><span class="n">godot_rid</span> <span class="n">GDAPI</span> <span class="nf">godot_rid_copy</span><span class="p">(</span><span class="n">godot_rid</span> <span class="n">p_rid</span><span class="p">);</span>
+<a name="gbab-71"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_rid_free</span><span class="p">(</span><span class="n">godot_rid</span> <span class="n">p_rid</span><span class="p">);</span>
+<a name="gbab-72"></a>
+<a name="gbab-73"></a><span class="c1">////// Variant (forward declared)</span>
+<a name="gbab-74"></a>
+<a name="gbab-75"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_variant</span><span class="p">;</span>
+<a name="gbab-76"></a>
+<a name="gbab-77"></a>
+<a name="gbab-78"></a><span class="c1">////// Dictionary</span>
+<a name="gbab-79"></a>
+<a name="gbab-80"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_dictionary</span><span class="p">;</span>
+<a name="gbab-81"></a>
+<a name="gbab-82"></a><span class="n">godot_dictionary</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_create</span><span class="p">();</span>
+<a name="gbab-83"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_has</span><span class="p">(</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">,</span><span class="n">godot_variant</span> <span class="n">p_key</span><span class="p">);</span>
+<a name="gbab-84"></a><span class="n">godot_variant</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_get</span><span class="p">(</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">,</span><span class="n">godot_variant</span> <span class="n">p_key</span><span class="p">);</span>
+<a name="gbab-85"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_insert</span><span class="p">(</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">,</span><span class="n">godot_variant</span> <span class="n">p_key</span><span class="p">,</span><span class="n">godot_variant</span> <span class="n">p_value</span><span class="p">);</span>
+<a name="gbab-86"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_remove</span><span class="p">(</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">,</span><span class="n">godot_variant</span> <span class="n">p_key</span><span class="p">);</span>
+<a name="gbab-87"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_clear</span><span class="p">(</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">);</span>
+<a name="gbab-88"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_get_size</span><span class="p">(</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">);</span>
+<a name="gbab-89"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_get_keys</span><span class="p">(</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">,</span><span class="n">godot_variant</span><span class="o">*</span> <span class="n">p_keys</span><span class="p">);</span>
+<a name="gbab-90"></a><span class="n">godot_dictionary</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_copy</span><span class="p">(</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">);</span>
+<a name="gbab-91"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_dictionary_free</span><span class="p">(</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">);</span>
+<a name="gbab-92"></a>
+<a name="gbab-93"></a><span class="c1">////// Array</span>
+<a name="gbab-94"></a>
+<a name="gbab-95"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_array</span><span class="p">;</span>
+<a name="gbab-96"></a>
+<a name="gbab-97"></a><span class="n">godot_array</span> <span class="n">GDAPI</span> <span class="nf">godot_array_create</span><span class="p">();</span>
+<a name="gbab-98"></a><span class="n">godot_variant</span> <span class="n">GDAPI</span> <span class="nf">godot_array_get</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-99"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_array_set</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="n">godot_variant</span> <span class="n">p_value</span><span class="p">);</span>
+<a name="gbab-100"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_array_resize</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_size</span><span class="p">);</span>
+<a name="gbab-101"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_array_insert</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_position</span><span class="p">,</span><span class="n">godot_variant</span> <span class="n">p_value</span><span class="p">);</span>
+<a name="gbab-102"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_array_remove</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_position</span><span class="p">);</span>
+<a name="gbab-103"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_array_clear</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-104"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_array_get_size</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-105"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_array_find</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">,</span><span class="n">godot_variant</span> <span class="n">p_value</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_from_pos</span><span class="o">=-</span><span class="mi">1</span><span class="p">);</span>
+<a name="gbab-106"></a><span class="n">godot_array</span> <span class="n">GDAPI</span> <span class="nf">godot_array_copy</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-107"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_array_free</span><span class="p">(</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-108"></a>
+<a name="gbab-109"></a><span class="c1">////// InputEvent</span>
+<a name="gbab-110"></a>
+<a name="gbab-111"></a><span class="cp">#define INPUT_EVENT_BUTTON_LEFT 1</span>
+<a name="gbab-112"></a><span class="cp">#define INPUT_EVENT_BUTTON_RIGHT 2</span>
+<a name="gbab-113"></a><span class="cp">#define INPUT_EVENT_BUTTON_MIDDLE 3</span>
+<a name="gbab-114"></a><span class="cp">#define INPUT_EVENT_BUTTON_WHEEL_UP 4</span>
+<a name="gbab-115"></a><span class="cp">#define INPUT_EVENT_BUTTON_WHEEL_DOWN 5</span>
+<a name="gbab-116"></a><span class="cp">#define INPUT_EVENT_BUTTON_WHEEL_LEFT 6</span>
+<a name="gbab-117"></a><span class="cp">#define INPUT_EVENT_BUTTON_WHEEL_RIGHT 7</span>
+<a name="gbab-118"></a><span class="cp">#define INPUT_EVENT_BUTTON_MASK_LEFT (1&lt;&lt;(INPUT_EVENT_BUTTON_LEFT-1))</span>
+<a name="gbab-119"></a><span class="cp">#define INPUT_EVENT_BUTTON_MASK_RIGHT (1&lt;&lt;(INPUT_EVENT_BUTTON_RIGHT-1))</span>
+<a name="gbab-120"></a><span class="cp">#define INPUT_EVENT_BUTTON_MASK_MIDDLE (1&lt;&lt;(INPUT_EVENT_BUTTON_MIDDLE-1))</span>
+<a name="gbab-121"></a>
+<a name="gbab-122"></a><span class="cp">#define INPUT_EVENT_TYPE_NONE 0</span>
+<a name="gbab-123"></a><span class="cp">#define INPUT_EVENT_TYPE_KEY 1</span>
+<a name="gbab-124"></a><span class="cp">#define INPUT_EVENT_TYPE_MOUSE_MOTION 2</span>
+<a name="gbab-125"></a><span class="cp">#define INPUT_EVENT_TYPE_MOUSE_BUTTON 3</span>
+<a name="gbab-126"></a><span class="cp">#define INPUT_EVENT_TYPE_JOYSTICK_MOTION 4</span>
+<a name="gbab-127"></a><span class="cp">#define INPUT_EVENT_TYPE_JOYSTICK_BUTTON 5</span>
+<a name="gbab-128"></a><span class="cp">#define INPUT_EVENT_TYPE_SCREEN_TOUCH 6</span>
+<a name="gbab-129"></a><span class="cp">#define INPUT_EVENT_TYPE_SCREEN_DRAG 7</span>
+<a name="gbab-130"></a><span class="cp">#define INPUT_EVENT_TYPE_ACTION 8</span>
+<a name="gbab-131"></a>
+<a name="gbab-132"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_input_event</span><span class="p">;</span>
+<a name="gbab-133"></a>
+<a name="gbab-134"></a>
+<a name="gbab-135"></a><span class="n">godot_input_event</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_create</span><span class="p">();</span>
+<a name="gbab-136"></a><span class="n">godot_input_event</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_copy</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_input_event</span><span class="p">);</span>
+<a name="gbab-137"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_free</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_input_event</span><span class="p">);</span>
+<a name="gbab-138"></a>
+<a name="gbab-139"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_get_type</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-140"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_get_device</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-141"></a>
+<a name="gbab-142"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mod_has_alt</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-143"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mod_has_ctrl</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-144"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mod_has_command</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-145"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mod_has_shift</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-146"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mod_has_meta</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-147"></a>
+<a name="gbab-148"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_key_get_scancode</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-149"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_key_get_unicode</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-150"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_key_is_pressed</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-151"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_key_is_echo</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-152"></a>
+<a name="gbab-153"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_get_x</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-154"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_get_y</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-155"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_get_global_x</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-156"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_get_global_y</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-157"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_get_button_mask</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-158"></a>
+<a name="gbab-159"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_button_get_button_index</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-160"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_button_is_pressed</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-161"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_button_is_doubleclick</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-162"></a>
+<a name="gbab-163"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_motion_get_relative_x</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-164"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_motion_get_relative_y</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-165"></a>
+<a name="gbab-166"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_motion_get_speed_x</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-167"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_mouse_motion_get_speed_y</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-168"></a>
+<a name="gbab-169"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_joystick_motion_get_axis</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-170"></a><span class="kt">float</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_joystick_motion_get_axis_value</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-171"></a>
+<a name="gbab-172"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_joystick_button_get_button_index</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-173"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_joystick_button_is_pressed</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-174"></a><span class="kt">float</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_joystick_button_get_pressure</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-175"></a>
+<a name="gbab-176"></a>
+<a name="gbab-177"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_touch_get_index</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-178"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_touch_get_x</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-179"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_touch_get_y</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-180"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_touch_is_pressed</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-181"></a>
+<a name="gbab-182"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_drag_get_index</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-183"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_drag_get_x</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-184"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_drag_get_y</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-185"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_drag_get_relative_x</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-186"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_drag_get_relative_y</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-187"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_drag_get_speed_x</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-188"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_screen_drag_get_speed_y</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">);</span>
+<a name="gbab-189"></a>
+<a name="gbab-190"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_is_action</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_action</span><span class="p">);</span>
+<a name="gbab-191"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_input_event_is_action_pressed</span><span class="p">(</span><span class="n">godot_input_event</span> <span class="n">p_event</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_action</span><span class="p">);</span>
+<a name="gbab-192"></a>
+<a name="gbab-193"></a><span class="c1">////// ByteArray</span>
+<a name="gbab-194"></a>
+<a name="gbab-195"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_byte_array</span><span class="p">;</span>
+<a name="gbab-196"></a>
+<a name="gbab-197"></a><span class="n">godot_byte_array</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_create</span><span class="p">();</span>
+<a name="gbab-198"></a><span class="n">godot_byte_array</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_copy</span><span class="p">(</span><span class="n">godot_byte_array</span> <span class="n">p_byte_array</span><span class="p">);</span>
+<a name="gbab-199"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_free</span><span class="p">(</span><span class="n">godot_byte_array</span> <span class="n">p_byte_array</span><span class="p">);</span>
+<a name="gbab-200"></a>
+<a name="gbab-201"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_get_size</span><span class="p">(</span><span class="n">godot_byte_array</span> <span class="n">p_byte_array</span><span class="p">);</span>
+<a name="gbab-202"></a><span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_get</span><span class="p">(</span><span class="n">godot_byte_array</span> <span class="n">p_byte_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-203"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_set</span><span class="p">(</span><span class="n">godot_byte_array</span> <span class="n">p_byte_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">p_value</span><span class="p">);</span>
+<a name="gbab-204"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_remove</span><span class="p">(</span><span class="n">godot_byte_array</span> <span class="n">p_byte_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-205"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_clear</span><span class="p">(</span><span class="n">godot_byte_array</span> <span class="n">p_byte_array</span><span class="p">);</span>
+<a name="gbab-206"></a>
+<a name="gbab-207"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_byte_array_lock</span><span class="p">;</span>
+<a name="gbab-208"></a>
+<a name="gbab-209"></a><span class="n">godot_byte_array_lock</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_get_lock</span><span class="p">(</span><span class="n">godot_byte_array</span> <span class="n">p_byte_array</span><span class="p">);</span>
+<a name="gbab-210"></a><span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">GDAPI</span> <span class="o">*</span><span class="nf">godot_byte_array_lock_get_pointer</span><span class="p">(</span><span class="n">godot_byte_array_lock</span> <span class="n">p_byte_array_lock</span><span class="p">);</span>
+<a name="gbab-211"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_byte_array_lock_free</span><span class="p">(</span><span class="n">godot_byte_array_lock</span> <span class="n">p_byte_array_lock</span><span class="p">);</span>
+<a name="gbab-212"></a>
+<a name="gbab-213"></a>
+<a name="gbab-214"></a><span class="n">godot_image</span> <span class="n">GDAPI</span> <span class="nf">godot_image_create_with_array</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_width</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_height</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_format</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_use_mipmaps</span><span class="p">,</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-215"></a><span class="n">godot_byte_array</span> <span class="n">GDAPI</span> <span class="nf">godot_image_get_data</span><span class="p">(</span><span class="n">godot_image</span> <span class="n">p_image</span><span class="p">);</span>
+<a name="gbab-216"></a>
+<a name="gbab-217"></a>
+<a name="gbab-218"></a><span class="c1">////// IntArray</span>
+<a name="gbab-219"></a>
+<a name="gbab-220"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_int_array</span><span class="p">;</span>
+<a name="gbab-221"></a>
+<a name="gbab-222"></a><span class="n">godot_int_array</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_create</span><span class="p">();</span>
+<a name="gbab-223"></a><span class="n">godot_int_array</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_copy</span><span class="p">(</span><span class="n">godot_int_array</span> <span class="n">p_int_array</span><span class="p">);</span>
+<a name="gbab-224"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_free</span><span class="p">(</span><span class="n">godot_int_array</span> <span class="n">p_int_array</span><span class="p">);</span>
+<a name="gbab-225"></a>
+<a name="gbab-226"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_get_size</span><span class="p">(</span><span class="n">godot_int_array</span> <span class="n">p_int_array</span><span class="p">);</span>
+<a name="gbab-227"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_get</span><span class="p">(</span><span class="n">godot_int_array</span> <span class="n">p_int_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-228"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_set</span><span class="p">(</span><span class="n">godot_int_array</span> <span class="n">p_int_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_value</span><span class="p">);</span>
+<a name="gbab-229"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_remove</span><span class="p">(</span><span class="n">godot_int_array</span> <span class="n">p_int_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-230"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_clear</span><span class="p">(</span><span class="n">godot_int_array</span> <span class="n">p_int_array</span><span class="p">);</span>
+<a name="gbab-231"></a>
+<a name="gbab-232"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_int_array_lock</span><span class="p">;</span>
+<a name="gbab-233"></a>
+<a name="gbab-234"></a><span class="n">godot_int_array_lock</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_get_lock</span><span class="p">(</span><span class="n">godot_int_array</span> <span class="n">p_int_array</span><span class="p">);</span>
+<a name="gbab-235"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="o">*</span><span class="nf">godot_int_array_lock_get_pointer</span><span class="p">(</span><span class="n">godot_int_array_lock</span> <span class="n">p_int_array_lock</span><span class="p">);</span>
+<a name="gbab-236"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_int_array_lock_free</span><span class="p">(</span><span class="n">godot_int_array_lock</span> <span class="n">p_int_array_lock</span><span class="p">);</span>
+<a name="gbab-237"></a>
+<a name="gbab-238"></a><span class="c1">////// RealArray</span>
+<a name="gbab-239"></a>
+<a name="gbab-240"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_real_array</span><span class="p">;</span>
+<a name="gbab-241"></a>
+<a name="gbab-242"></a>
+<a name="gbab-243"></a><span class="n">godot_real_array</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_create</span><span class="p">();</span>
+<a name="gbab-244"></a><span class="n">godot_real_array</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_copy</span><span class="p">(</span><span class="n">godot_real_array</span> <span class="n">p_real_array</span><span class="p">);</span>
+<a name="gbab-245"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_free</span><span class="p">(</span><span class="n">godot_real_array</span> <span class="n">p_real_array</span><span class="p">);</span>
+<a name="gbab-246"></a>
+<a name="gbab-247"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_get_size</span><span class="p">(</span><span class="n">godot_real_array</span> <span class="n">p_real_array</span><span class="p">);</span>
+<a name="gbab-248"></a><span class="kt">float</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_get</span><span class="p">(</span><span class="n">godot_real_array</span> <span class="n">p_real_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-249"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_set</span><span class="p">(</span><span class="n">godot_real_array</span> <span class="n">p_real_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">float</span> <span class="n">p_value</span><span class="p">);</span>
+<a name="gbab-250"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_remove</span><span class="p">(</span><span class="n">godot_real_array</span> <span class="n">p_real_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-251"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_clear</span><span class="p">(</span><span class="n">godot_real_array</span> <span class="n">p_real_array</span><span class="p">);</span>
+<a name="gbab-252"></a>
+<a name="gbab-253"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_real_array_lock</span><span class="p">;</span>
+<a name="gbab-254"></a>
+<a name="gbab-255"></a><span class="n">godot_real_array_lock</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_get_lock</span><span class="p">(</span><span class="n">godot_real_array</span> <span class="n">p_real_array</span><span class="p">);</span>
+<a name="gbab-256"></a><span class="kt">float</span> <span class="n">GDAPI</span> <span class="o">*</span><span class="nf">godot_real_array_lock_get_pointer</span><span class="p">(</span><span class="n">godot_real_array_lock</span> <span class="n">p_real_array_lock</span><span class="p">);</span>
+<a name="gbab-257"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_real_array_lock_free</span><span class="p">(</span><span class="n">godot_real_array_lock</span> <span class="n">p_real_array_lock</span><span class="p">);</span>
+<a name="gbab-258"></a>
+<a name="gbab-259"></a>
+<a name="gbab-260"></a><span class="c1">////// StringArray</span>
+<a name="gbab-261"></a>
+<a name="gbab-262"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_string_array</span><span class="p">;</span>
+<a name="gbab-263"></a>
+<a name="gbab-264"></a>
+<a name="gbab-265"></a><span class="n">godot_string_array</span> <span class="n">GDAPI</span> <span class="nf">godot_string_array_create</span><span class="p">();</span>
+<a name="gbab-266"></a><span class="n">godot_string_array</span> <span class="n">GDAPI</span> <span class="nf">godot_string_array_copy</span><span class="p">(</span><span class="n">godot_string_array</span> <span class="n">p_string_array</span><span class="p">);</span>
+<a name="gbab-267"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_string_array_free</span><span class="p">(</span><span class="n">godot_string_array</span> <span class="n">p_string_array</span><span class="p">);</span>
+<a name="gbab-268"></a>
+<a name="gbab-269"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_string_array_get_size</span><span class="p">(</span><span class="n">godot_string_array</span> <span class="n">p_string_array</span><span class="p">);</span>
+<a name="gbab-270"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_string_array_get</span><span class="p">(</span><span class="n">godot_string_array</span> <span class="n">p_string_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_string</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_max_len</span><span class="p">);</span>
+<a name="gbab-271"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_string_array_set</span><span class="p">(</span><span class="n">godot_string_array</span> <span class="n">p_string_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p_string</span><span class="p">);</span>
+<a name="gbab-272"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_string_array_remove</span><span class="p">(</span><span class="n">godot_string_array</span> <span class="n">p_string_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-273"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_string_array_clear</span><span class="p">(</span><span class="n">godot_string_array</span> <span class="n">p_string_array</span><span class="p">);</span>
+<a name="gbab-274"></a>
+<a name="gbab-275"></a><span class="c1">////// Vector2Array</span>
+<a name="gbab-276"></a>
+<a name="gbab-277"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_vector2_array</span><span class="p">;</span>
+<a name="gbab-278"></a>
+<a name="gbab-279"></a><span class="n">godot_vector2_array</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_create</span><span class="p">();</span>
+<a name="gbab-280"></a><span class="n">godot_vector2_array</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_copy</span><span class="p">(</span><span class="n">godot_vector2_array</span> <span class="n">p_vector2_array</span><span class="p">);</span>
+<a name="gbab-281"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_free</span><span class="p">(</span><span class="n">godot_vector2_array</span> <span class="n">p_vector2_array</span><span class="p">);</span>
+<a name="gbab-282"></a>
+<a name="gbab-283"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_get_size</span><span class="p">(</span><span class="n">godot_vector2_array</span> <span class="n">p_vector2_array</span><span class="p">);</span>
+<a name="gbab-284"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_get_stride</span><span class="p">(</span><span class="n">godot_vector2_array</span> <span class="n">p_vector2_array</span><span class="p">);</span>
+<a name="gbab-285"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_get</span><span class="p">(</span><span class="n">godot_vector2_array</span> <span class="n">p_vector2_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">float</span><span class="o">*</span> <span class="n">p_vector2</span><span class="p">);</span>
+<a name="gbab-286"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_set</span><span class="p">(</span><span class="n">godot_vector2_array</span> <span class="n">p_vector2_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_vector2</span><span class="p">);</span>
+<a name="gbab-287"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_remove</span><span class="p">(</span><span class="n">godot_vector2_array</span> <span class="n">p_vector2_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-288"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_clear</span><span class="p">(</span><span class="n">godot_vector2_array</span> <span class="n">p_vector2_array</span><span class="p">);</span>
+<a name="gbab-289"></a>
+<a name="gbab-290"></a>
+<a name="gbab-291"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_vector2_array_lock</span><span class="p">;</span>
+<a name="gbab-292"></a>
+<a name="gbab-293"></a><span class="n">godot_vector2_array_lock</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_get_lock</span><span class="p">(</span><span class="n">godot_vector2_array</span> <span class="n">p_vector2_array</span><span class="p">);</span>
+<a name="gbab-294"></a><span class="kt">float</span> <span class="n">GDAPI</span> <span class="o">*</span><span class="nf">godot_vector2_array_lock_get_pointer</span><span class="p">(</span><span class="n">godot_vector2_array_lock</span> <span class="n">p_vector2_array_lock</span><span class="p">);</span>
+<a name="gbab-295"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector2_array_lock_free</span><span class="p">(</span><span class="n">godot_vector2_array_lock</span> <span class="n">p_vector2_array_lock</span><span class="p">);</span>
+<a name="gbab-296"></a>
+<a name="gbab-297"></a><span class="c1">////// Vector3Array</span>
+<a name="gbab-298"></a>
+<a name="gbab-299"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_vector3_array</span><span class="p">;</span>
+<a name="gbab-300"></a>
+<a name="gbab-301"></a><span class="n">godot_vector3_array</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_create</span><span class="p">();</span>
+<a name="gbab-302"></a><span class="n">godot_vector3_array</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_copy</span><span class="p">(</span><span class="n">godot_vector3_array</span> <span class="n">p_vector3_array</span><span class="p">);</span>
+<a name="gbab-303"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_free</span><span class="p">(</span><span class="n">godot_vector3_array</span> <span class="n">p_vector3_array</span><span class="p">);</span>
+<a name="gbab-304"></a>
+<a name="gbab-305"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_get_size</span><span class="p">(</span><span class="n">godot_vector3_array</span> <span class="n">p_vector3_array</span><span class="p">);</span>
+<a name="gbab-306"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_get_stride</span><span class="p">(</span><span class="n">godot_vector3_array</span> <span class="n">p_vector3_array</span><span class="p">);</span>
+<a name="gbab-307"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_get</span><span class="p">(</span><span class="n">godot_vector3_array</span> <span class="n">p_vector3_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">float</span><span class="o">*</span> <span class="n">p_vector3</span><span class="p">);</span>
+<a name="gbab-308"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_set</span><span class="p">(</span><span class="n">godot_vector3_array</span> <span class="n">p_vector3_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_vector3</span><span class="p">);</span>
+<a name="gbab-309"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_remove</span><span class="p">(</span><span class="n">godot_vector3_array</span> <span class="n">p_vector3_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-310"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_clear</span><span class="p">(</span><span class="n">godot_vector3_array</span> <span class="n">p_vector3_array</span><span class="p">);</span>
+<a name="gbab-311"></a>
+<a name="gbab-312"></a>
+<a name="gbab-313"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_vector3_array_lock</span><span class="p">;</span>
+<a name="gbab-314"></a>
+<a name="gbab-315"></a><span class="n">godot_vector3_array_lock</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_get_lock</span><span class="p">(</span><span class="n">godot_vector3_array</span> <span class="n">p_vector3_array</span><span class="p">);</span>
+<a name="gbab-316"></a><span class="kt">float</span> <span class="n">GDAPI</span> <span class="o">*</span><span class="nf">godot_vector3_array_lock_get_pointer</span><span class="p">(</span><span class="n">godot_vector3_array_lock</span> <span class="n">p_vector3_array_lock</span><span class="p">);</span>
+<a name="gbab-317"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_vector3_array_lock_free</span><span class="p">(</span><span class="n">godot_vector3_array_lock</span> <span class="n">p_vector3_array_lock</span><span class="p">);</span>
+<a name="gbab-318"></a>
+<a name="gbab-319"></a><span class="c1">////// ColorArray</span>
+<a name="gbab-320"></a>
+<a name="gbab-321"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_color_array</span><span class="p">;</span>
+<a name="gbab-322"></a>
+<a name="gbab-323"></a><span class="n">godot_color_array</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_create</span><span class="p">();</span>
+<a name="gbab-324"></a><span class="n">godot_color_array</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_copy</span><span class="p">(</span><span class="n">godot_color_array</span> <span class="n">p_color_array</span><span class="p">);</span>
+<a name="gbab-325"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_free</span><span class="p">(</span><span class="n">godot_color_array</span> <span class="n">p_color_array</span><span class="p">);</span>
+<a name="gbab-326"></a>
+<a name="gbab-327"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_get_size</span><span class="p">(</span><span class="n">godot_color_array</span> <span class="n">p_color_array</span><span class="p">);</span>
+<a name="gbab-328"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_get_stride</span><span class="p">(</span><span class="n">godot_color_array</span> <span class="n">p_color_array</span><span class="p">);</span>
+<a name="gbab-329"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_get</span><span class="p">(</span><span class="n">godot_color_array</span> <span class="n">p_color_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">float</span><span class="o">*</span> <span class="n">p_color</span><span class="p">);</span>
+<a name="gbab-330"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_set</span><span class="p">(</span><span class="n">godot_color_array</span> <span class="n">p_color_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_color</span><span class="p">);</span>
+<a name="gbab-331"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_remove</span><span class="p">(</span><span class="n">godot_color_array</span> <span class="n">p_color_array</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_index</span><span class="p">);</span>
+<a name="gbab-332"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_clear</span><span class="p">(</span><span class="n">godot_color_array</span> <span class="n">p_color_array</span><span class="p">);</span>
+<a name="gbab-333"></a>
+<a name="gbab-334"></a>
+<a name="gbab-335"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="n">godot_color_array_lock</span><span class="p">;</span>
+<a name="gbab-336"></a>
+<a name="gbab-337"></a><span class="n">godot_color_array_lock</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_get_lock</span><span class="p">(</span><span class="n">godot_color_array</span> <span class="n">p_color_array</span><span class="p">);</span>
+<a name="gbab-338"></a><span class="kt">float</span> <span class="n">GDAPI</span> <span class="o">*</span><span class="nf">godot_color_array_lock_get_pointer</span><span class="p">(</span><span class="n">godot_color_array_lock</span> <span class="n">p_color_array_lock</span><span class="p">);</span>
+<a name="gbab-339"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_color_array_lock_free</span><span class="p">(</span><span class="n">godot_color_array_lock</span> <span class="n">p_color_array_lock</span><span class="p">);</span>
+<a name="gbab-340"></a>
+<a name="gbab-341"></a>
+<a name="gbab-342"></a><span class="c1">////// Instance (forward declared)</span>
+<a name="gbab-343"></a>
+<a name="gbab-344"></a><span class="k">typedef</span> <span class="kt">void</span> <span class="o">*</span><span class="n">godot_instance</span><span class="p">;</span>
+<a name="gbab-345"></a>
+<a name="gbab-346"></a><span class="c1">////// Variant</span>
+<a name="gbab-347"></a>
+<a name="gbab-348"></a><span class="cp">#define GODOT_VARIANT_NIL 0</span>
+<a name="gbab-349"></a><span class="cp">#define GODOT_VARIANT_BOOL 1</span>
+<a name="gbab-350"></a><span class="cp">#define GODOT_VARIANT_INT 2</span>
+<a name="gbab-351"></a><span class="cp">#define GODOT_VARIANT_REAL 3</span>
+<a name="gbab-352"></a><span class="cp">#define GODOT_VARIANT_STRING 4</span>
+<a name="gbab-353"></a><span class="cp">#define GODOT_VARIANT_VECTOR2 5</span>
+<a name="gbab-354"></a><span class="cp">#define GODOT_VARIANT_RECT2 6</span>
+<a name="gbab-355"></a><span class="cp">#define GODOT_VARIANT_VECTOR3 7</span>
+<a name="gbab-356"></a><span class="cp">#define GODOT_VARIANT_MATRIX32 8</span>
+<a name="gbab-357"></a><span class="cp">#define GODOT_VARIANT_PLANE 9</span>
+<a name="gbab-358"></a><span class="cp">#define GODOT_VARIANT_QUAT 10</span>
+<a name="gbab-359"></a><span class="cp">#define GODOT_VARIANT_AABB 11</span>
+<a name="gbab-360"></a><span class="cp">#define GODOT_VARIANT_MATRIX3 12</span>
+<a name="gbab-361"></a><span class="cp">#define GODOT_VARIANT_TRANSFORM 13</span>
+<a name="gbab-362"></a><span class="cp">#define GODOT_VARIANT_COLOR 14</span>
+<a name="gbab-363"></a><span class="cp">#define GODOT_VARIANT_IMAGE 15</span>
+<a name="gbab-364"></a><span class="cp">#define GODOT_VARIANT_NODE_PATH 16</span>
+<a name="gbab-365"></a><span class="cp">#define GODOT_VARIANT_RID 17</span>
+<a name="gbab-366"></a><span class="cp">#define GODOT_VARIANT_OBJECT 18</span>
+<a name="gbab-367"></a><span class="cp">#define GODOT_VARIANT_INPUT_EVENT 19</span>
+<a name="gbab-368"></a><span class="cp">#define GODOT_VARIANT_DICTIONARY 20</span>
+<a name="gbab-369"></a><span class="cp">#define GODOT_VARIANT_ARRAY 21</span>
+<a name="gbab-370"></a><span class="cp">#define GODOT_VARIANT_BYTE_ARRAY 22</span>
+<a name="gbab-371"></a><span class="cp">#define GODOT_VARIANT_INT_ARRAY 23</span>
+<a name="gbab-372"></a><span class="cp">#define GODOT_VARIANT_REAL_ARRAY 24</span>
+<a name="gbab-373"></a><span class="cp">#define GODOT_VARIANT_STRING_ARRAY 25</span>
+<a name="gbab-374"></a><span class="cp">#define GODOT_VARIANT_VECTOR2_ARRAY 26</span>
+<a name="gbab-375"></a><span class="cp">#define GODOT_VARIANT_VECTOR3_ARRAY 27</span>
+<a name="gbab-376"></a><span class="cp">#define GODOT_VARIANT_COLOR_ARRAY 28</span>
+<a name="gbab-377"></a><span class="cp">#define GODOT_VARIANT_MAX 29</span>
+<a name="gbab-378"></a>
+<a name="gbab-379"></a><span class="n">godot_variant</span> <span class="o">*</span><span class="nf">godot_variant_new</span><span class="p">();</span>
+<a name="gbab-380"></a>
+<a name="gbab-381"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_type</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-382"></a>
+<a name="gbab-383"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_null</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-384"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_bool</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_bool</span> <span class="n">p_bool</span><span class="p">);</span>
+<a name="gbab-385"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_int</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_int</span><span class="p">);</span>
+<a name="gbab-386"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_float</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_float</span><span class="p">);</span>
+<a name="gbab-387"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_string</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_string</span><span class="p">);</span>
+<a name="gbab-388"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_vector2</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-389"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_rect2</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-390"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_vector3</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-391"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_matrix32</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-392"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_plane</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-393"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_aabb</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-394"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_matrix3</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-395"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_transform</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-396"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_color</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-397"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_image</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_image</span> <span class="o">*</span><span class="n">p_image</span><span class="p">);</span>
+<a name="gbab-398"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_node_path</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_path</span><span class="p">);</span>
+<a name="gbab-399"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_rid</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_path</span><span class="p">);</span>
+<a name="gbab-400"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_instance</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_instance</span> <span class="n">p_instance</span><span class="p">);</span>
+<a name="gbab-401"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_input_event</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_input_event</span> <span class="n">p_instance</span><span class="p">);</span>
+<a name="gbab-402"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_dictionary</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_dictionary</span> <span class="n">p_dictionary</span><span class="p">);</span>
+<a name="gbab-403"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-404"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_byte_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_byte_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-405"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_int_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_byte_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-406"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_string_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_string_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-407"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_vector2_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_vector2_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-408"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_vector3_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_vector3_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-409"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_set_color_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_color_array</span> <span class="n">p_array</span><span class="p">);</span>
+<a name="gbab-410"></a>
+<a name="gbab-411"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_bool</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-412"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_int</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-413"></a><span class="kt">float</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_float</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-414"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_string</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_string</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_bufsize</span><span class="p">);</span>
+<a name="gbab-415"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_vector2</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-416"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_rect2</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-417"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_vector3</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-418"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_matrix32</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-419"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_plane</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-420"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_aabb</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-421"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_matrix3</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-422"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_transform</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-423"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_color</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">float</span> <span class="o">*</span><span class="n">p_elems</span><span class="p">);</span>
+<a name="gbab-424"></a><span class="n">godot_image</span> <span class="n">GDAPI</span> <span class="o">*</span><span class="nf">godot_variant_get_image</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-425"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_node_path</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_path</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_bufsize</span><span class="p">);</span>
+<a name="gbab-426"></a><span class="n">godot_rid</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_rid</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-427"></a><span class="n">godot_instance</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_instance</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-428"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_input_event</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_input_event</span><span class="p">);</span>
+<a name="gbab-429"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_dictionary</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">,</span><span class="n">godot_dictionary</span><span class="p">);</span>
+<a name="gbab-430"></a><span class="n">godot_array</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-431"></a><span class="n">godot_byte_array</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_byte_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-432"></a><span class="n">godot_byte_array</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_int_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-433"></a><span class="n">godot_string_array</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_string_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-434"></a><span class="n">godot_vector2_array</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_vector2_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-435"></a><span class="n">godot_vector3_array</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_vector3_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-436"></a><span class="n">godot_color_array</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_get_color_array</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-437"></a>
+<a name="gbab-438"></a>
+<a name="gbab-439"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_variant_delete</span><span class="p">(</span><span class="n">godot_variant</span> <span class="n">p_variant</span><span class="p">);</span>
+<a name="gbab-440"></a>
+<a name="gbab-441"></a><span class="c1">////// Class</span>
+<a name="gbab-442"></a><span class="c1">///</span>
+<a name="gbab-443"></a>
+<a name="gbab-444"></a><span class="kt">char</span> <span class="n">GDAPI</span> <span class="o">**</span><span class="nf">godot_class_get_list</span><span class="p">();</span> <span class="c1">//get list of classes in array to array of strings, must be freed, use godot_list_free()</span>
+<a name="gbab-445"></a>
+<a name="gbab-446"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_class_get_base</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_base</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_max_len</span><span class="p">);</span>
+<a name="gbab-447"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_class_get_name</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_base</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_max_len</span><span class="p">);</span>
+<a name="gbab-448"></a>
+<a name="gbab-449"></a><span class="kt">char</span> <span class="n">GDAPI</span> <span class="o">**</span><span class="nf">godot_class_get_method_list</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">);</span> <span class="c1">//free with godot_list_free()</span>
+<a name="gbab-450"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_class_method_get_argument_count</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_method</span><span class="p">);</span>
+<a name="gbab-451"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_class_method_get_argument_type</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_method</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_argument</span><span class="p">);</span>
+<a name="gbab-452"></a><span class="n">godot_variant</span> <span class="n">GDAPI</span> <span class="nf">godot_class_method_get_argument_default_value</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_method</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_argument</span><span class="p">);</span>
+<a name="gbab-453"></a>
+<a name="gbab-454"></a><span class="kt">char</span> <span class="n">GDAPI</span> <span class="o">**</span><span class="nf">godot_class_get_constant_list</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">);</span> <span class="c1">//free with godot_list_free()</span>
+<a name="gbab-455"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_class_constant_get_value</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">p_constant</span><span class="p">);</span>
+<a name="gbab-456"></a>
+<a name="gbab-457"></a>
+<a name="gbab-458"></a><span class="c1">////// Instance</span>
+<a name="gbab-459"></a>
+<a name="gbab-460"></a><span class="k">typedef</span> <span class="kt">int</span> <span class="n">godot_call_error</span><span class="p">;</span>
+<a name="gbab-461"></a>
+<a name="gbab-462"></a><span class="cp">#define GODOT_CALL_OK</span>
+<a name="gbab-463"></a><span class="cp">#define GODOT_CALL_ERROR_WRONG_ARGUMENTS</span>
+<a name="gbab-464"></a><span class="cp">#define GODOT_CALL_ERROR_INVALID_INSTANCE</span>
+<a name="gbab-465"></a>
+<a name="gbab-466"></a><span class="n">godot_instance</span> <span class="n">GDAPI</span> <span class="nf">godot_instance_new</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">);</span>
+<a name="gbab-467"></a><span class="kt">int</span> <span class="n">GDAPI</span> <span class="nf">godot_instance_get_class</span><span class="p">(</span><span class="n">godot_instance</span> <span class="n">p_instance</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_class</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_max_len</span><span class="p">);</span>
+<a name="gbab-468"></a>
+<a name="gbab-469"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="gbab-470"></a>	<span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+<a name="gbab-471"></a>	<span class="kt">int</span> <span class="n">hint</span><span class="p">;</span>
+<a name="gbab-472"></a>	<span class="kt">char</span> <span class="o">*</span><span class="n">hint_string</span><span class="p">;</span>
+<a name="gbab-473"></a>	<span class="kt">int</span> <span class="n">usage</span><span class="p">;</span>
+<a name="gbab-474"></a><span class="p">}</span> <span class="n">godot_property_info</span><span class="p">;</span>
+<a name="gbab-475"></a>
+<a name="gbab-476"></a><span class="n">godot_call_error</span> <span class="n">GDAPI</span> <span class="nf">godot_instance_call</span><span class="p">(</span><span class="n">godot_instance</span> <span class="n">p_instance</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_method</span><span class="p">,</span> <span class="p">...);</span>
+<a name="gbab-477"></a><span class="n">godot_call_error</span> <span class="n">GDAPI</span> <span class="nf">godot_instance_call_ret</span><span class="p">(</span><span class="n">godot_instance</span> <span class="n">p_instance</span><span class="p">,</span> <span class="n">godot_variant</span> <span class="n">r_return</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_method</span><span class="p">,</span> <span class="p">...);</span>
+<a name="gbab-478"></a><span class="n">godot_bool</span> <span class="n">GDAPI</span> <span class="nf">godot_instance_set</span><span class="p">(</span><span class="n">godot_instance</span> <span class="n">p_instance</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_prop</span><span class="p">,</span><span class="n">godot_variant</span> <span class="n">p_value</span><span class="p">);</span>
+<a name="gbab-479"></a><span class="n">godot_variant</span> <span class="n">GDAPI</span> <span class="nf">godot_instance_get</span><span class="p">(</span><span class="n">godot_instance</span> <span class="n">p_instance</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p_prop</span><span class="p">);</span>
+<a name="gbab-480"></a>
+<a name="gbab-481"></a>
+<a name="gbab-482"></a><span class="cp">#define GODOT_PROPERTY_HINT_NONE 0 </span><span class="c1">///&lt; no hint provided.</span>
+<a name="gbab-483"></a><span class="cp">#define GODOT_PROPERTY_HINT_RANGE 1</span><span class="c1">///&lt; hint_text = &quot;min,max,step,slider; //slider is optional&quot;</span>
+<a name="gbab-484"></a><span class="cp">#define GODOT_PROPERTY_HINT_EXP_RANGE 2</span><span class="c1">///&lt; hint_text = &quot;min,max,step&quot;, exponential edit</span>
+<a name="gbab-485"></a><span class="cp">#define GODOT_PROPERTY_HINT_ENUM 3</span><span class="c1">///&lt; hint_text= &quot;val1,val2,val3,etc&quot;</span>
+<a name="gbab-486"></a><span class="cp">#define GODOT_PROPERTY_HINT_EXP_EASING 4</span><span class="c1">/// exponential easing funciton (Math::ease)</span>
+<a name="gbab-487"></a><span class="cp">#define GODOT_PROPERTY_HINT_LENGTH 5</span><span class="c1">///&lt; hint_text= &quot;length&quot; (as integer)</span>
+<a name="gbab-488"></a><span class="cp">#define GODOT_PROPERTY_HINT_SPRITE_FRAME 6</span>
+<a name="gbab-489"></a><span class="cp">#define GODOT_PROPERTY_HINT_KEY_ACCEL 7</span><span class="c1">///&lt; hint_text= &quot;length&quot; (as integer)</span>
+<a name="gbab-490"></a><span class="cp">#define GODOT_PROPERTY_HINT_FLAGS 8</span><span class="c1">///&lt; hint_text= &quot;flag1,flag2,etc&quot; (as bit flags)</span>
+<a name="gbab-491"></a><span class="cp">#define GODOT_PROPERTY_HINT_ALL_FLAGS 9</span>
+<a name="gbab-492"></a><span class="cp">#define GODOT_PROPERTY_HINT_FILE 10 </span><span class="c1">///&lt; a file path must be passed, hint_text (optionally) is a filter &quot;*.png,*.wav,*.doc,&quot;</span>
+<a name="gbab-493"></a><span class="cp">#define GODOT_PROPERTY_HINT_DIR 11 </span><span class="c1">///&lt; a directort path must be passed</span>
+<a name="gbab-494"></a><span class="cp">#define GODOT_PROPERTY_HINT_GLOBAL_FILE 12</span><span class="c1">///&lt; a file path must be passed, hint_text (optionally) is a filter &quot;*.png,*.wav,*.doc,&quot;</span>
+<a name="gbab-495"></a><span class="cp">#define GODOT_PROPERTY_HINT_GLOBAL_DIR 13 </span><span class="c1">///&lt; a directort path must be passed</span>
+<a name="gbab-496"></a><span class="cp">#define GODOT_PROPERTY_HINT_RESOURCE_TYPE 14</span><span class="c1">///&lt; a resource object type</span>
+<a name="gbab-497"></a><span class="cp">#define GODOT_PROPERTY_HINT_MULTILINE_TEXT 15</span><span class="c1">///&lt; used for string properties that can contain multiple lines</span>
+<a name="gbab-498"></a><span class="cp">#define GODOT_PROPERTY_HINT_COLOR_NO_ALPHA 16</span><span class="c1">///&lt; used for ignoring alpha component when editing a color</span>
+<a name="gbab-499"></a><span class="cp">#define GODOT_PROPERTY_HINT_IMAGE_COMPRESS_LOSSY 17</span>
+<a name="gbab-500"></a><span class="cp">#define GODOT_PROPERTY_HINT_IMAGE_COMPRESS_LOSSLESS 18</span>
+<a name="gbab-501"></a><span class="cp">#define GODOT_PROPERTY_HINT_OBJECT_ID 19</span>
+<a name="gbab-502"></a>
+<a name="gbab-503"></a>
+<a name="gbab-504"></a><span class="cp">#define GODOT_PROPERTY_USAGE_STORAGE 1</span>
+<a name="gbab-505"></a><span class="cp">#define GODOT_PROPERTY_USAGE_EDITOR 2</span>
+<a name="gbab-506"></a><span class="cp">#define GODOT_PROPERTY_USAGE_NETWORK 4</span>
+<a name="gbab-507"></a><span class="cp">#define GODOT_PROPERTY_USAGE_EDITOR_HELPER 8</span>
+<a name="gbab-508"></a><span class="cp">#define GODOT_PROPERTY_USAGE_CHECKABLE 16 </span><span class="c1">//used for editing global variables</span>
+<a name="gbab-509"></a><span class="cp">#define GODOT_PROPERTY_USAGE_CHECKED 32 </span><span class="c1">//used for editing global variables</span>
+<a name="gbab-510"></a><span class="cp">#define GODOT_PROPERTY_USAGE_INTERNATIONALIZED 64 </span><span class="c1">//hint for internationalized strings</span>
+<a name="gbab-511"></a><span class="cp">#define GODOT_PROPERTY_USAGE_BUNDLE 128 </span><span class="c1">//used for optimized bundles</span>
+<a name="gbab-512"></a><span class="cp">#define GODOT_PROPERTY_USAGE_CATEGORY 256</span>
+<a name="gbab-513"></a><span class="cp">#define GODOT_PROPERTY_USAGE_STORE_IF_NONZERO 512 </span><span class="c1">//only store if nonzero</span>
+<a name="gbab-514"></a><span class="cp">#define GODOT_PROPERTY_USAGE_STORE_IF_NONONE 1024 </span><span class="c1">//only store if false</span>
+<a name="gbab-515"></a><span class="cp">#define GODOT_PROPERTY_USAGE_NO_INSTANCE_STATE 2048</span>
+<a name="gbab-516"></a><span class="cp">#define GODOT_PROPERTY_USAGE_RESTART_IF_CHANGED 4096</span>
+<a name="gbab-517"></a><span class="cp">#define GODOT_PROPERTY_USAGE_SCRIPT_VARIABLE 8192</span>
+<a name="gbab-518"></a><span class="cp">#define GODOT_PROPERTY_USAGE_STORE_IF_NULL 16384</span>
+<a name="gbab-519"></a><span class="cp">#define GODOT_PROPERTY_USAGE_ANIMATE_AS_TRIGGER 32768</span>
+<a name="gbab-520"></a>
+<a name="gbab-521"></a><span class="cp">#define GODOT_PROPERTY_USAGE_DEFAULT GODOT_PROPERTY_USAGE_STORAGE|GODOT_PROPERTY_USAGE_EDITOR|GODOT_PROPERTY_USAGE_NETWORK</span>
+<a name="gbab-522"></a><span class="cp">#define GODOT_PROPERTY_USAGE_DEFAULT_INTL GODOT_PROPERTY_USAGE_STORAGE|GODOT_PROPERTY_USAGE_EDITOR|GODOT_PROPERTY_USAGE_NETWORK|GODOT_PROPERTY_USAGE_INTERNATIONALIZED</span>
+<a name="gbab-523"></a><span class="cp">#define GODOT_PROPERTY_USAGE_NOEDITOR GODOT_PROPERTY_USAGE_STORAGE|GODOT_PROPERTY_USAGE_NETWORK</span>
+<a name="gbab-524"></a>
+<a name="gbab-525"></a>
+<a name="gbab-526"></a><span class="n">godot_property_info</span> <span class="n">GDAPI</span> <span class="o">**</span><span class="nf">godot_instance_get_property_list</span><span class="p">(</span><span class="n">godot_instance</span> <span class="n">p_instance</span><span class="p">);</span>
+<a name="gbab-527"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_instance_free_property_list</span><span class="p">(</span><span class="n">godot_instance</span> <span class="n">p_instance</span><span class="p">,</span><span class="n">godot_property_info</span><span class="o">**</span> <span class="n">p_list</span><span class="p">);</span>
+<a name="gbab-528"></a>
+<a name="gbab-529"></a>
+<a name="gbab-530"></a>
+<a name="gbab-531"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_list_free</span><span class="p">(</span><span class="kt">char</span> <span class="o">**</span><span class="n">p_name</span><span class="p">);</span> <span class="c1">//helper to free all the class list</span>
+<a name="gbab-532"></a>
+<a name="gbab-533"></a>
+<a name="gbab-534"></a><span class="c1">////// Script API</span>
+<a name="gbab-535"></a>
+<a name="gbab-536"></a><span class="k">typedef</span> <span class="kt">void</span><span class="o">*</span> <span class="p">(</span><span class="n">godot_script_instance_func</span><span class="p">)(</span><span class="n">godot_instance</span><span class="p">);</span> <span class="c1">//passed an instance, return a pointer to your userdata</span>
+<a name="gbab-537"></a><span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="n">godot_script_free_func</span><span class="p">)(</span><span class="n">godot_instance</span><span class="p">,</span><span class="kt">void</span><span class="o">*</span><span class="p">);</span> <span class="c1">//passed an instance, please free your userdata</span>
+<a name="gbab-538"></a>
+<a name="gbab-539"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_script_register</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_base</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_name</span><span class="p">,</span><span class="n">godot_script_instance_func</span> <span class="n">p_instance_func</span><span class="p">,</span><span class="n">godot_script_free_func</span> <span class="n">p_free_func</span><span class="p">);</span>
+<a name="gbab-540"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_script_unregister</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_name</span><span class="p">);</span>
+<a name="gbab-541"></a>
+<a name="gbab-542"></a><span class="k">typedef</span> <span class="n">GDAPI</span> <span class="nf">godot_variant</span> <span class="p">(</span><span class="n">godot_script_func</span><span class="p">)(</span><span class="n">godot_instance</span><span class="p">,</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span><span class="n">godot_variant</span><span class="o">*</span><span class="p">,</span><span class="kt">int</span><span class="p">);</span> <span class="c1">//instance,userdata,arguments,argument count. Return something or NULL. Arguments must not be freed.</span>
+<a name="gbab-543"></a>
+<a name="gbab-544"></a>
+<a name="gbab-545"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_script_add_function</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_name</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_function_name</span><span class="p">,</span><span class="n">godot_script_func</span> <span class="n">p_func</span><span class="p">);</span>
+<a name="gbab-546"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_script_add_validated_function</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_name</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_function_name</span><span class="p">,</span><span class="n">godot_script_func</span> <span class="n">p_func</span><span class="p">,</span><span class="kt">int</span><span class="o">*</span> <span class="n">p_arg_types</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_arg_count</span><span class="p">,</span><span class="n">godot_variant</span><span class="o">*</span> <span class="n">p_default_args</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_default_arg_count</span><span class="p">);</span>
+<a name="gbab-547"></a>
+<a name="gbab-548"></a><span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="n">godot_set_property_func</span><span class="p">)(</span><span class="n">godot_instance</span><span class="p">,</span><span class="kt">void</span><span class="o">*</span><span class="p">,</span><span class="n">godot_variant</span><span class="p">);</span> <span class="c1">//instance,userdata,value. Value must not be freed.</span>
+<a name="gbab-549"></a><span class="k">typedef</span> <span class="nf">godot_variant</span> <span class="p">(</span><span class="n">godot_get_property_func</span><span class="p">)(</span><span class="n">godot_instance</span><span class="p">,</span><span class="kt">void</span><span class="o">*</span><span class="p">);</span> <span class="c1">//instance,userdata. Return a value or NULL.</span>
+<a name="gbab-550"></a>
+<a name="gbab-551"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_script_add_property</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_name</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_path</span><span class="p">,</span><span class="n">godot_set_property_func</span> <span class="n">p_set_func</span><span class="p">,</span><span class="n">godot_get_property_func</span> <span class="n">p_get_func</span><span class="p">);</span>
+<a name="gbab-552"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_script_add_listed_property</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_name</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_path</span><span class="p">,</span><span class="n">godot_set_property_func</span> <span class="n">p_set_func</span><span class="p">,</span><span class="n">godot_get_property_func</span> <span class="n">p_get_func</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_type</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_hint</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span> <span class="n">p_hint_string</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_usage</span><span class="p">);</span>
+<a name="gbab-553"></a>
+<a name="gbab-554"></a>
+<a name="gbab-555"></a><span class="c1">////// System Functions</span>
+<a name="gbab-556"></a>
+<a name="gbab-557"></a><span class="c1">//using these will help Godot track how much memory is in use in debug mode</span>
+<a name="gbab-558"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="o">*</span><span class="nf">godot_alloc</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_bytes</span><span class="p">);</span>
+<a name="gbab-559"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="o">*</span><span class="nf">godot_realloc</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">p_ptr</span><span class="p">,</span><span class="kt">int</span> <span class="n">p_bytes</span><span class="p">);</span>
+<a name="gbab-560"></a><span class="kt">void</span> <span class="n">GDAPI</span> <span class="nf">godot_free</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">p_ptr</span><span class="p">);</span>
+<a name="gbab-561"></a>
+<a name="gbab-562"></a>
+<a name="gbab-563"></a><span class="cp">#ifdef __cplusplus</span>
+<a name="gbab-564"></a><span class="p">}</span>
+<a name="gbab-565"></a><span class="cp">#endif</span>
+<a name="gbab-566"></a>
+<a name="gbab-567"></a>
+<a name="gbab-568"></a><span class="cp">#endif </span><span class="c1">// GODOT_C_H</span>
+</pre></div>
+</td></tr></table>

@@ -1,0 +1,1779 @@
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889</pre></div></td><td class="code"><div class="highlight"><pre><span></span><a name="gbab-1"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-2"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-3"></a><span class="cm">/*  ftoption.h                                                             */</span>
+<a name="gbab-4"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-5"></a><span class="cm">/*    User-selectable configuration macros (specification only).           */</span>
+<a name="gbab-6"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-7"></a><span class="cm">/*  Copyright 1996-2016 by                                                 */</span>
+<a name="gbab-8"></a><span class="cm">/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */</span>
+<a name="gbab-9"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-10"></a><span class="cm">/*  This file is part of the FreeType project, and may only be used,       */</span>
+<a name="gbab-11"></a><span class="cm">/*  modified, and distributed under the terms of the FreeType project      */</span>
+<a name="gbab-12"></a><span class="cm">/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */</span>
+<a name="gbab-13"></a><span class="cm">/*  this file you indicate that you have read the license and              */</span>
+<a name="gbab-14"></a><span class="cm">/*  understand and accept it fully.                                        */</span>
+<a name="gbab-15"></a><span class="cm">/*                                                                         */</span>
+<a name="gbab-16"></a><span class="cm">/***************************************************************************/</span>
+<a name="gbab-17"></a>
+<a name="gbab-18"></a>
+<a name="gbab-19"></a><span class="cp">#ifndef FTOPTION_H_</span>
+<a name="gbab-20"></a><span class="cp">#define FTOPTION_H_</span>
+<a name="gbab-21"></a>
+<a name="gbab-22"></a>
+<a name="gbab-23"></a><span class="cp">#include</span> <span class="cpf">&lt;ft2build.h&gt;</span><span class="cp"></span>
+<a name="gbab-24"></a>
+<a name="gbab-25"></a>
+<a name="gbab-26"></a><span class="n">FT_BEGIN_HEADER</span>
+<a name="gbab-27"></a>
+<a name="gbab-28"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-29"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-30"></a>  <span class="cm">/*                 USER-SELECTABLE CONFIGURATION MACROS                  */</span>
+<a name="gbab-31"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-32"></a>  <span class="cm">/* This file contains the default configuration macro definitions for    */</span>
+<a name="gbab-33"></a>  <span class="cm">/* a standard build of the FreeType library.  There are three ways to    */</span>
+<a name="gbab-34"></a>  <span class="cm">/* use this file to build project-specific versions of the library:      */</span>
+<a name="gbab-35"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-36"></a>  <span class="cm">/*  - You can modify this file by hand, but this is not recommended in   */</span>
+<a name="gbab-37"></a>  <span class="cm">/*    cases where you would like to build several versions of the        */</span>
+<a name="gbab-38"></a>  <span class="cm">/*    library from a single source directory.                            */</span>
+<a name="gbab-39"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-40"></a>  <span class="cm">/*  - You can put a copy of this file in your build directory, more      */</span>
+<a name="gbab-41"></a>  <span class="cm">/*    precisely in `$BUILD/freetype/config/ftoption.h&#39;, where `$BUILD&#39;   */</span>
+<a name="gbab-42"></a>  <span class="cm">/*    is the name of a directory that is included _before_ the FreeType  */</span>
+<a name="gbab-43"></a>  <span class="cm">/*    include path during compilation.                                   */</span>
+<a name="gbab-44"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-45"></a>  <span class="cm">/*    The default FreeType Makefiles and Jamfiles use the build          */</span>
+<a name="gbab-46"></a>  <span class="cm">/*    directory `builds/&lt;system&gt;&#39; by default, but you can easily change  */</span>
+<a name="gbab-47"></a>  <span class="cm">/*    that for your own projects.                                        */</span>
+<a name="gbab-48"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-49"></a>  <span class="cm">/*  - Copy the file &lt;ft2build.h&gt; to `$BUILD/ft2build.h&#39; and modify it    */</span>
+<a name="gbab-50"></a>  <span class="cm">/*    slightly to pre-define the macro FT_CONFIG_OPTIONS_H used to       */</span>
+<a name="gbab-51"></a>  <span class="cm">/*    locate this file during the build.  For example,                   */</span>
+<a name="gbab-52"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-53"></a>  <span class="cm">/*      #define FT_CONFIG_OPTIONS_H  &lt;myftoptions.h&gt;                     */</span>
+<a name="gbab-54"></a>  <span class="cm">/*      #include &lt;freetype/config/ftheader.h&gt;                            */</span>
+<a name="gbab-55"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-56"></a>  <span class="cm">/*    will use `$BUILD/myftoptions.h&#39; instead of this file for macro     */</span>
+<a name="gbab-57"></a>  <span class="cm">/*    definitions.                                                       */</span>
+<a name="gbab-58"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-59"></a>  <span class="cm">/*    Note also that you can similarly pre-define the macro              */</span>
+<a name="gbab-60"></a>  <span class="cm">/*    FT_CONFIG_MODULES_H used to locate the file listing of the modules */</span>
+<a name="gbab-61"></a>  <span class="cm">/*    that are statically linked to the library at compile time.  By     */</span>
+<a name="gbab-62"></a>  <span class="cm">/*    default, this file is &lt;freetype/config/ftmodule.h&gt;.                */</span>
+<a name="gbab-63"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-64"></a>  <span class="cm">/*  We highly recommend using the third method whenever possible.        */</span>
+<a name="gbab-65"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-66"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-67"></a>
+<a name="gbab-68"></a>
+<a name="gbab-69"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-70"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-71"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-72"></a>  <span class="cm">/**** G E N E R A L   F R E E T Y P E   2   C O N F I G U R A T I O N ****/</span>
+<a name="gbab-73"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-74"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-75"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-76"></a>
+<a name="gbab-77"></a>
+<a name="gbab-78"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-79"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-80"></a>  <span class="cm">/* Uncomment the line below if you want to activate sub-pixel rendering  */</span>
+<a name="gbab-81"></a>  <span class="cm">/* (a.k.a. LCD rendering, or ClearType) in this build of the library.    */</span>
+<a name="gbab-82"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-83"></a>  <span class="cm">/* Note that this feature is covered by several Microsoft patents        */</span>
+<a name="gbab-84"></a>  <span class="cm">/* and should not be activated in any default build of the library.      */</span>
+<a name="gbab-85"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-86"></a>  <span class="cm">/* This macro has no impact on the FreeType API, only on its             */</span>
+<a name="gbab-87"></a>  <span class="cm">/* _implementation_.  For example, using FT_RENDER_MODE_LCD when calling */</span>
+<a name="gbab-88"></a>  <span class="cm">/* FT_Render_Glyph still generates a bitmap that is 3 times wider than   */</span>
+<a name="gbab-89"></a>  <span class="cm">/* the original size in case this macro isn&#39;t defined; however, each     */</span>
+<a name="gbab-90"></a>  <span class="cm">/* triplet of subpixels has R=G=B.                                       */</span>
+<a name="gbab-91"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-92"></a>  <span class="cm">/* This is done to allow FreeType clients to run unmodified, forcing     */</span>
+<a name="gbab-93"></a>  <span class="cm">/* them to display normal gray-level anti-aliased glyphs.                */</span>
+<a name="gbab-94"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-95"></a><span class="cm">/* #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING */</span>
+<a name="gbab-96"></a>
+<a name="gbab-97"></a>
+<a name="gbab-98"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-99"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-100"></a>  <span class="cm">/* Many compilers provide a non-ANSI 64-bit data type that can be used   */</span>
+<a name="gbab-101"></a>  <span class="cm">/* by FreeType to speed up some computations.  However, this will create */</span>
+<a name="gbab-102"></a>  <span class="cm">/* some problems when compiling the library in strict ANSI mode.         */</span>
+<a name="gbab-103"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-104"></a>  <span class="cm">/* For this reason, the use of 64-bit integers is normally disabled when */</span>
+<a name="gbab-105"></a>  <span class="cm">/* the __STDC__ macro is defined.  You can however disable this by       */</span>
+<a name="gbab-106"></a>  <span class="cm">/* defining the macro FT_CONFIG_OPTION_FORCE_INT64 here.                 */</span>
+<a name="gbab-107"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-108"></a>  <span class="cm">/* For most compilers, this will only create compilation warnings when   */</span>
+<a name="gbab-109"></a>  <span class="cm">/* building the library.                                                 */</span>
+<a name="gbab-110"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-111"></a>  <span class="cm">/* ObNote: The compiler-specific 64-bit integers are detected in the     */</span>
+<a name="gbab-112"></a>  <span class="cm">/*         file `ftconfig.h&#39; either statically or through the            */</span>
+<a name="gbab-113"></a>  <span class="cm">/*         `configure&#39; script on supported platforms.                    */</span>
+<a name="gbab-114"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-115"></a><span class="cp">#undef FT_CONFIG_OPTION_FORCE_INT64</span>
+<a name="gbab-116"></a>
+<a name="gbab-117"></a>
+<a name="gbab-118"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-119"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-120"></a>  <span class="cm">/* If this macro is defined, do not try to use an assembler version of   */</span>
+<a name="gbab-121"></a>  <span class="cm">/* performance-critical functions (e.g. FT_MulFix).  You should only do  */</span>
+<a name="gbab-122"></a>  <span class="cm">/* that to verify that the assembler function works properly, or to      */</span>
+<a name="gbab-123"></a>  <span class="cm">/* execute benchmark tests of the various implementations.               */</span>
+<a name="gbab-124"></a><span class="cm">/* #define FT_CONFIG_OPTION_NO_ASSEMBLER */</span>
+<a name="gbab-125"></a>
+<a name="gbab-126"></a>
+<a name="gbab-127"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-128"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-129"></a>  <span class="cm">/* If this macro is defined, try to use an inlined assembler version of  */</span>
+<a name="gbab-130"></a>  <span class="cm">/* the `FT_MulFix&#39; function, which is a `hotspot&#39; when loading and       */</span>
+<a name="gbab-131"></a>  <span class="cm">/* hinting glyphs, and which should be executed as fast as possible.     */</span>
+<a name="gbab-132"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-133"></a>  <span class="cm">/* Note that if your compiler or CPU is not supported, this will default */</span>
+<a name="gbab-134"></a>  <span class="cm">/* to the standard and portable implementation found in `ftcalc.c&#39;.      */</span>
+<a name="gbab-135"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-136"></a><span class="cp">#define FT_CONFIG_OPTION_INLINE_MULFIX</span>
+<a name="gbab-137"></a>
+<a name="gbab-138"></a>
+<a name="gbab-139"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-140"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-141"></a>  <span class="cm">/* LZW-compressed file support.                                          */</span>
+<a name="gbab-142"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-143"></a>  <span class="cm">/*   FreeType now handles font files that have been compressed with the  */</span>
+<a name="gbab-144"></a>  <span class="cm">/*   `compress&#39; program.  This is mostly used to parse many of the PCF   */</span>
+<a name="gbab-145"></a>  <span class="cm">/*   files that come with various X11 distributions.  The implementation */</span>
+<a name="gbab-146"></a>  <span class="cm">/*   uses NetBSD&#39;s `zopen&#39; to partially uncompress the file on the fly   */</span>
+<a name="gbab-147"></a>  <span class="cm">/*   (see src/lzw/ftgzip.c).                                             */</span>
+<a name="gbab-148"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-149"></a>  <span class="cm">/*   Define this macro if you want to enable this `feature&#39;.             */</span>
+<a name="gbab-150"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-151"></a><span class="cm">/* #define FT_CONFIG_OPTION_USE_LZW */</span> <span class="c1">// -GODOT-</span>
+<a name="gbab-152"></a>
+<a name="gbab-153"></a>
+<a name="gbab-154"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-155"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-156"></a>  <span class="cm">/* Gzip-compressed file support.                                         */</span>
+<a name="gbab-157"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-158"></a>  <span class="cm">/*   FreeType now handles font files that have been compressed with the  */</span>
+<a name="gbab-159"></a>  <span class="cm">/*   `gzip&#39; program.  This is mostly used to parse many of the PCF files */</span>
+<a name="gbab-160"></a>  <span class="cm">/*   that come with XFree86.  The implementation uses `zlib&#39; to          */</span>
+<a name="gbab-161"></a>  <span class="cm">/*   partially uncompress the file on the fly (see src/gzip/ftgzip.c).   */</span>
+<a name="gbab-162"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-163"></a>  <span class="cm">/*   Define this macro if you want to enable this `feature&#39;.  See also   */</span>
+<a name="gbab-164"></a>  <span class="cm">/*   the macro FT_CONFIG_OPTION_SYSTEM_ZLIB below.                       */</span>
+<a name="gbab-165"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-166"></a><span class="cm">/* #define FT_CONFIG_OPTION_USE_ZLIB */</span> <span class="c1">// -GODOT-</span>
+<a name="gbab-167"></a>
+<a name="gbab-168"></a>
+<a name="gbab-169"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-170"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-171"></a>  <span class="cm">/* ZLib library selection                                                */</span>
+<a name="gbab-172"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-173"></a>  <span class="cm">/*   This macro is only used when FT_CONFIG_OPTION_USE_ZLIB is defined.  */</span>
+<a name="gbab-174"></a>  <span class="cm">/*   It allows FreeType&#39;s `ftgzip&#39; component to link to the system&#39;s     */</span>
+<a name="gbab-175"></a>  <span class="cm">/*   installation of the ZLib library.  This is useful on systems like   */</span>
+<a name="gbab-176"></a>  <span class="cm">/*   Unix or VMS where it generally is already available.                */</span>
+<a name="gbab-177"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-178"></a>  <span class="cm">/*   If you let it undefined, the component will use its own copy        */</span>
+<a name="gbab-179"></a>  <span class="cm">/*   of the zlib sources instead.  These have been modified to be        */</span>
+<a name="gbab-180"></a>  <span class="cm">/*   included directly within the component and *not* export external    */</span>
+<a name="gbab-181"></a>  <span class="cm">/*   function names.  This allows you to link any program with FreeType  */</span>
+<a name="gbab-182"></a>  <span class="cm">/*   _and_ ZLib without linking conflicts.                               */</span>
+<a name="gbab-183"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-184"></a>  <span class="cm">/*   Do not #undef this macro here since the build system might define   */</span>
+<a name="gbab-185"></a>  <span class="cm">/*   it for certain configurations only.                                 */</span>
+<a name="gbab-186"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-187"></a><span class="cm">/* #define FT_CONFIG_OPTION_SYSTEM_ZLIB */</span>
+<a name="gbab-188"></a>
+<a name="gbab-189"></a>
+<a name="gbab-190"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-191"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-192"></a>  <span class="cm">/* Bzip2-compressed file support.                                        */</span>
+<a name="gbab-193"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-194"></a>  <span class="cm">/*   FreeType now handles font files that have been compressed with the  */</span>
+<a name="gbab-195"></a>  <span class="cm">/*   `bzip2&#39; program.  This is mostly used to parse many of the PCF      */</span>
+<a name="gbab-196"></a>  <span class="cm">/*   files that come with XFree86.  The implementation uses `libbz2&#39; to  */</span>
+<a name="gbab-197"></a>  <span class="cm">/*   partially uncompress the file on the fly (see src/bzip2/ftbzip2.c). */</span>
+<a name="gbab-198"></a>  <span class="cm">/*   Contrary to gzip, bzip2 currently is not included and need to use   */</span>
+<a name="gbab-199"></a>  <span class="cm">/*   the system available bzip2 implementation.                          */</span>
+<a name="gbab-200"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-201"></a>  <span class="cm">/*   Define this macro if you want to enable this `feature&#39;.             */</span>
+<a name="gbab-202"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-203"></a><span class="cm">/* #define FT_CONFIG_OPTION_USE_BZIP2 */</span>
+<a name="gbab-204"></a>
+<a name="gbab-205"></a>
+<a name="gbab-206"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-207"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-208"></a>  <span class="cm">/* Define to disable the use of file stream functions and types, FILE,   */</span>
+<a name="gbab-209"></a>  <span class="cm">/* fopen() etc.  Enables the use of smaller system libraries on embedded */</span>
+<a name="gbab-210"></a>  <span class="cm">/* systems that have multiple system libraries, some with or without     */</span>
+<a name="gbab-211"></a>  <span class="cm">/* file stream support, in the cases where file stream support is not    */</span>
+<a name="gbab-212"></a>  <span class="cm">/* necessary such as memory loading of font files.                       */</span>
+<a name="gbab-213"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-214"></a><span class="cm">/* #define FT_CONFIG_OPTION_DISABLE_STREAM_SUPPORT */</span>
+<a name="gbab-215"></a>
+<a name="gbab-216"></a>
+<a name="gbab-217"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-218"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-219"></a>  <span class="cm">/*  PNG bitmap support.                                                  */</span>
+<a name="gbab-220"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-221"></a>  <span class="cm">/*   FreeType now handles loading color bitmap glyphs in the PNG format. */</span>
+<a name="gbab-222"></a>  <span class="cm">/*   This requires help from the external libpng library.  Uncompressed  */</span>
+<a name="gbab-223"></a>  <span class="cm">/*   color bitmaps do not need any external libraries and will be        */</span>
+<a name="gbab-224"></a>  <span class="cm">/*   supported regardless of this configuration.                         */</span>
+<a name="gbab-225"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-226"></a>  <span class="cm">/*   Define this macro if you want to enable this `feature&#39;.             */</span>
+<a name="gbab-227"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-228"></a><span class="cm">/* #define FT_CONFIG_OPTION_USE_PNG */</span>
+<a name="gbab-229"></a>
+<a name="gbab-230"></a>
+<a name="gbab-231"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-232"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-233"></a>  <span class="cm">/* HarfBuzz support.                                                     */</span>
+<a name="gbab-234"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-235"></a>  <span class="cm">/*   FreeType uses the HarfBuzz library to improve auto-hinting of       */</span>
+<a name="gbab-236"></a>  <span class="cm">/*   OpenType fonts.  If available, many glyphs not directly addressable */</span>
+<a name="gbab-237"></a>  <span class="cm">/*   by a font&#39;s character map will be hinted also.                      */</span>
+<a name="gbab-238"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-239"></a>  <span class="cm">/*   Define this macro if you want to enable this `feature&#39;.             */</span>
+<a name="gbab-240"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-241"></a><span class="cm">/* #define FT_CONFIG_OPTION_USE_HARFBUZZ */</span>
+<a name="gbab-242"></a>
+<a name="gbab-243"></a>
+<a name="gbab-244"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-245"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-246"></a>  <span class="cm">/* DLL export compilation                                                */</span>
+<a name="gbab-247"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-248"></a>  <span class="cm">/*   When compiling FreeType as a DLL, some systems/compilers need a     */</span>
+<a name="gbab-249"></a>  <span class="cm">/*   special keyword in front OR after the return type of function       */</span>
+<a name="gbab-250"></a>  <span class="cm">/*   declarations.                                                       */</span>
+<a name="gbab-251"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-252"></a>  <span class="cm">/*   Two macros are used within the FreeType source code to define       */</span>
+<a name="gbab-253"></a>  <span class="cm">/*   exported library functions: FT_EXPORT and FT_EXPORT_DEF.            */</span>
+<a name="gbab-254"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-255"></a>  <span class="cm">/*     FT_EXPORT( return_type )                                          */</span>
+<a name="gbab-256"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-257"></a>  <span class="cm">/*       is used in a function declaration, as in                        */</span>
+<a name="gbab-258"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-259"></a>  <span class="cm">/*         FT_EXPORT( FT_Error )                                         */</span>
+<a name="gbab-260"></a>  <span class="cm">/*         FT_Init_FreeType( FT_Library*  alibrary );                    */</span>
+<a name="gbab-261"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-262"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-263"></a>  <span class="cm">/*     FT_EXPORT_DEF( return_type )                                      */</span>
+<a name="gbab-264"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-265"></a>  <span class="cm">/*       is used in a function definition, as in                         */</span>
+<a name="gbab-266"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-267"></a>  <span class="cm">/*         FT_EXPORT_DEF( FT_Error )                                     */</span>
+<a name="gbab-268"></a>  <span class="cm">/*         FT_Init_FreeType( FT_Library*  alibrary )                     */</span>
+<a name="gbab-269"></a>  <span class="cm">/*         {                                                             */</span>
+<a name="gbab-270"></a>  <span class="cm">/*           ... some code ...                                           */</span>
+<a name="gbab-271"></a>  <span class="cm">/*           return FT_Err_Ok;                                           */</span>
+<a name="gbab-272"></a>  <span class="cm">/*         }                                                             */</span>
+<a name="gbab-273"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-274"></a>  <span class="cm">/*   You can provide your own implementation of FT_EXPORT and            */</span>
+<a name="gbab-275"></a>  <span class="cm">/*   FT_EXPORT_DEF here if you want.  If you leave them undefined, they  */</span>
+<a name="gbab-276"></a>  <span class="cm">/*   will be later automatically defined as `extern return_type&#39; to      */</span>
+<a name="gbab-277"></a>  <span class="cm">/*   allow normal compilation.                                           */</span>
+<a name="gbab-278"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-279"></a>  <span class="cm">/*   Do not #undef these macros here since the build system might define */</span>
+<a name="gbab-280"></a>  <span class="cm">/*   them for certain configurations only.                               */</span>
+<a name="gbab-281"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-282"></a><span class="cm">/* #define FT_EXPORT(x)      extern x */</span>
+<a name="gbab-283"></a><span class="cm">/* #define FT_EXPORT_DEF(x)  x */</span>
+<a name="gbab-284"></a>
+<a name="gbab-285"></a>
+<a name="gbab-286"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-287"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-288"></a>  <span class="cm">/* Glyph Postscript Names handling                                       */</span>
+<a name="gbab-289"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-290"></a>  <span class="cm">/*   By default, FreeType 2 is compiled with the `psnames&#39; module.  This */</span>
+<a name="gbab-291"></a>  <span class="cm">/*   module is in charge of converting a glyph name string into a        */</span>
+<a name="gbab-292"></a>  <span class="cm">/*   Unicode value, or return a Macintosh standard glyph name for the    */</span>
+<a name="gbab-293"></a>  <span class="cm">/*   use with the TrueType `post&#39; table.                                 */</span>
+<a name="gbab-294"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-295"></a>  <span class="cm">/*   Undefine this macro if you do not want `psnames&#39; compiled in your   */</span>
+<a name="gbab-296"></a>  <span class="cm">/*   build of FreeType.  This has the following effects:                 */</span>
+<a name="gbab-297"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-298"></a>  <span class="cm">/*   - The TrueType driver will provide its own set of glyph names,      */</span>
+<a name="gbab-299"></a>  <span class="cm">/*     if you build it to support postscript names in the TrueType       */</span>
+<a name="gbab-300"></a>  <span class="cm">/*     `post&#39; table.                                                     */</span>
+<a name="gbab-301"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-302"></a>  <span class="cm">/*   - The Type 1 driver will not be able to synthesize a Unicode        */</span>
+<a name="gbab-303"></a>  <span class="cm">/*     charmap out of the glyphs found in the fonts.                     */</span>
+<a name="gbab-304"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-305"></a>  <span class="cm">/*   You would normally undefine this configuration macro when building  */</span>
+<a name="gbab-306"></a>  <span class="cm">/*   a version of FreeType that doesn&#39;t contain a Type 1 or CFF driver.  */</span>
+<a name="gbab-307"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-308"></a><span class="cp">#define FT_CONFIG_OPTION_POSTSCRIPT_NAMES</span>
+<a name="gbab-309"></a>
+<a name="gbab-310"></a>
+<a name="gbab-311"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-312"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-313"></a>  <span class="cm">/* Postscript Names to Unicode Values support                            */</span>
+<a name="gbab-314"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-315"></a>  <span class="cm">/*   By default, FreeType 2 is built with the `PSNames&#39; module compiled  */</span>
+<a name="gbab-316"></a>  <span class="cm">/*   in.  Among other things, the module is used to convert a glyph name */</span>
+<a name="gbab-317"></a>  <span class="cm">/*   into a Unicode value.  This is especially useful in order to        */</span>
+<a name="gbab-318"></a>  <span class="cm">/*   synthesize on the fly a Unicode charmap from the CFF/Type 1 driver  */</span>
+<a name="gbab-319"></a>  <span class="cm">/*   through a big table named the `Adobe Glyph List&#39; (AGL).             */</span>
+<a name="gbab-320"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-321"></a>  <span class="cm">/*   Undefine this macro if you do not want the Adobe Glyph List         */</span>
+<a name="gbab-322"></a>  <span class="cm">/*   compiled in your `PSNames&#39; module.  The Type 1 driver will not be   */</span>
+<a name="gbab-323"></a>  <span class="cm">/*   able to synthesize a Unicode charmap out of the glyphs found in the */</span>
+<a name="gbab-324"></a>  <span class="cm">/*   fonts.                                                              */</span>
+<a name="gbab-325"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-326"></a><span class="cp">#define FT_CONFIG_OPTION_ADOBE_GLYPH_LIST</span>
+<a name="gbab-327"></a>
+<a name="gbab-328"></a>
+<a name="gbab-329"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-330"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-331"></a>  <span class="cm">/* Support for Mac fonts                                                 */</span>
+<a name="gbab-332"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-333"></a>  <span class="cm">/*   Define this macro if you want support for outline fonts in Mac      */</span>
+<a name="gbab-334"></a>  <span class="cm">/*   format (mac dfont, mac resource, macbinary containing a mac         */</span>
+<a name="gbab-335"></a>  <span class="cm">/*   resource) on non-Mac platforms.                                     */</span>
+<a name="gbab-336"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-337"></a>  <span class="cm">/*   Note that the `FOND&#39; resource isn&#39;t checked.                        */</span>
+<a name="gbab-338"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-339"></a><span class="cp">#define FT_CONFIG_OPTION_MAC_FONTS</span>
+<a name="gbab-340"></a>
+<a name="gbab-341"></a>
+<a name="gbab-342"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-343"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-344"></a>  <span class="cm">/* Guessing methods to access embedded resource forks                    */</span>
+<a name="gbab-345"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-346"></a>  <span class="cm">/*   Enable extra Mac fonts support on non-Mac platforms (e.g.           */</span>
+<a name="gbab-347"></a>  <span class="cm">/*   GNU/Linux).                                                         */</span>
+<a name="gbab-348"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-349"></a>  <span class="cm">/*   Resource forks which include fonts data are stored sometimes in     */</span>
+<a name="gbab-350"></a>  <span class="cm">/*   locations which users or developers don&#39;t expected.  In some cases, */</span>
+<a name="gbab-351"></a>  <span class="cm">/*   resource forks start with some offset from the head of a file.  In  */</span>
+<a name="gbab-352"></a>  <span class="cm">/*   other cases, the actual resource fork is stored in file different   */</span>
+<a name="gbab-353"></a>  <span class="cm">/*   from what the user specifies.  If this option is activated,         */</span>
+<a name="gbab-354"></a>  <span class="cm">/*   FreeType tries to guess whether such offsets or different file      */</span>
+<a name="gbab-355"></a>  <span class="cm">/*   names must be used.                                                 */</span>
+<a name="gbab-356"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-357"></a>  <span class="cm">/*   Note that normal, direct access of resource forks is controlled via */</span>
+<a name="gbab-358"></a>  <span class="cm">/*   the FT_CONFIG_OPTION_MAC_FONTS option.                              */</span>
+<a name="gbab-359"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-360"></a><span class="cp">#ifdef FT_CONFIG_OPTION_MAC_FONTS</span>
+<a name="gbab-361"></a><span class="cp">#define FT_CONFIG_OPTION_GUESSING_EMBEDDED_RFORK</span>
+<a name="gbab-362"></a><span class="cp">#endif</span>
+<a name="gbab-363"></a>
+<a name="gbab-364"></a>
+<a name="gbab-365"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-366"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-367"></a>  <span class="cm">/* Allow the use of FT_Incremental_Interface to load typefaces that      */</span>
+<a name="gbab-368"></a>  <span class="cm">/* contain no glyph data, but supply it via a callback function.         */</span>
+<a name="gbab-369"></a>  <span class="cm">/* This is required by clients supporting document formats which         */</span>
+<a name="gbab-370"></a>  <span class="cm">/* supply font data incrementally as the document is parsed, such        */</span>
+<a name="gbab-371"></a>  <span class="cm">/* as the Ghostscript interpreter for the PostScript language.           */</span>
+<a name="gbab-372"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-373"></a><span class="cp">#define FT_CONFIG_OPTION_INCREMENTAL</span>
+<a name="gbab-374"></a>
+<a name="gbab-375"></a>
+<a name="gbab-376"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-377"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-378"></a>  <span class="cm">/* The size in bytes of the render pool used by the scan-line converter  */</span>
+<a name="gbab-379"></a>  <span class="cm">/* to do all of its work.                                                */</span>
+<a name="gbab-380"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-381"></a><span class="cp">#define FT_RENDER_POOL_SIZE  16384L</span>
+<a name="gbab-382"></a>
+<a name="gbab-383"></a>
+<a name="gbab-384"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-385"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-386"></a>  <span class="cm">/* FT_MAX_MODULES                                                        */</span>
+<a name="gbab-387"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-388"></a>  <span class="cm">/*   The maximum number of modules that can be registered in a single    */</span>
+<a name="gbab-389"></a>  <span class="cm">/*   FreeType library object.  32 is the default.                        */</span>
+<a name="gbab-390"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-391"></a><span class="cp">#define FT_MAX_MODULES  32</span>
+<a name="gbab-392"></a>
+<a name="gbab-393"></a>
+<a name="gbab-394"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-395"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-396"></a>  <span class="cm">/* Debug level                                                           */</span>
+<a name="gbab-397"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-398"></a>  <span class="cm">/*   FreeType can be compiled in debug or trace mode.  In debug mode,    */</span>
+<a name="gbab-399"></a>  <span class="cm">/*   errors are reported through the `ftdebug&#39; component.  In trace      */</span>
+<a name="gbab-400"></a>  <span class="cm">/*   mode, additional messages are sent to the standard output during    */</span>
+<a name="gbab-401"></a>  <span class="cm">/*   execution.                                                          */</span>
+<a name="gbab-402"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-403"></a>  <span class="cm">/*   Define FT_DEBUG_LEVEL_ERROR to build the library in debug mode.     */</span>
+<a name="gbab-404"></a>  <span class="cm">/*   Define FT_DEBUG_LEVEL_TRACE to build it in trace mode.              */</span>
+<a name="gbab-405"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-406"></a>  <span class="cm">/*   Don&#39;t define any of these macros to compile in `release&#39; mode!      */</span>
+<a name="gbab-407"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-408"></a>  <span class="cm">/*   Do not #undef these macros here since the build system might define */</span>
+<a name="gbab-409"></a>  <span class="cm">/*   them for certain configurations only.                               */</span>
+<a name="gbab-410"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-411"></a><span class="cm">/* #define FT_DEBUG_LEVEL_ERROR */</span>
+<a name="gbab-412"></a><span class="cm">/* #define FT_DEBUG_LEVEL_TRACE */</span>
+<a name="gbab-413"></a>
+<a name="gbab-414"></a>
+<a name="gbab-415"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-416"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-417"></a>  <span class="cm">/* Autofitter debugging                                                  */</span>
+<a name="gbab-418"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-419"></a>  <span class="cm">/*   If FT_DEBUG_AUTOFIT is defined, FreeType provides some means to     */</span>
+<a name="gbab-420"></a>  <span class="cm">/*   control the autofitter behaviour for debugging purposes with global */</span>
+<a name="gbab-421"></a>  <span class="cm">/*   boolean variables (consequently, you should *never* enable this     */</span>
+<a name="gbab-422"></a>  <span class="cm">/*   while compiling in `release&#39; mode):                                 */</span>
+<a name="gbab-423"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-424"></a>  <span class="cm">/*     _af_debug_disable_horz_hints                                      */</span>
+<a name="gbab-425"></a>  <span class="cm">/*     _af_debug_disable_vert_hints                                      */</span>
+<a name="gbab-426"></a>  <span class="cm">/*     _af_debug_disable_blue_hints                                      */</span>
+<a name="gbab-427"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-428"></a>  <span class="cm">/*   Additionally, the following functions provide dumps of various      */</span>
+<a name="gbab-429"></a>  <span class="cm">/*   internal autofit structures to stdout (using `printf&#39;):             */</span>
+<a name="gbab-430"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-431"></a>  <span class="cm">/*     af_glyph_hints_dump_points                                        */</span>
+<a name="gbab-432"></a>  <span class="cm">/*     af_glyph_hints_dump_segments                                      */</span>
+<a name="gbab-433"></a>  <span class="cm">/*     af_glyph_hints_dump_edges                                         */</span>
+<a name="gbab-434"></a>  <span class="cm">/*     af_glyph_hints_get_num_segments                                   */</span>
+<a name="gbab-435"></a>  <span class="cm">/*     af_glyph_hints_get_segment_offset                                 */</span>
+<a name="gbab-436"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-437"></a>  <span class="cm">/*   As an argument, they use another global variable:                   */</span>
+<a name="gbab-438"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-439"></a>  <span class="cm">/*     _af_debug_hints                                                   */</span>
+<a name="gbab-440"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-441"></a>  <span class="cm">/*   Please have a look at the `ftgrid&#39; demo program to see how those    */</span>
+<a name="gbab-442"></a>  <span class="cm">/*   variables and macros should be used.                                */</span>
+<a name="gbab-443"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-444"></a>  <span class="cm">/*   Do not #undef these macros here since the build system might define */</span>
+<a name="gbab-445"></a>  <span class="cm">/*   them for certain configurations only.                               */</span>
+<a name="gbab-446"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-447"></a><span class="cm">/* #define FT_DEBUG_AUTOFIT */</span>
+<a name="gbab-448"></a>
+<a name="gbab-449"></a>
+<a name="gbab-450"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-451"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-452"></a>  <span class="cm">/* Memory Debugging                                                      */</span>
+<a name="gbab-453"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-454"></a>  <span class="cm">/*   FreeType now comes with an integrated memory debugger that is       */</span>
+<a name="gbab-455"></a>  <span class="cm">/*   capable of detecting simple errors like memory leaks or double      */</span>
+<a name="gbab-456"></a>  <span class="cm">/*   deletes.  To compile it within your build of the library, you       */</span>
+<a name="gbab-457"></a>  <span class="cm">/*   should define FT_DEBUG_MEMORY here.                                 */</span>
+<a name="gbab-458"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-459"></a>  <span class="cm">/*   Note that the memory debugger is only activated at runtime when     */</span>
+<a name="gbab-460"></a>  <span class="cm">/*   when the _environment_ variable `FT2_DEBUG_MEMORY&#39; is defined also! */</span>
+<a name="gbab-461"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-462"></a>  <span class="cm">/*   Do not #undef this macro here since the build system might define   */</span>
+<a name="gbab-463"></a>  <span class="cm">/*   it for certain configurations only.                                 */</span>
+<a name="gbab-464"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-465"></a><span class="cm">/* #define FT_DEBUG_MEMORY */</span>
+<a name="gbab-466"></a>
+<a name="gbab-467"></a>
+<a name="gbab-468"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-469"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-470"></a>  <span class="cm">/* Module errors                                                         */</span>
+<a name="gbab-471"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-472"></a>  <span class="cm">/*   If this macro is set (which is _not_ the default), the higher byte  */</span>
+<a name="gbab-473"></a>  <span class="cm">/*   of an error code gives the module in which the error has occurred,  */</span>
+<a name="gbab-474"></a>  <span class="cm">/*   while the lower byte is the real error code.                        */</span>
+<a name="gbab-475"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-476"></a>  <span class="cm">/*   Setting this macro makes sense for debugging purposes only, since   */</span>
+<a name="gbab-477"></a>  <span class="cm">/*   it would break source compatibility of certain programs that use    */</span>
+<a name="gbab-478"></a>  <span class="cm">/*   FreeType 2.                                                         */</span>
+<a name="gbab-479"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-480"></a>  <span class="cm">/*   More details can be found in the files ftmoderr.h and fterrors.h.   */</span>
+<a name="gbab-481"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-482"></a><span class="cp">#undef FT_CONFIG_OPTION_USE_MODULE_ERRORS</span>
+<a name="gbab-483"></a>
+<a name="gbab-484"></a>
+<a name="gbab-485"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-486"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-487"></a>  <span class="cm">/* Position Independent Code                                             */</span>
+<a name="gbab-488"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-489"></a>  <span class="cm">/*   If this macro is set (which is _not_ the default), FreeType2 will   */</span>
+<a name="gbab-490"></a>  <span class="cm">/*   avoid creating constants that require address fixups.  Instead the  */</span>
+<a name="gbab-491"></a>  <span class="cm">/*   constants will be moved into a struct and additional intialization  */</span>
+<a name="gbab-492"></a>  <span class="cm">/*   code will be used.                                                  */</span>
+<a name="gbab-493"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-494"></a>  <span class="cm">/*   Setting this macro is needed for systems that prohibit address      */</span>
+<a name="gbab-495"></a>  <span class="cm">/*   fixups, such as BREW.                                               */</span>
+<a name="gbab-496"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-497"></a><span class="cm">/* #define FT_CONFIG_OPTION_PIC */</span>
+<a name="gbab-498"></a>
+<a name="gbab-499"></a>
+<a name="gbab-500"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-501"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-502"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-503"></a>  <span class="cm">/****        S F N T   D R I V E R    C O N F I G U R A T I O N       ****/</span>
+<a name="gbab-504"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-505"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-506"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-507"></a>
+<a name="gbab-508"></a>
+<a name="gbab-509"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-510"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-511"></a>  <span class="cm">/* Define TT_CONFIG_OPTION_EMBEDDED_BITMAPS if you want to support       */</span>
+<a name="gbab-512"></a>  <span class="cm">/* embedded bitmaps in all formats using the SFNT module (namely         */</span>
+<a name="gbab-513"></a>  <span class="cm">/* TrueType &amp; OpenType).                                                 */</span>
+<a name="gbab-514"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-515"></a><span class="cp">#define TT_CONFIG_OPTION_EMBEDDED_BITMAPS</span>
+<a name="gbab-516"></a>
+<a name="gbab-517"></a>
+<a name="gbab-518"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-519"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-520"></a>  <span class="cm">/* Define TT_CONFIG_OPTION_POSTSCRIPT_NAMES if you want to be able to    */</span>
+<a name="gbab-521"></a>  <span class="cm">/* load and enumerate the glyph Postscript names in a TrueType or        */</span>
+<a name="gbab-522"></a>  <span class="cm">/* OpenType file.                                                        */</span>
+<a name="gbab-523"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-524"></a>  <span class="cm">/* Note that when you do not compile the `PSNames&#39; module by undefining  */</span>
+<a name="gbab-525"></a>  <span class="cm">/* the above FT_CONFIG_OPTION_POSTSCRIPT_NAMES, the `sfnt&#39; module will   */</span>
+<a name="gbab-526"></a>  <span class="cm">/* contain additional code used to read the PS Names table from a font.  */</span>
+<a name="gbab-527"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-528"></a>  <span class="cm">/* (By default, the module uses `PSNames&#39; to extract glyph names.)       */</span>
+<a name="gbab-529"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-530"></a><span class="cp">#define TT_CONFIG_OPTION_POSTSCRIPT_NAMES</span>
+<a name="gbab-531"></a>
+<a name="gbab-532"></a>
+<a name="gbab-533"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-534"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-535"></a>  <span class="cm">/* Define TT_CONFIG_OPTION_SFNT_NAMES if your applications need to       */</span>
+<a name="gbab-536"></a>  <span class="cm">/* access the internal name table in a SFNT-based format like TrueType   */</span>
+<a name="gbab-537"></a>  <span class="cm">/* or OpenType.  The name table contains various strings used to         */</span>
+<a name="gbab-538"></a>  <span class="cm">/* describe the font, like family name, copyright, version, etc.  It     */</span>
+<a name="gbab-539"></a>  <span class="cm">/* does not contain any glyph name though.                               */</span>
+<a name="gbab-540"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-541"></a>  <span class="cm">/* Accessing SFNT names is done through the functions declared in        */</span>
+<a name="gbab-542"></a>  <span class="cm">/* `ftsnames.h&#39;.                                                         */</span>
+<a name="gbab-543"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-544"></a><span class="cp">#define TT_CONFIG_OPTION_SFNT_NAMES</span>
+<a name="gbab-545"></a>
+<a name="gbab-546"></a>
+<a name="gbab-547"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-548"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-549"></a>  <span class="cm">/* TrueType CMap support                                                 */</span>
+<a name="gbab-550"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-551"></a>  <span class="cm">/*   Here you can fine-tune which TrueType CMap table format shall be    */</span>
+<a name="gbab-552"></a>  <span class="cm">/*   supported.                                                          */</span>
+<a name="gbab-553"></a><span class="cp">#define TT_CONFIG_CMAP_FORMAT_0</span>
+<a name="gbab-554"></a><span class="cp">#define TT_CONFIG_CMAP_FORMAT_2</span>
+<a name="gbab-555"></a><span class="cp">#define TT_CONFIG_CMAP_FORMAT_4</span>
+<a name="gbab-556"></a><span class="cp">#define TT_CONFIG_CMAP_FORMAT_6</span>
+<a name="gbab-557"></a><span class="cp">#define TT_CONFIG_CMAP_FORMAT_8</span>
+<a name="gbab-558"></a><span class="cp">#define TT_CONFIG_CMAP_FORMAT_10</span>
+<a name="gbab-559"></a><span class="cp">#define TT_CONFIG_CMAP_FORMAT_12</span>
+<a name="gbab-560"></a><span class="cp">#define TT_CONFIG_CMAP_FORMAT_13</span>
+<a name="gbab-561"></a><span class="cp">#define TT_CONFIG_CMAP_FORMAT_14</span>
+<a name="gbab-562"></a>
+<a name="gbab-563"></a>
+<a name="gbab-564"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-565"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-566"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-567"></a>  <span class="cm">/****    T R U E T Y P E   D R I V E R    C O N F I G U R A T I O N   ****/</span>
+<a name="gbab-568"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-569"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-570"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-571"></a>
+<a name="gbab-572"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-573"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-574"></a>  <span class="cm">/* Define TT_CONFIG_OPTION_BYTECODE_INTERPRETER if you want to compile   */</span>
+<a name="gbab-575"></a>  <span class="cm">/* a bytecode interpreter in the TrueType driver.                        */</span>
+<a name="gbab-576"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-577"></a>  <span class="cm">/* By undefining this, you will only compile the code necessary to load  */</span>
+<a name="gbab-578"></a>  <span class="cm">/* TrueType glyphs without hinting.                                      */</span>
+<a name="gbab-579"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-580"></a>  <span class="cm">/*   Do not #undef this macro here, since the build system might         */</span>
+<a name="gbab-581"></a>  <span class="cm">/*   define it for certain configurations only.                          */</span>
+<a name="gbab-582"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-583"></a><span class="cp">#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER</span>
+<a name="gbab-584"></a>
+<a name="gbab-585"></a>
+<a name="gbab-586"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-587"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-588"></a>  <span class="cm">/* Define TT_CONFIG_OPTION_SUBPIXEL_HINTING if you want to compile       */</span>
+<a name="gbab-589"></a>  <span class="cm">/* subpixel hinting support into the TrueType driver.  This modifies the */</span>
+<a name="gbab-590"></a>  <span class="cm">/* TrueType hinting mechanism when anything but FT_RENDER_MODE_MONO is   */</span>
+<a name="gbab-591"></a>  <span class="cm">/* requested.                                                            */</span>
+<a name="gbab-592"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-593"></a>  <span class="cm">/* In particular, it modifies the bytecode interpreter to interpret (or  */</span>
+<a name="gbab-594"></a>  <span class="cm">/* not) instructions in a certain way so that all TrueType fonts look    */</span>
+<a name="gbab-595"></a>  <span class="cm">/* like they do in a Windows ClearType (DirectWrite) environment.  See   */</span>
+<a name="gbab-596"></a>  <span class="cm">/* [1] for a technical overview on what this means.  See `ttinterp.h&#39;    */</span>
+<a name="gbab-597"></a>  <span class="cm">/* for more details on the LEAN option.                                  */</span>
+<a name="gbab-598"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-599"></a>  <span class="cm">/* There are three options.                                              */</span>
+<a name="gbab-600"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-601"></a>  <span class="cm">/* 1. This option is associated with the `Infinality&#39; moniker.           */</span>
+<a name="gbab-602"></a>  <span class="cm">/*    Contributed by an individual nicknamed Infinality with the goal of */</span>
+<a name="gbab-603"></a>  <span class="cm">/*    making TrueType fonts render better than on Windows.  A high       */</span>
+<a name="gbab-604"></a>  <span class="cm">/*    amount of configurability and flexibility, down to rules for       */</span>
+<a name="gbab-605"></a>  <span class="cm">/*    single glyphs in fonts, but also very slow.  Its experimental and  */</span>
+<a name="gbab-606"></a>  <span class="cm">/*    slow nature and the original developer losing interest meant that  */</span>
+<a name="gbab-607"></a>  <span class="cm">/*    this option was never enabled in default builds.                   */</span>
+<a name="gbab-608"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-609"></a>  <span class="cm">/* 2. The new default mode for the TrueType driver.  The Infinality code */</span>
+<a name="gbab-610"></a>  <span class="cm">/*    base was stripped to the bare minimum and all configurability      */</span>
+<a name="gbab-611"></a>  <span class="cm">/*    removed in the name of speed and simplicity.  The configurability  */</span>
+<a name="gbab-612"></a>  <span class="cm">/*    was mainly aimed at legacy fonts like Arial, Times New Roman, or   */</span>
+<a name="gbab-613"></a>  <span class="cm">/*    Courier.  Legacy fonts are fonts that modify vertical stems to     */</span>
+<a name="gbab-614"></a>  <span class="cm">/*    achieve clean black-and-white bitmaps.  The new mode focuses on    */</span>
+<a name="gbab-615"></a>  <span class="cm">/*    applying a minimal set of rules to all fonts indiscriminately so   */</span>
+<a name="gbab-616"></a>  <span class="cm">/*    that modern and web fonts render well while legacy fonts render    */</span>
+<a name="gbab-617"></a>  <span class="cm">/*    okay.                                                              */</span>
+<a name="gbab-618"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-619"></a>  <span class="cm">/* 3. Compile both.                                                      */</span>
+<a name="gbab-620"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-621"></a>  <span class="cm">/* By undefining these, you get rendering behavior like on Windows       */</span>
+<a name="gbab-622"></a>  <span class="cm">/* without ClearType, i.e., Windows XP without ClearType enabled and     */</span>
+<a name="gbab-623"></a>  <span class="cm">/* Win9x (interpreter version v35).  Or not, depending on how much       */</span>
+<a name="gbab-624"></a>  <span class="cm">/* hinting blood and testing tears the font designer put into a given    */</span>
+<a name="gbab-625"></a>  <span class="cm">/* font.  If you define one or both subpixel hinting options, you can    */</span>
+<a name="gbab-626"></a>  <span class="cm">/* switch between between v35 and the ones you define.                   */</span>
+<a name="gbab-627"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-628"></a>  <span class="cm">/*   This option requires TT_CONFIG_OPTION_BYTECODE_INTERPRETER to be    */</span>
+<a name="gbab-629"></a>  <span class="cm">/*   defined.                                                            */</span>
+<a name="gbab-630"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-631"></a>  <span class="cm">/* [1] http://www.microsoft.com/typography/cleartype/truetypecleartype.aspx */</span>
+<a name="gbab-632"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-633"></a><span class="cm">/* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  1         */</span>
+<a name="gbab-634"></a><span class="cm">/* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  2         */</span>
+<a name="gbab-635"></a><span class="cm">/* #define TT_CONFIG_OPTION_SUBPIXEL_HINTING  ( 1 | 2 ) */</span>
+<a name="gbab-636"></a>
+<a name="gbab-637"></a>
+<a name="gbab-638"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-639"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-640"></a>  <span class="cm">/* Define TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED to compile the        */</span>
+<a name="gbab-641"></a>  <span class="cm">/* TrueType glyph loader to use Apple&#39;s definition of how to handle      */</span>
+<a name="gbab-642"></a>  <span class="cm">/* component offsets in composite glyphs.                                */</span>
+<a name="gbab-643"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-644"></a>  <span class="cm">/* Apple and MS disagree on the default behavior of component offsets    */</span>
+<a name="gbab-645"></a>  <span class="cm">/* in composites.  Apple says that they should be scaled by the scaling  */</span>
+<a name="gbab-646"></a>  <span class="cm">/* factors in the transformation matrix (roughly, it&#39;s more complex)     */</span>
+<a name="gbab-647"></a>  <span class="cm">/* while MS says they should not.  OpenType defines two bits in the      */</span>
+<a name="gbab-648"></a>  <span class="cm">/* composite flags array which can be used to disambiguate, but old      */</span>
+<a name="gbab-649"></a>  <span class="cm">/* fonts will not have them.                                             */</span>
+<a name="gbab-650"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-651"></a>  <span class="cm">/*   http://www.microsoft.com/typography/otspec/glyf.htm                 */</span>
+<a name="gbab-652"></a>  <span class="cm">/*   https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6glyf.html */</span>
+<a name="gbab-653"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-654"></a><span class="cp">#undef TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED</span>
+<a name="gbab-655"></a>
+<a name="gbab-656"></a>
+<a name="gbab-657"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-658"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-659"></a>  <span class="cm">/* Define TT_CONFIG_OPTION_GX_VAR_SUPPORT if you want to include         */</span>
+<a name="gbab-660"></a>  <span class="cm">/* support for Apple&#39;s distortable font technology (fvar, gvar, cvar,    */</span>
+<a name="gbab-661"></a>  <span class="cm">/* and avar tables).  This has many similarities to Type 1 Multiple      */</span>
+<a name="gbab-662"></a>  <span class="cm">/* Masters support.                                                      */</span>
+<a name="gbab-663"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-664"></a><span class="cp">#define TT_CONFIG_OPTION_GX_VAR_SUPPORT</span>
+<a name="gbab-665"></a>
+<a name="gbab-666"></a>
+<a name="gbab-667"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-668"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-669"></a>  <span class="cm">/* Define TT_CONFIG_OPTION_BDF if you want to include support for        */</span>
+<a name="gbab-670"></a>  <span class="cm">/* an embedded `BDF &#39; table within SFNT-based bitmap formats.            */</span>
+<a name="gbab-671"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-672"></a><span class="cp">#define TT_CONFIG_OPTION_BDF</span>
+<a name="gbab-673"></a>
+<a name="gbab-674"></a>
+<a name="gbab-675"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-676"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-677"></a>  <span class="cm">/* Option TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES controls the maximum     */</span>
+<a name="gbab-678"></a>  <span class="cm">/* number of bytecode instructions executed for a single run of the      */</span>
+<a name="gbab-679"></a>  <span class="cm">/* bytecode interpreter, needed to prevent infinite loops.  You don&#39;t    */</span>
+<a name="gbab-680"></a>  <span class="cm">/* want to change this except for very special situations (e.g., making  */</span>
+<a name="gbab-681"></a>  <span class="cm">/* a library fuzzer spend less time to handle broken fonts).             */</span>
+<a name="gbab-682"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-683"></a>  <span class="cm">/* It is not expected that this value is ever modified by a configuring  */</span>
+<a name="gbab-684"></a>  <span class="cm">/* script; instead, it gets surrounded with #ifndef ... #endif so that   */</span>
+<a name="gbab-685"></a>  <span class="cm">/* the value can be set as a preprocessor option on the compiler&#39;s       */</span>
+<a name="gbab-686"></a>  <span class="cm">/* command line.                                                         */</span>
+<a name="gbab-687"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-688"></a><span class="cp">#ifndef TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES</span>
+<a name="gbab-689"></a><span class="cp">#define TT_CONFIG_OPTION_MAX_RUNNABLE_OPCODES  1000000L</span>
+<a name="gbab-690"></a><span class="cp">#endif</span>
+<a name="gbab-691"></a>
+<a name="gbab-692"></a>
+<a name="gbab-693"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-694"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-695"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-696"></a>  <span class="cm">/****      T Y P E 1   D R I V E R    C O N F I G U R A T I O N       ****/</span>
+<a name="gbab-697"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-698"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-699"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-700"></a>
+<a name="gbab-701"></a>
+<a name="gbab-702"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-703"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-704"></a>  <span class="cm">/* T1_MAX_DICT_DEPTH is the maximum depth of nest dictionaries and       */</span>
+<a name="gbab-705"></a>  <span class="cm">/* arrays in the Type 1 stream (see t1load.c).  A minimum of 4 is        */</span>
+<a name="gbab-706"></a>  <span class="cm">/* required.                                                             */</span>
+<a name="gbab-707"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-708"></a><span class="cp">#define T1_MAX_DICT_DEPTH  5</span>
+<a name="gbab-709"></a>
+<a name="gbab-710"></a>
+<a name="gbab-711"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-712"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-713"></a>  <span class="cm">/* T1_MAX_SUBRS_CALLS details the maximum number of nested sub-routine   */</span>
+<a name="gbab-714"></a>  <span class="cm">/* calls during glyph loading.                                           */</span>
+<a name="gbab-715"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-716"></a><span class="cp">#define T1_MAX_SUBRS_CALLS  16</span>
+<a name="gbab-717"></a>
+<a name="gbab-718"></a>
+<a name="gbab-719"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-720"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-721"></a>  <span class="cm">/* T1_MAX_CHARSTRING_OPERANDS is the charstring stack&#39;s capacity.  A     */</span>
+<a name="gbab-722"></a>  <span class="cm">/* minimum of 16 is required.                                            */</span>
+<a name="gbab-723"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-724"></a>  <span class="cm">/* The Chinese font MingTiEG-Medium (CNS 11643 character set) needs 256. */</span>
+<a name="gbab-725"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-726"></a><span class="cp">#define T1_MAX_CHARSTRINGS_OPERANDS  256</span>
+<a name="gbab-727"></a>
+<a name="gbab-728"></a>
+<a name="gbab-729"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-730"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-731"></a>  <span class="cm">/* Define this configuration macro if you want to prevent the            */</span>
+<a name="gbab-732"></a>  <span class="cm">/* compilation of `t1afm&#39;, which is in charge of reading Type 1 AFM      */</span>
+<a name="gbab-733"></a>  <span class="cm">/* files into an existing face.  Note that if set, the T1 driver will be */</span>
+<a name="gbab-734"></a>  <span class="cm">/* unable to produce kerning distances.                                  */</span>
+<a name="gbab-735"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-736"></a><span class="cp">#undef T1_CONFIG_OPTION_NO_AFM</span>
+<a name="gbab-737"></a>
+<a name="gbab-738"></a>
+<a name="gbab-739"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-740"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-741"></a>  <span class="cm">/* Define this configuration macro if you want to prevent the            */</span>
+<a name="gbab-742"></a>  <span class="cm">/* compilation of the Multiple Masters font support in the Type 1        */</span>
+<a name="gbab-743"></a>  <span class="cm">/* driver.                                                               */</span>
+<a name="gbab-744"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-745"></a><span class="cp">#undef T1_CONFIG_OPTION_NO_MM_SUPPORT</span>
+<a name="gbab-746"></a>
+<a name="gbab-747"></a>
+<a name="gbab-748"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-749"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-750"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-751"></a>  <span class="cm">/****         C F F   D R I V E R    C O N F I G U R A T I O N        ****/</span>
+<a name="gbab-752"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-753"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-754"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-755"></a>
+<a name="gbab-756"></a>
+<a name="gbab-757"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-758"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-759"></a>  <span class="cm">/* Using CFF_CONFIG_OPTION_DARKENING_PARAMETER_{X,Y}{1,2,3,4} it is      */</span>
+<a name="gbab-760"></a>  <span class="cm">/* possible to set up the default values of the four control points that */</span>
+<a name="gbab-761"></a>  <span class="cm">/* define the stem darkening behaviour of the (new) CFF engine.  For     */</span>
+<a name="gbab-762"></a>  <span class="cm">/* more details please read the documentation of the                     */</span>
+<a name="gbab-763"></a>  <span class="cm">/* `darkening-parameters&#39; property of the cff driver module (file        */</span>
+<a name="gbab-764"></a>  <span class="cm">/* `ftcffdrv.h&#39;), which allows the control at run-time.                  */</span>
+<a name="gbab-765"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-766"></a>  <span class="cm">/* Do *not* undefine these macros!                                       */</span>
+<a name="gbab-767"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-768"></a><span class="cp">#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_X1   500</span>
+<a name="gbab-769"></a><span class="cp">#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y1   400</span>
+<a name="gbab-770"></a>
+<a name="gbab-771"></a><span class="cp">#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2  1000</span>
+<a name="gbab-772"></a><span class="cp">#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y2   275</span>
+<a name="gbab-773"></a>
+<a name="gbab-774"></a><span class="cp">#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3  1667</span>
+<a name="gbab-775"></a><span class="cp">#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y3   275</span>
+<a name="gbab-776"></a>
+<a name="gbab-777"></a><span class="cp">#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_X4  2333</span>
+<a name="gbab-778"></a><span class="cp">#define CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y4     0</span>
+<a name="gbab-779"></a>
+<a name="gbab-780"></a>
+<a name="gbab-781"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-782"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-783"></a>  <span class="cm">/* CFF_CONFIG_OPTION_OLD_ENGINE controls whether the pre-Adobe CFF       */</span>
+<a name="gbab-784"></a>  <span class="cm">/* engine gets compiled into FreeType.  If defined, it is possible to    */</span>
+<a name="gbab-785"></a>  <span class="cm">/* switch between the two engines using the `hinting-engine&#39; property of */</span>
+<a name="gbab-786"></a>  <span class="cm">/* the cff driver module.                                                */</span>
+<a name="gbab-787"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-788"></a><span class="cm">/* #define CFF_CONFIG_OPTION_OLD_ENGINE */</span>
+<a name="gbab-789"></a>
+<a name="gbab-790"></a>
+<a name="gbab-791"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-792"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-793"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-794"></a>  <span class="cm">/****    A U T O F I T   M O D U L E    C O N F I G U R A T I O N     ****/</span>
+<a name="gbab-795"></a>  <span class="cm">/****                                                                 ****/</span>
+<a name="gbab-796"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-797"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-798"></a>
+<a name="gbab-799"></a>
+<a name="gbab-800"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-801"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-802"></a>  <span class="cm">/* Compile autofit module with CJK (Chinese, Japanese, Korean) script    */</span>
+<a name="gbab-803"></a>  <span class="cm">/* support.                                                              */</span>
+<a name="gbab-804"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-805"></a><span class="cp">#define AF_CONFIG_OPTION_CJK</span>
+<a name="gbab-806"></a>
+<a name="gbab-807"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-808"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-809"></a>  <span class="cm">/* Compile autofit module with Indic script support.                     */</span>
+<a name="gbab-810"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-811"></a><span class="cp">#define AF_CONFIG_OPTION_INDIC</span>
+<a name="gbab-812"></a>
+<a name="gbab-813"></a>  <span class="cm">/*************************************************************************/</span>
+<a name="gbab-814"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-815"></a>  <span class="cm">/* Compile autofit module with warp hinting.  The idea of the warping    */</span>
+<a name="gbab-816"></a>  <span class="cm">/* code is to slightly scale and shift a glyph within a single dimension */</span>
+<a name="gbab-817"></a>  <span class="cm">/* so that as much of its segments are aligned (more or less) on the     */</span>
+<a name="gbab-818"></a>  <span class="cm">/* grid.  To find out the optimal scaling and shifting value, various    */</span>
+<a name="gbab-819"></a>  <span class="cm">/* parameter combinations are tried and scored.                          */</span>
+<a name="gbab-820"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-821"></a>  <span class="cm">/* This experimental option is active only if the rendering mode is      */</span>
+<a name="gbab-822"></a>  <span class="cm">/* FT_RENDER_MODE_LIGHT; you can switch warping on and off with the      */</span>
+<a name="gbab-823"></a>  <span class="cm">/* `warping&#39; property of the auto-hinter (see file `ftautoh.h&#39; for more  */</span>
+<a name="gbab-824"></a>  <span class="cm">/* information; by default it is switched off).                          */</span>
+<a name="gbab-825"></a>  <span class="cm">/*                                                                       */</span>
+<a name="gbab-826"></a><span class="cp">#define AF_CONFIG_OPTION_USE_WARPER</span>
+<a name="gbab-827"></a>
+<a name="gbab-828"></a>  <span class="cm">/* */</span>
+<a name="gbab-829"></a>
+<a name="gbab-830"></a>
+<a name="gbab-831"></a>  <span class="cm">/*</span>
+<a name="gbab-832"></a><span class="cm">   *  This macro is obsolete.  Support has been removed in FreeType</span>
+<a name="gbab-833"></a><span class="cm">   *  version 2.5.</span>
+<a name="gbab-834"></a><span class="cm">   */</span>
+<a name="gbab-835"></a><span class="cm">/* #define FT_CONFIG_OPTION_OLD_INTERNALS */</span>
+<a name="gbab-836"></a>
+<a name="gbab-837"></a>
+<a name="gbab-838"></a>  <span class="cm">/*</span>
+<a name="gbab-839"></a><span class="cm">   * This macro is defined if native TrueType hinting is requested by the</span>
+<a name="gbab-840"></a><span class="cm">   * definitions above.</span>
+<a name="gbab-841"></a><span class="cm">   */</span>
+<a name="gbab-842"></a><span class="cp">#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER</span>
+<a name="gbab-843"></a><span class="cp">#define  TT_USE_BYTECODE_INTERPRETER</span>
+<a name="gbab-844"></a>
+<a name="gbab-845"></a><span class="cp">#if TT_CONFIG_OPTION_SUBPIXEL_HINTING &amp; 1</span>
+<a name="gbab-846"></a><span class="cp">#define  TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY</span>
+<a name="gbab-847"></a><span class="cp">#endif</span>
+<a name="gbab-848"></a>
+<a name="gbab-849"></a><span class="cp">#if TT_CONFIG_OPTION_SUBPIXEL_HINTING &amp; 2</span>
+<a name="gbab-850"></a><span class="cp">#define  TT_SUPPORT_SUBPIXEL_HINTING_MINIMAL</span>
+<a name="gbab-851"></a><span class="cp">#endif</span>
+<a name="gbab-852"></a><span class="cp">#endif</span>
+<a name="gbab-853"></a>
+<a name="gbab-854"></a>
+<a name="gbab-855"></a>  <span class="cm">/*</span>
+<a name="gbab-856"></a><span class="cm">   * Check CFF darkening parameters.  The checks are the same as in function</span>
+<a name="gbab-857"></a><span class="cm">   * `cff_property_set&#39; in file `cffdrivr.c&#39;.</span>
+<a name="gbab-858"></a><span class="cm">   */</span>
+<a name="gbab-859"></a><span class="cp">#if CFF_CONFIG_OPTION_DARKENING_PARAMETER_X1 &lt; 0   || \</span>
+<a name="gbab-860"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2 &lt; 0   || \</span>
+<a name="gbab-861"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3 &lt; 0   || \</span>
+<a name="gbab-862"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X4 &lt; 0   || \</span>
+<a name="gbab-863"></a><span class="cp">                                                      \</span>
+<a name="gbab-864"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y1 &lt; 0   || \</span>
+<a name="gbab-865"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y2 &lt; 0   || \</span>
+<a name="gbab-866"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y3 &lt; 0   || \</span>
+<a name="gbab-867"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y4 &lt; 0   || \</span>
+<a name="gbab-868"></a><span class="cp">                                                      \</span>
+<a name="gbab-869"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X1 &gt;        \</span>
+<a name="gbab-870"></a><span class="cp">      CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2     || \</span>
+<a name="gbab-871"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X2 &gt;        \</span>
+<a name="gbab-872"></a><span class="cp">      CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3     || \</span>
+<a name="gbab-873"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_X3 &gt;        \</span>
+<a name="gbab-874"></a><span class="cp">      CFF_CONFIG_OPTION_DARKENING_PARAMETER_X4     || \</span>
+<a name="gbab-875"></a><span class="cp">                                                      \</span>
+<a name="gbab-876"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y1 &gt; 500 || \</span>
+<a name="gbab-877"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y2 &gt; 500 || \</span>
+<a name="gbab-878"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y3 &gt; 500 || \</span>
+<a name="gbab-879"></a><span class="cp">    CFF_CONFIG_OPTION_DARKENING_PARAMETER_Y4 &gt; 500</span>
+<a name="gbab-880"></a><span class="cp">#error &quot;Invalid CFF darkening parameters!&quot;</span>
+<a name="gbab-881"></a><span class="cp">#endif</span>
+<a name="gbab-882"></a>
+<a name="gbab-883"></a><span class="n">FT_END_HEADER</span>
+<a name="gbab-884"></a>
+<a name="gbab-885"></a>
+<a name="gbab-886"></a><span class="cp">#endif </span><span class="cm">/* FTOPTION_H_ */</span><span class="cp"></span>
+<a name="gbab-887"></a>
+<a name="gbab-888"></a>
+<a name="gbab-889"></a><span class="cm">/* END */</span>
+</pre></div>
+</td></tr></table>
